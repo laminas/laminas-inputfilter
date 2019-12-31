@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter;
+use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Factory;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Filter;
-use Zend\InputFilter\CollectionInputFilter;
-use Zend\InputFilter\Factory;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
 
 class InputFilterTest extends TestCase
 {
@@ -26,7 +25,7 @@ class InputFilterTest extends TestCase
     public function testLazilyComposesAFactoryByDefault()
     {
         $factory = $this->filter->getFactory();
-        $this->assertInstanceOf('Zend\InputFilter\Factory', $factory);
+        $this->assertInstanceOf('Laminas\InputFilter\Factory', $factory);
     }
 
     public function testCanComposeAFactory()
@@ -43,11 +42,11 @@ class InputFilterTest extends TestCase
         ));
         $this->assertTrue($this->filter->has('foo'));
         $foo = $this->filter->get('foo');
-        $this->assertInstanceOf('Zend\InputFilter\InputInterface', $foo);
+        $this->assertInstanceOf('Laminas\InputFilter\InputInterface', $foo);
     }
 
     /**
-     * @covers \Zend\InputFilter\BaseInputFilter::getValue
+     * @covers \Laminas\InputFilter\BaseInputFilter::getValue
      *
      * @group 6028
      */
@@ -71,7 +70,7 @@ class InputFilterTest extends TestCase
     }
 
     /**
-     * @group ZF2-5648
+     * @group Laminas-5648
      */
     public function testCountZeroValidateInternalInputWithCollectionInputFilter()
     {
