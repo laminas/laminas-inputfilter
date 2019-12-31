@@ -1,16 +1,17 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-inputfilter for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
-use Zend\InputFilter\ConfigProvider;
-use Zend\InputFilter\InputFilterAbstractServiceFactory;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\InputFilter\InputFilterPluginManagerFactory;
+use Laminas\InputFilter\ConfigProvider;
+use Laminas\InputFilter\InputFilterAbstractServiceFactory;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\InputFilterPluginManagerFactory;
 
 final class ConfigProviderTest extends \PHPUnit_Framework_TestCase
 {

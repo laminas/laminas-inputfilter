@@ -1,36 +1,36 @@
 # Input filter specifications
 
-`Zend\InputFilter` allows configuration-driven creation of input filters via
-`Zend\InputFilter\InputFilterAbstractServiceFactory`. This abstract factory is
+`Laminas\InputFilter` allows configuration-driven creation of input filters via
+`Laminas\InputFilter\InputFilterAbstractServiceFactory`. This abstract factory is
 responsible for creating and returning an appropriate input filter given named
 configuration under the top-level configuration key `input_filter_specs`.
 
-It is registered with `Zend\InputFilter\InputFilterPluginManager`, allowing you
+It is registered with `Laminas\InputFilter\InputFilterPluginManager`, allowing you
 to pull the input filter via that plugin manager. A side effect is that forms
-pulled from `Zend\Form\FormElementManager` can use these named input filters.
+pulled from `Laminas\Form\FormElementManager` can use these named input filters.
 
 ## Setup
 
-When using zend-mvc version 2 releases, this functionality is disabled by
+When using laminas-mvc version 2 releases, this functionality is disabled by
 default.  To enable it, you must add the
-`Zend\InputFilter\InputFilterAbstractServiceFactory` abstract factory to the
-`Zend\InputFilter\InputFilterPluginManager` configuration, which is under the
+`Laminas\InputFilter\InputFilterAbstractServiceFactory` abstract factory to the
+`Laminas\InputFilter\InputFilterPluginManager` configuration, which is under the
 `input_filters` configuration key.
 
 ```php
 return array(
     'input_filters' => array(
         'abstract_factories' => array(
-            'Zend\InputFilter\InputFilterAbstractServiceFactory'
+            'Laminas\InputFilter\InputFilterAbstractServiceFactory'
         ),
     ),
 );
 ```
 
-For [Expressive](https://zendframework.github.io/zend-expressive/) when using
-the configuration manager, and for zend-mvc v3 releases, the functionality is
+For [Mezzio](https://docs.mezzio.dev/mezzio/) when using
+the configuration manager, and for laminas-mvc v3 releases, the functionality is
 enabled by default, assuming you are using the
-[component installer](https://zendframework.github.io/zend-component-installer/).
+[component installer](https://docs.laminas.dev/laminas-component-installer/).
 
 ## Example
 
@@ -45,7 +45,7 @@ return [
                 'required' => true,
                 'filters' => [
                     [
-                        'name' => 'Zend\Filter\StringTrim',
+                        'name' => 'Laminas\Filter\StringTrim',
                         'options' => [],
                     ],
                 ],
@@ -63,8 +63,8 @@ When creating a controller, we might then pull the `InputFilterManager`, and
 retrieve the `foobar` input filter we've defined in order to inject it:
 
 ```php
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MyValidatingControllerFactory implements FactoryInterface
 {

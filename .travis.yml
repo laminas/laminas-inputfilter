@@ -1,5 +1,3 @@
-sudo: false
-
 language: php
 
 branches:
@@ -12,40 +10,35 @@ cache:
     - $HOME/.composer/cache
     - vendor
     - $HOME/.local
-    - zf-mkdoc-theme
+    - laminas-mkdoc-theme
 
 env:
   global:
     - COMPOSER_ARGS="--no-interaction"
     - COVERAGE_DEPS="satooshi/php-coveralls"
     - LEGACY_DEPS="phpunit/phpunit"
-    - SITE_URL: https://zendframework.github.io/zend-inputfilter
+    - SITE_URL: https://docs.laminas.dev/laminas-inputfilter
     - GH_USER_NAME: "Matthew Weier O'Phinney"
     - GH_USER_EMAIL: matthew@weierophinney.net
-    - GH_REF: github.com/zendframework/zend-inputfilter.git
-    - secure: "BZ5FxRDnh7Q4KSjnZXBn+vrY0RjZVHUfOcOIVTLR5hIlBRFBz436GbbyyIGAO+YQ8MGPj8Ek+fm/zuDP9gTafG3fNen4dLJOR4dOYmHUNZRgXdLeCpor6W1kaXOQInEs2mpjnsIlSM5s7/IP3QCkaZcj6GBiYuYLXGrH1PJxhE047B8StV3PWpcHi3idRqsdz26oUTH0szD70QNlk0dHqtbzjr9uSk1pRrz8LZW6WuW8yFEq3X1zDEA/XICTXPBk+CEi68wnX8RhXiTvtDpYUnPF3ZkCy6m94PROmBs0UwTPr9MCQShAVSJ0OikFkvEKJgkHNaKce+FqGK5sGcR1asunx87iMsScNKmM/0FrQOqa1pNsv6/jl+n05FZRKbfoK68bnb4YZmOnNAqPiSrF/8oiBfe2tvZVtFmAIkI6uaGD7jP07ljA9JAqtOuTt4u4DX9J2dNYoNF7+F+jtI8/+Ec1wBFvsI/DF02Mw4KYfFfdz5a5+Xzc84MkaFb+hTmAlP8BPh/7RRciL86rCELvQ2zyfwDYk5q4uLJgwg5VjpS/4B2lsjqomXC3iTYUbmdF1Y9ZFE+tyEi/XlyrQOEHisdgrfIf8Itown3S+2vJh15851UtOWs2FQWtAOM/fv4ovLyZwf6adJ0tEUtHsgr+C8NLjSfeY1i6E5QuoOhG9OA="
+    - GH_REF: github.com/laminas/laminas-inputfilter.git
+    - secure: "BZ5FxRDnh7Q4KSjnZXBn+vrY0RjZVHUfOcOIVTLR5hIlBRFBz436GbbyyIGAO+YQ8MGPj8Ek+fm/zuDP9gTafG3fNen4dLJOR4dOYmHUNZRgXdLeCpor6W1kaXOQInEs2mpjnsIlSM5s7/IP3QCkaZcj6GBiYuYLXGrH1PJxhE047B8StV3PWpcHi3idRqsdz26oUTH0szD70QNlk0dHqtbzjr9uSk1pRrz8LZW6WuW8yFEq3X1zDEA/XICTXPBk+CEi68wnX8RhXiTvtDpYUnPF3ZkCy6m94PROmBs0UwTPr9MCQShAVSJ0OikFkvEKJgkHNaKce+FqGK5sGcR1asunx87iMsScNKmM/0FrQOqa1pNsv6/jl+n05FZRKbfoK68bnb4YZmOnNAqPiSrF/8oiBfe2tvZVtFmAIkI6uaGD7jP07ljA9JAqtOuTt4u4DX9J2dNYoNF7+F+jtI8/+Ec1wBFvsI/DF02Mw4KYfFfdz5a5+Xzc84MkaFb+hTmAlP8BPh/7RRciL86rCELvQ2zyfwDYk5q4uLJgwg5VjpS/4B2lsjqomXC3iTYUbmdF1Y9LaminasE+tyEi/XlyrQOEHisdgrfIf8Itown3S+2vJh15851UtOWs2FQWtAOM/fv4ovLyZwf6adJ0tEUtHsgr+C8NLjSfeY1i6E5QuoOhG9OA="
 
 matrix:
+  fast_finish: true
   include:
     - php: 5.6
       env:
         - DEPS=lowest
     - php: 5.6
       env:
-        - DEPS=locked
+        - DEPS=latest
         - CS_CHECK=true
         - TEST_COVERAGE=true
         - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
         - PATH="$HOME/.local/bin:$PATH"
-    - php: 5.6
-      env:
-        - DEPS=latest
     - php: 7
       env:
         - DEPS=lowest
-    - php: 7
-      env:
-        - DEPS=locked
     - php: 7
       env:
         - DEPS=latest
@@ -53,9 +46,6 @@ matrix:
     - php: 7.1
       env:
         - DEPS=lowest
-    - php: 7.1
-      env:
-        - DEPS=locked
     - php: 7.1
       env:
         - DEPS=latest
@@ -88,10 +78,10 @@ script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; fi
   - if [[ $TEST_COVERAGE != 'true' ]]; then composer test ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
-  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then wget -O theme-installer.sh "https://raw.githubusercontent.com/zendframework/zf-mkdoc-theme/master/theme-installer.sh" ; chmod 755 theme-installer.sh ; ./theme-installer.sh ; fi
+  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then wget -O theme-installer.sh "https://raw.githubusercontent.com/laminas/laminas-mkdoc-theme/master/theme-installer.sh" ; chmod 755 theme-installer.sh ; ./theme-installer.sh ; fi
 
 after_success:
-  - if [[ $DEPLOY_DOCS == "true" ]]; then echo "Preparing to build and deploy documentation" ; ./zf-mkdoc-theme/deploy.sh ; echo "Completed deploying documentation" ; fi
+  - if [[ $DEPLOY_DOCS == "true" ]]; then echo "Preparing to build and deploy documentation" ; ./laminas-mkdoc-theme/deploy.sh ; echo "Completed deploying documentation" ; fi
 
 after_script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer upload-coverage ; fi
@@ -100,6 +90,6 @@ notifications:
   email: false
   slack:
     rooms:
-      - secure: "Jlr0RxX9sUVOWeo8BK75JlKYnf0Pj/ZD1p3+keEvAO71iB4zVK1OKlUjdARYx8bgEX8aKSun3v6aImu8NwuCrshl3bkXBtADEiQ7ibghi+apHU3A/HGYtiUfwRMmR4+SNXB5qe7RMA5FbKu5j28acea5N4urJqJIDAgQvlZVJrUCsJDpOpwkJ0BlV/UUA7sUvHTs/N3jsUhL+YZdNjirpcrj1LVdwWBs62h25lJ8BvYkGzg4WckP808dSokbfEtAisg/TyxoBFA+GQESvmch0tvQeZBmdrgBJ/t/MRZy8L+u80oXIs26uTnuIxKWtp8p80WPiGdMsJTxyPr1JpIJXVTGYoAzhjGG8ukXXkKxpc4bbhvEm5aPLh0l1RVzzTbp+RaPSaBBqIpEBpAWzzrJMS7owaPMkZzfv/VjUPxawDK7ZIk1Q+VFdeoWdgiKnmr78VtQ8YWeiwKE2FK6JL+UmKMXNSKKJ3Fz4vnlig0tJ+UrqL3LtKLJmqn7+K8rTntPrCIoxKElruazGuKtyUFR/13l6y10mmwtdj14YmENG1OjWDuG+hzrzs0+MwthqSqIADwduyjxu2XE0AbNjCaXqjpwO72zZgfFYtJppaWAS4VF+XpLDy+Ig11RKJccX1bPbMA06Bl32pJieNCFBua2RWnFTK20NMDf/Bht66nFubs="
+      - secure: "Jlr0RxX9sUVOWeo8BK75JlKYnf0Pj/ZD1p3+keEvAO71iB4zVK1OKlUjdARYx8bgEX8aKSun3v6aImu8NwuCrshl3bkXBtADEiQ7ibghi+apHU3A/HGYtiUfwRMmR4+SNXB5qe7RMA5FbKu5j28acea5N4urJqJIDAgQvlZVJrUCsJDpOpwkJ0BlV/UUA7sUvHTs/N3jsUhL+YZdNjirpcrj1LVdwWBs62h25lJ8BvYkGzg4WckP808dSokbfEtAisg/TyxoBFA+GQESvmch0tvQeZBmdrgBJ/t/MRZy8L+u80oXIs26uTnuIxKWtp8p80WPiGdMsJTxyPr1JpIJXVTGYoAzhjGG8ukXXkKxpc4bbhvEm5aPLh0l1RVzzTbp+RaPSaBBqIpEBpAWzzrJMS7owaPMkZlaminasv/VjUPxawDK7ZIk1Q+VFdeoWdgiKnmr78VtQ8YWeiwKE2FK6JL+UmKMXNSKKJ3Fz4vnlig0tJ+UrqL3LtKLJmqn7+K8rTntPrCIoxKElruazGuKtyUFR/13l6y10mmwtdj14YmENG1OjWDuG+hzrzs0+MwthqSqIADwduyjxu2XE0AbNjCaXqjpwO72zZgfFYtJppaWAS4VF+XpLDy+Ig11RKJccX1bPbMA06Bl32pJieNCFBua2RWnFTK20NMDf/Bht66nFubs="
     on_success: change
     on_failure: always
