@@ -1,19 +1,18 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
+use Laminas\Filter\FilterChain;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use Traversable;
-use Zend\Filter\FilterChain;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Validator\ValidatorInterface;
-use Zend\Validator\ValidatorChain;
 
 class Factory
 {
@@ -153,7 +152,7 @@ class Factory
             $inputSpecification = ArrayUtils::iteratorToArray($inputSpecification);
         }
 
-        $class = 'Zend\InputFilter\Input';
+        $class = 'Laminas\InputFilter\Input';
 
         if (isset($inputSpecification['type'])) {
             $class = $inputSpecification['type'];
@@ -178,7 +177,7 @@ class Factory
         if (!$input instanceof InputInterface) {
             throw new Exception\RuntimeException(sprintf(
                 'Input factory expects the "type" to be a class implementing %s; received "%s"',
-                'Zend\InputFilter\InputInterface',
+                'Laminas\InputFilter\InputInterface',
                 $class
             ));
         }
@@ -273,7 +272,7 @@ class Factory
             $inputFilterSpecification = ArrayUtils::iteratorToArray($inputFilterSpecification);
         }
 
-        $type = 'Zend\InputFilter\InputFilter';
+        $type = 'Laminas\InputFilter\InputFilter';
 
         if (isset($inputFilterSpecification['type']) && is_string($inputFilterSpecification['type'])) {
             $type = $inputFilterSpecification['type'];
