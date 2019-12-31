@@ -1,15 +1,14 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
-use Zend\Validator\File\UploadFile as UploadValidator;
+use Laminas\Validator\File\UploadFile as UploadValidator;
 
 /**
  * FileInput is a special Input type for handling uploaded files.
@@ -23,7 +22,7 @@ use Zend\Validator\File\UploadFile as UploadValidator;
  *    may rename/move/modify the file.
  *
  * 3. Instead of adding a NotEmpty validator, it will (by default) automatically add
- *    a Zend\Validator\File\Upload validator.
+ *    a Laminas\Validator\File\Upload validator.
  */
 class FileInput extends Input
 {
