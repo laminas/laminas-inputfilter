@@ -1,24 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_InputFilter
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
+use Laminas\Filter\FilterChain;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use Traversable;
-use Zend\Filter\FilterChain;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Validator\ValidatorChain;
-use Zend\Validator\ValidatorInterface;
 
 /**
- * @category   Zend
- * @package    Zend_InputFilter
+ * @category   Laminas
+ * @package    Laminas_InputFilter
  */
 class Factory
 {
@@ -110,7 +108,7 @@ class Factory
             $inputSpecification = ArrayUtils::iteratorToArray($inputSpecification);
         }
 
-        $class = 'Zend\InputFilter\Input';
+        $class = 'Laminas\InputFilter\Input';
         if (isset($inputSpecification['type'])) {
             $class = $inputSpecification['type'];
             if (!class_exists($class)) {
@@ -129,7 +127,7 @@ class Factory
         if (!$input instanceof InputInterface) {
             throw new Exception\RuntimeException(sprintf(
                 'Input factory expects the "type" to be a class implementing %s; received "%s"',
-                'Zend\InputFilter\InputInterface',
+                'Laminas\InputFilter\InputInterface',
                 $class
             ));
         }
@@ -219,7 +217,7 @@ class Factory
             $inputFilterSpecification = ArrayUtils::iteratorToArray($inputFilterSpecification);
         }
 
-        $class = 'Zend\InputFilter\InputFilter';
+        $class = 'Laminas\InputFilter\InputFilter';
         if (isset($inputFilterSpecification['type']) && is_string($inputFilterSpecification['type'])) {
             $class = $inputFilterSpecification['type'];
             if (!class_exists($class)) {
@@ -235,7 +233,7 @@ class Factory
         if (!$inputFilter instanceof InputFilterInterface) {
             throw new Exception\RuntimeException(sprintf(
                 'InputFilter factory expects the "type" to be a class implementing %s; received "%s"',
-                'Zend\InputFilter\InputFilterInterface', $class));
+                'Laminas\InputFilter\InputFilterInterface', $class));
         }
 
         foreach ($inputFilterSpecification as $key => $value) {
