@@ -1,22 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_InputFilter
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter;
+use Laminas\InputFilter\BaseInputFilter as InputFilter;
+use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\Input;
+use Laminas\Validator;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\BaseInputFilter as InputFilter;
-use Zend\Filter;
-use Zend\Validator;
 
 class BaseInputFilterTest extends TestCase
 {
@@ -186,12 +184,12 @@ class BaseInputFilterTest extends TestCase
         $invalidInputs = $filter->getInvalidInput();
         $this->assertArrayNotHasKey('foo', $invalidInputs);
         $this->assertArrayHasKey('bar', $invalidInputs);
-        $this->assertInstanceOf('Zend\InputFilter\Input', $invalidInputs['bar']);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $invalidInputs['bar']);
         $this->assertArrayHasKey('nest', $invalidInputs/*, var_export($invalidInputs, 1)*/);
-        $this->assertInstanceOf('Zend\InputFilter\InputFilterInterface', $invalidInputs['nest']);
+        $this->assertInstanceOf('Laminas\InputFilter\InputFilterInterface', $invalidInputs['nest']);
         $nestInvalids = $invalidInputs['nest']->getInvalidInput();
         $this->assertArrayHasKey('foo', $nestInvalids);
-        $this->assertInstanceOf('Zend\InputFilter\Input', $nestInvalids['foo']);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $nestInvalids['foo']);
         $this->assertArrayNotHasKey('bar', $nestInvalids);
     }
 
@@ -210,15 +208,15 @@ class BaseInputFilterTest extends TestCase
         $this->assertFalse($filter->isValid());
         $validInputs = $filter->getValidInput();
         $this->assertArrayHasKey('foo', $validInputs);
-        $this->assertInstanceOf('Zend\InputFilter\Input', $validInputs['foo']);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $validInputs['foo']);
         $this->assertArrayNotHasKey('bar', $validInputs);
         $this->assertArrayHasKey('nest', $validInputs);
-        $this->assertInstanceOf('Zend\InputFilter\InputFilterInterface', $validInputs['nest']);
+        $this->assertInstanceOf('Laminas\InputFilter\InputFilterInterface', $validInputs['nest']);
         $nestValids = $validInputs['nest']->getValidInput();
         $this->assertArrayHasKey('foo', $nestValids);
-        $this->assertInstanceOf('Zend\InputFilter\Input', $nestValids['foo']);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $nestValids['foo']);
         $this->assertArrayHasKey('bar', $nestValids);
-        $this->assertInstanceOf('Zend\InputFilter\Input', $nestValids['bar']);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $nestValids['bar']);
     }
 
     public function testValuesRetrievedAreFiltered()
@@ -619,11 +617,11 @@ class BaseInputFilterTest extends TestCase
         $input->setRequired(true);
 
         $input->getValidatorChain()->attach(
-            new \Zend\Validator\Explode(
+            new \Laminas\Validator\Explode(
                 array(
-                    'validator' => new \Zend\Validator\IsInstanceOf(
+                    'validator' => new \Laminas\Validator\IsInstanceOf(
                         array(
-                            'className' => 'Zend\InputFilter\Input'
+                            'className' => 'Laminas\InputFilter\Input'
                         )
                     )
                 )
