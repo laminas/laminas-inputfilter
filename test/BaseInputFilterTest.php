@@ -1,28 +1,27 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
 use ArrayObject;
 use FilterIterator;
+use Laminas\InputFilter\ArrayInput;
+use Laminas\InputFilter\BaseInputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
-use Zend\InputFilter\ArrayInput;
-use Zend\InputFilter\BaseInputFilter;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\InputInterface;
 
 /**
- * @covers Zend\InputFilter\BaseInputFilter
+ * @covers Laminas\InputFilter\BaseInputFilter
  */
 class BaseInputFilterTest extends TestCase
 {
@@ -47,8 +46,8 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
-            'expects an instance of Zend\InputFilter\InputInterface or Zend\InputFilter\InputFilterInterface ' .
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
+            'expects an instance of Laminas\InputFilter\InputInterface or Laminas\InputFilter\InputFilterInterface ' .
             'as its first argument; received "stdClass"'
         );
         /** @noinspection PhpParamsInspection */
@@ -60,7 +59,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'no input found matching "not exists"'
         );
         $inputFilter->get('not exists');
@@ -72,8 +71,8 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->add(new Input('foo'), 'replace_me');
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
-            'expects an instance of Zend\InputFilter\InputInterface or Zend\InputFilter\InputFilterInterface '
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
+            'expects an instance of Laminas\InputFilter\InputInterface or Laminas\InputFilter\InputFilterInterface '
             . 'as its first argument; received "stdClass"'
         );
         /** @noinspection PhpParamsInspection */
@@ -85,7 +84,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'no input found matching "not exists"'
         );
         $inputFilter->replace(new Input('foo'), 'not exists');
@@ -96,7 +95,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             '"not exists" was not found in the filter'
         );
         $inputFilter->getValue('not exists');
@@ -107,7 +106,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             '"not exists" was not found in the filter'
         );
         $inputFilter->getRawValue('not exists');
@@ -118,7 +117,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'expects an array or Traversable argument; received stdClass'
         );
         /** @noinspection PhpParamsInspection */
@@ -130,7 +129,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\RuntimeException',
+            'Laminas\InputFilter\Exception\RuntimeException',
             'no data present to validate'
         );
         $inputFilter->isValid();
@@ -141,11 +140,11 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         /** @var InputInterface|MockObject $nestedInput */
-        $nestedInput = $this->getMock('Zend\InputFilter\InputInterface');
+        $nestedInput = $this->getMock('Laminas\InputFilter\InputInterface');
         $inputFilter->add($nestedInput, 'fooInput');
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'Input "fooInput" must implement InputFilterInterface'
         );
         $inputFilter->setValidationGroup(array('fooInput' => 'foo'));
@@ -156,7 +155,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'expects a list of valid input names; "anotherNotExistsInputFilter" was not found'
         );
         $inputFilter->setValidationGroup(array('notExistInputFilter' => 'anotherNotExistsInputFilter'));
@@ -167,7 +166,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'expects a list of valid input names; "notExistInputFilter" was not found'
         );
         $inputFilter->setValidationGroup('notExistInputFilter');
@@ -178,7 +177,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\RuntimeException'
+            'Laminas\InputFilter\Exception\RuntimeException'
         );
         $inputFilter->hasUnknown();
     }
@@ -188,7 +187,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\RuntimeException'
+            'Laminas\InputFilter\Exception\RuntimeException'
         );
         $inputFilter->getUnknown();
     }
@@ -356,7 +355,7 @@ class BaseInputFilterTest extends TestCase
         );
         $expectedData = array_merge($data, array('notSet' => null));
         /** @var Input|MockObject $resetInput */
-        $flatInput = $this->getMockBuilder('Zend\InputFilter\Input')
+        $flatInput = $this->getMockBuilder('Laminas\InputFilter\Input')
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(array('flat'))
             ->getMock()
@@ -367,7 +366,7 @@ class BaseInputFilterTest extends TestCase
         ;
         // Inputs without value must be reset for to have clean states when use different setData arguments
         /** @var Input|MockObject $flatInput */
-        $resetInput = $this->getMockBuilder('Zend\InputFilter\Input')
+        $resetInput = $this->getMockBuilder('Laminas\InputFilter\Input')
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(array('notSet'))
             ->getMock()
@@ -474,7 +473,7 @@ class BaseInputFilterTest extends TestCase
 
         $optionalInputName = 'fooOptionalInput';
         /** @var InputInterface|MockObject $optionalInput */
-        $optionalInput = $this->getMock('Zend\InputFilter\InputInterface');
+        $optionalInput = $this->getMock('Laminas\InputFilter\InputInterface');
         $optionalInput->method('getName')
             ->willReturn($optionalInputName)
         ;
@@ -560,7 +559,7 @@ class BaseInputFilterTest extends TestCase
     public function testPopulateSupportsArrayInputEvenIfDataMissing()
     {
         /** @var ArrayInput|MockObject $arrayInput */
-        $arrayInput = $this->getMock('Zend\InputFilter\ArrayInput');
+        $arrayInput = $this->getMock('Laminas\InputFilter\ArrayInput');
         $arrayInput
             ->expects($this->once())
             ->method('setValue')
@@ -793,7 +792,7 @@ class BaseInputFilterTest extends TestCase
         $getMessages = array()
     ) {
         /** @var InputFilterInterface|MockObject $inputFilter */
-        $inputFilter = $this->getMock('Zend\InputFilter\InputFilterInterface');
+        $inputFilter = $this->getMock('Laminas\InputFilter\InputFilterInterface');
         $inputFilter->method('getRawValues')
             ->willReturn($getRawValues)
         ;
@@ -840,7 +839,7 @@ class BaseInputFilterTest extends TestCase
         $breakOnFailure = false
     ) {
         /** @var InputInterface|MockObject $input */
-        $input = $this->getMock('Zend\InputFilter\InputInterface');
+        $input = $this->getMock('Laminas\InputFilter\InputInterface');
         $input->method('getName')
             ->willReturn($name)
         ;
