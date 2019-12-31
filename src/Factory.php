@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
+use Laminas\Filter\FilterChain;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use Traversable;
-use Zend\Filter\FilterChain;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Validator\ValidatorChain;
-use Zend\Validator\ValidatorInterface;
 
 class Factory
 {
@@ -166,7 +165,7 @@ class Factory
             $inputSpecification = ArrayUtils::iteratorToArray($inputSpecification);
         }
 
-        $class = 'Zend\InputFilter\Input';
+        $class = 'Laminas\InputFilter\Input';
 
         if (isset($inputSpecification['type'])) {
             $class = $inputSpecification['type'];
@@ -192,7 +191,7 @@ class Factory
         if (!$input instanceof InputInterface) {
             throw new Exception\RuntimeException(sprintf(
                 'Input factory expects the "type" to be a class implementing %s; received "%s"',
-                'Zend\InputFilter\InputInterface',
+                'Laminas\InputFilter\InputInterface',
                 $class
             ));
         }
@@ -223,7 +222,7 @@ class Factory
                         throw new Exception\RuntimeException(sprintf(
                             '%s "continue_if_empty" can only set to inputs of type "%s"',
                             __METHOD__,
-                            'Zend\InputFilter\Input'
+                            'Laminas\InputFilter\Input'
                         ));
                     }
                     $input->setContinueIfEmpty($inputSpecification['continue_if_empty']);
@@ -236,7 +235,7 @@ class Factory
                         throw new Exception\RuntimeException(sprintf(
                             '%s "fallback_value" can only set to inputs of type "%s"',
                             __METHOD__,
-                            'Zend\InputFilter\Input'
+                            'Laminas\InputFilter\Input'
                         ));
                     }
                     $input->setFallbackValue($value);
@@ -306,7 +305,7 @@ class Factory
             $inputFilterSpecification = ArrayUtils::iteratorToArray($inputFilterSpecification);
         }
 
-        $type = 'Zend\InputFilter\InputFilter';
+        $type = 'Laminas\InputFilter\InputFilter';
 
         if (isset($inputFilterSpecification['type']) && is_string($inputFilterSpecification['type'])) {
             $type = $inputFilterSpecification['type'];
