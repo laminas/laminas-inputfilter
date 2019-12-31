@@ -1,26 +1,25 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterChain;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputInterface;
+use Laminas\Validator\NotEmpty as NotEmptyValidator;
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
-use Zend\Filter\FilterChain;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputInterface;
-use Zend\Validator\NotEmpty as NotEmptyValidator;
-use Zend\Validator\ValidatorChain;
-use Zend\Validator\ValidatorInterface;
 
 /**
- * @covers Zend\InputFilter\Input
+ * @covers Laminas\InputFilter\Input
  */
 class InputTest extends TestCase
 {
@@ -57,14 +56,14 @@ class InputTest extends TestCase
     public function testInputHasEmptyFilterChainByDefault()
     {
         $filters = $this->input->getFilterChain();
-        $this->assertInstanceOf('Zend\Filter\FilterChain', $filters);
+        $this->assertInstanceOf('Laminas\Filter\FilterChain', $filters);
         $this->assertEquals(0, count($filters));
     }
 
     public function testInputHasEmptyValidatorChainByDefault()
     {
         $validators = $this->input->getValidatorChain();
-        $this->assertInstanceOf('Zend\Validator\ValidatorChain', $validators);
+        $this->assertInstanceOf('Laminas\Validator\ValidatorChain', $validators);
         $this->assertEquals(0, count($validators));
     }
 
@@ -761,7 +760,7 @@ class InputTest extends TestCase
     public function createInputInterfaceMock()
     {
         /** @var InputInterface|MockObject $source */
-        $source = $this->getMock('Zend\InputFilter\InputInterface');
+        $source = $this->getMock('Laminas\InputFilter\InputInterface');
 
         return $source;
     }
@@ -775,7 +774,7 @@ class InputTest extends TestCase
     public function createFilterChainMock($valueRaw = null, $valueFiltered = null)
     {
         /** @var FilterChain|MockObject $filterChain */
-        $filterChain = $this->getMock('Zend\Filter\FilterChain');
+        $filterChain = $this->getMock('Laminas\Filter\FilterChain');
 
         $filterChain->method('filter')
             ->with($valueRaw)
@@ -796,7 +795,7 @@ class InputTest extends TestCase
     public function createValidatorChainMock($isValid = null, $value = null, $context = null, $messages = array())
     {
         /** @var ValidatorChain|MockObject $validatorChain */
-        $validatorChain = $this->getMock('Zend\Validator\ValidatorChain');
+        $validatorChain = $this->getMock('Laminas\Validator\ValidatorChain');
 
         if (($isValid === false) || ($isValid === true)) {
             $validatorChain->expects($this->once())
@@ -829,7 +828,7 @@ class InputTest extends TestCase
     public function createValidatorMock($isValid, $value = 'not-set', $context = null, $messages = array())
     {
         /** @var ValidatorInterface|MockObject $validator */
-        $validator = $this->getMock('Zend\Validator\ValidatorInterface');
+        $validator = $this->getMock('Laminas\Validator\ValidatorInterface');
 
         if (($isValid === false) || ($isValid === true)) {
             $isValidMethod = $validator->expects($this->once())
@@ -862,7 +861,7 @@ class InputTest extends TestCase
     public function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {
         /** @var NotEmptyValidator|MockObject $notEmptyMock */
-        $notEmptyMock = $this->getMock('Zend\Validator\NotEmpty', array('isValid'));
+        $notEmptyMock = $this->getMock('Laminas\Validator\NotEmpty', array('isValid'));
         $notEmptyMock->expects($this->once())
             ->method('isValid')
             ->with($value, $context)
