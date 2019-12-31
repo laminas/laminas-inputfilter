@@ -1,19 +1,18 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter;
+use Laminas\InputFilter\Input;
+use Laminas\Validator;
 use PHPUnit_Framework_TestCase as TestCase;
 use RuntimeException;
-use Zend\Filter;
-use Zend\InputFilter\Input;
-use Zend\Validator;
 
 class InputTest extends TestCase
 {
@@ -35,14 +34,14 @@ class InputTest extends TestCase
     public function testInputHasEmptyFilterChainByDefault()
     {
         $filters = $this->input->getFilterChain();
-        $this->assertInstanceOf('Zend\Filter\FilterChain', $filters);
+        $this->assertInstanceOf('Laminas\Filter\FilterChain', $filters);
         $this->assertEquals(0, count($filters));
     }
 
     public function testInputHasEmptyValidatorChainByDefault()
     {
         $validators = $this->input->getValidatorChain();
-        $this->assertInstanceOf('Zend\Validator\ValidatorChain', $validators);
+        $this->assertInstanceOf('Laminas\Validator\ValidatorChain', $validators);
         $this->assertEquals(0, count($validators));
     }
 
@@ -214,7 +213,7 @@ class InputTest extends TestCase
         $this->assertTrue($this->input->isRequired());
         $this->input->setValue('');
 
-        $notEmptyMock = $this->getMock('Zend\Validator\NotEmpty', array('isValid'));
+        $notEmptyMock = $this->getMock('Laminas\Validator\NotEmpty', array('isValid'));
         $notEmptyMock->expects($this->exactly(1))
                      ->method('isValid')
                      ->will($this->returnValue(false));
@@ -330,10 +329,10 @@ class InputTest extends TestCase
         $this->assertEquals(1, $filterChain->count());
 
         $validators = $validatorChain->getValidators();
-        $this->assertInstanceOf('Zend\Validator\Digits', $validators[0]['instance']);
+        $this->assertInstanceOf('Laminas\Validator\Digits', $validators[0]['instance']);
 
         $filters = $filterChain->getFilters()->toArray();
-        $this->assertInstanceOf('Zend\Filter\StringTrim', $filters[0]);
+        $this->assertInstanceOf('Laminas\Filter\StringTrim', $filters[0]);
     }
 
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain()
@@ -341,7 +340,7 @@ class InputTest extends TestCase
         $this->assertTrue($this->input->isRequired());
         $this->input->setValue('');
 
-        $notEmptyMock = $this->getMock('Zend\Validator\NotEmpty', array('isValid'));
+        $notEmptyMock = $this->getMock('Laminas\Validator\NotEmpty', array('isValid'));
         $notEmptyMock->expects($this->exactly(1))
                      ->method('isValid')
                      ->will($this->returnValue(false));
