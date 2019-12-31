@@ -1,17 +1,16 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
-use Zend\InputFilter\FileInput;
-use Zend\Filter;
-use Zend\Validator;
+use Laminas\Filter;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
 class FileInputTest extends InputTest
 {
@@ -40,7 +39,7 @@ class FileInputTest extends InputTest
         $this->input->setValue($value);
 
         $newValue = array('tmp_name' => 'foo');
-        $filterMock = $this->getMockBuilder('Zend\Filter\File\Rename')
+        $filterMock = $this->getMockBuilder('Laminas\Filter\File\Rename')
             ->disableOriginalConstructor()
             ->getMock();
         $filterMock->expects($this->any())
@@ -71,7 +70,7 @@ class FileInputTest extends InputTest
         $this->input->setValue($values);
 
         $newValue = array('tmp_name' => 'new');
-        $filterMock = $this->getMockBuilder('Zend\Filter\File\Rename')
+        $filterMock = $this->getMockBuilder('Laminas\Filter\File\Rename')
             ->disableOriginalConstructor()
             ->getMock();
         $filterMock->expects($this->any())
@@ -136,7 +135,7 @@ class FileInputTest extends InputTest
         $this->input->setValue($badValue);
 
         $filteredValue = array('tmp_name' => 'new');
-        $filterMock = $this->getMockBuilder('Zend\Filter\File\Rename')
+        $filterMock = $this->getMockBuilder('Laminas\Filter\File\Rename')
             ->disableOriginalConstructor()
             ->getMock();
         $filterMock->expects($this->any())
@@ -244,7 +243,7 @@ class FileInputTest extends InputTest
         $this->assertFalse($this->input->isValid());
         $validators = $validatorChain->getValidators();
         $this->assertEquals(1, count($validators));
-        $this->assertInstanceOf('Zend\Validator\File\UploadFile', $validators[0]['instance']);
+        $this->assertInstanceOf('Laminas\Validator\File\UploadFile', $validators[0]['instance']);
     }
 
     public function testUploadValidatorIsNotAddedWhenIsValidIsCalled()
@@ -266,7 +265,7 @@ class FileInputTest extends InputTest
         $this->assertTrue($this->input->isRequired());
         $this->input->setValue(array('tmp_name' => 'bar'));
 
-        $uploadMock = $this->getMock('Zend\Validator\File\UploadFile', array('isValid'));
+        $uploadMock = $this->getMock('Laminas\Validator\File\UploadFile', array('isValid'));
         $uploadMock->expects($this->exactly(1))
                      ->method('isValid')
                      ->will($this->returnValue(true));
@@ -287,7 +286,7 @@ class FileInputTest extends InputTest
         $this->assertTrue($this->input->isRequired());
         $this->input->setValue('');
 
-        $uploadMock = $this->getMock('Zend\Validator\File\UploadFile', array('isValid'));
+        $uploadMock = $this->getMock('Laminas\Validator\File\UploadFile', array('isValid'));
         $uploadMock->expects($this->exactly(1))
             ->method('isValid')
             ->will($this->returnValue(false));
@@ -334,10 +333,10 @@ class FileInputTest extends InputTest
         $this->assertEquals(1, $filterChain->count());
 
         $validators = $validatorChain->getValidators();
-        $this->assertInstanceOf('Zend\Validator\Digits', $validators[0]['instance']);
+        $this->assertInstanceOf('Laminas\Validator\Digits', $validators[0]['instance']);
 
         $filters = $filterChain->getFilters()->toArray();
-        $this->assertInstanceOf('Zend\Filter\StringTrim', $filters[0]);
+        $this->assertInstanceOf('Laminas\Filter\StringTrim', $filters[0]);
     }
 
     public function testFallbackValue($fallbackValue = null)
