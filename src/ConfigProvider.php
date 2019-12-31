@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-inputfilter for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
 class ConfigProvider
 {
@@ -32,6 +33,9 @@ class ConfigProvider
         return [
             'aliases' => [
                 'InputFilterManager' => InputFilterPluginManager::class,
+
+                // Legacy Zend Framework aliases
+                \Zend\InputFilter\InputFilterPluginManager::class => InputFilterPluginManager::class,
             ],
             'factories' => [
                 InputFilterPluginManager::class => InputFilterPluginManagerFactory::class,

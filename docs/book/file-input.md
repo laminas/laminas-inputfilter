@@ -1,6 +1,6 @@
 # File Upload Input
 
-The `Zend\InputFilter\FileInput` class is a special `Input` type for uploaded
+The `Laminas\InputFilter\FileInput` class is a special `Input` type for uploaded
 files found in the `$_FILES` array.
 
 While `FileInput` uses the same interface as `Input`, it differs in a few ways:
@@ -8,8 +8,8 @@ While `FileInput` uses the same interface as `Input`, it differs in a few ways:
 1. It expects the raw value to be in a normalized `$_FILES` array format. See
    the [PSR-7 Uploaded files](http://www.php-fig.org/psr/psr-7/#uploaded-files)
    chapter for details on how to accomplish this.
-   [Diactoros](https://docs.zendframework.com/zend-diactoros/) and
-   [zend-http](https://docs.zendframework.com/zend-http/) can do this for you.
+   [Diactoros](https://docs.laminas.dev/laminas-diactoros/) and
+   [laminas-http](https://docs.laminas.dev/laminas-http/) can do this for you.
 
    Alternately, you may provide an array of PSR-7 uploaded file instances.
 
@@ -19,7 +19,7 @@ While `FileInput` uses the same interface as `Input`, it differs in a few ways:
    those operations if the file upload was invalid!
 
 3. Instead of adding a `NotEmpty` validator, it will (by default) automatically
-   add a `Zend\Validator\File\UploadFile` validator.
+   add a `Laminas\Validator\File\UploadFile` validator.
 
 The biggest thing to be concerned about is that if you are using a `<input
 type="file">` element in your form, you will need to use the `FileInput`
@@ -30,12 +30,12 @@ type="file">` element in your form, you will need to use the `FileInput`
 Usage of `FileInput` is essentially the same as `Input`:
 
 ```php
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\FileInput;
-use Zend\Validator;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
 // Description text input
 $description = new Input('description'); // Standard Input type
@@ -98,10 +98,10 @@ You may also pass an array of uploaded files from a [PSR-7 ServerRequestInterfac
 
 ```php
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\FileInput;
-use Zend\Validator;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
 // File upload input
 $file = new FileInput('file');
