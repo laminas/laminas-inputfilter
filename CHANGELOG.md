@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#7](https://github.com/zendframework/zend-inputfilter/pull/7) fixes an issue
+- [zendframework/zend-inputfilter#7](https://github.com/zendframework/zend-inputfilter/pull/7) fixes an issue
   with the combination of `required` and `allow_empty`, now properly
   invalidating a data set if the `required` input is missing entirely
   (previously, it would consider the data set valid, and auto-initialize the
