@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
-use Zend\InputFilter\ArrayInput;
+use Laminas\InputFilter\ArrayInput;
 
 /**
- * @covers Zend\InputFilter\ArrayInput
+ * @covers Laminas\InputFilter\ArrayInput
  */
 class ArrayInputTest extends InputTest
 {
@@ -29,7 +28,7 @@ class ArrayInputTest extends InputTest
     public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException()
     {
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\InvalidArgumentException',
+            'Laminas\InputFilter\Exception\InvalidArgumentException',
             'Value must be an array, string given'
         );
         $this->input->setValue('bar');

@@ -1,25 +1,24 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
+use Laminas\InputFilter\BaseInputFilter;
+use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
-use Zend\InputFilter\BaseInputFilter;
-use Zend\InputFilter\CollectionInputFilter;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
 
 /**
- * @covers Zend\InputFilter\CollectionInputFilter
+ * @covers Laminas\InputFilter\CollectionInputFilter
  */
 class CollectionInputFilterTest extends TestCase
 {
@@ -38,8 +37,8 @@ class CollectionInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\RuntimeException',
-            'expects an instance of Zend\InputFilter\BaseInputFilter; received "stdClass"'
+            'Laminas\InputFilter\Exception\RuntimeException',
+            'expects an instance of Laminas\InputFilter\BaseInputFilter; received "stdClass"'
         );
         /** @noinspection PhpParamsInspection */
         $inputFilter->setInputFilter(new stdClass());
@@ -58,7 +57,7 @@ class CollectionInputFilterTest extends TestCase
 
     public function testGetDefaultInputFilter()
     {
-        $this->assertInstanceOf('Zend\InputFilter\BaseInputFilter', $this->inputFilter->getInputFilter());
+        $this->assertInstanceOf('Laminas\InputFilter\BaseInputFilter', $this->inputFilter->getInputFilter());
     }
 
     /**
@@ -317,9 +316,9 @@ class CollectionInputFilterTest extends TestCase
 
         $dataSets = array(
             // Description => [inputFilter, $expectedType]
-            'BaseInputFilter' => array($baseInputFilter, 'Zend\InputFilter\BaseInputFilter'),
-            'array' => array($inputFilterSpecificationAsArray, 'Zend\InputFilter\InputFilter'),
-            'Traversable' => array($inputSpecificationAsTraversable, 'Zend\InputFilter\InputFilter'),
+            'BaseInputFilter' => array($baseInputFilter, 'Laminas\InputFilter\BaseInputFilter'),
+            'array' => array($inputFilterSpecificationAsArray, 'Laminas\InputFilter\InputFilter'),
+            'Traversable' => array($inputSpecificationAsTraversable, 'Laminas\InputFilter\InputFilter'),
         );
 
         return $dataSets;
@@ -373,7 +372,7 @@ class CollectionInputFilterTest extends TestCase
         $getMessages = array()
     ) {
         /** @var BaseInputFilter|MockObject $inputFilter */
-        $inputFilter = $this->getMock('Zend\InputFilter\BaseInputFilter');
+        $inputFilter = $this->getMock('Laminas\InputFilter\BaseInputFilter');
         $inputFilter->method('getRawValues')
             ->willReturn($getRawValues)
         ;

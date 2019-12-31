@@ -1,25 +1,24 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\InputFilterAbstractServiceFactory;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorPluginManager;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Filter\FilterPluginManager;
-use Zend\InputFilter\InputFilterAbstractServiceFactory;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Validator\ValidatorInterface;
-use Zend\Validator\ValidatorPluginManager;
 
 /**
- * @covers Zend\InputFilter\InputFilterAbstractServiceFactory
+ * @covers Laminas\InputFilter\InputFilterAbstractServiceFactory
  */
 class InputFilterAbstractServiceFactoryTest extends TestCase
 {
@@ -79,7 +78,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ),
         ));
         $filter = $this->factory->createServiceWithName($this->filters, 'filter', 'filter');
-        $this->assertInstanceOf('Zend\InputFilter\InputFilterInterface', $filter);
+        $this->assertInstanceOf('Laminas\InputFilter\InputFilterInterface', $filter);
     }
 
     /**
@@ -94,7 +93,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
 
         $validators = new ValidatorPluginManager();
         /** @var ValidatorInterface|MockObject $validator */
-        $validator  = $this->getMock('Zend\Validator\ValidatorInterface');
+        $validator  = $this->getMock('Laminas\Validator\ValidatorInterface');
         $validators->setService('foo', $validator);
 
         $this->services->setService('FilterManager', $filters);
@@ -143,7 +142,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
 
         $validators = new ValidatorPluginManager();
         /** @var ValidatorInterface|MockObject $validator */
-        $validator  = $this->getMock('Zend\Validator\ValidatorInterface');
+        $validator  = $this->getMock('Laminas\Validator\ValidatorInterface');
         $validators->setService('foo', $validator);
 
         $this->services->setService('FilterManager', $filters);
@@ -164,9 +163,9 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
                 ),
             ),
         ));
-        $this->services->get('InputFilterManager')->addAbstractFactory('Zend\InputFilter\InputFilterAbstractServiceFactory');
+        $this->services->get('InputFilterManager')->addAbstractFactory('Laminas\InputFilter\InputFilterAbstractServiceFactory');
 
         $inputFilter = $this->services->get('InputFilterManager')->get('foobar');
-        $this->assertInstanceOf('Zend\InputFilter\InputFilterInterface', $inputFilter);
+        $this->assertInstanceOf('Laminas\InputFilter\InputFilterInterface', $inputFilter);
     }
 }
