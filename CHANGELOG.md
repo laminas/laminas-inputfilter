@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#10](https://github.com/zendframework/zend-inputfilter/pull/10) fixes an
+- [zendframework/zend-inputfilter#10](https://github.com/zendframework/zend-inputfilter/pull/10) fixes an
   issue with with the combination of `required`, `allow_empty`, and presence of
   a fallback value on an input introduced in 2.4.5. Prior to the fix, the
   fallback value was no longer considered when the value was required but no
@@ -40,7 +40,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#7](https://github.com/zendframework/zend-inputfilter/pull/7) fixes an issue
+- [zendframework/zend-inputfilter#7](https://github.com/zendframework/zend-inputfilter/pull/7) fixes an issue
   with the combination of `required` and `allow_empty`, now properly
   invalidating a data set if the `required` input is missing entirely
   (previously, it would consider the data set valid, and auto-initialize the
