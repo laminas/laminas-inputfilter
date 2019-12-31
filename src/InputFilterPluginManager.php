@@ -1,18 +1,17 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\InitializableInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Stdlib\InitializableInterface;
 
 /**
  * Plugin manager implementation for input filters.
@@ -25,8 +24,8 @@ class InputFilterPluginManager extends AbstractPluginManager
      * @var array
      */
     protected $invokableClasses = array(
-        'inputfilter' => 'Zend\InputFilter\InputFilter',
-        'collection'  => 'Zend\InputFilter\CollectionInputFilter',
+        'inputfilter' => 'Laminas\InputFilter\InputFilter',
+        'collection'  => 'Laminas\InputFilter\CollectionInputFilter',
     );
 
     /**
@@ -81,7 +80,7 @@ class InputFilterPluginManager extends AbstractPluginManager
         }
 
         throw new Exception\RuntimeException(sprintf(
-            'Plugin of type %s is invalid; must implement Zend\InputFilter\InputFilterInterface',
+            'Plugin of type %s is invalid; must implement Laminas\InputFilter\InputFilterInterface',
             (is_object($plugin) ? get_class($plugin) : gettype($plugin))
         ));
     }
