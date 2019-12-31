@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-inputfilter for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-inputfilter/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter\FileInput\TestAsset;
+namespace LaminasTest\InputFilter\FileInput\TestAsset;
 
-use Zend\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorInterface;
 
 final class FileUploadMock implements ValidatorInterface
 {

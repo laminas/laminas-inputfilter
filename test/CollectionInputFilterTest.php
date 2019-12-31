@@ -1,29 +1,28 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Laminas\InputFilter\BaseInputFilter;
+use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
+use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\Digits;
+use Laminas\Validator\NotEmpty;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use stdClass;
-use Zend\InputFilter\BaseInputFilter;
-use Zend\InputFilter\CollectionInputFilter;
-use Zend\InputFilter\Exception\InvalidArgumentException;
-use Zend\InputFilter\Exception\RuntimeException;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
-use Zend\Validator\Digits;
-use Zend\Validator\NotEmpty;
 
 /**
- * @covers \Zend\InputFilter\CollectionInputFilter
+ * @covers \Laminas\InputFilter\CollectionInputFilter
  */
 class CollectionInputFilterTest extends TestCase
 {
@@ -42,7 +41,7 @@ class CollectionInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('expects an instance of Zend\InputFilter\BaseInputFilter; received "stdClass"');
+        $this->expectExceptionMessage('expects an instance of Laminas\InputFilter\BaseInputFilter; received "stdClass"');
         /** @noinspection PhpParamsInspection */
         $inputFilter->setInputFilter(new stdClass());
     }
@@ -610,7 +609,7 @@ class CollectionInputFilterTest extends TestCase
 
     public function testDuplicatedErrorMessages()
     {
-        $factory = new \Zend\InputFilter\Factory();
+        $factory = new \Laminas\InputFilter\Factory();
         $inputFilter = $factory->createInputFilter(
             [
                 'element' => [
@@ -625,7 +624,7 @@ class CollectionInputFilterTest extends TestCase
                                         'required' => false,
                                         'validators' => [
                                             [
-                                                'name' => \Zend\Validator\Between::class,
+                                                'name' => \Laminas\Validator\Between::class,
                                                 'options' => [
                                                     'min' => 50,
                                                     'max' => 100,
@@ -638,7 +637,7 @@ class CollectionInputFilterTest extends TestCase
                                         'required' => false,
                                         'validators' => [
                                             [
-                                                'name' => \Zend\Validator\Between::class,
+                                                'name' => \Laminas\Validator\Between::class,
                                                 'options' => [
                                                     'min' => 50,
                                                     'max' => 100,

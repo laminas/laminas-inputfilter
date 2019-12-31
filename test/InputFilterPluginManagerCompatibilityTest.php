@@ -1,20 +1,19 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\ServiceManager\Config;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
-use Zend\InputFilter\Exception\RuntimeException;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\ServiceManager\Config;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Test\CommonPluginManagerTrait;
 
 class InputFilterPluginManagerCompatibilityTest extends TestCase
 {
@@ -45,7 +44,7 @@ class InputFilterPluginManagerCompatibilityTest extends TestCase
     {
         $plugins = $this->getPluginManager();
         if (method_exists($plugins, 'configure')) {
-            $this->markTestSkipped('zend-servicemanager v3 plugin managers require a container argument');
+            $this->markTestSkipped('laminas-servicemanager v3 plugin managers require a container argument');
         }
 
         $plugins = new InputFilterPluginManager();
@@ -56,7 +55,7 @@ class InputFilterPluginManagerCompatibilityTest extends TestCase
     {
         $plugins = $this->getPluginManager();
         if (method_exists($plugins, 'configure')) {
-            $this->markTestSkipped('zend-servicemanager v3 plugin managers require a container argument');
+            $this->markTestSkipped('laminas-servicemanager v3 plugin managers require a container argument');
         }
 
         $plugins = new InputFilterPluginManager(new Config([]));
