@@ -1,23 +1,22 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\InputInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\InputFilter\InputInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @covers Zend\InputFilter\InputFilterPluginManager
+ * @covers Laminas\InputFilter\InputFilterPluginManager
  */
 class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +32,7 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsASubclassOfAbstractPluginManager()
     {
-        $this->assertInstanceOf('Zend\ServiceManager\AbstractPluginManager', $this->manager);
+        $this->assertInstanceOf('Laminas\ServiceManager\AbstractPluginManager', $this->manager);
     }
 
     public function testIsNotSharedByDefault()
@@ -44,8 +43,8 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
     public function testRegisteringInvalidElementRaisesException()
     {
         $this->setExpectedException(
-            'Zend\InputFilter\Exception\RuntimeException',
-            'must implement Zend\InputFilter\InputFilterInterface or Zend\InputFilter\InputInterface'
+            'Laminas\InputFilter\Exception\RuntimeException',
+            'must implement Laminas\InputFilter\InputFilterInterface or Laminas\InputFilter\InputInterface'
         );
         $this->manager->setService('test', $this);
     }
@@ -53,7 +52,7 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
     public function testLoadingInvalidElementRaisesException()
     {
         $this->manager->setInvokableClass('test', get_class($this));
-        $this->setExpectedException('Zend\InputFilter\Exception\RuntimeException');
+        $this->setExpectedException('Laminas\InputFilter\Exception\RuntimeException');
         $this->manager->get('test');
     }
 
@@ -61,8 +60,8 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             // Description => [$alias, $expectedInstance]
-            'inputfilter' => array('inputfilter', 'Zend\InputFilter\InputFilter'),
-            'collection' => array('collection', 'Zend\InputFilter\CollectionInputFilter'),
+            'inputfilter' => array('inputfilter', 'Laminas\InputFilter\InputFilter'),
+            'collection' => array('collection', 'Laminas\InputFilter\CollectionInputFilter'),
         );
     }
 
@@ -93,8 +92,8 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator()
     {
-        $filterManager = $this->getMock('Zend\Filter\FilterPluginManager');
-        $validatorManager = $this->getMock('Zend\Validator\ValidatorPluginManager');
+        $filterManager = $this->getMock('Laminas\Filter\FilterPluginManager');
+        $validatorManager = $this->getMock('Laminas\Validator\ValidatorPluginManager');
 
         $serviceLocator = $this->createServiceLocatorInterfaceMock();
         $serviceLocator->method('get')
@@ -142,8 +141,8 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
         // @formatter:off
         return array(
             // Description => [$serviceName, $service, $instanceOf]
-            'InputFilterInterface' => array('inputFilterInterfaceService', $inputFilterInterfaceMock, 'Zend\InputFilter\InputFilterInterface'),
-            'InputInterface' => array('inputInterfaceService', $inputInterfaceMock, 'Zend\InputFilter\InputInterface'),
+            'InputFilterInterface' => array('inputFilterInterfaceService', $inputFilterInterfaceMock, 'Laminas\InputFilter\InputFilterInterface'),
+            'InputInterface' => array('inputInterfaceService', $inputInterfaceMock, 'Laminas\InputFilter\InputInterface'),
         );
         // @formatter:on
     }
@@ -163,7 +162,7 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testServicesAreInitiatedIfImplementsInitializableInterface($serviceName, $service, $instanceOf)
     {
-        $initializableProphecy = $this->prophesize($instanceOf)->willImplement('Zend\Stdlib\InitializableInterface');
+        $initializableProphecy = $this->prophesize($instanceOf)->willImplement('Laminas\Stdlib\InitializableInterface');
         $service = $initializableProphecy->reveal();
 
         $this->manager->setService($serviceName, $service);
@@ -179,7 +178,7 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
     protected function createInputFilterInterfaceMock()
     {
         /** @var InputFilterInterface|MockObject $inputFilter */
-        $inputFilter = $this->getMock('Zend\InputFilter\InputFilterInterface');
+        $inputFilter = $this->getMock('Laminas\InputFilter\InputFilterInterface');
 
         return $inputFilter;
     }
@@ -190,7 +189,7 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
     protected function createInputInterfaceMock()
     {
         /** @var InputInterface|MockObject $input */
-        $input = $this->getMock('Zend\InputFilter\InputInterface');
+        $input = $this->getMock('Laminas\InputFilter\InputInterface');
 
         return $input;
     }
@@ -201,7 +200,7 @@ class InputFilterPluginManagerTest extends \PHPUnit_Framework_TestCase
     protected function createServiceLocatorInterfaceMock()
     {
         /** @var ServiceLocatorInterface|MockObject $serviceLocator */
-        $serviceLocator = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $serviceLocator = $this->getMock('Laminas\ServiceManager\ServiceLocatorInterface');
 
         return $serviceLocator;
     }
