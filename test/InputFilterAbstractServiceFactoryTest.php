@@ -1,30 +1,28 @@
 <?php
 
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Laminas\Filter;
+use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\InputFilterAbstractServiceFactory;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Validator;
+use Laminas\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorPluginManager;
 use PHPUnit\Framework\TestCase;
-use Zend\Filter;
-use Zend\Filter\FilterPluginManager;
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\InputFilterAbstractServiceFactory;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Validator;
-use Zend\Validator\ValidatorInterface;
-use Zend\Validator\ValidatorPluginManager;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
- * @covers Zend\InputFilter\InputFilterAbstractServiceFactory
+ * @covers Laminas\InputFilter\InputFilterAbstractServiceFactory
  */
 class InputFilterAbstractServiceFactoryTest extends TestCase
 {
@@ -265,17 +263,17 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->filters->addAbstractFactory(TestAsset\FooAbstractFactory::class);
 
         if (method_exists($this->filters, 'configure')) {
-            // zend-servicemanager v3 usage
+            // laminas-servicemanager v3 usage
             $filter = $this->factory->__invoke($this->services, 'filter');
         } else {
-            // zend-servicemanager v2 usage
+            // laminas-servicemanager v2 usage
             $filter = $this->factory->createServiceWithName($this->filters, 'filter', 'filter');
         }
 
         $inputFilterManager = $filter->getFactory()->getInputFilterManager();
 
-        $this->assertInstanceOf('Zend\InputFilter\InputFilterPluginManager', $inputFilterManager);
-        $this->assertInstanceOf('ZendTest\InputFilter\TestAsset\Foo', $inputFilterManager->get('foo'));
+        $this->assertInstanceOf('Laminas\InputFilter\InputFilterPluginManager', $inputFilterManager);
+        $this->assertInstanceOf('LaminasTest\InputFilter\TestAsset\Foo', $inputFilterManager->get('foo'));
     }
 
     /**
