@@ -1,20 +1,21 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-inputfilter for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-inputfilter/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter\FileInput;
+namespace LaminasTest\InputFilter\FileInput;
 
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\FileInput\HttpServerFileInputDecorator;
-use Zend\Validator;
-use ZendTest\InputFilter\InputTest;
+use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\FileInput\HttpServerFileInputDecorator;
+use Laminas\Validator;
+use LaminasTest\InputFilter\InputTest;
 
 /**
- * @covers \Zend\InputFilter\FileInput\HttpServerFileInputDecorator
- * @covers \Zend\InputFilter\FileInput
+ * @covers \Laminas\InputFilter\FileInput\HttpServerFileInputDecorator
+ * @covers \Laminas\InputFilter\FileInput
  */
 class HttpServerFileInputDecoratorTest extends InputTest
 {

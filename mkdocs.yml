@@ -1,6 +1,6 @@
 docs_dir: docs/book
 site_dir: docs/html
-pages:
+nav:
     - Home: index.md
     - Introduction: intro.md
     - Reference:
@@ -8,6 +8,6 @@ pages:
       - "File Upload Input": file-input.md
       - "Optional Input Filters": optional-input-filters.md
       - "Unfiltered Data": unfiltered-data.md
-site_name: zend-inputfilter
+site_name: laminas-inputfilter
 site_description: 'Normalize and validate input sets from the web, APIs, the CLI, and more, including files.'
-repo_url: 'https://github.com/zendframework/zend-inputfilter'
+repo_url: 'https://github.com/laminas/laminas-inputfilter'

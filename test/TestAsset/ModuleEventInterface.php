@@ -1,16 +1,17 @@
 <?php
+
 /**
- * @link      https://github.com/zendframework/zend-inputfilter for the canonical source repository
- * @copyright Copyright (c) 2019 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-inputfilter/blob/master/LICENSE.md
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter\TestAsset;
+namespace LaminasTest\InputFilter\TestAsset;
 
 /**
  * Mock interface to use when testing Module::init
  *
- * Mimics Zend\ModuleManager\ModuleEvent methods called.
+ * Mimics Laminas\ModuleManager\ModuleEvent methods called.
  */
 interface ModuleEventInterface
 {

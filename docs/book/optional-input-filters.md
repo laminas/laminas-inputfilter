@@ -8,7 +8,7 @@ data), and no data is provided for that item, or an empty set of data is
 provided, then the input filter will consider the data invalid.
 
 If you want to allow a set of data to be empty, you can use
-`Zend\InputFilter\OptionalInputFilter`.
+`Laminas\InputFilter\OptionalInputFilter`.
 
 To illustrate this, let's consider a form where a user provides profile
 information. The user can provide an optional "title" and a required "email",
@@ -91,8 +91,8 @@ JSON for readability:
     "email": "user@example.com",
     "title": "Software Developer",
     "project": {
-      "project_name": "zend-inputfilter",
-      "url": "https://github.com/zend-inputfilter",
+      "project_name": "laminas-inputfilter",
+      "url": "https://github.com/laminas-inputfilter",
     }
   }
   ```
