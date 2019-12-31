@@ -15,8 +15,8 @@ accomplished by merging the sets returned by `getRawValues()` and
 `getUnknown()` when working with normal input filters, but this approach breaks
 down when working with collections.
 
-Version 2.10.0 introduces a new interface, `Zend\InputFilter\UnfilteredDataInterface`,
-for dealing with this situation. `Zend\InputFilter\BaseInputFilter`, which
+Version 2.10.0 introduces a new interface, `Laminas\InputFilter\UnfilteredDataInterface`,
+for dealing with this situation. `Laminas\InputFilter\BaseInputFilter`, which
 forms the parent class for all shipped input filter implementations, implements
 the interface, which consists of the following methods:
 

@@ -1,32 +1,31 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\InputInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Stdlib\InitializableInterface;
+use Laminas\Validator\ValidatorPluginManager;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Zend\Filter\FilterPluginManager;
-use Zend\InputFilter\CollectionInputFilter;
-use Zend\InputFilter\Exception\RuntimeException;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\InputFilter\InputInterface;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\InitializableInterface;
-use Zend\Validator\ValidatorPluginManager;
 
 /**
- * @covers Zend\InputFilter\InputFilterPluginManager
+ * @covers Laminas\InputFilter\InputFilterPluginManager
  */
 class InputFilterPluginManagerTest extends TestCase
 {
@@ -64,7 +63,7 @@ class InputFilterPluginManagerTest extends TestCase
     {
         $this->expectException($this->getServiceNotFoundException());
         $this->expectExceptionMessage(
-            'must implement Zend\InputFilter\InputFilterInterface or Zend\InputFilter\InputInterface'
+            'must implement Laminas\InputFilter\InputFilterInterface or Laminas\InputFilter\InputInterface'
         );
         $this->manager->setService('test', $this);
     }
