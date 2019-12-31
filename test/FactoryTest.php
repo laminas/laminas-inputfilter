@@ -1,34 +1,33 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
 use Interop\Container\ContainerInterface;
+use Laminas\Filter;
+use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
+use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\Factory;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\InputFilter\InputInterface;
+use Laminas\InputFilter\InputProviderInterface;
+use Laminas\ServiceManager;
+use Laminas\Validator;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Filter;
-use Zend\InputFilter\CollectionInputFilter;
-use Zend\InputFilter\Exception\InvalidArgumentException;
-use Zend\InputFilter\Exception\RuntimeException;
-use Zend\InputFilter\Factory;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\InputFilter\InputInterface;
-use Zend\InputFilter\InputProviderInterface;
-use Zend\ServiceManager;
-use Zend\Validator;
 
 /**
- * @covers Zend\InputFilter\Factory
+ * @covers Laminas\InputFilter\Factory
  */
 class FactoryTest extends TestCase
 {
@@ -96,7 +95,7 @@ class FactoryTest extends TestCase
 
         $this->setExpectedException(
             RuntimeException::class,
-            'Input factory expects the "type" to be a class implementing Zend\InputFilter\InputInterface; ' .
+            'Input factory expects the "type" to be a class implementing Laminas\InputFilter\InputInterface; ' .
             'received "fooPlugin"'
         );
         $factory->createInput(
@@ -113,7 +112,7 @@ class FactoryTest extends TestCase
 
         $this->setExpectedException(
             RuntimeException::class,
-            'Input factory expects the "type" to be a class implementing Zend\InputFilter\InputInterface; ' .
+            'Input factory expects the "type" to be a class implementing Laminas\InputFilter\InputInterface; ' .
             'received "stdClass"'
         );
         $factory->createInput(
@@ -232,7 +231,7 @@ class FactoryTest extends TestCase
 
         $this->setExpectedException(
             RuntimeException::class,
-            sprintf('"%s" can only set to inputs of type "Zend\InputFilter\Input"', $specificationKey)
+            sprintf('"%s" can only set to inputs of type "Laminas\InputFilter\Input"', $specificationKey)
         );
         $factory->createInput(
             [
@@ -590,7 +589,7 @@ class FactoryTest extends TestCase
                 ],
             ],
             'bat' => [
-                'type' => 'ZendTest\InputFilter\TestAsset\CustomInput',
+                'type' => 'LaminasTest\InputFilter\TestAsset\CustomInput',
                 'name' => 'bat',
             ],
             'zomg' => [
@@ -628,7 +627,7 @@ class FactoryTest extends TestCase
                     $this->assertEquals(2, count($bar->getFilterChain()));
                     break;
                 case 'bat':
-                    $this->assertInstanceOf('ZendTest\InputFilter\TestAsset\CustomInput', $input);
+                    $this->assertInstanceOf('LaminasTest\InputFilter\TestAsset\CustomInput', $input);
                     $this->assertEquals('bat', $input->getName());
                     break;
                 case 'zomg':
@@ -823,7 +822,7 @@ class FactoryTest extends TestCase
     /**
      * @group 5691
      *
-     * @covers \Zend\InputFilter\Factory::createInput
+     * @covers \Laminas\InputFilter\Factory::createInput
      */
     public function testSetsBreakChainOnFailure()
     {

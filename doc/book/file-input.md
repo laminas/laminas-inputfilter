@@ -1,6 +1,6 @@
 # File Upload Input
 
-The `Zend\InputFilter\FileInput` class is a special `Input` type for uploaded
+The `Laminas\InputFilter\FileInput` class is a special `Input` type for uploaded
 files found in the `$_FILES` array.
 
 While `FileInput` uses the same interface as `Input`, it differs in a few ways:
@@ -8,13 +8,13 @@ While `FileInput` uses the same interface as `Input`, it differs in a few ways:
 1. It expects the raw value to be in a normalized `$_FILES` array format. See
    the [PSR-7 Uploaded files](http://www.php-fig.org/psr/psr-7/#1-6-uploaded-files)
    chapter for details on how to accomplish this.
-   [Diactoros](https://zendframework.github.io/zend-diactoros/) and
-   [zend-http](https://zendframework.github.io/zend-http/) can do this for you.
+   [Diactoros](https://docs.laminas.dev/laminas-diactoros/) and
+   [laminas-http](https://docs.laminas.dev/laminas-http/) can do this for you.
 2. The validators are run **before** the filters (which is the opposite behavior
    of `Input`). This is so that any `is_uploaded_file()` validation can be run
    prior to any filters that may rename/move/modify the file.
 3. Instead of adding a `NotEmpty` validator, it will (by default) automatically
-   add a `Zend\Validator\File\UploadFile` validator.
+   add a `Laminas\Validator\File\UploadFile` validator.
 
 The biggest thing to be concerned about is that if you are using a `<input
 type="file">` element in your form, you will need to use the `FileInput`
@@ -25,12 +25,12 @@ type="file">` element in your form, you will need to use the `FileInput`
 Usage of `FileInput` is essentially the same as `Input`:
 
 ```php
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\FileInput;
-use Zend\Validator;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
 // Description text input
 $description = new Input('description'); // Standard Input type
