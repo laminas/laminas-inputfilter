@@ -1,10 +1,10 @@
-# Usage in a zend-mvc Application
+# Usage in a laminas-mvc Application
 
-The following example shows _one_ potential use case of zend-inputfilter within
-a zend-mvc based application. The example uses a module, a controller and the
-zend-inputfilter plugin manager.
+The following example shows _one_ potential use case of laminas-inputfilter within
+a laminas-mvc based application. The example uses a module, a controller and the
+laminas-inputfilter plugin manager.
 
-Before starting, make sure zend-inputfilter is installed and configured.
+Before starting, make sure laminas-inputfilter is installed and configured.
 
 ## Create Input Filter
 
@@ -14,9 +14,9 @@ Create an input filter as separate class, e.g.
 ```php
 namespace Album\InputFilter;
 
-use Zend\Filter\ToInt;
-use Zend\I18n\Validator\IsInt;
-use Zend\InputFilter\InputFilter;
+use Laminas\Filter\ToInt;
+use Laminas\I18n\Validator\IsInt;
+use Laminas\InputFilter\InputFilter;
 
 class QueryInputFilter extends InputFilter
 {
@@ -57,8 +57,8 @@ Using the input filter in a controller, e.g.
 namespace Album\Controller;
 
 use Album\InputFilter\QueryInputFilter;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 class AlbumController extends AbstractActionController
 {
@@ -91,8 +91,8 @@ namespace Album\Controller;
 
 use Album\InputFilter\QueryInputFilter;
 use Interop\Container\ContainerInterface;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class AlbumControllerFactory implements FactoryInterface
 {
@@ -129,7 +129,7 @@ controller in the application, e.g. `module/Album/config/module.config.php`:
 ```php
 namespace Album;
 
-use Zend\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
     'controllers' => [

@@ -1,11 +1,11 @@
-# Usage in a zend-expressive Application
+# Usage in a mezzio Application
 
-The following example shows _one_ potential use case of zend-inputfilter within
-a zend-expressive based application. The example uses a module, config provider
-configuration, zend-servicemanager as dependency injection container, the
-zend-inputfilter plugin manager and a request handler.
+The following example shows _one_ potential use case of laminas-inputfilter within
+a mezzio based application. The example uses a module, config provider
+configuration, laminas-servicemanager as dependency injection container, the
+laminas-inputfilter plugin manager and a request handler.
 
-Before starting, make sure zend-inputfilter is installed and configured.
+Before starting, make sure laminas-inputfilter is installed and configured.
 
 ## Create Input Filter
 
@@ -15,9 +15,9 @@ Create an input filter as separate class, e.g.
 ```php
 namespace Album\InputFilter;
 
-use Zend\Filter\ToInt;
-use Zend\I18n\Validator\IsInt;
-use Zend\InputFilter\InputFilter;
+use Laminas\Filter\ToInt;
+use Laminas\I18n\Validator\IsInt;
+use Laminas\InputFilter\InputFilter;
 
 class QueryInputFilter extends InputFilter
 {
@@ -61,8 +61,8 @@ use Album\InputFilter\QueryInputFilter;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\InputFilter\InputFilterInterface;
+use Mezzio\Template\TemplateRendererInterface;
 
 class ListHandler implements RequestHandlerInterface
 {
@@ -106,7 +106,7 @@ namespace Album\Handler;
 
 use Album\InputFilter\QueryInputFilter;
 use Psr\Container\ContainerInterface;
-use Zend\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\InputFilterPluginManager;
 
 class ListHandlerFactory
 {

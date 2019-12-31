@@ -1,17 +1,18 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-inputfilter for the canonical source repository
- * @copyright Copyright (c) 2019 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-inputfilter/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
 use Interop\Container\ContainerInterface;
+use Laminas\InputFilter\InputFilterAbstractServiceFactory;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\Module;
 use PHPUnit\Framework\TestCase;
-use Zend\InputFilter\InputFilterAbstractServiceFactory;
-use Zend\InputFilter\InputFilterPluginManager;
-use Zend\InputFilter\Module;
 
 class ModuleTest extends TestCase
 {
@@ -73,7 +74,7 @@ class ModuleTest extends TestCase
         $serviceListener->addServiceManager(
             'InputFilterManager',
             'input_filters',
-            'Zend\ModuleManager\Feature\InputFilterProviderInterface',
+            'Laminas\ModuleManager\Feature\InputFilterProviderInterface',
             'getInputFilterConfig'
         )->shouldBeCalled();
 
