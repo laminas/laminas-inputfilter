@@ -1,6 +1,6 @@
 # Introduction
 
-The `Zend\InputFilter` component can be used to filter and validate generic sets of input data. For
+The `Laminas\InputFilter` component can be used to filter and validate generic sets of input data. For
 instance, you could use it to filter `$_GET` or `$_POST` values, CLI arguments, etc.
 
 To pass input data to the `InputFilter`, you can use the `setData()` method. The data must be
@@ -8,9 +8,9 @@ specified using an associative array. Below is an example on how to validate the
 form using the *POST* method.
 
 ```php
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Input;
-use Zend\Validator;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\Validator;
 
 $email = new Input('email');
 $email->getValidatorChain()
@@ -57,8 +57,8 @@ You can validate and/or filter the data using the `InputFilter`. To filter data,
 chain. Below is an example that uses filtering without validation.
 
 ```php
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
 
 $input = new Input('foo');
 $input->getFilterChain()
@@ -80,12 +80,12 @@ echo $inputFilter->getValue('foo') . "\n"; // the output is 'Bar'
 The `getValue()` method returns the filtered value of the 'foo' input, while `getRawValue()` returns
 the original value of the input.
 
-We provide also `Zend\InputFilter\Factory`, to allow initialization of the `InputFilter` based on a
+We provide also `Laminas\InputFilter\Factory`, to allow initialization of the `InputFilter` based on a
 configuration array (or `Traversable` object). Below is an example where we create a password input
 value with the same constraints proposed before (a string with at least 8 characters):
 
 ```php
-use Zend\InputFilter\Factory;
+use Laminas\InputFilter\Factory;
 
 $factory = new Factory();
 $inputFilter = $factory->createInputFilter(array(
@@ -119,7 +119,7 @@ create the appropriate object. You may create either `Input` or `InputFilter` ob
 fashion.
 
 ```php
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 $filter = new InputFilter();
 
@@ -142,7 +142,7 @@ $filter->add(array(
 
 // Adding another input filter what also contains a single input. Merging both.
 $filter->add(array(
-    'type' => 'Zend\InputFilter\InputFilter',
+    'type' => 'Laminas\InputFilter\InputFilter',
     'password' => array(
         'name' => 'password',
         'required' => true,
@@ -172,7 +172,7 @@ all of the merged filters are run against the calling object in order to validat
 properties based on our compound set of filters.
 
 ```php
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 ```
 
 > /*\** Filter to ensure a name property is set and &gt; 8 characters  
@@ -197,6 +197,6 @@ return $this;
 }
 Also see
 
-- Zend\\\\Filter&lt;zend.filter.introduction&gt;
-- Zend\\\\Validator&lt;zend.validator.introduction&gt;
+- Laminas\\\\Filter&lt;laminas.filter.introduction&gt;
+- Laminas\\\\Validator&lt;laminas.validator.introduction&gt;
 
