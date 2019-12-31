@@ -1,6 +1,6 @@
 # File Upload Input
 
-The `Zend\InputFilter\FileInput` class is a special `Input` type for uploaded files found in the
+The `Laminas\InputFilter\FileInput` class is a special `Input` type for uploaded files found in the
 `$_FILES` array.
 
 While `FileInput` uses the same interface as `Input`, it differs in a few ways:
@@ -10,7 +10,7 @@ While `FileInput` uses the same interface as `Input`, it differs in a few ways:
 is so that any `is_uploaded_file()` validation can be run prior to any filters that may
 rename/move/modify the file.
 3.  Instead of adding a `NotEmpty` validator, it will (by default) automatically add a
-`Zend\Validator\File\UploadFile` validator.
+`Laminas\Validator\File\UploadFile` validator.
 
 The biggest thing to be concerned about is that if you are using a `<input type="file">` element in
 your form, you will need to use the `FileInput` **instead of** `Input` or else you will encounter
@@ -21,12 +21,12 @@ issues.
 Usage of `FileInput` is essentially the same as `Input`:
 
 ```php
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Filter;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\FileInput;
-use Zend\Validator;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
 // Description text input
 $description = new Input('description'); // Standard Input type
@@ -67,6 +67,6 @@ if ($inputFilter->isValid()) {           // FileInput validators are run, but no
 
 Also see
 
-- File filter classes&lt;zend.filter.file&gt;
-- File validator classes&lt;zend.validator.file&gt;
+- File filter classes&lt;laminas.filter.file&gt;
+- File validator classes&lt;laminas.validator.file&gt;
 

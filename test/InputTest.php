@@ -1,28 +1,27 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterChain;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputInterface;
+use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\NotEmpty as NotEmptyValidator;
+use Laminas\Validator\Translator\TranslatorInterface;
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use stdClass;
-use Zend\Filter\FilterChain;
-use Zend\InputFilter\Input;
-use Zend\InputFilter\InputInterface;
-use Zend\Validator\AbstractValidator;
-use Zend\Validator\NotEmpty as NotEmptyValidator;
-use Zend\Validator\Translator\TranslatorInterface;
-use Zend\Validator\ValidatorChain;
-use Zend\Validator\ValidatorInterface;
 
 /**
- * @covers Zend\InputFilter\Input
+ * @covers Laminas\InputFilter\Input
  */
 class InputTest extends TestCase
 {
