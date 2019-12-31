@@ -1,19 +1,18 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\InputFilter;
+namespace Laminas\InputFilter;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\Factory\InvokableFactory;
-use Zend\Stdlib\InitializableInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Factory\InvokableFactory;
+use Laminas\Stdlib\InitializableInterface;
 
 /**
  * Plugin manager implementation for input filters.
@@ -33,6 +32,14 @@ class InputFilterPluginManager extends AbstractPluginManager
         'InputFilter' => InputFilter::class,
         'collection'  => CollectionInputFilter::class,
         'Collection'  => CollectionInputFilter::class,
+
+        // Legacy Zend Framework aliases
+        \Zend\InputFilter\InputFilter::class => InputFilter::class,
+        \Zend\InputFilter\CollectionInputFilter::class => CollectionInputFilter::class,
+
+        // v2 normalized FQCNs
+        'zendinputfilterinputfilter' => InputFilter::class,
+        'zendinputfiltercollectioninputfilter' => CollectionInputFilter::class,
     ];
 
     /**
@@ -44,8 +51,8 @@ class InputFilterPluginManager extends AbstractPluginManager
         InputFilter::class                      => InvokableFactory::class,
         CollectionInputFilter::class            => InvokableFactory::class,
         // v2 canonical FQCN
-        'zendinputfilterinputfilter'            => InvokableFactory::class,
-        'zendinputfiltercollectioninputfilter'  => InvokableFactory::class,
+        'laminasinputfilterinputfilter'            => InvokableFactory::class,
+        'laminasinputfiltercollectioninputfilter'  => InvokableFactory::class,
     ];
 
     /**
@@ -63,10 +70,10 @@ class InputFilterPluginManager extends AbstractPluginManager
     protected $shareByDefault = false;
 
     /**
-     * @param null|\Zend\ServiceManager\ConfigInterface|ContainerInterface $configOrContainer
-     *     For zend-servicemanager v2, null or a ConfigInterface instance are
+     * @param null|\Laminas\ServiceManager\ConfigInterface|ContainerInterface $configOrContainer
+     *     For laminas-servicemanager v2, null or a ConfigInterface instance are
      *     allowed; for v3, a ContainerInterface is expected.
-     * @param array $v3config Optional configuration array (zend-servicemanager v3 only)
+     * @param array $v3config Optional configuration array (laminas-servicemanager v3 only)
      */
     public function __construct($configOrContainer = null, array $v3config = [])
     {
