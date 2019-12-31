@@ -1,21 +1,20 @@
 <?php
+
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-inputfilter for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-inputfilter/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\InputFilter;
+namespace LaminasTest\InputFilter;
 
+use Laminas\Filter;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Zend\Filter;
-use Zend\InputFilter\FileInput;
-use Zend\Validator;
 
 /**
- * @covers Zend\InputFilter\FileInput
+ * @covers Laminas\InputFilter\FileInput
  */
 class FileInputTest extends InputTest
 {
