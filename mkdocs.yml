@@ -14,3 +14,6 @@ nav:
 site_name: laminas-inputfilter
 site_description: 'Normalize and validate input sets from the web, APIs, the CLI, and more, including files.'
 repo_url: 'https://github.com/laminas/laminas-inputfilter'
+extra:
+    project: Components
+    project_url: 'https://docs.laminas.dev'
