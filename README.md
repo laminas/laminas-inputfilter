@@ -1,6 +1,6 @@
 # laminas-inputfilter
 
-[![Build Status](https://travis-ci.org/laminas/laminas-inputfilter.svg?branch=master)](https://travis-ci.org/laminas/laminas-inputfilter)
+[![Build Status](https://travis-ci.com/laminas/laminas-inputfilter.svg?branch=master)](https://travis-ci.com/laminas/laminas-inputfilter)
 [![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-inputfilter/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-inputfilter?branch=master)
 
 The laminas-inputfilter component can be used to filter and validate generic sets
