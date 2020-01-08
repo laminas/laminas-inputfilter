@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Normalize and validate input sets from the web, APIs, the CLI, and more, including files.">  
-    <link rel="canonical" href="https://docs.laminas.dev/specs/">
     <link rel="shortcut icon" href="/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>Specifications - laminas-inputfilter - Laminas Docs</title>
+    <title>laminas-inputfilter - Laminas Docs</title>
 
     <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -59,7 +58,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">laminas-inputfilter</a>
+            <a href="../.">laminas-inputfilter</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -92,8 +91,8 @@
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">Specifications</a>
+    <li class="subnavigation__list-item ">
+        <a href="../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
@@ -209,176 +208,21 @@
         <div class="row">
             <div class="col-md-2 col-sm-12">
                 
-    
-
-    
-    
-        <div class="toc">
-            <h6 class="toc__headline">On this page</h6>
-            <ul class="toc__list">
-                
-                    <li class="toc__entry">
-                        <a href="#setup" class="toc__link">Setup</a>
-                    </li>
-                
-                    <li class="toc__entry">
-                        <a href="#example" class="toc__link">Example</a>
-                    </li>
-                
-            </ul>
-        </div>
-    
-
             </div>
             <div class="col-md-7 col-sm-12 content" role="main" data-spy="scroll" data-target=".toc">
                 
-                    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        
-            <li class="breadcrumb-item"><a href="">Overview</a></li>
 
-            
-                <li class="breadcrumb-item"><a href="..">laminas-inputfilter</a></li>
+<h1 class="content__title">404</h1>
+<blockquote>
+    <h3>Something went wrong!</h3>
+    <p>
+        We're sorry, but the page you are looking for does not exist.
+    </p>
+</blockquote>
 
-                
-                    
-                        
-                        
-                            <li class="breadcrumb-item">Reference</li>
-                        
-                    
-                
-
-                <li class="breadcrumb-item active" aria-current="page">Specifications</li>
-            
-        
-    </ol>
-</nav>
+<a href="../." class="btn btn-default" role="button">Go to homepage</a>
 
 
-
-
-
-
-    
-    
-        <h2 class="chapter__headline">Reference</h2>
-    
-
-    <h1 id="specifications">Specifications</h1>
-<p><code>Laminas\InputFilter</code> allows configuration-driven creation of input filters via
-<code>Laminas\InputFilter\InputFilterAbstractServiceFactory</code>. This abstract factory is
-responsible for creating and returning an appropriate input filter given named
-configuration under the top-level configuration key <code>input_filter_specs</code>.</p>
-<p>It is registered with <code>Laminas\InputFilter\InputFilterPluginManager</code>, allowing you
-to pull the input filter via that plugin manager. A side effect is that forms
-pulled from <code>Laminas\Form\FormElementManager</code> can use these named input filters.</p>
-<h2 id="setup">Setup</h2>
-<p>When using laminas-mvc version 2 releases, this functionality is disabled by
-default.  To enable it, you must add the
-<code>Laminas\InputFilter\InputFilterAbstractServiceFactory</code> abstract factory to the
-<code>Laminas\InputFilter\InputFilterPluginManager</code> configuration, which is under the
-<code>input_filters</code> configuration key.</p>
-<pre class=codehilite><code class=language-php>return [
-    'input_filters' =&gt; [
-        'abstract_factories' =&gt; [
-            'Laminas\InputFilter\InputFilterAbstractServiceFactory',
-        ],
-    ],
-];</code></pre>
-<p>For <a href="https://docs.mezzio.dev/mezzio/">Mezzio</a> when using
-the configuration manager, and for laminas-mvc v3 releases, the functionality is
-enabled by default, assuming you are using the
-<a href="https://docs.laminas.dev/laminas-component-installer/">component installer</a>.</p>
-<h2 id="example">Example</h2>
-<p>In the following code, we define configuration for an input filter named <code>foobar</code>:</p>
-<pre class=codehilite><code class=language-php>return [
-    'input_filter_specs' =&gt; [
-        'foobar' =&gt; [
-            [
-                'name' =&gt; 'name',
-                'required' =&gt; true,
-                'filters' =&gt; [
-                    [
-                        'name' =&gt; 'Laminas\Filter\StringTrim',
-                        'options' =&gt; [],
-                    ],
-                ],
-                'validators' =&gt; [],
-                'description' =&gt; 'Hello to name',
-                'allow_empty' =&gt; false,
-                'continue_if_empty' =&gt; false,
-            ],
-        ],
-    ],
-];</code></pre>
-<p>When creating a controller, we might then pull the <code>InputFilterManager</code>, and
-retrieve the <code>foobar</code> input filter we've defined in order to inject it:</p>
-<pre class=codehilite><code class=language-php>use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-
-class MyValidatingControllerFactory implements FactoryInterface
-{
-    public function createService(ServiceLocatorInterface $controllers)
-    {
-        // Retrieve the application service manager
-        $services = $controllers-&gt;getServiceLocator();
-
-        // Retrieve the InputFilterManager
-        $filters = $services-&gt;get('InputFilterManager');
-
-        // Instantiate the controller and pass it the foobar input filter
-        return new MyValidatingController($filters-&gt;get('foobar'));
-    }
-}</code></pre>
-<p>And you can use it as you already did with other input filters:</p>
-<pre class=codehilite><code class=language-php>$inputFilter-&gt;setData([
-    'name' =&gt; 'test',
-]);
-
-if (! $inputFilter-&gt;isValid()) {
-    echo 'Data invalid';
-}</code></pre>
-
-
-
-
-    <nav>
-    <ul class="page-nav hidden-print">
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../intro/">
-                    <i class="fa fa-chevron-left"></i> Previous
-                </a>
-            
-        </li>
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../file-input/">
-                    Next <i class="fa fa-chevron-right"></i>
-                </a>
-            
-        </li>
-    </ul>
-</nav>
-
-
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/laminas/laminas-inputfilter/edit/master/docs/book/specs.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
-
-                
             </div>
             <div class="col-md-3 col-sm-12 sidebar">
                 
@@ -393,7 +237,7 @@ if (! $inputFilter-&gt;isValid()) {
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">laminas-inputfilter</a>
+            <a href="../.">laminas-inputfilter</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -426,8 +270,8 @@ if (! $inputFilter-&gt;isValid()) {
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">Specifications</a>
+    <li class="subnavigation__list-item ">
+        <a href="../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     

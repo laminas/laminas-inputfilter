@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -274,107 +278,104 @@ laminas-inputfilter plugin manager and a request handler.</p>
 <h2 id="create-input-filter">Create Input Filter</h2>
 <p>Create an input filter as separate class, e.g.
 <code>src/Album/InputFilter/QueryInputFilter.php</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Album\InputFilter;</span>
+<pre class=codehilite><code class=language-php>namespace Album\InputFilter;
 
-<span class=x>use Laminas\Filter\ToInt;</span>
-<span class=x>use Laminas\I18n\Validator\IsInt;</span>
-<span class=x>use Laminas\InputFilter\InputFilter;</span>
+use Laminas\Filter\ToInt;
+use Laminas\I18n\Validator\IsInt;
+use Laminas\InputFilter\InputFilter;
 
-<span class=x>class QueryInputFilter extends InputFilter</span>
-<span class=x>{</span>
-<span class=x>    public function init()</span>
-<span class=x>    {</span>
-<span class=x>        // Page</span>
-<span class=x>        $this-&gt;add(</span>
-<span class=x>            [</span>
-<span class=x>                &#39;name&#39;              =&gt; &#39;page&#39;,</span>
-<span class=x>                &#39;allow_empty&#39;       =&gt; true,</span>
-<span class=x>                &#39;validators&#39;        =&gt; [</span>
-<span class=x>                    [</span>
-<span class=x>                        &#39;name&#39; =&gt; IsInt::class,                        </span>
-<span class=x>                    ],                    </span>
-<span class=x>                ],</span>
-<span class=x>                &#39;filters&#39;           =&gt; [</span>
-<span class=x>                    [</span>
-<span class=x>                        &#39;name&#39; =&gt; ToInt::class,</span>
-<span class=x>                    ],</span>
-<span class=x>                ],</span>
-<span class=x>                &#39;fallback_value&#39;    =&gt; 1,</span>
-<span class=x>            ]</span>
-<span class=x>        );</span>
+class QueryInputFilter extends InputFilter
+{
+    public function init()
+    {
+        // Page
+        $this-&gt;add(
+            [
+                'name'              =&gt; 'page',
+                'allow_empty'       =&gt; true,
+                'validators'        =&gt; [
+                    [
+                        'name' =&gt; IsInt::class,                        
+                    ],                    
+                ],
+                'filters'           =&gt; [
+                    [
+                        'name' =&gt; ToInt::class,
+                    ],
+                ],
+                'fallback_value'    =&gt; 1,
+            ]
+        );
 
-<span class=x>        // …</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+        // …
+    }
+}</code></pre>
 <h2 id="using-input-filter">Using Input Filter</h2>
 <h3>Create Handler</h3>
 <p>Using the input filter in a request handler, e.g.
 <code>src/Album/Handler/ListHandler.php</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Album\Handler;</span>
+<pre class=codehilite><code class=language-php>namespace Album\Handler;
 
-<span class=x>use Album\InputFilter\QueryInputFilter;</span>
-<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
-<span class=x>use Psr\Http\Server\RequestHandlerInterface;</span>
-<span class=x>use Psr\Http\Message\ResponseInterface;</span>
-<span class=x>use Laminas\InputFilter\InputFilterInterface;</span>
-<span class=x>use Mezzio\Template\TemplateRendererInterface;</span>
+use Album\InputFilter\QueryInputFilter;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Laminas\InputFilter\InputFilterInterface;
+use Mezzio\Template\TemplateRendererInterface;
 
-<span class=x>class ListHandler implements RequestHandlerInterface</span>
-<span class=x>{</span>
-<span class=x>    /** @var InputFilterInterface */</span>
-<span class=x>    private $inputFilter;</span>
+class ListHandler implements RequestHandlerInterface
+{
+    /** @var InputFilterInterface */
+    private $inputFilter;
 
-<span class=x>    /** @var TemplateRendererInterface */</span>
-<span class=x>    private $renderer;</span>
+    /** @var TemplateRendererInterface */
+    private $renderer;
 
-<span class=x>    public function __construct(</span>
-<span class=x>        InputFilterInterface $inputFilter,</span>
-<span class=x>        TemplateRendererInterface $renderer</span>
-<span class=x>    ) {</span>
-<span class=x>        $this-&gt;inputFilter = $inputFilter;</span>
-<span class=x>        $this-&gt;renderer    = $renderer;</span>
-<span class=x>    }</span>
+    public function __construct(
+        InputFilterInterface $inputFilter,
+        TemplateRendererInterface $renderer
+    ) {
+        $this-&gt;inputFilter = $inputFilter;
+        $this-&gt;renderer    = $renderer;
+    }
 
-<span class=x>    public function handle(ServerRequestInterface $request) : ResponseInterface</span>
-<span class=x>    {</span>
-<span class=x>        $this-&gt;inputFilter-&gt;setData($request-&gt;getQueryParams());</span>
-<span class=x>        $this-&gt;inputFilter-&gt;isValid();</span>
-<span class=x>        $filteredParams = $this-&gt;inputFilter-&gt;getValues();</span>
+    public function handle(ServerRequestInterface $request) : ResponseInterface
+    {
+        $this-&gt;inputFilter-&gt;setData($request-&gt;getQueryParams());
+        $this-&gt;inputFilter-&gt;isValid();
+        $filteredParams = $this-&gt;inputFilter-&gt;getValues();
 
-<span class=x>        // …</span>
+        // …
 
-<span class=x>        return new HtmlResponse($this-&gt;renderer-&gt;render(</span>
-<span class=x>            &#39;album::list&#39;,</span>
-<span class=x>            []</span>
-<span class=x>        ));</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+        return new HtmlResponse($this-&gt;renderer-&gt;render(
+            'album::list',
+            []
+        ));
+    }
+}</code></pre>
 <h3>Create Factory for Handler</h3>
 <p>Fetch the <code>QueryInputFilter</code> from the input filter plugin manager in a factory,
 e.g. <code>src/Album/Handler/ListHandlerFactory.php</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Album\Handler;</span>
+<pre class=codehilite><code class=language-php>namespace Album\Handler;
 
-<span class=x>use Album\InputFilter\QueryInputFilter;</span>
-<span class=x>use Psr\Container\ContainerInterface;</span>
-<span class=x>use Laminas\InputFilter\InputFilterPluginManager;</span>
+use Album\InputFilter\QueryInputFilter;
+use Psr\Container\ContainerInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
 
-<span class=x>class ListHandlerFactory</span>
-<span class=x>{</span>
-<span class=x>    public function __invoke(ContainerInterface $container)</span>
-<span class=x>    {</span>
-<span class=x>        /** @var InputFilterPluginManager $pluginManager */</span>
-<span class=x>        $pluginManager = $container-&gt;get(InputFilterPluginManager::class);</span>
-<span class=x>        $inputFilter   = $pluginManager-&gt;get(QueryInputFilter::class);</span>
+class ListHandlerFactory
+{
+    public function __invoke(ContainerInterface $container)
+    {
+        /** @var InputFilterPluginManager $pluginManager */
+        $pluginManager = $container-&gt;get(InputFilterPluginManager::class);
+        $inputFilter   = $pluginManager-&gt;get(QueryInputFilter::class);
 
-<span class=x>        return new ListHandler(</span>
-<span class=x>            $inputFilter,</span>
-<span class=x>            $container-&gt;get(TemplateRendererInterface::class)</span>
-<span class=x>        );</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+        return new ListHandler(
+            $inputFilter,
+            $container-&gt;get(TemplateRendererInterface::class)
+        );
+    }
+}</code></pre>
 <blockquote>
 <h3>Instantiating the InputFilter</h3>
 <p>The <code>InputFilterPluginManager</code> is used instead of directly instantiating the
@@ -388,41 +389,40 @@ first.</p>
 <h2 id="register-input-filter-and-handler">Register Input Filter and Handler</h2>
 <p>Extend the configuration provider of the module to register the input filter and
 the request handler, e.g. <code>src/Album/ConfigProvider.php</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Album;</span>
+<pre class=codehilite><code class=language-php>namespace Album;
 
-<span class=x>class ConfigProvider</span>
-<span class=x>{</span>
-<span class=x>    public function __invoke() : array</span>
-<span class=x>    {</span>
-<span class=x>        return [</span>
-<span class=x>            &#39;dependencies&#39;  =&gt; $this-&gt;getDependencies(),</span>
-<span class=x>            &#39;input_filters&#39; =&gt; $this-&gt;getInputFilters(), // &lt;-- Add this line</span>
-<span class=x>        ];</span>
-<span class=x>    }</span>
+class ConfigProvider
+{
+    public function __invoke() : array
+    {
+        return [
+            'dependencies'  =&gt; $this-&gt;getDependencies(),
+            'input_filters' =&gt; $this-&gt;getInputFilters(), // &lt;-- Add this line
+        ];
+    }
 
-<span class=x>    public function getDependencies() : array</span>
-<span class=x>    {</span>
-<span class=x>        return [</span>
-<span class=x>            &#39;factories&#39; =&gt; [</span>
-<span class=x>                Handler\ListHandler::class =&gt; Handler\ListHandlerFactory::class, // &lt;-- Add this line</span>
-<span class=x>                // …</span>
-<span class=x>            ],</span>
-<span class=x>        ];</span>
-<span class=x>    }</span>
+    public function getDependencies() : array
+    {
+        return [
+            'factories' =&gt; [
+                Handler\ListHandler::class =&gt; Handler\ListHandlerFactory::class, // &lt;-- Add this line
+                // …
+            ],
+        ];
+    }
 
-<span class=x>    // Add the following method</span>
-<span class=x>    public function getInputFilters() : array</span>
-<span class=x>    {</span>
-<span class=x>        return [</span>
-<span class=x>            &#39;factories&#39; =&gt; [</span>
-<span class=x>                InputFilter\QueryInputFilter::class =&gt; InvokableFactory::class,</span>
-<span class=x>            ],</span>
-<span class=x>        ];</span>
-<span class=x>    }</span>
+    // Add the following method
+    public function getInputFilters() : array
+    {
+        return [
+            'factories' =&gt; [
+                InputFilter\QueryInputFilter::class =&gt; InvokableFactory::class,
+            ],
+        ];
+    }
 
-<span class=x>    // …</span>
-<span class=x>}</span>
-</pre></div></p>
+    // …
+}</code></pre>
 
 
 
@@ -587,9 +587,10 @@ the request handler, e.g. <code>src/Album/ConfigProvider.php</code>:</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -626,7 +627,7 @@ the request handler, e.g. <code>src/Album/ConfigProvider.php</code>:</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-inputfilter//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -635,8 +636,8 @@ the request handler, e.g. <code>src/Album/ConfigProvider.php</code>:</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-inputfilter//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-inputfilter/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

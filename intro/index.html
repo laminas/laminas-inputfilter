@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -244,32 +248,31 @@ arguments, etc.</p>
 <p>To pass input data to the <code>InputFilter</code>, use the <code>setData()</code> method; the data
 must be specified using an associative array. Below is an example on how to
 validate the data coming from a form using the POST method.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\InputFilter\InputFilter;</span>
-<span class=x>use Laminas\InputFilter\Input;</span>
-<span class=x>use Laminas\Validator;</span>
+<pre class=codehilite><code class=language-php>use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\Validator;
 
-<span class=x>$email = new Input(&#39;email&#39;);</span>
-<span class=x>$email-&gt;getValidatorChain()</span>
-<span class=x>      -&gt;attach(new Validator\EmailAddress());</span>
+$email = new Input('email');
+$email-&gt;getValidatorChain()
+      -&gt;attach(new Validator\EmailAddress());
 
-<span class=x>$password = new Input(&#39;password&#39;);</span>
-<span class=x>$password-&gt;getValidatorChain()</span>
-<span class=x>         -&gt;attach(new Validator\StringLength(8));</span>
+$password = new Input('password');
+$password-&gt;getValidatorChain()
+         -&gt;attach(new Validator\StringLength(8));
 
-<span class=x>$inputFilter = new InputFilter();</span>
-<span class=x>$inputFilter-&gt;add($email);</span>
-<span class=x>$inputFilter-&gt;add($password);</span>
-<span class=x>$inputFilter-&gt;setData($_POST);</span>
+$inputFilter = new InputFilter();
+$inputFilter-&gt;add($email);
+$inputFilter-&gt;add($password);
+$inputFilter-&gt;setData($_POST);
 
-<span class=x>if ($inputFilter-&gt;isValid()) {</span>
-<span class=x>    echo &quot;The form is valid\n&quot;;</span>
-<span class=x>} else {</span>
-<span class=x>    echo &quot;The form is not valid\n&quot;;</span>
-<span class=x>    foreach ($inputFilter-&gt;getInvalidInput() as $error) {</span>
-<span class=x>        print_r($error-&gt;getMessages());</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+if ($inputFilter-&gt;isValid()) {
+    echo &quot;The form is valid\n&quot;;
+} else {
+    echo &quot;The form is not valid\n&quot;;
+    foreach ($inputFilter-&gt;getInvalidInput() as $error) {
+        print_r($error-&gt;getMessages());
+    }
+}</code></pre>
 <p>In this example, we validated the email and password values. The email must be a
 valid address and the password must be composed of at least 8 characters. If the
 input data are not valid, we report the list of invalid input using the
@@ -279,65 +282,62 @@ validator chain. It is also possible to specify a "validation group", a subset
 of the data to be validated; this may be done using the <code>setValidationGroup()</code>
 method. You can specify the list of the input names as an array or as individual
 parameters.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// As individual parameters</span>
-<span class=x>$inputFilter-&gt;setValidationGroup(&#39;email&#39;, &#39;password&#39;);</span>
+<pre class=codehilite><code class=language-php>// As individual parameters
+$inputFilter-&gt;setValidationGroup('email', 'password');
 
-<span class=x>// or as an array of names</span>
-<span class=x>$inputFilter-&gt;setValidationGroup([&#39;email&#39;, &#39;password&#39;]);</span>
-</pre></div></p>
+// or as an array of names
+$inputFilter-&gt;setValidationGroup(['email', 'password']);</code></pre>
 <p>You can validate and/or filter the data using the <code>InputFilter</code>. To filter data,
 use the <code>getFilterChain()</code> method of individual <code>Input</code> instances, and attach
 filters to the returned filter chain. Below is an example that uses filtering
 without validation.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\InputFilter\Input;</span>
-<span class=x>use Laminas\InputFilter\InputFilter;</span>
+<pre class=codehilite><code class=language-php>use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
 
-<span class=x>$input = new Input(&#39;foo&#39;);</span>
-<span class=x>$input-&gt;getFilterChain()</span>
-<span class=x>      -&gt;attachByName(&#39;stringtrim&#39;)</span>
-<span class=x>      -&gt;attachByName(&#39;alpha&#39;);</span>
+$input = new Input('foo');
+$input-&gt;getFilterChain()
+      -&gt;attachByName('stringtrim')
+      -&gt;attachByName('alpha');
 
-<span class=x>$inputFilter = new InputFilter();</span>
-<span class=x>$inputFilter-&gt;add($input);</span>
-<span class=x>$inputFilter-&gt;setData([</span>
-<span class=x>    &#39;foo&#39; =&gt; &#39; Bar3 &#39;,</span>
-<span class=x>]);</span>
+$inputFilter = new InputFilter();
+$inputFilter-&gt;add($input);
+$inputFilter-&gt;setData([
+    'foo' =&gt; ' Bar3 ',
+]);
 
-<span class=x>echo &quot;Before:\n&quot;;</span>
-<span class=x>echo $inputFilter-&gt;getRawValue(&#39;foo&#39;) . &quot;\n&quot;; // the output is &#39; Bar3 &#39;</span>
-<span class=x>echo &quot;After:\n&quot;;</span>
-<span class=x>echo $inputFilter-&gt;getValue(&#39;foo&#39;) . &quot;\n&quot;;    // the output is &#39;Bar&#39;</span>
-</pre></div></p>
+echo &quot;Before:\n&quot;;
+echo $inputFilter-&gt;getRawValue('foo') . &quot;\n&quot;; // the output is ' Bar3 '
+echo &quot;After:\n&quot;;
+echo $inputFilter-&gt;getValue('foo') . &quot;\n&quot;;    // the output is 'Bar'</code></pre>
 <p>The <code>getValue()</code> method returns the filtered value of the 'foo' input, while
 <code>getRawValue()</code> returns the original value of the input.</p>
 <p>We also provide <code>Laminas\InputFilter\Factory</code> to allow initialization of the
 <code>InputFilter</code> based on a configuration array or <code>Traversable</code> object. Below is
 an example where we create a password input value with the same constraints
 proposed before (a string with at least 8 characters):</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\InputFilter\Factory;</span>
+<pre class=codehilite><code class=language-php>use Laminas\InputFilter\Factory;
 
-<span class=x>$factory = new Factory();</span>
-<span class=x>$inputFilter = $factory-&gt;createInputFilter([</span>
-<span class=x>    &#39;password&#39; =&gt; [</span>
-<span class=x>        &#39;name&#39;       =&gt; &#39;password&#39;,</span>
-<span class=x>        &#39;required&#39;   =&gt; true,</span>
-<span class=x>        &#39;validators&#39; =&gt; [</span>
-<span class=x>            [</span>
-<span class=x>                &#39;name&#39; =&gt; &#39;not_empty&#39;,</span>
-<span class=x>            ],</span>
-<span class=x>            [</span>
-<span class=x>                &#39;name&#39; =&gt; &#39;string_length&#39;,</span>
-<span class=x>                &#39;options&#39; =&gt; [</span>
-<span class=x>                    &#39;min&#39; =&gt; 8</span>
-<span class=x>                ],</span>
-<span class=x>            ],</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>]);</span>
+$factory = new Factory();
+$inputFilter = $factory-&gt;createInputFilter([
+    'password' =&gt; [
+        'name'       =&gt; 'password',
+        'required'   =&gt; true,
+        'validators' =&gt; [
+            [
+                'name' =&gt; 'not_empty',
+            ],
+            [
+                'name' =&gt; 'string_length',
+                'options' =&gt; [
+                    'min' =&gt; 8
+                ],
+            ],
+        ],
+    ],
+]);
 
-<span class=x>$inputFilter-&gt;setData($_POST);</span>
-<span class=x>echo $inputFilter-&gt;isValid() ? &#39;Valid form&#39; : &#39;Invalid form&#39;;</span>
-</pre></div></p>
+$inputFilter-&gt;setData($_POST);
+echo $inputFilter-&gt;isValid() ? 'Valid form' : 'Invalid form';</code></pre>
 <p>The factory may be used to create not only <code>Input</code> instances, but also nested
 <code>InputFilter</code>s, allowing you to create validation and filtering rules for
 hierarchical data sets.</p>
@@ -345,47 +345,46 @@ hierarchical data sets.</p>
 means that when calling <code>add()</code>, you can provide a specification that the
 <code>Factory</code> understands, and it will create the appropriate object. You may
 create either <code>Input</code> or <code>InputFilter</code> objects in this fashion.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\InputFilter\InputFilter;</span>
+<pre class=codehilite><code class=language-php>use Laminas\InputFilter\InputFilter;
 
-<span class=x>$filter = new InputFilter();</span>
+$filter = new InputFilter();
 
-<span class=x>// Adding a single input</span>
-<span class=x>$filter-&gt;add([</span>
-<span class=x>    &#39;name&#39; =&gt; &#39;username&#39;,</span>
-<span class=x>    &#39;required&#39; =&gt; true,</span>
-<span class=x>    &#39;validators&#39; =&gt; [</span>
-<span class=x>        [</span>
-<span class=x>            &#39;name&#39; =&gt; &#39;not_empty&#39;,</span>
-<span class=x>        ],</span>
-<span class=x>        [</span>
-<span class=x>            &#39;name&#39; =&gt; &#39;string_length&#39;,</span>
-<span class=x>            &#39;options&#39; =&gt; [</span>
-<span class=x>                &#39;min&#39; =&gt; 5</span>
-<span class=x>            ],</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>]);</span>
+// Adding a single input
+$filter-&gt;add([
+    'name' =&gt; 'username',
+    'required' =&gt; true,
+    'validators' =&gt; [
+        [
+            'name' =&gt; 'not_empty',
+        ],
+        [
+            'name' =&gt; 'string_length',
+            'options' =&gt; [
+                'min' =&gt; 5
+            ],
+        ],
+    ],
+]);
 
-<span class=x>// Adding another input filter what also contains a single input. Merging both.</span>
-<span class=x>$filter-&gt;add([</span>
-<span class=x>    &#39;type&#39; =&gt; &#39;Laminas\InputFilter\InputFilter&#39;,</span>
-<span class=x>    &#39;password&#39; =&gt; [</span>
-<span class=x>        &#39;name&#39; =&gt; &#39;password&#39;,</span>
-<span class=x>        &#39;required&#39; =&gt; true,</span>
-<span class=x>        &#39;validators&#39; =&gt; [</span>
-<span class=x>            [</span>
-<span class=x>                &#39;name&#39; =&gt; &#39;not_empty&#39;,</span>
-<span class=x>            ],</span>
-<span class=x>            [</span>
-<span class=x>                &#39;name&#39; =&gt; &#39;string_length&#39;,</span>
-<span class=x>                &#39;options&#39; =&gt; [</span>
-<span class=x>                    &#39;min&#39; =&gt; 8</span>
-<span class=x>                ],</span>
-<span class=x>            ],</span>
-<span class=x>        ],</span>
-<span class=x>    ],</span>
-<span class=x>]);</span>
-</pre></div></p>
+// Adding another input filter what also contains a single input. Merging both.
+$filter-&gt;add([
+    'type' =&gt; 'Laminas\InputFilter\InputFilter',
+    'password' =&gt; [
+        'name' =&gt; 'password',
+        'required' =&gt; true,
+        'validators' =&gt; [
+            [
+                'name' =&gt; 'not_empty',
+            ],
+            [
+                'name' =&gt; 'string_length',
+                'options' =&gt; [
+                    'min' =&gt; 8
+                ],
+            ],
+        ],
+    ],
+]);</code></pre>
 <p>The <code>merge()</code> method may be used on an <code>InputFilterInterface</code> instance in order
 to add two or more filters to each other, effectively allowing you to create
 chains of filters. This is especially useful in object hierarchies that define a
@@ -396,66 +395,65 @@ properties, allowing them to be re-used elsewhere. When the <code>isValid()</cod
 is called on the object, all of the merged filters are run against the calling
 object in order to validate the internal properties based on our compound set of
 filters.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\InputFilter\InputFilter;</span>
+<pre class=codehilite><code class=language-php>use Laminas\InputFilter\InputFilter;
 
-<span class=x>/**</span>
-<span class=x> * Filter to ensure a name property is set and &gt; 8 characters</span>
-<span class=x> */</span>
-<span class=x>class NameInputFilter extends InputFilter</span>
-<span class=x>{</span>
-<span class=x>    /** Filter body goes here **/</span>
-<span class=x>}</span>
+/**
+ * Filter to ensure a name property is set and &gt; 8 characters
+ */
+class NameInputFilter extends InputFilter
+{
+    /** Filter body goes here **/
+}
 
-<span class=x>/**</span>
-<span class=x> * Filter to ensure an email property is set and &gt; 8 characters and is valid</span>
-<span class=x> */</span>
-<span class=x>class EmailInputFilter extends InputFilter</span>
-<span class=x>{</span>
-<span class=x>    /** Filter body goes here **/</span>
-<span class=x>}</span>
+/**
+ * Filter to ensure an email property is set and &gt; 8 characters and is valid
+ */
+class EmailInputFilter extends InputFilter
+{
+    /** Filter body goes here **/
+}
 
-<span class=x>class SimplePerson</span>
-<span class=x>{</span>
-<span class=x>    /** Member variables omitted for brevity **/</span>
+class SimplePerson
+{
+    /** Member variables omitted for brevity **/
 
-<span class=x>    /** @var InputFilter */</span>
-<span class=x>    protected $inputFilter;</span>
+    /** @var InputFilter */
+    protected $inputFilter;
 
-<span class=x>    /**</span>
-<span class=x>     * Retrieve input filter</span>
-<span class=x>     *</span>
-<span class=x>     * @return InputFilter</span>
-<span class=x>     */</span>
-<span class=x>    public function getInputFilter()</span>
-<span class=x>    {</span>
-<span class=x>        if (! $this-&gt;inputFilter) {</span>
-<span class=x>            // Create a new input filter</span>
-<span class=x>            $this-&gt;inputFilter = new InputFilter();</span>
+    /**
+     * Retrieve input filter
+     *
+     * @return InputFilter
+     */
+    public function getInputFilter()
+    {
+        if (! $this-&gt;inputFilter) {
+            // Create a new input filter
+            $this-&gt;inputFilter = new InputFilter();
 
-<span class=x>            // Merge our inputFilter in for the email property</span>
-<span class=x>            $this-&gt;inputFilter-&gt;merge(new EmailInputFilter());</span>
+            // Merge our inputFilter in for the email property
+            $this-&gt;inputFilter-&gt;merge(new EmailInputFilter());
 
-<span class=x>            // Merge our inputFilter in for the name property</span>
-<span class=x>            $this-&gt;inputFilter-&gt;merge(new NameInputFilter());</span>
-<span class=x>        }</span>
+            // Merge our inputFilter in for the name property
+            $this-&gt;inputFilter-&gt;merge(new NameInputFilter());
+        }
 
-<span class=x>        return $this-&gt;inputFilter;</span>
-<span class=x>    }</span>
+        return $this-&gt;inputFilter;
+    }
 
-<span class=x>    /**</span>
-<span class=x>     * Set input filter</span>
-<span class=x>     *</span>
-<span class=x>     * @param  InputFilterInterface $inputFilter</span>
-<span class=x>     * @return SimplePerson</span>
-<span class=x>     */</span>
-<span class=x>    public function setInputFilter(InputFilterInterface $inputFilter)</span>
-<span class=x>    {</span>
-<span class=x>        $this-&gt;inputFilter = $inputFilter;</span>
+    /**
+     * Set input filter
+     *
+     * @param  InputFilterInterface $inputFilter
+     * @return SimplePerson
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        $this-&gt;inputFilter = $inputFilter;
 
-<span class=x>        return $this;</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+        return $this;
+    }
+}</code></pre>
 <p>Also see</p>
 <ul>
 <li><a href="https://docs.laminas.dev/laminas-filter/">laminas-filter</a></li>
@@ -629,9 +627,10 @@ filters.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -668,7 +667,7 @@ filters.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-inputfilter//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -677,8 +676,8 @@ filters.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-inputfilter//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-inputfilter/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

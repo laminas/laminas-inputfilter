@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -290,112 +294,110 @@ type="file"&gt;</code> element in your form, you will need to use the <code>File
 <strong>instead of</strong> <code>Input</code> or else you will encounter issues.</p>
 <h2 id="basic-usage">Basic Usage</h2>
 <p>Usage of <code>FileInput</code> is essentially the same as <code>Input</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Laminas\Http\PhpEnvironment\Request;</span>
-<span class=x>use Laminas\Filter;</span>
-<span class=x>use Laminas\InputFilter\InputFilter;</span>
-<span class=x>use Laminas\InputFilter\Input;</span>
-<span class=x>use Laminas\InputFilter\FileInput;</span>
-<span class=x>use Laminas\Validator;</span>
+<pre class=codehilite><code class=language-php>use Laminas\Http\PhpEnvironment\Request;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
-<span class=x>// Description text input</span>
-<span class=x>$description = new Input(&#39;description&#39;); // Standard Input type</span>
+// Description text input
+$description = new Input('description'); // Standard Input type
 
-<span class=x>// Filters are run first w/ Input</span>
-<span class=x>$description</span>
-<span class=x>    -&gt;getFilterChain()</span>
-<span class=x>    -&gt;attach(new Filter\StringTrim());</span>
+// Filters are run first w/ Input
+$description
+    -&gt;getFilterChain()
+    -&gt;attach(new Filter\StringTrim());
 
-<span class=x>// Validators are run second w/ Input</span>
-<span class=x>$description</span>
-<span class=x>    -&gt;getValidatorChain()</span>
-<span class=x>    -&gt;attach(new Validator\StringLength([&#39;max&#39; =&gt; 140]));</span>
+// Validators are run second w/ Input
+$description
+    -&gt;getValidatorChain()
+    -&gt;attach(new Validator\StringLength(['max' =&gt; 140]));
 
-<span class=x>// File upload input</span>
-<span class=x>$file = new FileInput(&#39;file&#39;); // Special File Input type</span>
+// File upload input
+$file = new FileInput('file'); // Special File Input type
 
-<span class=x>// Validators are run first w/ FileInput</span>
-<span class=x>$file</span>
-<span class=x>    -&gt;getValidatorChain()</span>
-<span class=x>    -&gt;attach(new Validator\File\UploadFile());</span>
+// Validators are run first w/ FileInput
+$file
+    -&gt;getValidatorChain()
+    -&gt;attach(new Validator\File\UploadFile());
 
-<span class=x>// Filters are run second w/ FileInput</span>
-<span class=x>$file</span>
-<span class=x>    -&gt;getFilterChain()</span>
-<span class=x>    -&gt;attach(new Filter\File\RenameUpload([</span>
-<span class=x>         &#39;target&#39;    =&gt; &#39;./data/tmpuploads/file&#39;,</span>
-<span class=x>         &#39;randomize&#39; =&gt; true,</span>
-<span class=x>    ]));</span>
+// Filters are run second w/ FileInput
+$file
+    -&gt;getFilterChain()
+    -&gt;attach(new Filter\File\RenameUpload([
+         'target'    =&gt; './data/tmpuploads/file',
+         'randomize' =&gt; true,
+    ]));
 
-<span class=x>// Merge $_POST and $_FILES data together</span>
-<span class=x>$request  = new Request();</span>
-<span class=x>$postData = array_merge_recursive(</span>
-<span class=x>    $request-&gt;getPost()-&gt;toArray(),</span>
-<span class=x>    $request-&gt;getFiles()-&gt;toArray()</span>
-<span class=x>);</span>
+// Merge $_POST and $_FILES data together
+$request  = new Request();
+$postData = array_merge_recursive(
+    $request-&gt;getPost()-&gt;toArray(),
+    $request-&gt;getFiles()-&gt;toArray()
+);
 
-<span class=x>$inputFilter = new InputFilter();</span>
-<span class=x>$inputFilter</span>
-<span class=x>    -&gt;add($description)</span>
-<span class=x>    -&gt;add($file)</span>
-<span class=x>    -&gt;setData($postData);</span>
+$inputFilter = new InputFilter();
+$inputFilter
+    -&gt;add($description)
+    -&gt;add($file)
+    -&gt;setData($postData);
 
-<span class=x>if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...</span>
-<span class=x>    echo &quot;The form is valid\n&quot;;</span>
-<span class=x>    $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.</span>
-<span class=x>} else {</span>
-<span class=x>    echo &quot;The form is not valid\n&quot;;</span>
-<span class=x>    foreach ($inputFilter-&gt;getInvalidInput() as $error) {</span>
-<span class=x>        print_r ($error-&gt;getMessages());</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...
+    echo &quot;The form is valid\n&quot;;
+    $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.
+} else {
+    echo &quot;The form is not valid\n&quot;;
+    foreach ($inputFilter-&gt;getInvalidInput() as $error) {
+        print_r ($error-&gt;getMessages());
+    }
+}</code></pre>
 <h2 id="psr-7-support">PSR-7 Support</h2>
 <blockquote>
 <p>Available since version 2.9.0</p>
 </blockquote>
 <p>You may also pass an array of uploaded files from a <a href="http://www.php-fig.org/psr/psr-7/#serverrequestinterface">PSR-7 ServerRequestInterface</a>.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
-<span class=x>use Laminas\Filter;</span>
-<span class=x>use Laminas\InputFilter\InputFilter;</span>
-<span class=x>use Laminas\InputFilter\FileInput;</span>
-<span class=x>use Laminas\Validator;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ServerRequestInterface;
+use Laminas\Filter;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\FileInput;
+use Laminas\Validator;
 
-<span class=x>// File upload input</span>
-<span class=x>$file = new FileInput(&#39;file&#39;);</span>
-<span class=x>$file</span>
-<span class=x>    -&gt;getValidatorChain()</span>
-<span class=x>    -&gt;attach(new Validator\File\UploadFile());</span>
-<span class=x>$file</span>
-<span class=x>    -&gt;getFilterChain()</span>
-<span class=x>    -&gt;attach(new Filter\File\RenameUpload([</span>
-<span class=x>         &#39;target&#39;    =&gt; &#39;./data/tmpuploads/file&#39;,</span>
-<span class=x>         &#39;randomize&#39; =&gt; true,</span>
-<span class=x>    ]));</span>
+// File upload input
+$file = new FileInput('file');
+$file
+    -&gt;getValidatorChain()
+    -&gt;attach(new Validator\File\UploadFile());
+$file
+    -&gt;getFilterChain()
+    -&gt;attach(new Filter\File\RenameUpload([
+         'target'    =&gt; './data/tmpuploads/file',
+         'randomize' =&gt; true,
+    ]));
 
-<span class=x>// Merge form and uploaded file data together</span>
-<span class=x>// Unlike the previous example, we get the form data from `getParsedBody()`, and</span>
-<span class=x>// the uploaded file data from `getUploadedFiles()`.</span>
-<span class=x>// @var ServerRequestInterface $request</span>
-<span class=x>$postData = array_merge_recursive(</span>
-<span class=x>    $request-&gt;getParsedBody(),</span>
-<span class=x>    $request-&gt;getUploadedFiles()</span>
-<span class=x>);</span>
+// Merge form and uploaded file data together
+// Unlike the previous example, we get the form data from `getParsedBody()`, and
+// the uploaded file data from `getUploadedFiles()`.
+// @var ServerRequestInterface $request
+$postData = array_merge_recursive(
+    $request-&gt;getParsedBody(),
+    $request-&gt;getUploadedFiles()
+);
 
-<span class=x>$inputFilter = new InputFilter();</span>
-<span class=x>$inputFilter</span>
-<span class=x>    -&gt;add($file)</span>
-<span class=x>    -&gt;setData($postData);</span>
+$inputFilter = new InputFilter();
+$inputFilter
+    -&gt;add($file)
+    -&gt;setData($postData);
 
-<span class=x>if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...</span>
-<span class=x>    echo &quot;The form is valid\n&quot;;</span>
-<span class=x>    $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.</span>
-<span class=x>} else {</span>
-<span class=x>    echo &quot;The form is not valid\n&quot;;</span>
-<span class=x>    foreach ($inputFilter-&gt;getInvalidInput() as $error) {</span>
-<span class=x>        print_r ($error-&gt;getMessages());</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...
+    echo &quot;The form is valid\n&quot;;
+    $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.
+} else {
+    echo &quot;The form is not valid\n&quot;;
+    foreach ($inputFilter-&gt;getInvalidInput() as $error) {
+        print_r ($error-&gt;getMessages());
+    }
+}</code></pre>
 
 
 
@@ -564,9 +566,10 @@ type="file"&gt;</code> element in your form, you will need to use the <code>File
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -603,7 +606,7 @@ type="file"&gt;</code> element in your form, you will need to use the <code>File
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/laminas/laminas-inputfilter//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/laminas/laminas-inputfilter/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -612,8 +615,8 @@ type="file"&gt;</code> element in your form, you will need to use the <code>File
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/laminas/laminas-inputfilter//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/laminas/laminas-inputfilter/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>
