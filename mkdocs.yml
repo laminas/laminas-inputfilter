@@ -16,4 +16,3 @@ site_description: 'Normalize and validate input sets from the web, APIs, the CLI
 repo_url: 'https://github.com/laminas/laminas-inputfilter'
 extra:
     project: Components
-    project_url: 'https://docs.laminas.dev'
