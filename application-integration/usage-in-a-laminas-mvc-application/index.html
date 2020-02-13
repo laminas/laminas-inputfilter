@@ -378,26 +378,30 @@ first.</p>
 </blockquote>
 <h2 id="register-input-filter-and-controller">Register Input Filter and Controller</h2>
 <p>Extend the configuration of the module to register the input filter and
-controller in the application, e.g. <code>module/Album/config/module.config.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album;
+controller in the application.<br />
+Add the following lines to the module configuration file, e.g.
+<code>module/Album/config/module.config.php</code>:</p>
+<pre class="language-php" data-line="8-9,12-17"><code>
+namespace Album;
 
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
-    'controllers' =&gt; [
-        'factories' =&gt; [
+    'controllers' => [
+        'factories' => [
             // Add this line
-            Controller\AlbumController::class =&gt; Controller\AlbumControllerFactory::class,
+            Controller\AlbumController::class => Controller\AlbumControllerFactory::class,
         ],
     ],
     // Add the following array
-    'input_filters' =&gt; [
-        'factories =&gt; [
-            InputFilter\QueryInputFilter::class =&gt; InvokableFactory::class,
+    'input_filters' => [
+        'factories => [
+            InputFilter\QueryInputFilter::class => InvokableFactory::class,
         ],
     ],
     // …
-];</code></pre>
+];
+</code></pre>
 
 
 
