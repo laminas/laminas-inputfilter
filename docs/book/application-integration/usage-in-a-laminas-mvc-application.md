@@ -124,9 +124,11 @@ class AlbumControllerFactory implements FactoryInterface
 ## Register Input Filter and Controller
 
 Extend the configuration of the module to register the input filter and
-controller in the application, e.g. `module/Album/config/module.config.php`:
+controller in the application.  
+Add the following lines to the module configuration file, e.g.
+`module/Album/config/module.config.php`:
 
-```php
+<pre class="language-php" data-line="8-9,12-17"><code>
 namespace Album;
 
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -146,4 +148,4 @@ return [
     ],
     // …
 ];
-```
+</code></pre>
