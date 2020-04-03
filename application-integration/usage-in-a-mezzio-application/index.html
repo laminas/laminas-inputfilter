@@ -337,7 +337,7 @@ laminas-inputfilter plugin manager and a request handler.</p>
 <h2 id="create-input-filter">Create Input Filter</h2>
 <p>Create an input filter as separate class, e.g.
 <code>src/Album/InputFilter/QueryInputFilter.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album\InputFilter;
+<pre class="highlight"><code class="language-php">namespace Album\InputFilter;
 
 use Laminas\Filter\ToInt;
 use Laminas\I18n\Validator\IsInt;
@@ -369,11 +369,12 @@ class QueryInputFilter extends InputFilter
         // …
     }
 }</code></pre>
+
 <h2 id="using-input-filter">Using Input Filter</h2>
 <h3>Create Handler</h3>
 <p>Using the input filter in a request handler, e.g.
 <code>src/Album/Handler/ListHandler.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album\Handler;
+<pre class="highlight"><code class="language-php">namespace Album\Handler;
 
 use Album\InputFilter\QueryInputFilter;
 use Psr\Http\Message\ServerRequestInterface;
@@ -412,10 +413,11 @@ class ListHandler implements RequestHandlerInterface
         ));
     }
 }</code></pre>
+
 <h3>Create Factory for Handler</h3>
 <p>Fetch the <code>QueryInputFilter</code> from the input filter plugin manager in a factory,
 e.g. <code>src/Album/Handler/ListHandlerFactory.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album\Handler;
+<pre class="highlight"><code class="language-php">namespace Album\Handler;
 
 use Album\InputFilter\QueryInputFilter;
 use Psr\Container\ContainerInterface;
@@ -435,6 +437,7 @@ class ListHandlerFactory
         );
     }
 }</code></pre>
+
 <blockquote>
 <h3>Instantiating the InputFilter</h3>
 <p>The <code>InputFilterPluginManager</code> is used instead of directly instantiating the
@@ -448,7 +451,7 @@ first.</p>
 <h2 id="register-input-filter-and-handler">Register Input Filter and Handler</h2>
 <p>Extend the configuration provider of the module to register the input filter and
 the request handler, e.g. <code>src/Album/ConfigProvider.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album;
+<pre class="highlight"><code class="language-php">namespace Album;
 
 class ConfigProvider
 {

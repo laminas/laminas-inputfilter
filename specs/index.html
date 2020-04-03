@@ -338,20 +338,21 @@ default.  To enable it, you must add the
 <code>Laminas\InputFilter\InputFilterAbstractServiceFactory</code> abstract factory to the
 <code>Laminas\InputFilter\InputFilterPluginManager</code> configuration, which is under the
 <code>input_filters</code> configuration key.</p>
-<pre class=codehilite><code class=language-php>return [
+<pre class="highlight"><code class="language-php">return [
     'input_filters' =&gt; [
         'abstract_factories' =&gt; [
             'Laminas\InputFilter\InputFilterAbstractServiceFactory',
         ],
     ],
 ];</code></pre>
+
 <p>For <a href="https://docs.mezzio.dev/mezzio/">Mezzio</a> when using
 the configuration manager, and for laminas-mvc v3 releases, the functionality is
 enabled by default, assuming you are using the
 <a href="https://docs.laminas.dev/laminas-component-installer/">component installer</a>.</p>
 <h2 id="example">Example</h2>
 <p>In the following code, we define configuration for an input filter named <code>foobar</code>:</p>
-<pre class=codehilite><code class=language-php>return [
+<pre class="highlight"><code class="language-php">return [
     'input_filter_specs' =&gt; [
         'foobar' =&gt; [
             [
@@ -371,9 +372,10 @@ enabled by default, assuming you are using the
         ],
     ],
 ];</code></pre>
+
 <p>When creating a controller, we might then pull the <code>InputFilterManager</code>, and
 retrieve the <code>foobar</code> input filter we've defined in order to inject it:</p>
-<pre class=codehilite><code class=language-php>use Laminas\ServiceManager\FactoryInterface;
+<pre class="highlight"><code class="language-php">use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MyValidatingControllerFactory implements FactoryInterface
@@ -390,8 +392,9 @@ class MyValidatingControllerFactory implements FactoryInterface
         return new MyValidatingController($filters-&gt;get('foobar'));
     }
 }</code></pre>
+
 <p>And you can use it as you already did with other input filters:</p>
-<pre class=codehilite><code class=language-php>$inputFilter-&gt;setData([
+<pre class="highlight"><code class="language-php">$inputFilter-&gt;setData([
     'name' =&gt; 'test',
 ]);
 

@@ -329,7 +329,7 @@ down when working with collections.</p>
 for dealing with this situation. <code>Laminas\InputFilter\BaseInputFilter</code>, which
 forms the parent class for all shipped input filter implementations, implements
 the interface, which consists of the following methods:</p>
-<pre class=codehilite><code class=language-php>interface UnfilteredDataInterface
+<pre class="highlight"><code class="language-php">interface UnfilteredDataInterface
 {
     /**
      * @return array|object
@@ -349,6 +349,7 @@ the interface, which consists of the following methods:</p>
         return $this;
     }
 }</code></pre>
+
 <p>The <code>setUnfilteredData()</code> method is called by <code>setData()</code> with the full <code>$data</code>
 provided to that method, ensuring that <code>getUnfilteredData()</code> will always provide
 the original data with which the input filter was initialized, with no filtering

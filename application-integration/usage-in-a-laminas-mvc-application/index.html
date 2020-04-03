@@ -336,7 +336,7 @@ laminas-inputfilter plugin manager.</p>
 <h2 id="create-input-filter">Create Input Filter</h2>
 <p>Create an input filter as separate class, e.g.
 <code>module/Album/src/InputFilter/QueryInputFilter.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album\InputFilter;
+<pre class="highlight"><code class="language-php">namespace Album\InputFilter;
 
 use Laminas\Filter\ToInt;
 use Laminas\I18n\Validator\IsInt;
@@ -368,11 +368,12 @@ class QueryInputFilter extends InputFilter
         // …
     }
 }</code></pre>
+
 <h2 id="using-input-filter">Using Input Filter</h2>
 <h3>Create Controller</h3>
 <p>Using the input filter in a controller, e.g.
 <code>module/Album/Controller/AlbumController.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album\Controller;
+<pre class="highlight"><code class="language-php">namespace Album\Controller;
 
 use Album\InputFilter\QueryInputFilter;
 use Laminas\InputFilter\InputFilterInterface;
@@ -397,10 +398,11 @@ class AlbumController extends AbstractActionController
         // …
     }
 }</code></pre>
+
 <h3>Create Factory for Controller</h3>
 <p>Fetch the <code>QueryInputFilter</code> from the input filter plugin manager in a factory,
 e.g. <code>src/Album/Handler/ListHandlerFactory.php</code>:</p>
-<pre class=codehilite><code class=language-php>namespace Album\Controller;
+<pre class="highlight"><code class="language-php">namespace Album\Controller;
 
 use Album\InputFilter\QueryInputFilter;
 use Interop\Container\ContainerInterface;
@@ -421,6 +423,7 @@ class AlbumControllerFactory implements FactoryInterface
         return new AlbumController($inputFilter);
     }
 }</code></pre>
+
 <blockquote>
 <h3>Instantiating the Input Filter</h3>
 <p>The <code>InputFilterPluginManager</code> is used instead of directly instantiating the

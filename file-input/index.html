@@ -353,7 +353,7 @@ type="file"&gt;</code> element in your form, you will need to use the <code>File
 <strong>instead of</strong> <code>Input</code> or else you will encounter issues.</p>
 <h2 id="basic-usage">Basic Usage</h2>
 <p>Usage of <code>FileInput</code> is essentially the same as <code>Input</code>:</p>
-<pre class=codehilite><code class=language-php>use Laminas\Http\PhpEnvironment\Request;
+<pre class="highlight"><code class="language-php">use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Filter;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\Input;
@@ -403,20 +403,21 @@ $inputFilter
     -&gt;setData($postData);
 
 if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...
-    echo &quot;The form is valid\n&quot;;
+    echo "The form is valid\n";
     $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.
 } else {
-    echo &quot;The form is not valid\n&quot;;
+    echo "The form is not valid\n";
     foreach ($inputFilter-&gt;getInvalidInput() as $error) {
         print_r ($error-&gt;getMessages());
     }
 }</code></pre>
+
 <h2 id="psr-7-support">PSR-7 Support</h2>
 <blockquote>
 <p>Available since version 2.9.0</p>
 </blockquote>
 <p>You may also pass an array of uploaded files from a <a href="http://www.php-fig.org/psr/psr-7/#serverrequestinterface">PSR-7 ServerRequestInterface</a>.</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ServerRequestInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Filter;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\FileInput;
@@ -449,10 +450,10 @@ $inputFilter
     -&gt;setData($postData);
 
 if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...
-    echo &quot;The form is valid\n&quot;;
+    echo "The form is valid\n";
     $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.
 } else {
-    echo &quot;The form is not valid\n&quot;;
+    echo "The form is not valid\n";
     foreach ($inputFilter-&gt;getInvalidInput() as $error) {
         print_r ($error-&gt;getMessages());
     }

@@ -324,7 +324,7 @@ information. The user can provide an optional "title" and a required "email",
 and <em>optionally</em> details about a project they lead, which will include the
 project title and a URL, both of which are required if present.</p>
 <p>First, let's create an <code>OptionalInputFilter</code> instance for the project data:</p>
-<pre class=codehilite><code class=language-php>$projectFilter = new OptionalInputFilter();
+<pre class="highlight"><code class="language-php">$projectFilter = new OptionalInputFilter();
 $projectFilter-&gt;add([
     'name' =&gt; 'project_name',
     'required' =&gt; true,
@@ -336,8 +336,9 @@ $projectFilter-&gt;add([
         ['type' =&gt; 'uri'],
     ],
 ]);</code></pre>
+
 <p>Now, we'll create our primary input filter:</p>
-<pre class=codehilite><code class=language-php>$profileFilter = new InputFilter();
+<pre class="highlight"><code class="language-php">$profileFilter = new InputFilter();
 $profileFilter-&gt;add([
     'name' =&gt; 'title',
     'required' =&gt; false,
@@ -352,46 +353,46 @@ $profileFilter-&gt;add([
 
 // And, finally, compose our project sub-filter:
 $profileFilter-&gt;add($projectFilter, 'project');</code></pre>
+
 <p>With this defined, we can now validate the following sets of data, presented in
 JSON for readability:</p>
 <ul>
 <li>Just profile information:</li>
 </ul>
-<p><code>json
-  {
-    "email": "user@example.com",
-    "title": "Software Developer"
-  }</code></p>
+<pre class="highlight"><code class="language-json">{
+  "email": "user@example.com",
+  "title": "Software Developer"
+}</code></pre>
+
 <ul>
 <li><code>null</code> project provided:</li>
 </ul>
-<p><code>json
-  {
-    "email": "user@example.com",
-    "title": "Software Developer",
-    "project": null
-  }</code></p>
+<pre class="highlight"><code class="language-json">{
+  "email": "user@example.com",
+  "title": "Software Developer",
+  "project": null
+}</code></pre>
+
 <ul>
 <li>Empty project provided:</li>
 </ul>
-<p><code>json
-  {
-    "email": "user@example.com",
-    "title": "Software Developer",
-    "project": {}
-  }</code></p>
+<pre class="highlight"><code class="language-json">{
+  "email": "user@example.com",
+  "title": "Software Developer",
+  "project": {}
+}</code></pre>
+
 <ul>
 <li>Valid project provided:</li>
 </ul>
-<p><code>json
-  {
-    "email": "user@example.com",
-    "title": "Software Developer",
-    "project": {
-      "project_name": "laminas-inputfilter",
-      "url": "https://github.com/laminas-inputfilter",
-    }
-  }</code></p>
+<pre class="highlight"><code class="language-json">{
+  "email": "user@example.com",
+  "title": "Software Developer",
+  "project": {
+    "project_name": "laminas-inputfilter",
+    "url": "https://github.com/laminas-inputfilter",
+  }
+}</code></pre>
 
 
 
