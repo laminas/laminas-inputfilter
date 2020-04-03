@@ -56,7 +56,6 @@ With this defined, we can now validate the following sets of data, presented in
 JSON for readability:
 
 - Just profile information:
-
   ```json
   {
     "email": "user@example.com",
@@ -65,7 +64,6 @@ JSON for readability:
   ```
 
 - `null` project provided:
-
   ```json
   {
     "email": "user@example.com",
@@ -75,7 +73,6 @@ JSON for readability:
   ```
 
 - Empty project provided:
-
   ```json
   {
     "email": "user@example.com",
@@ -85,7 +82,6 @@ JSON for readability:
   ```
 
 - Valid project provided:
-
   ```json
   {
     "email": "user@example.com",
