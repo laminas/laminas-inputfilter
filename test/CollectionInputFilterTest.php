@@ -41,7 +41,9 @@ class CollectionInputFilterTest extends TestCase
         $inputFilter = $this->inputFilter;
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('expects an instance of Laminas\InputFilter\BaseInputFilter; received "stdClass"');
+        $this->expectExceptionMessage(
+            'expects an instance of Laminas\InputFilter\BaseInputFilter; received "stdClass"'
+        );
         /** @noinspection PhpParamsInspection */
         $inputFilter->setInputFilter(new stdClass());
     }
