@@ -23,6 +23,7 @@ final class ConfigProviderTest extends TestCase
         $expected = [
             'aliases' => [
                 'InputFilterManager' => InputFilterPluginManager::class,
+                'Zend\InputFilter\InputFilterPluginManager' => InputFilterPluginManager::class,
             ],
             'factories' => [
                 InputFilterPluginManager::class => InputFilterPluginManagerFactory::class,
