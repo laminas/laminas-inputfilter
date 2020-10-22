@@ -18,7 +18,7 @@ use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\Digits;
 use Laminas\Validator\NotEmpty;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 
 /**
@@ -31,7 +31,7 @@ class CollectionInputFilterTest extends TestCase
      */
     protected $inputFilter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->inputFilter = new CollectionInputFilter();
     }

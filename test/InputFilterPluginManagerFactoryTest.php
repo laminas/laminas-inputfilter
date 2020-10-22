@@ -15,9 +15,13 @@ use Laminas\InputFilter\InputFilterPluginManagerFactory;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ReflectionObject;
 
 class InputFilterPluginManagerFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testFactoryReturnsPluginManager()
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
@@ -28,7 +32,10 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
         if (method_exists($filters, 'configure')) {
             // laminas-servicemanager v3
-            $this->assertAttributeSame($container, 'creationContext', $filters);
+            $r = new ReflectionObject($filters);
+            $p = $r->getProperty('creationContext');
+            $p->setAccessible(true);
+            $this->assertSame($container, $p->getValue($filters));
         } else {
             // laminas-servicemanager v2
             $this->assertSame($container, $filters->getServiceLocator());

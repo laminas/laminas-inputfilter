@@ -12,8 +12,7 @@ use ArrayIterator;
 use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use stdClass;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers \Laminas\InputFilter\InputFilter
@@ -25,7 +24,7 @@ class InputFilterTest extends BaseInputFilterTest
      */
     protected $inputFilter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->inputFilter = new InputFilter();
     }

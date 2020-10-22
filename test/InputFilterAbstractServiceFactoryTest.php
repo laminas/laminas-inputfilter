@@ -19,13 +19,16 @@ use Laminas\Validator;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @covers \Laminas\InputFilter\InputFilterAbstractServiceFactory
  */
 class InputFilterAbstractServiceFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ServiceManager
      */
@@ -41,7 +44,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
      */
     protected $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->services = new ServiceManager();
         $this->filters  = new InputFilterPluginManager($this->services);
@@ -368,7 +371,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertCount(1, $filters);
 
         $callback = $filters->getFilters()->top();
-        $this->assertInternalType('array', $callback);
+        $this->assertIsArray($callback);
         $this->assertSame($filter, $callback[0]);
     }
 }

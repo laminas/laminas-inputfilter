@@ -19,7 +19,8 @@ use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\UnfilteredDataInterface;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionObject;
 use stdClass;
 
 /**
@@ -32,7 +33,7 @@ class BaseInputFilterTest extends TestCase
      */
     protected $inputFilter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->inputFilter = new BaseInputFilter();
     }
@@ -134,7 +135,11 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->add($nestedInput, 'fooInput');
 
         $inputFilter->setValidationGroup(['fooInput' => 'foo']);
-        $this->assertAttributeEquals(['fooInput'], 'validationGroup', $inputFilter);
+
+        $r = new ReflectionObject($inputFilter);
+        $p = $r->getProperty('validationGroup');
+        $p->setAccessible(true);
+        $this->assertEquals(['fooInput'], $p->getValue($inputFilter));
     }
 
     public function testSetValidationGroupAllowsSpecifyingArrayOfInputsToNestedInputFilter()
@@ -155,8 +160,11 @@ class BaseInputFilterTest extends TestCase
 
         $inputFilter->setValidationGroup(['nested' => ['nested-input1', 'nested-input2']]);
 
-        $this->assertAttributeEquals(['nested'], 'validationGroup', $inputFilter);
-        $this->assertAttributeEquals(['nested-input1', 'nested-input2'], 'validationGroup', $nestedInputFilter);
+        $r = new ReflectionObject($inputFilter);
+        $p = $r->getProperty('validationGroup');
+        $p->setAccessible(true);
+        $this->assertEquals(['nested'], $p->getValue($inputFilter));
+        $this->assertEquals(['nested-input1', 'nested-input2'], $p->getValue($nestedInputFilter));
     }
 
     public function testSetValidationGroupThrowExceptionIfInputFilterNotExists()
@@ -618,7 +626,7 @@ class BaseInputFilterTest extends TestCase
     {
         $baseInputFilter = new BaseInputFilter();
 
-        self::assertInternalType('array', $baseInputFilter->getUnfilteredData());
+        self::assertIsArray($baseInputFilter->getUnfilteredData());
     }
 
     public function testSetUnfilteredDataReturnsBaseInputFilter()

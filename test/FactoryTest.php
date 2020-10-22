@@ -24,8 +24,9 @@ use Laminas\InputFilter\InputProviderInterface;
 use Laminas\ServiceManager;
 use Laminas\Validator;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use ReflectionProperty;
 
 /**
@@ -33,6 +34,8 @@ use ReflectionProperty;
  */
 class FactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testCreateInputWithInvalidDataTypeThrowsInvalidArgumentException()
     {
         $factory = $this->createDefaultFactory();

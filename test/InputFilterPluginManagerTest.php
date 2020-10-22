@@ -22,13 +22,17 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ReflectionObject;
 
 /**
  * @covers \Laminas\InputFilter\InputFilterPluginManager
  */
 class InputFilterPluginManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var InputFilterPluginManager
      */
@@ -39,7 +43,7 @@ class InputFilterPluginManagerTest extends TestCase
      */
     protected $services;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->services = new ServiceManager();
         $this->manager = new InputFilterPluginManager($this->services);
@@ -56,7 +60,10 @@ class InputFilterPluginManagerTest extends TestCase
             ? 'sharedByDefault' // v3
             : 'shareByDefault'; // v2
 
-        $this->assertAttributeSame(false, $property, $this->manager);
+        $r = new ReflectionObject($this->manager);
+        $p = $r->getProperty($property);
+        $p->setAccessible(true);
+        $this->assertFalse($p->getValue($this->manager));
     }
 
     public function testRegisteringInvalidElementRaisesException()
