@@ -56,12 +56,8 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testIsNotSharedByDefault()
     {
-        $property = method_exists($this->manager, 'configure')
-            ? 'sharedByDefault' // v3
-            : 'shareByDefault'; // v2
-
         $r = new ReflectionObject($this->manager);
-        $p = $r->getProperty($property);
+        $p = $r->getProperty('sharedByDefault');
         $p->setAccessible(true);
         $this->assertFalse($p->getValue($this->manager));
     }

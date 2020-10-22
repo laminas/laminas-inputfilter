@@ -30,16 +30,10 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $filters = $factory($container, InputFilterPluginManagerFactory::class);
         $this->assertInstanceOf(InputFilterPluginManager::class, $filters);
 
-        if (method_exists($filters, 'configure')) {
-            // laminas-servicemanager v3
-            $r = new ReflectionObject($filters);
-            $p = $r->getProperty('creationContext');
-            $p->setAccessible(true);
-            $this->assertSame($container, $p->getValue($filters));
-        } else {
-            // laminas-servicemanager v2
-            $this->assertSame($container, $filters->getServiceLocator());
-        }
+        $r = new ReflectionObject($filters);
+        $p = $r->getProperty('creationContext');
+        $p->setAccessible(true);
+        $this->assertSame($container, $p->getValue($filters));
     }
 
     public function pluginProvider()
