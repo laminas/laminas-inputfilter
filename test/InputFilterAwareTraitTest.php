@@ -11,6 +11,7 @@ namespace LaminasTest\InputFilter;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareTrait;
 use PHPUnit\Framework\TestCase;
+use ReflectionObject;
 
 /**
  * @requires PHP 5.4
@@ -22,13 +23,16 @@ class InputFilterAwareTraitTest extends TestCase
     {
         $object = $this->getObjectForTrait(InputFilterAwareTrait::class);
 
-        $this->assertAttributeEquals(null, 'inputFilter', $object);
+        $r = new ReflectionObject($object);
+        $p = $r->getProperty('inputFilter');
+        $p->setAccessible(true);
+        $this->assertNull($p->getValue($object));
 
         $inputFilter = new InputFilter;
 
         $object->setInputFilter($inputFilter);
 
-        $this->assertAttributeEquals($inputFilter, 'inputFilter', $object);
+        $this->assertSame($inputFilter, $p->getValue($object));
     }
 
     public function testGetInputFilter()

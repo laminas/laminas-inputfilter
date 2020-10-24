@@ -13,13 +13,16 @@ use Laminas\InputFilter\InputFilterAbstractServiceFactory;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\Module;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ModuleTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var Module */
     private $module;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->module = new Module();
     }
@@ -28,7 +31,7 @@ class ModuleTest extends TestCase
     {
         $config = $this->module->getConfig();
 
-        $this->assertInternalType('array', $config);
+        $this->assertIsArray($config);
 
         // Service manager
         $this->assertArrayHasKey('service_manager', $config);

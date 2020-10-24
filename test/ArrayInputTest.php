@@ -16,7 +16,7 @@ use Laminas\InputFilter\Exception\InvalidArgumentException;
  */
 class ArrayInputTest extends InputTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->input = new ArrayInput('foo');
     }

@@ -18,7 +18,8 @@ use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 
 /**
@@ -26,17 +27,19 @@ use stdClass;
  */
 class InputTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Input
      */
     protected $input;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->input = new Input('foo');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         AbstractValidator::setDefaultTranslator(null);
     }
@@ -47,7 +50,7 @@ class InputTest extends TestCase
         $message .= ';';
 
         $messages = $input->getMessages();
-        $this->assertInternalType('array', $messages, $message . ' non-array messages array');
+        $this->assertIsArray($messages, $message . ' non-array messages array');
 
         $notEmpty         = new NotEmptyValidator();
         $messageTemplates = $notEmpty->getOption('messageTemplates');

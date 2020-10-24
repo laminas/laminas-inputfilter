@@ -13,6 +13,7 @@ use Laminas\InputFilter\FileInput\PsrFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
@@ -21,10 +22,12 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class PsrFileInputDecoratorTest extends InputTest
 {
+    use ProphecyTrait;
+
     /** @var PsrFileInputDecorator */
     protected $input;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->input = new FileInput('foo');
         // Upload validator does not work in CLI test environment, disable

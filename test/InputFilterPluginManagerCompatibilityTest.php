@@ -39,26 +39,4 @@ class InputFilterPluginManagerCompatibilityTest extends TestCase
         // InputFilterManager accepts multiple instance types
         return;
     }
-
-    public function testConstructorArgumentsAreOptionalUnderV2()
-    {
-        $plugins = $this->getPluginManager();
-        if (method_exists($plugins, 'configure')) {
-            $this->markTestSkipped('laminas-servicemanager v3 plugin managers require a container argument');
-        }
-
-        $plugins = new InputFilterPluginManager();
-        $this->assertInstanceOf(InputFilterPluginManager::class, $plugins);
-    }
-
-    public function testConstructorAllowsConfigInstanceAsFirstArgumentUnderV2()
-    {
-        $plugins = $this->getPluginManager();
-        if (method_exists($plugins, 'configure')) {
-            $this->markTestSkipped('laminas-servicemanager v3 plugin managers require a container argument');
-        }
-
-        $plugins = new InputFilterPluginManager(new Config([]));
-        $this->assertInstanceOf(InputFilterPluginManager::class, $plugins);
-    }
 }
