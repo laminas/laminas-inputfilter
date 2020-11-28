@@ -324,6 +324,10 @@ class Factory
             return $inputFilter;
         }
 
+        if (isset($inputFilterSpecification['inputs']) && is_array($inputFilterSpecification['inputs'])) {
+            $inputFilterSpecification = $inputFilterSpecification['inputs'];
+        }
+
         foreach ($inputFilterSpecification as $key => $value) {
             if (null === $value) {
                 continue;
