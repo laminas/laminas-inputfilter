@@ -503,82 +503,15 @@ class FactoryTest extends TestCase
         $this->assertEquals($input, $inputFilter->get('foo'));
     }
 
-    public function testFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfiguration()
+    /**
+     * @param array $spec
+     *
+     * @dataProvider getFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfigurationData
+     */
+    public function testFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfiguration(array $spec)
     {
         $factory     = $this->createDefaultFactory();
-        $inputFilter = $factory->createInputFilter([
-            'foo' => [
-                'name'       => 'foo',
-                'required'   => false,
-                'validators' => [
-                    [
-                        'name' => Validator\NotEmpty::class,
-                    ],
-                    [
-                        'name' => Validator\StringLength::class,
-                        'options' => [
-                            'min' => 3,
-                            'max' => 5,
-                        ],
-                    ],
-                ],
-            ],
-            'bar' => [
-                'allow_empty' => true,
-                'filters'     => [
-                    [
-                        'name' => Filter\StringTrim::class,
-                    ],
-                    [
-                        'name' => Filter\StringToLower::class,
-                        'options' => [
-                            'encoding' => 'ISO-8859-1',
-                        ],
-                    ],
-                ],
-            ],
-            'baz' => [
-                'type'   => InputFilter::class,
-                'foo' => [
-                    'name'       => 'foo',
-                    'required'   => false,
-                    'validators' => [
-                        [
-                            'name' => Validator\NotEmpty::class,
-                        ],
-                        [
-                            'name' => Validator\StringLength::class,
-                            'options' => [
-                                'min' => 3,
-                                'max' => 5,
-                            ],
-                        ],
-                    ],
-                ],
-                'bar' => [
-                    'allow_empty' => true,
-                    'filters'     => [
-                        [
-                            'name' => Filter\StringTrim::class,
-                        ],
-                        [
-                            'name' => Filter\StringToLower::class,
-                            'options' => [
-                                'encoding' => 'ISO-8859-1',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'bat' => [
-                'type' => 'LaminasTest\InputFilter\TestAsset\CustomInput',
-                'name' => 'bat',
-            ],
-            'zomg' => [
-                'name' => 'zomg',
-                'continue_if_empty' => true,
-            ],
-        ]);
+        $inputFilter = $factory->createInputFilter($spec);
         $this->assertInstanceOf(InputFilter::class, $inputFilter);
         $this->assertEquals(5, count($inputFilter));
 
@@ -617,6 +550,165 @@ class FactoryTest extends TestCase
                     $this->assertTrue($input->continueIfEmpty());
             }
         }
+    }
+
+    public function getFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfigurationData()
+    {
+        return [
+            [
+                [
+                    'foo' => [
+                        'name'       => 'foo',
+                        'required'   => false,
+                        'validators' => [
+                            [
+                                'name' => Validator\NotEmpty::class,
+                            ],
+                            [
+                                'name' => Validator\StringLength::class,
+                                'options' => [
+                                    'min' => 3,
+                                    'max' => 5,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'bar' => [
+                        'allow_empty' => true,
+                        'filters'     => [
+                            [
+                                'name' => Filter\StringTrim::class,
+                            ],
+                            [
+                                'name' => Filter\StringToLower::class,
+                                'options' => [
+                                    'encoding' => 'ISO-8859-1',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'baz' => [
+                        'type'   => InputFilter::class,
+                        'foo' => [
+                            'name'       => 'foo',
+                            'required'   => false,
+                            'validators' => [
+                                [
+                                    'name' => Validator\NotEmpty::class,
+                                ],
+                                [
+                                    'name' => Validator\StringLength::class,
+                                    'options' => [
+                                        'min' => 3,
+                                        'max' => 5,
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'bar' => [
+                            'allow_empty' => true,
+                            'filters'     => [
+                                [
+                                    'name' => Filter\StringTrim::class,
+                                ],
+                                [
+                                    'name' => Filter\StringToLower::class,
+                                    'options' => [
+                                        'encoding' => 'ISO-8859-1',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'bat' => [
+                        'type' => 'LaminasTest\InputFilter\TestAsset\CustomInput',
+                        'name' => 'bat',
+                    ],
+                    'zomg' => [
+                        'name' => 'zomg',
+                        'continue_if_empty' => true,
+                    ],
+                ],
+            ],
+
+            [
+                [
+                    'foo' => [
+                        'name'       => 'foo',
+                        'required'   => false,
+                        'validators' => [
+                            [
+                                'name' => Validator\NotEmpty::class,
+                            ],
+                            [
+                                'name' => Validator\StringLength::class,
+                                'options' => [
+                                    'min' => 3,
+                                    'max' => 5,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'bar' => [
+                        'allow_empty' => true,
+                        'filters'     => [
+                            [
+                                'name' => Filter\StringTrim::class,
+                            ],
+                            [
+                                'name' => Filter\StringToLower::class,
+                                'options' => [
+                                    'encoding' => 'ISO-8859-1',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'baz' => [
+                        'type'   => InputFilter::class,
+                        'inputs' => [
+                            'foo' => [
+                                'name'       => 'foo',
+                                'required'   => false,
+                                'validators' => [
+                                    [
+                                        'name' => Validator\NotEmpty::class,
+                                    ],
+                                    [
+                                        'name' => Validator\StringLength::class,
+                                        'options' => [
+                                            'min' => 3,
+                                            'max' => 5,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'bar' => [
+                                'allow_empty' => true,
+                                'filters'     => [
+                                    [
+                                        'name' => Filter\StringTrim::class,
+                                    ],
+                                    [
+                                        'name' => Filter\StringToLower::class,
+                                        'options' => [
+                                            'encoding' => 'ISO-8859-1',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'bat' => [
+                        'type' => 'LaminasTest\InputFilter\TestAsset\CustomInput',
+                        'name' => 'bat',
+                    ],
+                    'zomg' => [
+                        'name' => 'zomg',
+                        'continue_if_empty' => true,
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function testFactoryWillCreateInputFilterMatchingInputNameWhenNotSpecified()
