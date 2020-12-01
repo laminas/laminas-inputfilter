@@ -2,27 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.11.0 - TBD
+## 2.11.0 - 2020-12-01
 
 ### Added
 
 - [#21](https://github.com/laminas/laminas-inputfilter/pull/21) Add PHP 8.0 support
 
-### Changed
 
-- Nothing.
+-----
 
-### Deprecated
+### Release Notes for [2.11.0](https://github.com/laminas/laminas-inputfilter/milestone/1)
 
-- Nothing.
 
-### Removed
 
-- Nothing.
+### 2.11.0
 
-### Fixed
+- Total issues resolved: **0**
+- Total pull requests resolved: **1**
+- Total contributors: **1**
 
-- Nothing.
+#### Enhancement,hacktoberfest-accepted
+
+ - [21: PHP 8.0 support #20](https://github.com/laminas/laminas-inputfilter/pull/21) thanks to @svycka
 
 ## 2.10.1 - 2019-08-28
 
