@@ -244,7 +244,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -368,7 +368,6 @@ class QueryInputFilter extends InputFilter
         // …
     }
 }</code></pre>
-
 <h2 id="using-input-filter">Using Input Filter</h2>
 <h3>Create Controller</h3>
 <p>Using the input filter in a controller, e.g.
@@ -398,7 +397,6 @@ class AlbumController extends AbstractActionController
         // …
     }
 }</code></pre>
-
 <h3>Create Factory for Controller</h3>
 <p>Fetch the <code>QueryInputFilter</code> from the input filter plugin manager in a factory,
 e.g. <code>src/Album/Handler/ListHandlerFactory.php</code>:</p>
@@ -423,7 +421,6 @@ class AlbumControllerFactory implements FactoryInterface
         return new AlbumController($inputFilter);
     }
 }</code></pre>
-
 <blockquote>
 <h3>Instantiating the Input Filter</h3>
 <p>The <code>InputFilterPluginManager</code> is used instead of directly instantiating the

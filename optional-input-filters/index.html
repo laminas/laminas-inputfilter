@@ -244,7 +244,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -336,7 +336,6 @@ $projectFilter-&gt;add([
         ['type' =&gt; 'uri'],
     ],
 ]);</code></pre>
-
 <p>Now, we'll create our primary input filter:</p>
 <pre class="highlight"><code class="language-php">$profileFilter = new InputFilter();
 $profileFilter-&gt;add([
@@ -353,7 +352,6 @@ $profileFilter-&gt;add([
 
 // And, finally, compose our project sub-filter:
 $profileFilter-&gt;add($projectFilter, 'project');</code></pre>
-
 <p>With this defined, we can now validate the following sets of data, presented in
 JSON for readability:</p>
 <ul>

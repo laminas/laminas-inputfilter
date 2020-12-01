@@ -244,7 +244,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -369,7 +369,6 @@ class QueryInputFilter extends InputFilter
         // …
     }
 }</code></pre>
-
 <h2 id="using-input-filter">Using Input Filter</h2>
 <h3>Create Handler</h3>
 <p>Using the input filter in a request handler, e.g.
@@ -413,7 +412,6 @@ class ListHandler implements RequestHandlerInterface
         ));
     }
 }</code></pre>
-
 <h3>Create Factory for Handler</h3>
 <p>Fetch the <code>QueryInputFilter</code> from the input filter plugin manager in a factory,
 e.g. <code>src/Album/Handler/ListHandlerFactory.php</code>:</p>
@@ -437,7 +435,6 @@ class ListHandlerFactory
         );
     }
 }</code></pre>
-
 <blockquote>
 <h3>Instantiating the InputFilter</h3>
 <p>The <code>InputFilterPluginManager</code> is used instead of directly instantiating the
