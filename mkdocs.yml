@@ -3,6 +3,7 @@ site_dir: docs/html
 nav:
     - Home: index.md
     - Introduction: intro.md
+    - Installation: installation.md
     - Reference:
       - Specifications: specs.md
       - "File Upload Input": file-input.md
@@ -16,3 +17,6 @@ site_description: 'Normalize and validate input sets from the web, APIs, the CLI
 repo_url: 'https://github.com/laminas/laminas-inputfilter'
 extra:
     project: Components
+    installation:
+      config_provider_class: 'Laminas\InputFilter\ConfigProvider'
+      module_class: 'Laminas\InputFilter\Module'
