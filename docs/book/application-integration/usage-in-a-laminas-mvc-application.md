@@ -4,7 +4,7 @@ The following example shows _one_ potential use case of laminas-inputfilter with
 a laminas-mvc based application. The example uses a module, a controller and the
 laminas-inputfilter plugin manager.
 
-Before starting, make sure laminas-inputfilter is installed and configured.
+Before starting, make sure laminas-inputfilter is [installed and configured](../installation.md).
 
 ## Create Input Filter
 
