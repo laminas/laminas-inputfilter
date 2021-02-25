@@ -34,9 +34,12 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
+        "laminas/laminas-db": "^2.12",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.4.2",
-        "psr/http-message": "^1.0"
+        "psalm/plugin-phpunit": "^0.15.1",
+        "psr/http-message": "^1.0",
+        "vimeo/psalm": "^4.6"
     },
     "suggest": {
         "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"
@@ -59,7 +62,8 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "static-analysis": "psalm --shepherd --stats"
     },
     "replace": {
         "zendframework/zend-inputfilter": "^2.10.1"
