@@ -5,7 +5,7 @@ a mezzio based application. The example uses a module, config provider
 configuration, laminas-servicemanager as dependency injection container, the
 laminas-inputfilter plugin manager and a request handler.
 
-Before starting, make sure laminas-inputfilter is installed and configured.
+Before starting, make sure laminas-inputfilter is [installed and configured](../installation.md).
 
 ## Create Input Filter
 
