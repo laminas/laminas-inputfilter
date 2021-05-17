@@ -1,29 +1,12 @@
 {
     "name": "laminas/laminas-inputfilter",
     "description": "Normalize and validate input sets from the web, APIs, the CLI, and more, including files",
-    "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "inputfilter"
     ],
     "homepage": "https://laminas.dev",
-    "support": {
-        "docs": "https://docs.laminas.dev/laminas-inputfilter/",
-        "issues": "https://github.com/laminas/laminas-inputfilter/issues",
-        "source": "https://github.com/laminas/laminas-inputfilter",
-        "rss": "https://github.com/laminas/laminas-inputfilter/releases.atom",
-        "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laminas": {
-            "component": "Laminas\\InputFilter",
-            "config-provider": "Laminas\\InputFilter\\ConfigProvider"
-        }
-    },
+    "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ~8.0.0",
         "laminas/laminas-filter": "^2.9.1",
@@ -31,6 +14,9 @@
         "laminas/laminas-stdlib": "^3.0",
         "laminas/laminas-validator": "^2.11",
         "laminas/laminas-zendframework-bridge": "^1.0"
+    },
+    "replace": {
+        "zendframework/zend-inputfilter": "^2.10.1"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
@@ -43,6 +29,15 @@
     },
     "suggest": {
         "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laminas": {
+            "component": "Laminas\\InputFilter",
+            "config-provider": "Laminas\\InputFilter\\ConfigProvider"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -61,11 +56,16 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "static-analysis": "psalm --shepherd --stats",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "static-analysis": "psalm --shepherd --stats"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-inputfilter": "^2.10.1"
+    "support": {
+        "issues": "https://github.com/laminas/laminas-inputfilter/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/laminas/laminas-inputfilter",
+        "docs": "https://docs.laminas.dev/laminas-inputfilter/",
+        "rss": "https://github.com/laminas/laminas-inputfilter/releases.atom"
     }
 }
