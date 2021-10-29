@@ -683,6 +683,52 @@ class BaseInputFilterTest extends TestCase
         self::assertSame($filteredArray, $baseInputFilter->getRawValues());
     }
 
+    public function testValidateInputsUsingArrayAccessObjectAsDataArgument()
+    {
+        $myInputFilter = new class extends BaseInputFilter{
+            protected function validateInputs(array $inputs, $data = [], $context = null)
+            {
+                // according to DocBlock $data must be array or ArrayAccess, so if it's not an ArrayAccess then array
+                // and I can safely pass $data to MyArrayAccess object __construct
+                if (! $data instanceof \ArrayAccess) {
+                    $data = new class($data) implements \ArrayAccess {
+                        protected $input1 = 'default';
+                        public function __construct(array $data)
+                        {
+                            if (key_exists('input1', $data)) {
+                                $this->input1 = $data['input1'];
+                            }
+                        }
+                        public function offsetExists($offset)
+                        {
+                            return $offset === 'input1';
+                        }
+                        public function offsetGet($offset)
+                        {
+                            return $this->$offset;
+                        }
+                        public function offsetSet($offset, $value)
+                        {
+                        }
+                        public function offsetUnset($offset)
+                        {
+                        }
+                    };
+                }
+                // So I pass ArrayAccess object to parent function, what is allowed according to DocBlock
+                return parent::validateInputs($inputs, $data, $context);
+            }
+        };
+        // simple optional(!!!) input that validates string to be not longer than 5 characters
+        $input = new Input('input1');
+        $input->setRequired(false);
+        $input->getValidatorChain()->attachByName('StringLength', ['max' => 5]);
+        $myInputFilter->add($input, 'input1');
+        $myInputFilter->setData(['input1' => 'Value longer than 5 characters']);
+        $result = $myInputFilter->isValid();
+        self::assertFalse($result, "Validation of optional input - failed");
+    }
+
     public function addMethodArgumentsProvider()
     {
         $inputTypes = $this->inputProvider();
