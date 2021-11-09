@@ -799,7 +799,10 @@ class CollectionInputFilterTest extends TestCase
         self::assertSame($unfilteredArray, $collectionInputFilter->getUnfilteredData());
     }
 
-    public function contextProvider()
+    /**
+     * @return iterable<string, array{0: array, 1: null|array, 2: null|array}>
+     */
+    public function contextProvider() : iterable
     {
         $data = ['fooInput' => 'fooValue'];
 
@@ -815,7 +818,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider contextProvider
      */
-    public function testValidationContext(array $data, $customContext, $expectedContext)
+    public function testValidationContext(array $data, ?array $customContext, ?array $expectedContext) : void
     {
         /** @var MockObject|BaseInputFilter $baseInputFilter */
         $baseInputFilter = $this->createMock(BaseInputFilter::class);

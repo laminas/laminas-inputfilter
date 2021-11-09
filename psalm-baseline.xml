@@ -921,7 +921,7 @@
       <code>function () use ($dataRaw, $dataFiltered) {</code>
       <code>function () use ($dataRaw, $dataFiltered, $errorMessage) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="21">
+    <MissingParamType occurrences="19">
       <code>$count</code>
       <code>$count</code>
       <code>$count</code>
@@ -941,10 +941,8 @@
       <code>$inputFilter</code>
       <code>$required</code>
       <code>$value</code>
-      <code>$customContext</code>
-      <code>$expectedContext</code>
     </MissingParamType>
-    <MissingReturnType occurrences="31">
+    <MissingReturnType occurrences="29">
       <code>countVsDataProvider</code>
       <code>dataNestingCollection</code>
       <code>dataVsValidProvider</code>
@@ -974,8 +972,6 @@
       <code>testSettingDataAsTraversableWithInvalidCollectionsRaisesException</code>
       <code>testSettingDataWithNonArrayNonTraversableRaisesException</code>
       <code>testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty</code>
-      <code>contextProvider</code>
-      <code>testValidationContext</code>
     </MissingReturnType>
     <MixedArgument occurrences="27">
       <code>$count</code>
