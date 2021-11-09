@@ -205,7 +205,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isValid($context = null)
     {
