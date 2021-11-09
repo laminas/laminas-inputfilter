@@ -921,7 +921,7 @@
       <code>function () use ($dataRaw, $dataFiltered) {</code>
       <code>function () use ($dataRaw, $dataFiltered, $errorMessage) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="19">
+    <MissingParamType occurrences="21">
       <code>$count</code>
       <code>$count</code>
       <code>$count</code>
@@ -941,8 +941,10 @@
       <code>$inputFilter</code>
       <code>$required</code>
       <code>$value</code>
+      <code>$customContext</code>
+      <code>$expectedContext</code>
     </MissingParamType>
-    <MissingReturnType occurrences="29">
+    <MissingReturnType occurrences="31">
       <code>countVsDataProvider</code>
       <code>dataNestingCollection</code>
       <code>dataVsValidProvider</code>
@@ -972,6 +974,8 @@
       <code>testSettingDataAsTraversableWithInvalidCollectionsRaisesException</code>
       <code>testSettingDataWithNonArrayNonTraversableRaisesException</code>
       <code>testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty</code>
+      <code>contextProvider</code>
+      <code>testValidationContext</code>
     </MissingReturnType>
     <MixedArgument occurrences="27">
       <code>$count</code>
@@ -1025,7 +1029,7 @@
     <MixedFunctionCall occurrences="1">
       <code>$set[3]()</code>
     </MixedFunctionCall>
-    <MixedMethodCall occurrences="8">
+    <MixedMethodCall occurrences="11">
       <code>method</code>
       <code>method</code>
       <code>method</code>
@@ -1034,17 +1038,22 @@
       <code>willReturn</code>
       <code>willReturn</code>
       <code>with</code>
+      <code>method</code>
+      <code>with</code>
+      <code>willReturn</code>
     </MixedMethodCall>
-    <PossiblyInvalidArgument occurrences="1">
+    <PossiblyInvalidArgument occurrences="2">
+      <code>$baseInputFilter</code>
       <code>$baseInputFilter</code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod occurrences="6">
+    <PossiblyUndefinedMethod occurrences="7">
       <code>expects</code>
       <code>expects</code>
       <code>expects</code>
       <code>method</code>
       <code>method</code>
       <code>method</code>
+      <code>expects</code>
     </PossiblyUndefinedMethod>
   </file>
   <file src="test/ConfigProviderTest.php">
