@@ -389,6 +389,8 @@ echo $inputFilter-&gt;getValue('foo') . "\n";    // the output is 'Bar'</code></
 an example where we create a password input value with the same constraints
 proposed before (a string with at least 8 characters):</p>
 <pre class="highlight"><code class="language-php">use Laminas\InputFilter\Factory;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 $factory = new Factory();
 $inputFilter = $factory-&gt;createInputFilter([
@@ -397,10 +399,10 @@ $inputFilter = $factory-&gt;createInputFilter([
         'required'   =&gt; true,
         'validators' =&gt; [
             [
-                'name' =&gt; 'not_empty',
+                'name' =&gt; NotEmpty::class,
             ],
             [
-                'name' =&gt; 'string_length',
+                'name' =&gt; StringLength::class,
                 'options' =&gt; [
                     'min' =&gt; 8
                 ],
@@ -419,6 +421,8 @@ means that when calling <code>add()</code>, you can provide a specification that
 <code>Factory</code> understands, and it will create the appropriate object. You may
 create either <code>Input</code> or <code>InputFilter</code> objects in this fashion.</p>
 <pre class="highlight"><code class="language-php">use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 $filter = new InputFilter();
 
@@ -428,10 +432,10 @@ $filter-&gt;add([
     'required' =&gt; true,
     'validators' =&gt; [
         [
-            'name' =&gt; 'not_empty',
+            'name' =&gt; NotEmpty::class,
         ],
         [
-            'name' =&gt; 'string_length',
+            'name' =&gt; StringLength::class,
             'options' =&gt; [
                 'min' =&gt; 5
             ],
@@ -447,10 +451,10 @@ $filter-&gt;add([
         'required' =&gt; true,
         'validators' =&gt; [
             [
-                'name' =&gt; 'not_empty',
+                'name' =&gt; NotEmpty::class,
             ],
             [
-                'name' =&gt; 'string_length',
+                'name' =&gt; StringLength::class,
                 'options' =&gt; [
                     'min' =&gt; 8
                 ],
@@ -560,16 +564,6 @@ class SimplePerson
 </nav>
 
 
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/laminas/laminas-inputfilter/edit/master/docs/book/intro.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
 
                 
             </div>
