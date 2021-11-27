@@ -128,6 +128,7 @@ controller in the application.
 Add the following lines to the module configuration file, e.g.
 `module/Album/config/module.config.php`:
 
+<!-- markdownlint-disable MD033 -->
 <pre class="language-php" data-line="8-9,12-17"><code>
 namespace Album;
 
@@ -149,3 +150,4 @@ return [
     // …
 ];
 </code></pre>
+<!-- markdownlint-enable MD033 -->
