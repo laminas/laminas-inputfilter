@@ -88,7 +88,7 @@ JSON for readability:
     "title": "Software Developer",
     "project": {
       "project_name": "laminas-inputfilter",
-      "url": "https://github.com/laminas-inputfilter",
+      "url": "https://github.com/laminas-inputfilter"
     }
   }
   ```

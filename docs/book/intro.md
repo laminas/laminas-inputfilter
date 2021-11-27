@@ -91,6 +91,8 @@ proposed before (a string with at least 8 characters):
 
 ```php
 use Laminas\InputFilter\Factory;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 $factory = new Factory();
 $inputFilter = $factory->createInputFilter([
@@ -99,10 +101,10 @@ $inputFilter = $factory->createInputFilter([
         'required'   => true,
         'validators' => [
             [
-                'name' => 'not_empty',
+                'name' => NotEmpty::class,
             ],
             [
-                'name' => 'string_length',
+                'name' => StringLength::class,
                 'options' => [
                     'min' => 8
                 ],
@@ -126,6 +128,8 @@ create either `Input` or `InputFilter` objects in this fashion.
 
 ```php
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 $filter = new InputFilter();
 
@@ -135,10 +139,10 @@ $filter->add([
     'required' => true,
     'validators' => [
         [
-            'name' => 'not_empty',
+            'name' => NotEmpty::class,
         ],
         [
-            'name' => 'string_length',
+            'name' => StringLength::class,
             'options' => [
                 'min' => 5
             ],
@@ -154,10 +158,10 @@ $filter->add([
         'required' => true,
         'validators' => [
             [
-                'name' => 'not_empty',
+                'name' => NotEmpty::class,
             ],
             [
-                'name' => 'string_length',
+                'name' => StringLength::class,
                 'options' => [
                     'min' => 8
                 ],
