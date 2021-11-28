@@ -2,7 +2,6 @@
 
 namespace Laminas\InputFilter;
 
-use ArrayAccess;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\InitializableInterface;
 use Traversable;
@@ -226,13 +225,13 @@ class BaseInputFilter implements
      * Validate a set of inputs against the current data
      *
      * @param  string[] $inputs Array of input names.
-     * @param  array|ArrayAccess $data
+     * @param  array $data
      * @param  mixed|null $context
      * @return bool
      */
-    protected function validateInputs(array $inputs, $data = [], $context = null)
+    protected function validateInputs(array $inputs, array $data = [], $context = null)
     {
-        $inputContext = $context ?: (array_merge($this->getRawValues(), (array) $data));
+        $inputContext = $context ?: (array_merge($this->getRawValues(), $data));
 
         $this->validInputs   = [];
         $this->invalidInputs = [];
