@@ -229,9 +229,9 @@ class BaseInputFilter implements
      * @param  mixed|null $context
      * @return bool
      */
-    protected function validateInputs(array $inputs, array $data = [], $context = null)
+    protected function validateInputs(array $inputs, $data = [], $context = null)
     {
-        $inputContext = $context ?: (array_merge($this->getRawValues(), $data));
+        $inputContext = $context ?: (array_merge($this->getRawValues(), (array) $data));
 
         $this->validInputs   = [];
         $this->invalidInputs = [];
