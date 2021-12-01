@@ -5,6 +5,12 @@ namespace LaminasTest\InputFilter;
 use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 
+use function array_map;
+use function array_pop;
+use function array_walk;
+use function current;
+use function is_array;
+
 /**
  * @covers \Laminas\InputFilter\ArrayInput
  */
@@ -54,7 +60,16 @@ class ArrayInputTest extends InputTest
         $this->input->setValue('bar');
     }
 
-    public function fallbackValueVsIsValidProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: bool,
+     *     1: string[],
+     *     2: string[],
+     *     3: bool,
+     *     4: string[]
+     * }>
+     */
+    public function fallbackValueVsIsValidProvider(): array
     {
         $dataSets = parent::fallbackValueVsIsValidProvider();
         array_walk($dataSets, function (&$set) {
@@ -66,7 +81,13 @@ class ArrayInputTest extends InputTest
         return $dataSets;
     }
 
-    public function emptyValueProvider()
+    /**
+     * @psalm-return iterable<string, array{
+     *     raw: list<null|string|array>,
+     *     filtered: null|string|array
+     * }>
+     */
+    public function emptyValueProvider(): iterable
     {
         $dataSets = parent::emptyValueProvider();
         array_walk($dataSets, function (&$set) {
@@ -76,7 +97,13 @@ class ArrayInputTest extends InputTest
         return $dataSets;
     }
 
-    public function mixedValueProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     raw: list<bool|int|float|string|list<string>|object>,
+     *     filtered:  bool|int|float|string|list<string>|object
+     * }>
+     */
+    public function mixedValueProvider(): array
     {
         $dataSets = parent::mixedValueProvider();
         array_walk($dataSets, function (&$set) {
@@ -86,6 +113,10 @@ class ArrayInputTest extends InputTest
         return $dataSets;
     }
 
+    /**
+     * @param array $valueMap
+     * @return FilterChain|MockObject
+     */
     protected function createFilterChainMock(array $valueMap = [])
     {
         // ArrayInput filters per each array value
@@ -105,6 +136,11 @@ class ArrayInputTest extends InputTest
         return parent::createFilterChainMock($valueMap);
     }
 
+    /**
+     * @param array $valueMap
+     * @param string[] $messages
+     * @return ValidatorChain|MockObject
+     */
     protected function createValidatorChainMock(array $valueMap = [], $messages = [])
     {
         // ArrayInput validates per each array value
@@ -121,6 +157,12 @@ class ArrayInputTest extends InputTest
         return parent::createValidatorChainMock($valueMap, $messages);
     }
 
+    /**
+     * @param bool $isValid
+     * @param mixed $value
+     * @param mixed $context
+     * @return NotEmptyValidator|MockObject
+     */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {
         // ArrayInput validates per each array value
@@ -131,7 +173,8 @@ class ArrayInputTest extends InputTest
         return parent::createNonEmptyValidatorMock($isValid, $value, $context);
     }
 
-    protected function getDummyValue($raw = true)
+    /** @return string[] */
+    protected function getDummyValue(bool $raw = true)
     {
         return [parent::getDummyValue($raw)];
     }

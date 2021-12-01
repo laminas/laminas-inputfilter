@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCaps
 
 namespace LaminasTest\InputFilter;
 
@@ -11,10 +11,16 @@ use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
+
+use function array_diff_key;
+use function array_merge;
+use function count;
+use function iterator_to_array;
+use function json_encode;
 
 /**
  * @covers \Laminas\InputFilter\Input
@@ -23,9 +29,7 @@ class InputTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var Input
-     */
+    /** @var Input */
     protected $input;
 
     protected function setUp(): void
@@ -38,7 +42,7 @@ class InputTest extends TestCase
         AbstractValidator::setDefaultTranslator(null);
     }
 
-    public function assertRequiredValidationErrorMessage(Input $input, $message = '')
+    public function assertRequiredValidationErrorMessage(Input $input, string $message = ''): void
     {
         $message  = $message ?: 'Expected failure message for required input';
         $message .= ';';
@@ -123,6 +127,7 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider setValueProvider
+     * @param mixed $fallbackValue
      */
     public function testSetFallbackValue($fallbackValue)
     {
@@ -137,6 +142,7 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider setValueProvider
+     * @param mixed $fallbackValue
      */
     public function testClearFallbackValue($fallbackValue)
     {
@@ -146,11 +152,20 @@ class InputTest extends TestCase
         $this->assertNull($input->getFallbackValue(), 'getFallbackValue() value not match');
         $this->assertFalse($input->hasFallback(), 'hasFallback() value not match');
     }
+
     /**
      * @dataProvider fallbackValueVsIsValidProvider
+     * @param string|string[] $fallbackValue
+     * @param string|string[] $originalValue
+     * @param string|string[] $expectedValue
      */
-    public function testFallbackValueVsIsValidRules($required, $fallbackValue, $originalValue, $isValid, $expectedValue)
-    {
+    public function testFallbackValueVsIsValidRules(
+        bool $required,
+        $fallbackValue,
+        $originalValue,
+        bool $isValid,
+        $expectedValue
+    ) {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
 
@@ -161,8 +176,8 @@ class InputTest extends TestCase
 
         $this->assertTrue(
             $input->isValid(),
-            'isValid() should be return always true when fallback value is set. Detail: ' .
-            json_encode($input->getMessages())
+            'isValid() should be return always true when fallback value is set. Detail: '
+            . json_encode($input->getMessages())
         );
         $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
         $this->assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
@@ -171,8 +186,9 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider fallbackValueVsIsValidProvider
+     * @param string|string[] $fallbackValue
      */
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet($required, $fallbackValue)
+    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, $fallbackValue)
     {
         $expectedValue = $fallbackValue; // Should always return the fallback value
 
@@ -185,8 +201,8 @@ class InputTest extends TestCase
 
         $this->assertTrue(
             $input->isValid(),
-            'isValid() should be return always true when fallback value is set. Detail: ' .
-            json_encode($input->getMessages())
+            'isValid() should be return always true when fallback value is set. Detail: '
+            . json_encode($input->getMessages())
         );
         $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
         $this->assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
@@ -295,18 +311,18 @@ class InputTest extends TestCase
 
         // Validator should not to be called
         $input->getValidatorChain()
-            ->attach($this->createValidatorMock(null, null))
-        ;
+            ->attach($this->createValidatorMock(null, null));
         $this->assertTrue(
             $input->isValid(),
-            'isValid() should be return always true when is not required, and no data is set. Detail: ' .
-            json_encode($input->getMessages())
+            'isValid() should be return always true when is not required, and no data is set. Detail: '
+            . json_encode($input->getMessages())
         );
         $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
     }
 
     /**
      * @dataProvider emptyValueProvider
+     * @param mixed $value
      */
     public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue($value)
     {
@@ -334,7 +350,7 @@ class InputTest extends TestCase
 
     public function testRetrievingValueFiltersTheValue()
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw      = $this->getDummyValue();
         $valueFiltered = $this->getDummyValue(false);
 
         $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
@@ -359,7 +375,7 @@ class InputTest extends TestCase
 
     public function testValidationOperatesOnFilteredValue()
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw      = $this->getDummyValue();
         $valueFiltered = $this->getDummyValue(false);
 
         $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
@@ -390,6 +406,7 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider emptyValueProvider
+     * @param mixed $value
      */
     public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value)
     {
@@ -410,6 +427,7 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider emptyValueProvider
+     * @param mixed $value
      */
     public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value)
     {
@@ -429,10 +447,12 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider emptyValueProvider
+     * @param mixed $valueRaw
+     * @param mixed $valueFiltered
      */
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain($valueRaw, $valueFiltered)
     {
-        $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
+        $filterChain    = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
@@ -454,22 +474,22 @@ class InputTest extends TestCase
     /**
      * @group 7448
      * @dataProvider isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider
+     * @param mixed $value
      */
     public function testIsRequiredVsAllowEmptyVsContinueIfEmptyVsIsValid(
-        $required,
-        $allowEmpty,
-        $continueIfEmpty,
-        $validator,
+        bool $required,
+        bool $allowEmpty,
+        bool $continueIfEmpty,
+        ValidatorInterface $validator,
         $value,
-        $expectedIsValid,
-        $expectedMessages
+        bool $expectedIsValid,
+        array $expectedMessages
     ) {
         $this->input->setRequired($required);
         $this->input->setAllowEmpty($allowEmpty);
         $this->input->setContinueIfEmpty($continueIfEmpty);
         $this->input->getValidatorChain()
-            ->attach($validator)
-        ;
+            ->attach($validator);
         $this->input->setValue($value);
 
         $this->assertEquals(
@@ -484,6 +504,7 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider setValueProvider
+     * @param mixed $value
      */
     public function testSetValuePutInputInTheDesiredState($value)
     {
@@ -496,10 +517,11 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider setValueProvider
+     * @param mixed $value
      */
     public function testResetValueReturnsInputValueToDefaultValue($value)
     {
-        $input = $this->input;
+        $input         = $this->input;
         $originalInput = clone $input;
         $this->assertFalse($input->hasValue(), 'Input should not have value by default');
 
@@ -527,14 +549,12 @@ class InputTest extends TestCase
         $targetFilterChain = $this->createFilterChainMock();
         $targetFilterChain->expects(TestCase::once())
             ->method('merge')
-            ->with($source->getFilterChain())
-        ;
+            ->with($source->getFilterChain());
 
         $targetValidatorChain = $this->createValidatorChainMock();
         $targetValidatorChain->expects(TestCase::once())
             ->method('merge')
-            ->with($source->getValidatorChain())
-        ;
+            ->with($source->getValidatorChain());
 
         $target = $this->input;
         $target->setName('fooInput');
@@ -628,8 +648,7 @@ class InputTest extends TestCase
         $translator->expects($this->atLeastOnce())
             ->method('translate')
             ->with($notEmpty->getMessageTemplates()[NotEmptyValidator::IS_EMPTY])
-            ->willReturn($translatedMessage)
-        ;
+            ->willReturn($translatedMessage);
 
         $this->assertFalse($this->input->isValid());
         $messages = $this->input->getMessages();
@@ -637,26 +656,41 @@ class InputTest extends TestCase
         $this->assertSame($translatedMessage, $messages['isEmpty']);
     }
 
-    public function fallbackValueVsIsValidProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: bool,
+     *     1: string,
+     *     2: string,
+     *     3: bool,
+     *     4: string
+     * }>
+     */
+    public function fallbackValueVsIsValidProvider(): array
     {
         $required = true;
-        $isValid = true;
+        $isValid  = true;
 
         $originalValue = 'fooValue';
         $fallbackValue = 'fooFallbackValue';
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore
         return [
-            // Description => [$inputIsRequired, $fallbackValue, $originalValue, $isValid, $expectedValue]
-            'Required: T, Input: Invalid. getValue: fallback' => [ $required, $fallbackValue, $originalValue, !$isValid, $fallbackValue],
-            'Required: T, Input: Valid. getValue: original' =>   [ $required, $fallbackValue, $originalValue,  $isValid, $originalValue],
-            'Required: F, Input: Invalid. getValue: fallback' => [!$required, $fallbackValue, $originalValue, !$isValid, $fallbackValue],
-            'Required: F, Input: Valid. getValue: original' =>   [!$required, $fallbackValue, $originalValue,  $isValid, $originalValue],
+            // Description                                    => [$inputIsRequired, $fallbackValue, $originalValue, $isValid, $expectedValue]
+            'Required: T, Input: Invalid. getValue: fallback' => [  $required, $fallbackValue, $originalValue, ! $isValid, $fallbackValue],
+            'Required: T, Input: Valid. getValue: original'   => [  $required, $fallbackValue, $originalValue,   $isValid, $originalValue],
+            'Required: F, Input: Invalid. getValue: fallback' => [! $required, $fallbackValue, $originalValue, ! $isValid, $fallbackValue],
+            'Required: F, Input: Valid. getValue: original'   => [! $required, $fallbackValue, $originalValue,   $isValid, $originalValue],
         ];
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore
     }
 
-    public function setValueProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     raw: bool|int|float|string|list<string>|object,
+     *     filtered:  bool|int|float|string|list<string>|object
+     * }>
+     */
+    public function setValueProvider(): array
     {
         $emptyValues = $this->emptyValueProvider();
         $mixedValues = $this->mixedValueProvider();
@@ -664,12 +698,21 @@ class InputTest extends TestCase
         $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
         $mixedValues = $mixedValues instanceof Iterator ? iterator_to_array($mixedValues) : $mixedValues;
 
-        $values = array_merge($emptyValues, $mixedValues);
-
-        return $values;
+        return array_merge($emptyValues, $mixedValues);
     }
 
-    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider()
+    /**
+     * @psalm-return iterable<string, array{
+     *     0: bool,
+     *     1: bool,
+     *     2: bool,
+     *     3: ValidatorInterface,
+     *     4: mixed,
+     *     5: bool,
+     *     6: string[]
+     * }>
+     */
+    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $allValues = $this->setValueProvider();
 
@@ -679,62 +722,62 @@ class InputTest extends TestCase
         $nonEmptyValues = array_diff_key($allValues, $emptyValues);
 
         $isRequired = true;
-        $aEmpty = true;
-        $cIEmpty = true;
-        $isValid = true;
+        $aEmpty     = true;
+        $cIEmpty    = true;
+        $isValid    = true;
 
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
-        $notEmptyMsg = ['isEmpty' => "Value is required and can't be empty"];
+        $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
         $validatorNotCall = function ($value, $context = null) {
             return $this->createValidatorMock(null, $value, $context);
         };
-        $validatorInvalid = function ($value, $context = null) use ($validatorMsg) {
+        $validatorInvalid                              = function ($value, $context = null) use ($validatorMsg) {
             return $this->createValidatorMock(false, $value, $context, $validatorMsg);
         };
         $validatorValid = function ($value, $context = null) {
             return $this->createValidatorMock(true, $value, $context);
         };
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
         $dataTemplates = [
             // Description => [$isRequired, $allowEmpty, $continueIfEmpty, $validator, [$values], $expectedIsValid, $expectedMessages]
-            'Required: T; AEmpty: T; CIEmpty: T; Validator: T'                   => [ $isRequired,  $aEmpty,  $cIEmpty, $validatorValid  , $allValues     ,  $isValid, []],
-            'Required: T; AEmpty: T; CIEmpty: T; Validator: F'                   => [ $isRequired,  $aEmpty,  $cIEmpty, $validatorInvalid, $allValues     , !$isValid, $validatorMsg],
+            'Required: T; AEmpty: T; CIEmpty: T; Validator: T'                   => [  $isRequired,   $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
+            'Required: T; AEmpty: T; CIEmpty: T; Validator: F'                   => [  $isRequired,   $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
 
-            'Required: T; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'     => [ $isRequired,  $aEmpty, !$cIEmpty, $validatorNotCall, $emptyValues   ,  $isValid, []],
-            'Required: T; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty' => [ $isRequired,  $aEmpty, !$cIEmpty, $validatorValid  , $nonEmptyValues,  $isValid, []],
-            'Required: T; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty' => [ $isRequired,  $aEmpty, !$cIEmpty, $validatorInvalid, $nonEmptyValues, !$isValid, $validatorMsg],
+            'Required: T; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'     => [  $isRequired,   $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   ,   $isValid, []],
+            'Required: T; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty' => [  $isRequired,   $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
+            'Required: T; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty' => [  $isRequired,   $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
 
-            'Required: T; AEmpty: F; CIEmpty: T; Validator: T'                   => [ $isRequired, !$aEmpty,  $cIEmpty, $validatorValid  , $allValues     ,  $isValid, []],
-            'Required: T; AEmpty: F; CIEmpty: T; Validator: F'                   => [ $isRequired, !$aEmpty,  $cIEmpty, $validatorInvalid, $allValues     , !$isValid, $validatorMsg],
+            'Required: T; AEmpty: F; CIEmpty: T; Validator: T'                   => [  $isRequired, ! $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
+            'Required: T; AEmpty: F; CIEmpty: T; Validator: F'                   => [  $isRequired, ! $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
 
-            'Required: T; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty'     => [ $isRequired, !$aEmpty, !$cIEmpty, $validatorNotCall, $emptyValues   , !$isValid, $notEmptyMsg],
-            'Required: T; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty' => [ $isRequired, !$aEmpty, !$cIEmpty, $validatorValid  , $nonEmptyValues,  $isValid, []],
-            'Required: T; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty' => [ $isRequired, !$aEmpty, !$cIEmpty, $validatorInvalid, $nonEmptyValues, !$isValid, $validatorMsg],
+            'Required: T; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty'     => [  $isRequired, ! $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   , ! $isValid, $notEmptyMsg],
+            'Required: T; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty' => [  $isRequired, ! $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
+            'Required: T; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty' => [  $isRequired, ! $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
 
-            'Required: F; AEmpty: T; CIEmpty: T; Validator: T'                   => [!$isRequired,  $aEmpty,  $cIEmpty, $validatorValid  , $allValues     ,  $isValid, []],
-            'Required: F; AEmpty: T; CIEmpty: T; Validator: F'                   => [!$isRequired,  $aEmpty,  $cIEmpty, $validatorInvalid, $allValues     , !$isValid, $validatorMsg],
+            'Required: F; AEmpty: T; CIEmpty: T; Validator: T'                   => [! $isRequired,   $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
+            'Required: F; AEmpty: T; CIEmpty: T; Validator: F'                   => [! $isRequired,   $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
 
-            'Required: F; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'     => [!$isRequired,  $aEmpty, !$cIEmpty, $validatorNotCall, $emptyValues   ,  $isValid, []],
-            'Required: F; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty' => [!$isRequired,  $aEmpty, !$cIEmpty, $validatorValid  , $nonEmptyValues,  $isValid, []],
-            'Required: F; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty' => [!$isRequired,  $aEmpty, !$cIEmpty, $validatorInvalid, $nonEmptyValues, !$isValid, $validatorMsg],
+            'Required: F; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'     => [! $isRequired,   $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   ,   $isValid, []],
+            'Required: F; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty' => [! $isRequired,   $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
+            'Required: F; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty' => [! $isRequired,   $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
 
-            'Required: F; AEmpty: F; CIEmpty: T; Validator: T'                   => [!$isRequired, !$aEmpty,  $cIEmpty, $validatorValid  , $allValues     ,  $isValid, []],
-            'Required: F; AEmpty: F; CIEmpty: T; Validator: F'                   => [!$isRequired, !$aEmpty,  $cIEmpty, $validatorInvalid, $allValues     , !$isValid, $validatorMsg],
+            'Required: F; AEmpty: F; CIEmpty: T; Validator: T'                   => [! $isRequired, ! $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
+            'Required: F; AEmpty: F; CIEmpty: T; Validator: F'                   => [! $isRequired, ! $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
 
-            'Required: F; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty'     => [!$isRequired, !$aEmpty, !$cIEmpty, $validatorNotCall, $emptyValues   ,  $isValid, []],
-            'Required: F; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty' => [!$isRequired, !$aEmpty, !$cIEmpty, $validatorValid  , $nonEmptyValues,  $isValid, []],
-            'Required: F; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty' => [!$isRequired, !$aEmpty, !$cIEmpty, $validatorInvalid, $nonEmptyValues, !$isValid, $validatorMsg],
+            'Required: F; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty'     => [! $isRequired, ! $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   ,   $isValid, []],
+            'Required: F; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty' => [! $isRequired, ! $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
+            'Required: F; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty' => [! $isRequired, ! $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
         ];
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
 
         // Expand data template matrix for each possible input value.
         // Description => [$isRequired, $allowEmpty, $continueIfEmpty, $validator, $value, $expectedIsValid]
         $dataSets = [];
         foreach ($dataTemplates as $dataTemplateDescription => $dataTemplate) {
             foreach ($dataTemplate[4] as $valueDescription => $value) {
-                $tmpTemplate = $dataTemplate;
+                $tmpTemplate    = $dataTemplate;
                 $tmpTemplate[3] = $dataTemplate[3]($value['filtered']); // Get validator mock for each data set
                 $tmpTemplate[4] = $value['raw']; // expand value
 
@@ -745,16 +788,22 @@ class InputTest extends TestCase
         return $dataSets;
     }
 
-    public function emptyValueProvider()
+    /**
+     * @psalm-return iterable<string, array{
+     *     raw: null|string|array,
+     *     filtered: null|string|array
+     * }>
+     */
+    public function emptyValueProvider(): iterable
     {
         return [
             // Description => [$value]
             'null' => [
-                'raw' => null,
+                'raw'      => null,
                 'filtered' => null,
             ],
-            '""' => [
-                'raw' => '',
+            '""'   => [
+                'raw'      => '',
                 'filtered' => '',
             ],
 //            '"0"' => ['0'],
@@ -762,26 +811,32 @@ class InputTest extends TestCase
 //            '0.0' => [0.0],
 //            'false' => [false],
             '[]' => [
-                'raw' => [],
+                'raw'      => [],
                 'filtered' => [],
             ],
         ];
     }
 
-    public function mixedValueProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     raw: bool|int|float|string|list<string>|object,
+     *     filtered:  bool|int|float|string|list<string>|object
+     * }>
+     */
+    public function mixedValueProvider(): array
     {
         return [
             // Description => [$value]
             '"0"' => [
-                'raw' => '0',
+                'raw'      => '0',
                 'filtered' => '0',
             ],
-            '0' => [
-                'raw' => 0,
+            '0'   => [
+                'raw'      => 0,
                 'filtered' => 0,
             ],
             '0.0' => [
-                'raw' => 0.0,
+                'raw'      => 0.0,
                 'filtered' => 0.0,
             ],
 //            TODO enable me
@@ -790,7 +845,7 @@ class InputTest extends TestCase
 //                'filtered' => false,
 //            ],
             'php' => [
-                'raw' => 'php',
+                'raw'      => 'php',
                 'filtered' => 'php',
             ],
 //            TODO enable me
@@ -798,33 +853,26 @@ class InputTest extends TestCase
 //                'raw' => ' ',
 //                'filtered' => ' ',
 //            ],
-            '1' => [
-                'raw' => 1,
+            '1'       => [
+                'raw'      => 1,
                 'filtered' => 1,
             ],
-            '1.0' => [
-                'raw' => 1.0,
+            '1.0'     => [
+                'raw'      => 1.0,
                 'filtered' => 1.0,
             ],
-            'true' => [
-                'raw' => true,
+            'true'    => [
+                'raw'      => true,
                 'filtered' => true,
             ],
             '["php"]' => [
-                'raw' => ['php'],
+                'raw'      => ['php'],
                 'filtered' => ['php'],
             ],
-            'object' => [
-                'raw' => new stdClass(),
+            'object'  => [
+                'raw'      => new stdClass(),
                 'filtered' => new stdClass(),
             ],
-            // @codingStandardsIgnoreStart
-//            TODO Skip HHVM failure enable me
-//            'callable' => [
-//                'raw' => function () {},
-//                'filtered' => function () {},
-//            ],
-            // @codingStandardsIgnoreEnd
         ];
     }
 
@@ -841,7 +889,6 @@ class InputTest extends TestCase
 
     /**
      * @param array $valueMap
-     *
      * @return FilterChain|MockObject
      */
     protected function createFilterChainMock(array $valueMap = [])
@@ -850,8 +897,7 @@ class InputTest extends TestCase
         $filterChain = $this->createMock(FilterChain::class);
 
         $filterChain->method('filter')
-            ->willReturnMap($valueMap)
-        ;
+            ->willReturnMap($valueMap);
 
         return $filterChain;
     }
@@ -859,7 +905,6 @@ class InputTest extends TestCase
     /**
      * @param array $valueMap
      * @param string[] $messages
-     *
      * @return ValidatorChain|MockObject
      */
     protected function createValidatorChainMock(array $valueMap = [], $messages = [])
@@ -869,18 +914,15 @@ class InputTest extends TestCase
 
         if (empty($valueMap)) {
             $validatorChain->expects($this->never())
-                ->method('isValid')
-            ;
+                ->method('isValid');
         } else {
             $validatorChain->expects($this->atLeastOnce())
                 ->method('isValid')
-                ->willReturnMap($valueMap)
-            ;
+                ->willReturnMap($valueMap);
         }
 
         $validatorChain->method('getMessages')
-            ->willReturn($messages)
-        ;
+            ->willReturn($messages);
 
         return $validatorChain;
     }
@@ -890,7 +932,6 @@ class InputTest extends TestCase
      * @param mixed $value
      * @param mixed $context
      * @param string[] $messages
-     *
      * @return ValidatorInterface|MockObject
      */
     protected function createValidatorMock($isValid, $value = 'not-set', $context = null, $messages = [])
@@ -901,20 +942,17 @@ class InputTest extends TestCase
         if (($isValid === false) || ($isValid === true)) {
             $isValidMethod = $validator->expects($this->once())
                 ->method('isValid')
-                ->willReturn($isValid)
-            ;
+                ->willReturn($isValid);
         } else {
             $isValidMethod = $validator->expects($this->never())
-                ->method('isValid')
-            ;
+                ->method('isValid');
         }
         if ($value !== 'not-set') {
             $isValidMethod->with($value, $context);
         }
 
         $validator->method('getMessages')
-            ->willReturn($messages)
-        ;
+            ->willReturn($messages);
 
         return $validator;
     }
@@ -923,7 +961,6 @@ class InputTest extends TestCase
      * @param bool $isValid
      * @param mixed $value
      * @param mixed $context
-     *
      * @return NotEmptyValidator|MockObject
      */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
@@ -935,18 +972,14 @@ class InputTest extends TestCase
         $notEmptyMock->expects($this->once())
             ->method('isValid')
             ->with($value, $context)
-            ->willReturn($isValid)
-        ;
+            ->willReturn($isValid);
 
         return $notEmptyMock;
     }
 
-    protected function getDummyValue($raw = true)
+    /** @return string */
+    protected function getDummyValue(bool $raw = true)
     {
-        if ($raw) {
-            return 'foo';
-        } else {
-            return 'filtered';
-        }
+        return $raw ? 'foo' : 'filtered';
     }
 }

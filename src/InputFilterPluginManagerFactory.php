@@ -7,12 +7,14 @@ use Laminas\ServiceManager\Config;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
+use function is_array;
+
 class InputFilterPluginManagerFactory implements FactoryInterface
 {
     /**
      * laminas-servicemanager v2 support for invocation options.
      *
-     * @param array
+     * @var array
      */
     protected $creationOptions;
 
@@ -21,7 +23,7 @@ class InputFilterPluginManagerFactory implements FactoryInterface
      *
      * @return InputFilterPluginManager
      */
-    public function __invoke(ContainerInterface $container, $name, array $options = null)
+    public function __invoke(ContainerInterface $container, $name, ?array $options = null)
     {
         $pluginManager = new InputFilterPluginManager($container, $options ?: []);
 

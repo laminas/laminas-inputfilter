@@ -9,6 +9,8 @@ use Psr\Http\Message\UploadedFileInterface;
 
 use function is_array;
 
+use const UPLOAD_ERR_NO_FILE;
+
 /**
  * PsrFileInput is a special Input type for handling uploaded files through  PSR-7 middlware.
  *
@@ -113,7 +115,8 @@ class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInter
 
         // Check if Upload validator is already first in chain
         $validators = $chain->getValidators();
-        if (isset($validators[0]['instance'])
+        if (
+            isset($validators[0]['instance'])
             && $validators[0]['instance'] instanceof UploadValidator
         ) {
             $this->subject->autoPrependUploadValidator = false;

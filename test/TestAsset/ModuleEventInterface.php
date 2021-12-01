@@ -9,5 +9,10 @@ namespace LaminasTest\InputFilter\TestAsset;
  */
 interface ModuleEventInterface
 {
+    /**
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
     public function getParam($name, $default = null);
 }

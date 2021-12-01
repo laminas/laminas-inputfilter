@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCaps
 
 namespace LaminasTest\InputFilter;
 
@@ -8,22 +8,28 @@ use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Validator\Between;
 use Laminas\Validator\Digits;
 use Laminas\Validator\NotEmpty;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use stdClass;
+
+use function array_merge;
+use function array_walk;
+use function count;
+use function json_encode;
 
 /**
  * @covers \Laminas\InputFilter\CollectionInputFilter
  */
 class CollectionInputFilterTest extends TestCase
 {
-    /**
-     * @var CollectionInputFilter
-     */
+    /** @var CollectionInputFilter */
     protected $inputFilter;
 
     protected function setUp(): void
@@ -45,8 +51,9 @@ class CollectionInputFilterTest extends TestCase
 
     /**
      * @dataProvider inputFilterProvider
+     * @param array|Traversable|InputFilterInterface $inputFilter
      */
-    public function testSetInputFilter($inputFilter, $expectedType)
+    public function testSetInputFilter($inputFilter, string $expectedType)
     {
         $this->inputFilter->setInputFilter($inputFilter);
 
@@ -61,7 +68,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider isRequiredProvider
      */
-    public function testSetRequired($value)
+    public function testSetRequired(bool $value)
     {
         $this->inputFilter->setIsRequired($value);
         $this->assertEquals($value, $this->inputFilter->getIsRequired());
@@ -70,7 +77,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider countVsDataProvider
      */
-    public function testSetCount($count, $data, $expectedCount)
+    public function testSetCount(?int $count, ?array $data, int $expectedCount)
     {
         if ($count !== null) {
             $this->inputFilter->setCount($count);
@@ -106,14 +113,14 @@ class CollectionInputFilterTest extends TestCase
      * @dataProvider dataVsValidProvider
      */
     public function testDataVsValid(
-        $required,
-        $count,
-        $data,
-        $inputFilter,
-        $expectedRaw,
-        $expectedValues,
-        $expectedValid,
-        $expectedMessages
+        bool $required,
+        ?int $count,
+        array $data,
+        InputFilterInterface $inputFilter,
+        array $expectedRaw,
+        array $expectedValues,
+        bool $expectedValid,
+        array $expectedMessages
     ) {
         $this->inputFilter->setInputFilter($inputFilter);
         $this->inputFilter->setData($data);
@@ -132,45 +139,57 @@ class CollectionInputFilterTest extends TestCase
         $this->assertEquals($expectedMessages, $this->inputFilter->getMessages(), 'getMessages() value not match');
     }
 
-    public function dataVsValidProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: bool,
+     *     1: null|int,
+     *     2: array,
+     *     3: InputFilterInterface,
+     *     4: array,
+     *     5: array,
+     *     6: array,
+     *     7: array
+     * }>
+     */
+    public function dataVsValidProvider(): array
     {
-        $dataRaw = [
+        $dataRaw      = [
             'fooInput' => 'fooRaw',
         ];
         $dataFiltered = [
             'fooInput' => 'fooFiltered',
         ];
-        $colRaw = [$dataRaw];
-        $colFiltered = [$dataFiltered];
+        $colRaw       = [$dataRaw];
+        $colFiltered  = [$dataFiltered];
         $errorMessage = [
             'fooInput' => 'fooError',
         ];
-        $colMessages = [$errorMessage];
+        $colMessages  = [$errorMessage];
 
-        $invalidIF = function () use ($dataRaw, $dataFiltered, $errorMessage) {
+        $invalidIF  = function () use ($dataRaw, $dataFiltered, $errorMessage) {
             return $this->createBaseInputFilterMock(false, $dataRaw, $dataFiltered, $errorMessage);
         };
-        $validIF = function () use ($dataRaw, $dataFiltered) {
+        $validIF    = function () use ($dataRaw, $dataFiltered) {
             return $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
         };
-        $noValidIF = function () use ($dataRaw, $dataFiltered) {
+        $noValidIF  = function () use ($dataRaw, $dataFiltered) {
             return $this->createBaseInputFilterMock(null, $dataRaw, $dataFiltered);
         };
         $isRequired = true;
 
-        // @codingStandardsIgnoreStart
+        // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
         $dataSets = [
             // Description => [$required, $count, $data, $inputFilter, $expectedRaw, $expectedValues, $expectedValid, $expectedMessages]
-            'Required: T, Count: N, Valid: T'  => [ $isRequired, null, $colRaw, $validIF  , $colRaw, $colFiltered, true , []],
-            'Required: T, Count: N, Valid: F'  => [ $isRequired, null, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Count: +1, Valid: F' => [ $isRequired,    2, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: N, Valid: T'  => [!$isRequired, null, $colRaw, $validIF  , $colRaw, $colFiltered, true , []],
-            'Required: F, Count: N, Valid: F'  => [!$isRequired, null, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: +1, Valid: F' => [!$isRequired,    2, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Data: [], Valid: X'  => [ $isRequired, null, []     , $noValidIF, []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
-            'Required: F, Data: [], Valid: X'  => [!$isRequired, null, []     , $noValidIF, []     , []          , true , []],
+            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIF  , $colRaw, $colFiltered, true , []],
+            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIF  , $colRaw, $colFiltered, true , []],
+            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIF, []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
+            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIF, []     , []          , true , []],
         ];
-        // @codingStandardsIgnoreEnd
+        // @phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
 
         array_walk(
             $dataSets,
@@ -187,24 +206,23 @@ class CollectionInputFilterTest extends TestCase
 
     public function testSetValidationGroupUsingFormStyle()
     {
-        $validationGroup = [
+        $validationGroup    = [
             'fooGroup',
         ];
         $colValidationGroup = [$validationGroup];
 
-        $dataRaw = [
+        $dataRaw         = [
             'fooInput' => 'fooRaw',
         ];
-        $dataFiltered = [
+        $dataFiltered    = [
             'fooInput' => 'fooFiltered',
         ];
-        $colRaw = [$dataRaw];
-        $colFiltered = [$dataFiltered];
+        $colRaw          = [$dataRaw];
+        $colFiltered     = [$dataFiltered];
         $baseInputFilter = $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
         $baseInputFilter->expects($this->once())
             ->method('setValidationGroup')
-            ->with($validationGroup)
-        ;
+            ->with($validationGroup);
 
         $this->inputFilter->setInputFilter($baseInputFilter);
         $this->inputFilter->setData($colRaw);
@@ -219,27 +237,28 @@ class CollectionInputFilterTest extends TestCase
         $this->assertEquals([], $this->inputFilter->getMessages(), 'getMessages() value not match');
     }
 
-    public function dataNestingCollection()
+    /** @psalm-return array<string, array{0: null|int, 1: bool}> */
+    public function dataNestingCollection(): array
     {
         return [
             'count not specified' => [
-                'count' => null,
+                'count'   => null,
                 'isValid' => true,
             ],
-            'count=0' => [
-                'count' => 0,
+            'count=0'             => [
+                'count'   => 0,
                 'isValid' => true,
             ],
-            'count = 1' => [
-                'count' => 1,
+            'count = 1'           => [
+                'count'   => 1,
                 'isValid' => true,
             ],
-            'count = 2' => [
-                'count' => 2,
+            'count = 2'           => [
+                'count'   => 2,
                 'isValid' => false,
             ],
-            'count = 3' => [
-                'count' => 3,
+            'count = 3'           => [
+                'count'   => 3,
                 'isValid' => false,
             ],
         ];
@@ -248,20 +267,20 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider dataNestingCollection
      */
-    public function testNestingCollectionCountCached($count, $expectedIsValid)
+    public function testNestingCollectionCountCached(?int $count, bool $expectedIsValid)
     {
         $firstInputFilter = new InputFilter();
 
         $firstCollection = new CollectionInputFilter();
         $firstCollection->setInputFilter($firstInputFilter);
 
-        $someInput = new Input('input');
+        $someInput         = new Input('input');
         $secondInputFilter = new InputFilter();
         $secondInputFilter->add($someInput, 'input');
 
         $secondCollection = new CollectionInputFilter();
         $secondCollection->setInputFilter($secondInputFilter);
-        if (! is_null($count)) {
+        if (null !== $count) {
             $secondCollection->setCount($count);
         }
 
@@ -296,7 +315,13 @@ class CollectionInputFilterTest extends TestCase
         $this->assertSame($expectedIsValid, $mainInputFilter->isValid());
     }
 
-    public function inputFilterProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: InputFilterInterface|array|Traversable,
+     *     1: class-string<InputFilterInterface>
+     * }>
+     */
+    public function inputFilterProvider(): array
     {
         $baseInputFilter = new BaseInputFilter();
 
@@ -306,23 +331,28 @@ class CollectionInputFilterTest extends TestCase
         $inputFilterSpecificationResult = new InputFilter();
         $inputFilterSpecificationResult->getFactory()->getInputFilterManager();
 
-        $dataSets = [
+        return [
             // Description => [inputFilter, $expectedType]
             'BaseInputFilter' => [$baseInputFilter, BaseInputFilter::class],
-            'array' => [$inputFilterSpecificationAsArray, InputFilter::class],
-            'Traversable' => [$inputSpecificationAsTraversable, InputFilter::class],
+            'array'           => [$inputFilterSpecificationAsArray, InputFilter::class],
+            'Traversable'     => [$inputSpecificationAsTraversable, InputFilter::class],
         ];
-
-        return $dataSets;
     }
 
-    public function countVsDataProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: null|int,
+     *     1: null|array<string, string>,
+     *     2: int
+     * }>
+     */
+    public function countVsDataProvider(): array
     {
         $data0 = [];
         $data1 = [['A' => 'a']];
         $data2 = [['A' => 'a'], ['B' => 'b']];
-
         // @codingStandardsIgnoreStart
+        // phpcs:disable
         return [
             // Description => [$count, $data, $expectedCount]
             'C:   -1, D: null' => [  -1, null  ,  0],
@@ -338,13 +368,14 @@ class CollectionInputFilterTest extends TestCase
             'C:    0, D:    1' => [   0, $data1,  0],
             'C:    1, D:    1' => [   1, $data1,  1],
         ];
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable
     }
 
-    public function isRequiredProvider()
+    /** @psalm-return array<string, array{0: bool}> */
+    public function isRequiredProvider(): array
     {
         return [
-            'enabled' => [true],
+            'enabled'  => [true],
             'disabled' => [false],
         ];
     }
@@ -354,7 +385,6 @@ class CollectionInputFilterTest extends TestCase
      * @param mixed[] $getRawValues
      * @param mixed[] $getValues
      * @param string[] $getMessages
-     *
      * @return MockObject|BaseInputFilter
      */
     protected function createBaseInputFilterMock(
@@ -366,24 +396,19 @@ class CollectionInputFilterTest extends TestCase
         /** @var BaseInputFilter|MockObject $inputFilter */
         $inputFilter = $this->createMock(BaseInputFilter::class);
         $inputFilter->method('getRawValues')
-            ->willReturn($getRawValues)
-        ;
+            ->willReturn($getRawValues);
         $inputFilter->method('getValues')
-            ->willReturn($getValues)
-        ;
+            ->willReturn($getValues);
         if (($isValid === false) || ($isValid === true)) {
             $inputFilter->expects($this->once())
                 ->method('isValid')
-                ->willReturn($isValid)
-            ;
+                ->willReturn($isValid);
         } else {
             $inputFilter->expects($this->never())
-                ->method('isValid')
-            ;
+                ->method('isValid');
         }
         $inputFilter->method('getMessages')
-            ->willReturn($getMessages)
-        ;
+            ->willReturn($getMessages);
 
         return $inputFilter;
     }
@@ -437,7 +462,8 @@ class CollectionInputFilterTest extends TestCase
         $this->assertEquals([['baz' => 'hey'], ['tor' => 'ver']], $unknown);
     }
 
-    public function invalidCollections()
+    /** @psalm-return array<string, array{0: array}> */
+    public function invalidCollections(): array
     {
         return [
             'null'       => [[['this' => 'is valid'], null]],
@@ -455,7 +481,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider invalidCollections
      */
-    public function testSettingDataAsArrayWithInvalidCollectionsRaisesException($data)
+    public function testSettingDataAsArrayWithInvalidCollectionsRaisesException(array $data)
     {
         $collectionInputFilter = $this->inputFilter;
 
@@ -467,17 +493,18 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider invalidCollections
      */
-    public function testSettingDataAsTraversableWithInvalidCollectionsRaisesException($data)
+    public function testSettingDataAsTraversableWithInvalidCollectionsRaisesException(array $data)
     {
         $collectionInputFilter = $this->inputFilter;
-        $data = new ArrayIterator($data);
+        $data                  = new ArrayIterator($data);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('invalid item in collection');
         $collectionInputFilter->setData($data);
     }
 
-    public function invalidDataType()
+    /** @psalm-return array<string, array{0: mixed}> */
+    public function invalidDataType(): array
     {
         return [
             'null'       => [null],
@@ -494,6 +521,7 @@ class CollectionInputFilterTest extends TestCase
 
     /**
      * @dataProvider invalidDataType
+     * @param mixed $data
      */
     public function testSettingDataWithNonArrayNonTraversableRaisesException($data)
     {
@@ -508,16 +536,16 @@ class CollectionInputFilterTest extends TestCase
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
-            'name' => 'phone',
-            'required' => true,
+            'name'       => 'phone',
+            'required'   => true,
             'validators' => [
                 ['name' => Digits::class],
                 ['name' => NotEmpty::class],
             ],
         ]);
         $inputFilter->add([
-            'name' => 'name',
-            'required' => true,
+            'name'       => 'name',
+            'required'   => true,
             'validators' => [
                 ['name' => NotEmpty::class],
             ],
@@ -532,11 +560,11 @@ class CollectionInputFilterTest extends TestCase
             ],
             [
                 'phone' => 'tom@tom',
-                'name' => 'Tom',
+                'name'  => 'Tom',
             ],
         ]);
 
-        $isValid = $collectionInputFilter->isValid();
+        $isValid  = $collectionInputFilter->isValid();
         $messages = $collectionInputFilter->getMessages();
 
         // @codingStandardsIgnoreStart
@@ -558,17 +586,17 @@ class CollectionInputFilterTest extends TestCase
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
-            'name' => 'phone',
-            'required' => true,
-            'validators' => [
+            'name'          => 'phone',
+            'required'      => true,
+            'validators'    => [
                 ['name' => Digits::class],
                 ['name' => NotEmpty::class],
             ],
             'error_message' => 'CUSTOM ERROR MESSAGE',
         ]);
         $inputFilter->add([
-            'name' => 'name',
-            'required' => true,
+            'name'       => 'name',
+            'required'   => true,
             'validators' => [
                 ['name' => NotEmpty::class],
             ],
@@ -583,13 +611,12 @@ class CollectionInputFilterTest extends TestCase
             ],
             [
                 'phone' => 'tom@tom',
-                'name' => 'Tom',
+                'name'  => 'Tom',
             ],
         ]);
 
-        $isValid = $collectionInputFilter->isValid();
+        $isValid  = $collectionInputFilter->isValid();
         $messages = $collectionInputFilter->getMessages();
-
 
         $this->assertFalse($isValid);
         $this->assertCount(2, $messages);
@@ -606,38 +633,38 @@ class CollectionInputFilterTest extends TestCase
 
     public function testDuplicatedErrorMessages()
     {
-        $factory = new \Laminas\InputFilter\Factory();
+        $factory     = new Factory();
         $inputFilter = $factory->createInputFilter(
             [
                 'element' => [
-                    'type' => InputFilter::class,
+                    'type'  => InputFilter::class,
                     'type1' => [
-                        'type' => CollectionInputFilter::class,
+                        'type'         => CollectionInputFilter::class,
                         'input_filter' => [
                             'test_field' => [
-                                'type' => CollectionInputFilter::class,
+                                'type'         => CollectionInputFilter::class,
                                 'input_filter' => [
                                     'test_field1' => [
-                                        'required' => false,
+                                        'required'   => false,
                                         'validators' => [
                                             [
-                                                'name' => \Laminas\Validator\Between::class,
+                                                'name'    => Between::class,
                                                 'options' => [
-                                                    'min' => 50,
-                                                    'max' => 100,
+                                                    'min'     => 50,
+                                                    'max'     => 100,
                                                     'message' => '%value% is incorrect',
                                                 ],
                                             ],
                                         ],
                                     ],
-                                    'price' => [
-                                        'required' => false,
+                                    'price'       => [
+                                        'required'   => false,
                                         'validators' => [
                                             [
-                                                'name' => \Laminas\Validator\Between::class,
+                                                'name'    => Between::class,
                                                 'options' => [
-                                                    'min' => 50,
-                                                    'max' => 100,
+                                                    'min'     => 50,
+                                                    'max'     => 100,
                                                     'message' => '%value% is incorrect',
                                                 ],
                                             ],
@@ -659,15 +686,15 @@ class CollectionInputFilterTest extends TestCase
                             'test_field' => [
                                 [
                                     'test_field1' => -20,
-                                    'price' => 20,
+                                    'price'       => 20,
                                 ],
                                 [
                                     'test_field1' => -15,
-                                    'price' => 15,
+                                    'price'       => 15,
                                 ],
                                 [
                                     'test_field1' => -10,
-                                    'price' => 10,
+                                    'price'       => 10,
                                 ],
                             ],
                         ],
@@ -675,7 +702,7 @@ class CollectionInputFilterTest extends TestCase
                             'test_field' => [
                                 [
                                     'test_field1' => -5,
-                                    'price' => 5,
+                                    'price'       => 5,
                                 ],
                             ],
                         ],
@@ -693,7 +720,7 @@ class CollectionInputFilterTest extends TestCase
                                 'test_field1' => [
                                     'notBetween' => '-20 is incorrect',
                                 ],
-                                'price' => [
+                                'price'       => [
                                     'notBetween' => '20 is incorrect',
                                 ],
                             ],
@@ -701,7 +728,7 @@ class CollectionInputFilterTest extends TestCase
                                 'test_field1' => [
                                     'notBetween' => '-15 is incorrect',
                                 ],
-                                'price' => [
+                                'price'       => [
                                     'notBetween' => '15 is incorrect',
                                 ],
                             ],
@@ -709,7 +736,7 @@ class CollectionInputFilterTest extends TestCase
                                 'test_field1' => [
                                     'notBetween' => '-10 is incorrect',
                                 ],
-                                'price' => [
+                                'price'       => [
                                     'notBetween' => '10 is incorrect',
                                 ],
                             ],
@@ -721,7 +748,7 @@ class CollectionInputFilterTest extends TestCase
                                 'test_field1' => [
                                     'notBetween' => '-5 is incorrect',
                                 ],
-                                'price' => [
+                                'price'       => [
                                     'notBetween' => '5 is incorrect',
                                 ],
                             ],
@@ -746,7 +773,7 @@ class CollectionInputFilterTest extends TestCase
 
     public function testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty()
     {
-        $message = 'this is the validation message';
+        $message           = 'this is the validation message';
         $notEmptyValidator = new NotEmpty();
         $notEmptyValidator->setMessage($message);
 
@@ -796,23 +823,23 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @return iterable<string, array{0: array, 1: null|array, 2: null|array}>
      */
-    public function contextProvider() : iterable
+    public function contextProvider(): iterable
     {
         $data = ['fooInput' => 'fooValue'];
 
         return [
             // Description => [$data, $customContext, $expectedContext]
-            'null context' => [[$data], null, null],
-            'array context' => [[$data], [$data], [$data]],
+            'null context'        => [[$data], null, null],
+            'array context'       => [[$data], [$data], [$data]],
             'traversable context' => [[$data], [new ArrayObject($data)], [new ArrayObject($data)]],
-            'empty data' => [[], ['fooContext'], ['fooContext']],
+            'empty data'          => [[], ['fooContext'], ['fooContext']],
         ];
     }
 
     /**
      * @dataProvider contextProvider
      */
-    public function testValidationContext(array $data, ?array $customContext, ?array $expectedContext) : void
+    public function testValidationContext(array $data, ?array $customContext, ?array $expectedContext): void
     {
         /** @var MockObject|BaseInputFilter $baseInputFilter */
         $baseInputFilter = $this->createMock(BaseInputFilter::class);

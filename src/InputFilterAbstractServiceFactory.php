@@ -9,20 +9,19 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 
+use function is_array;
+
 class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
 {
-    /**
-     * @var Factory
-     */
+    /** @var Factory */
     protected $factory;
 
     /**
-     * @param ContainerInterface      $services
      * @param string                  $rName
      * @param array                   $options
      * @return InputFilterInterface
      */
-    public function __invoke(ContainerInterface $services, $rName, array  $options = null)
+    public function __invoke(ContainerInterface $services, $rName, ?array $options = null)
     {
         $allConfig = $services->get('config');
         $config    = $allConfig['input_filter_specs'][$rName];
@@ -32,8 +31,6 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     }
 
     /**
-     *
-     * @param ContainerInterface $services
      * @param string $rName
      * @return bool
      */
@@ -44,7 +41,8 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
         }
 
         $config = $services->get('config');
-        if (! isset($config['input_filter_specs'][$rName])
+        if (
+            ! isset($config['input_filter_specs'][$rName])
             || ! is_array($config['input_filter_specs'][$rName])
         ) {
             return false;
@@ -56,9 +54,8 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     /**
      * Determine if we can create a service with name (v2)
      *
-     * @param ServiceLocatorInterface $container
-     * @param $name
-     * @param $requestedName
+     * @param string $name
+     * @param string $requestedName
      * @return bool
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $container, $name, $requestedName)
@@ -74,7 +71,6 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     /**
      * Create the requested service (v2)
      *
-     * @param ServiceLocatorInterface $container
      * @param string                  $cName
      * @param string                  $rName
      * @return InputFilterInterface
@@ -90,7 +86,6 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     }
 
     /**
-     * @param ContainerInterface $container
      * @return Factory
      */
     protected function getInputFilterFactory(ContainerInterface $container)
@@ -113,7 +108,6 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     }
 
     /**
-     * @param ContainerInterface $container
      * @return FilterPluginManager
      */
     protected function getFilterPluginManager(ContainerInterface $container)
@@ -126,7 +120,6 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     }
 
     /**
-     * @param ContainerInterface $container
      * @return ValidatorPluginManager
      */
     protected function getValidatorPluginManager(ContainerInterface $container)

@@ -4,17 +4,16 @@ namespace Laminas\InputFilter;
 
 use Traversable;
 
+use function is_array;
+
 class InputFilter extends BaseInputFilter
 {
-    /**
-     * @var Factory
-     */
+    /** @var Factory */
     protected $factory;
 
     /**
      * Set factory to use when adding inputs and filters by spec
      *
-     * @param  Factory $factory
      * @return InputFilter
      */
     public function setFactory(Factory $factory)
@@ -47,11 +46,12 @@ class InputFilter extends BaseInputFilter
      */
     public function add($input, $name = null)
     {
-        if (is_array($input)
+        if (
+            is_array($input)
             || ($input instanceof Traversable && ! $input instanceof InputFilterInterface)
         ) {
             $factory = $this->getFactory();
-            $input = $factory->createInput($input);
+            $input   = $factory->createInput($input);
         }
         return parent::add($input, $name);
     }

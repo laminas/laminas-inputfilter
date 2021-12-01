@@ -7,6 +7,9 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorChain;
 
+use function class_exists;
+use function is_array;
+
 class Input implements
     InputInterface,
     EmptyContextInterface
@@ -25,24 +28,16 @@ class Input implements
      */
     protected $continueIfEmpty = false;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $breakOnFailure = false;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     protected $errorMessage;
 
-    /**
-     * @var FilterChain
-     */
+    /** @var FilterChain */
     protected $filterChain;
 
-    /**
-     * @var string
-     */
+    /** @var null|string */
     protected $name;
 
     /**
@@ -52,19 +47,13 @@ class Input implements
      */
     protected $notEmptyValidator = false;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $required = true;
 
-    /**
-     * @var ValidatorChain
-     */
+    /** @var ValidatorChain */
     protected $validatorChain;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $value;
 
     /**
@@ -74,16 +63,13 @@ class Input implements
      */
     protected $hasValue = false;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $fallbackValue;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $hasFallback = false;
 
+    /** @param null|string $name */
     public function __construct($name = null)
     {
         $this->name = $name;
@@ -129,12 +115,11 @@ class Input implements
      */
     public function setErrorMessage($errorMessage)
     {
-        $this->errorMessage = (null === $errorMessage) ? null : (string) $errorMessage;
+        $this->errorMessage = null === $errorMessage ? null : (string) $errorMessage;
         return $this;
     }
 
     /**
-     * @param  FilterChain $filterChain
      * @return Input
      */
     public function setFilterChain(FilterChain $filterChain)
@@ -164,7 +149,6 @@ class Input implements
     }
 
     /**
-     * @param  ValidatorChain $validatorChain
      * @return Input
      */
     public function setValidatorChain(ValidatorChain $validatorChain)
@@ -187,7 +171,7 @@ class Input implements
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        $this->value    = $value;
         $this->hasValue = true;
         return $this;
     }
@@ -202,7 +186,7 @@ class Input implements
      */
     public function resetValue()
     {
-        $this->value = null;
+        $this->value    = null;
         $this->hasValue = false;
         return $this;
     }
@@ -214,7 +198,7 @@ class Input implements
     public function setFallbackValue($value)
     {
         $this->fallbackValue = $value;
-        $this->hasFallback = true;
+        $this->hasFallback   = true;
         return $this;
     }
 
@@ -344,12 +328,11 @@ class Input implements
 
     public function clearFallbackValue()
     {
-        $this->hasFallback = false;
+        $this->hasFallback   = false;
         $this->fallbackValue = null;
     }
 
     /**
-     * @param  InputInterface $input
      * @return Input
      */
     public function merge(InputInterface $input)
@@ -386,7 +369,7 @@ class Input implements
 
         $value           = $this->getValue();
         $hasValue        = $this->hasValue();
-        $empty           = ($value === null || $value === '' || $value === []);
+        $empty           = $value === null || $value === '' || $value === [];
         $required        = $this->isRequired();
         $allowEmpty      = $this->allowEmpty();
         $continueIfEmpty = $this->continueIfEmpty();
@@ -489,8 +472,8 @@ class Input implements
      */
     protected function prepareRequiredValidationFailureMessage()
     {
-        $chain      = $this->getValidatorChain();
-        $notEmpty   = $chain->plugin(NotEmpty::class);
+        $chain    = $this->getValidatorChain();
+        $notEmpty = $chain->plugin(NotEmpty::class);
 
         foreach ($chain->getValidators() as $validator) {
             if ($validator['instance'] instanceof NotEmpty) {

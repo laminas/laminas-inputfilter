@@ -3,6 +3,7 @@
 namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
+use Exception;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
@@ -25,7 +26,7 @@ class OptionalInputFilterTest extends TestCase
             'car' => [
                 'brand' => 'Volkswagen',
                 'model' => 'Golf',
-            ]
+            ],
         ];
 
         $inputFilter = $this->getNestedCarInputFilter();
@@ -65,7 +66,7 @@ class OptionalInputFilterTest extends TestCase
         $inputFilter->setData([
             'car' => [
                 'brand' => 'Volkswagen',
-            ]
+            ],
         ]);
 
         $this->assertFalse($inputFilter->isValid());
@@ -91,7 +92,7 @@ class OptionalInputFilterTest extends TestCase
      */
     public function testIteratorBehavesTheSameAsArray()
     {
-        $optionalInputFilter = new OptionalInputFilter;
+        $optionalInputFilter = new OptionalInputFilter();
         $optionalInputFilter->add(new Input('brand'));
 
         $optionalInputFilter->setData(['model' => 'Golf']);
@@ -110,21 +111,22 @@ class OptionalInputFilterTest extends TestCase
             $inputFilter->getValues();
             $this->assertTrue(false);
         // TODO: issue #143 narrow which exception should be thrown
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->assertTrue(true);
         }
     }
 
+    /** @var null|OptionalInputFilter */
     private $nestedCarInputFilter;
 
-    protected function getNestedCarInputFilter()
+    protected function getNestedCarInputFilter(): InputFilter
     {
         if (! $this->nestedCarInputFilter) {
-            $optionalInputFilter = new OptionalInputFilter;
+            $optionalInputFilter = new OptionalInputFilter();
             $optionalInputFilter->add(new Input('brand'));
             $optionalInputFilter->add(new Input('model'));
 
-            $this->nestedCarInputFilter = new InputFilter;
+            $this->nestedCarInputFilter = new InputFilter();
             $this->nestedCarInputFilter->add($optionalInputFilter, 'car');
         }
 
