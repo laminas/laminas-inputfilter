@@ -1025,7 +1025,7 @@
     <MixedFunctionCall occurrences="1">
       <code>$set[3]()</code>
     </MixedFunctionCall>
-    <MixedMethodCall occurrences="8">
+    <MixedMethodCall occurrences="11">
       <code>method</code>
       <code>method</code>
       <code>method</code>
@@ -1034,17 +1034,22 @@
       <code>willReturn</code>
       <code>willReturn</code>
       <code>with</code>
+      <code>method</code>
+      <code>with</code>
+      <code>willReturn</code>
     </MixedMethodCall>
-    <PossiblyInvalidArgument occurrences="1">
+    <PossiblyInvalidArgument occurrences="2">
+      <code>$baseInputFilter</code>
       <code>$baseInputFilter</code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod occurrences="6">
+    <PossiblyUndefinedMethod occurrences="7">
       <code>expects</code>
       <code>expects</code>
       <code>expects</code>
       <code>method</code>
       <code>method</code>
       <code>method</code>
+      <code>expects</code>
     </PossiblyUndefinedMethod>
   </file>
   <file src="test/ConfigProviderTest.php">

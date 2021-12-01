@@ -3,6 +3,7 @@
 namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
+use ArrayObject;
 use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
@@ -790,5 +791,42 @@ class CollectionInputFilterTest extends TestCase
         $collectionInputFilter->isValid();
 
         self::assertSame($unfilteredArray, $collectionInputFilter->getUnfilteredData());
+    }
+
+    /**
+     * @return iterable<string, array{0: array, 1: null|array, 2: null|array}>
+     */
+    public function contextProvider() : iterable
+    {
+        $data = ['fooInput' => 'fooValue'];
+
+        return [
+            // Description => [$data, $customContext, $expectedContext]
+            'null context' => [[$data], null, null],
+            'array context' => [[$data], [$data], [$data]],
+            'traversable context' => [[$data], [new ArrayObject($data)], [new ArrayObject($data)]],
+            'empty data' => [[], ['fooContext'], ['fooContext']],
+        ];
+    }
+
+    /**
+     * @dataProvider contextProvider
+     */
+    public function testValidationContext(array $data, ?array $customContext, ?array $expectedContext) : void
+    {
+        /** @var MockObject|BaseInputFilter $baseInputFilter */
+        $baseInputFilter = $this->createMock(BaseInputFilter::class);
+        $baseInputFilter->expects($this->exactly(count($data)))
+            ->method('isValid')
+            ->with($expectedContext)
+            ->willReturn(true);
+
+        $collectionInputFilter = (new CollectionInputFilter())->setInputFilter($baseInputFilter);
+        $collectionInputFilter->setData($data);
+
+        $this->assertTrue(
+            $collectionInputFilter->isValid($customContext),
+            'isValid() value not match. Detail: ' . json_encode($collectionInputFilter->getMessages())
+        );
     }
 }

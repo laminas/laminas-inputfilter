@@ -199,8 +199,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * {@inheritdoc}
-     * @param mixed $context Ignored, but present to retain signature compatibility.
+     * @inheritdoc
      */
     public function isValid($context = null)
     {
@@ -231,7 +230,7 @@ class CollectionInputFilter extends InputFilter
                 $inputFilter->setValidationGroup($this->validationGroup[$key]);
             }
 
-            if ($inputFilter->isValid()) {
+            if ($inputFilter->isValid($context)) {
                 $this->validInputs[$key] = $inputFilter->getValidInput();
             } else {
                 $valid = false;
