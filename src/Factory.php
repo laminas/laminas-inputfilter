@@ -9,27 +9,28 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Traversable;
 
+use function class_exists;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_callable;
+use function is_int;
+use function is_object;
+use function is_string;
+use function sprintf;
+
 class Factory
 {
-    /**
-     * @var FilterChain
-     */
+    /** @var FilterChain */
     protected $defaultFilterChain;
 
-    /**
-     * @var ValidatorChain
-     */
+    /** @var ValidatorChain */
     protected $defaultValidatorChain;
 
-    /**
-     * @var InputFilterPluginManager
-     */
+    /** @var InputFilterPluginManager */
     protected $inputFilterManager;
 
-    /**
-     * @param InputFilterPluginManager $inputFilterManager
-     */
-    public function __construct(InputFilterPluginManager $inputFilterManager = null)
+    public function __construct(?InputFilterPluginManager $inputFilterManager = null)
     {
         $this->defaultFilterChain    = new FilterChain();
         $this->defaultValidatorChain = new ValidatorChain();
@@ -42,7 +43,6 @@ class Factory
     /**
      * Set default filter chain to use
      *
-     * @param  FilterChain $filterChain
      * @return Factory
      */
     public function setDefaultFilterChain(FilterChain $filterChain)
@@ -74,7 +74,6 @@ class Factory
     /**
      * Set default validator chain to use
      *
-     * @param  ValidatorChain $validatorChain
      * @return Factory
      */
     public function setDefaultValidatorChain(ValidatorChain $validatorChain)
@@ -104,7 +103,6 @@ class Factory
     }
 
     /**
-     * @param  InputFilterPluginManager $inputFilterManager
      * @return self
      */
     public function setInputFilterManager(InputFilterPluginManager $inputFilterManager)
@@ -144,7 +142,7 @@ class Factory
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
-                (is_object($inputSpecification) ? get_class($inputSpecification) : gettype($inputSpecification))
+                is_object($inputSpecification) ? get_class($inputSpecification) : gettype($inputSpecification)
             ));
         }
         if ($inputSpecification instanceof Traversable) {
@@ -236,7 +234,7 @@ class Factory
                             '%s expects the value associated with "filters" to be an array/Traversable of filters'
                             . ' or filter specifications, or a FilterChain; received "%s"',
                             __METHOD__,
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
                     $this->populateFilters($input->getFilterChain(), $value);
@@ -251,7 +249,7 @@ class Factory
                             '%s expects the value associated with "validators" to be an array/Traversable of validators'
                             . ' or validator specifications, or a ValidatorChain; received "%s"',
                             __METHOD__,
-                            (is_object($value) ? get_class($value) : gettype($value))
+                            is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
                     $this->populateValidators($input->getValidatorChain(), $value);
@@ -323,7 +321,8 @@ class Factory
                 continue;
             }
 
-            if ($value instanceof InputInterface
+            if (
+                $value instanceof InputInterface
                 || $value instanceof InputFilterInterface
             ) {
                 $inputFilter->add($value, $key);
@@ -333,12 +332,13 @@ class Factory
             // Patch to enable nested, integer indexed input_filter_specs.
             // Check type and name are in spec, and that composed type is
             // an input filter...
-            if ((isset($value['type']) && is_string($value['type']))
+            if (
+                (isset($value['type']) && is_string($value['type']))
                 && (isset($value['name']) && is_string($value['name']))
                 && $this->getInputFilterManager()->get($value['type']) instanceof InputFilter
             ) {
                 // If $key is an integer, reset it to the specified name.
-                if (is_integer($key)) {
+                if (is_int($key)) {
                     $key = $value['name'];
                 }
 
@@ -354,7 +354,6 @@ class Factory
     }
 
     /**
-     * @param  FilterChain       $chain
      * @param  array|Traversable $filters
      * @throws Exception\RuntimeException
      * @return void
@@ -373,9 +372,9 @@ class Factory
                         'Invalid filter specification provided; does not include "name" key'
                     );
                 }
-                $name = $filter['name'];
-                $priority = isset($filter['priority']) ? $filter['priority'] : FilterChain::DEFAULT_PRIORITY;
-                $options = [];
+                $name     = $filter['name'];
+                $priority = $filter['priority'] ?? FilterChain::DEFAULT_PRIORITY;
+                $options  = [];
                 if (isset($filter['options'])) {
                     $options = $filter['options'];
                 }
@@ -390,7 +389,6 @@ class Factory
     }
 
     /**
-     * @param  ValidatorChain    $chain
      * @param  string[]|ValidatorInterface[] $validators
      * @throws Exception\RuntimeException
      * @return void
@@ -418,7 +416,7 @@ class Factory
                 if (isset($validator['break_chain_on_failure'])) {
                     $breakChainOnFailure = $validator['break_chain_on_failure'];
                 }
-                $priority = isset($validator['priority']) ? $validator['priority'] : ValidatorChain::DEFAULT_PRIORITY;
+                $priority = $validator['priority'] ?? ValidatorChain::DEFAULT_PRIORITY;
                 $chain->attachByName($name, $options, $breakChainOnFailure, $priority);
                 continue;
             }
@@ -434,7 +432,6 @@ class Factory
      *
      * This ensures custom plugins are made available to the input instance.
      *
-     * @param InputInterface $input
      * @return void
      */
     protected function injectDefaultFilterAndValidatorChains(InputInterface $input)
@@ -454,7 +451,6 @@ class Factory
      *
      * This ensures custom plugins are made available to the input instance.
      *
-     * @param InputInterface $input
      * @return void
      */
     protected function injectFilterAndValidatorChainsWithPluginManagers(InputInterface $input)

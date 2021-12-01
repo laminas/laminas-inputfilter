@@ -4,9 +4,16 @@ namespace Laminas\InputFilter;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\Stdlib\InitializableInterface;
+
+use function get_class;
+use function gettype;
+use function is_object;
+use function property_exists;
+use function sprintf;
 
 /**
  * Plugin manager implementation for input filters.
@@ -31,14 +38,14 @@ class InputFilterPluginManager extends AbstractPluginManager
         'OptionalInputFilter' => OptionalInputFilter::class,
 
         // Legacy Zend Framework aliases
-        \Zend\InputFilter\InputFilter::class => InputFilter::class,
+        \Zend\InputFilter\InputFilter::class           => InputFilter::class,
         \Zend\InputFilter\CollectionInputFilter::class => CollectionInputFilter::class,
-        \Zend\InputFilter\OptionalInputFilter::class => OptionalInputFilter::class,
+        \Zend\InputFilter\OptionalInputFilter::class   => OptionalInputFilter::class,
 
         // v2 normalized FQCNs
-        'zendinputfilterinputfilter' => InputFilter::class,
+        'zendinputfilterinputfilter'           => InputFilter::class,
         'zendinputfiltercollectioninputfilter' => CollectionInputFilter::class,
-        'zendinputfilteroptionalinputfilter' => OptionalInputFilter::class,
+        'zendinputfilteroptionalinputfilter'   => OptionalInputFilter::class,
     ];
 
     /**
@@ -47,13 +54,13 @@ class InputFilterPluginManager extends AbstractPluginManager
      * @var string[]
      */
     protected $factories = [
-        InputFilter::class                      => InvokableFactory::class,
-        CollectionInputFilter::class            => InvokableFactory::class,
-        OptionalInputFilter::class              => InvokableFactory::class,
+        InputFilter::class           => InvokableFactory::class,
+        CollectionInputFilter::class => InvokableFactory::class,
+        OptionalInputFilter::class   => InvokableFactory::class,
         // v2 canonical FQCN
-        'laminasinputfilterinputfilter'            => InvokableFactory::class,
-        'laminasinputfiltercollectioninputfilter'  => InvokableFactory::class,
-        'laminasinputfilteroptionalinputfilter'    => InvokableFactory::class,
+        'laminasinputfilterinputfilter'           => InvokableFactory::class,
+        'laminasinputfiltercollectioninputfilter' => InvokableFactory::class,
+        'laminasinputfilteroptionalinputfilter'   => InvokableFactory::class,
     ];
 
     /**
@@ -71,9 +78,9 @@ class InputFilterPluginManager extends AbstractPluginManager
     protected $shareByDefault = false;
 
     /**
-     * @param null|\Laminas\ServiceManager\ConfigInterface|ContainerInterface $configOrContainer
-     *     For laminas-servicemanager v2, null or a ConfigInterface instance are
-     *     allowed; for v3, a ContainerInterface is expected.
+     * @param null|ConfigInterface|ContainerInterface $configOrContainer For laminas-servicemanager v2,
+     *     null or a ConfigInterface instance are allowed; for v3, a
+     *     ContainerInterface is expected.
      * @param array $v3config Optional configuration array (laminas-servicemanager v3 only)
      */
     public function __construct($configOrContainer = null, array $v3config = [])
@@ -104,7 +111,6 @@ class InputFilterPluginManager extends AbstractPluginManager
     /**
      * Populate the filter and validator managers for the default filter/validator chains.
      *
-     * @param Factory $factory
      * @return void
      */
     public function populateFactoryPluginManagers(Factory $factory)
@@ -125,12 +131,12 @@ class InputFilterPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc} (v3)
      */
-    public function validate($plugin)
+    public function validate($instance)
     {
-        if ($plugin instanceof InputFilterInterface || $plugin instanceof InputInterface) {
+        if ($instance instanceof InputFilterInterface || $instance instanceof InputInterface) {
             // Hook to perform various initialization, when the inputFilter is not created through the factory
-            if ($plugin instanceof InitializableInterface) {
-                $plugin->init();
+            if ($instance instanceof InitializableInterface) {
+                $instance->init();
             }
 
             // we're okay
@@ -139,7 +145,7 @@ class InputFilterPluginManager extends AbstractPluginManager
 
         throw new InvalidServiceException(sprintf(
             'Plugin of type %s is invalid; must implement %s or %s',
-            (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
+            is_object($instance) ? get_class($instance) : gettype($instance),
             InputFilterInterface::class,
             InputInterface::class
         ));
@@ -153,7 +159,7 @@ class InputFilterPluginManager extends AbstractPluginManager
      *
      * @param  mixed                      $plugin
      * @return void
-     * @throws Exception\RuntimeException if invalid
+     * @throws Exception\RuntimeException If invalid.
      */
     public function validatePlugin($plugin)
     {

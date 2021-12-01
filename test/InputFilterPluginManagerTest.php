@@ -15,10 +15,12 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
 use Laminas\Validator\ValidatorPluginManager;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use ReflectionObject;
+
+use function method_exists;
 
 /**
  * @covers \Laminas\InputFilter\InputFilterPluginManager
@@ -27,20 +29,16 @@ class InputFilterPluginManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var InputFilterPluginManager
-     */
+    /** @var InputFilterPluginManager */
     protected $manager;
 
-    /**
-     * @var ServiceManager
-     */
+    /** @var ServiceManager */
     protected $services;
 
     protected function setUp(): void
     {
         $this->services = new ServiceManager();
-        $this->manager = new InputFilterPluginManager($this->services);
+        $this->manager  = new InputFilterPluginManager($this->services);
     }
 
     public function testIsASubclassOfAbstractPluginManager()
@@ -67,25 +65,28 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testLoadingInvalidElementRaisesException()
     {
-        $this->manager->setInvokableClass('test', get_class($this));
+        $this->manager->setInvokableClass('test', static::class);
         $this->expectException($this->getServiceNotFoundException());
         $this->manager->get('test');
     }
 
-    public function defaultInvokableClassesProvider()
+    /** @psalm-return array<string, array{0: string, 1: class-string<InputFilter>}> */
+    public function defaultInvokableClassesProvider(): array
     {
         return [
             // Description => [$alias, $expectedInstance]
             'inputfilter' => ['inputfilter', InputFilter::class],
-            'collection' => ['collection', CollectionInputFilter::class],
+            'collection'  => ['collection', CollectionInputFilter::class],
         ];
     }
 
     /**
      * @dataProvider defaultInvokableClassesProvider
+     * @psalm-param class-string $expectedInstance
      */
-    public function testDefaultInvokableClasses($alias, $expectedInstance)
+    public function testDefaultInvokableClasses(string $alias, string $expectedInstance)
     {
+        /** @var object $service */
         $service = $this->manager->get($alias);
 
         $this->assertInstanceOf($expectedInstance, $service, 'get() return type not match');
@@ -106,7 +107,7 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator()
     {
-        $filterManager = $this->getMockBuilder(FilterPluginManager::class)
+        $filterManager    = $this->getMockBuilder(FilterPluginManager::class)
             ->disableOriginalConstructor()
             ->getMock();
         $validatorManager = $this->getMockBuilder(ValidatorPluginManager::class)
@@ -141,24 +142,31 @@ class InputFilterPluginManagerTest extends TestCase
         );
     }
 
-    public function serviceProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: string,
+     *     1: InputInterface,
+     *     2: class-string<InputInterface>
+     * }>
+     */
+    public function serviceProvider(): array
     {
         $inputFilterInterfaceMock = $this->createInputFilterInterfaceMock();
-        $inputInterfaceMock = $this->createInputInterfaceMock();
+        $inputInterfaceMock       = $this->createInputInterfaceMock();
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable
         return [
             // Description         => [$serviceName,                  $service,                  $instanceOf]
             'InputFilterInterface' => ['inputFilterInterfaceService', $inputFilterInterfaceMock, InputFilterInterface::class],
             'InputInterface'       => ['inputInterfaceService',       $inputInterfaceMock,       InputInterface::class],
         ];
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable
     }
 
     /**
      * @dataProvider serviceProvider
      */
-    public function testGet($serviceName, $service)
+    public function testGet(string $serviceName, object $service)
     {
         $this->manager->setService($serviceName, $service);
 
@@ -167,11 +175,15 @@ class InputFilterPluginManagerTest extends TestCase
 
     /**
      * @dataProvider serviceProvider
+     * @param class-string<InputInterface> $instanceOf
      */
-    public function testServicesAreInitiatedIfImplementsInitializableInterface($serviceName, $service, $instanceOf)
-    {
+    public function testServicesAreInitiatedIfImplementsInitializableInterface(
+        string $serviceName,
+        object $service,
+        string $instanceOf
+    ) {
         $initializableProphecy = $this->prophesize($instanceOf)->willImplement(InitializableInterface::class);
-        $service = $initializableProphecy->reveal();
+        $service               = $initializableProphecy->reveal();
 
         $this->manager->setService($serviceName, $service);
         $this->assertSame($service, $this->manager->get($serviceName), 'get() value not match');
@@ -221,7 +233,7 @@ class InputFilterPluginManagerTest extends TestCase
         return $serviceLocator;
     }
 
-    protected function getServiceNotFoundException()
+    protected function getServiceNotFoundException(): string
     {
         if (method_exists($this->manager, 'configure')) {
             return InvalidServiceException::class;

@@ -7,15 +7,16 @@ use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Traversable;
+
+use function array_merge;
 
 /**
  * @covers \Laminas\InputFilter\InputFilter
  */
 class InputFilterTest extends BaseInputFilterTest
 {
-    /**
-     * @var InputFilter
-     */
+    /** @var InputFilter */
     protected $inputFilter;
 
     protected function setUp(): void
@@ -36,11 +37,18 @@ class InputFilterTest extends BaseInputFilterTest
         $this->assertSame($factory, $this->inputFilter->getFactory());
     }
 
-    public function inputProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: array|Traversable,
+     *     1: string,
+     *     2: Input
+     * }>
+     */
+    public function inputProvider(): array
     {
         $dataSets = parent::inputProvider();
 
-        $inputSpecificationAsArray = [
+        $inputSpecificationAsArray       = [
             'name' => 'inputFoo',
         ];
         $inputSpecificationAsTraversable = new ArrayIterator($inputSpecificationAsArray);
@@ -49,13 +57,13 @@ class InputFilterTest extends BaseInputFilterTest
         $inputSpecificationResult->getFilterChain(); // Fill input with a default chain just for make the test pass
         $inputSpecificationResult->getValidatorChain(); // Fill input with a default chain just for make the test pass
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable
         $inputFilterDataSets = [
             // Description => [input, expected name, $expectedReturnInput]
             'array' =>       [$inputSpecificationAsArray      , 'inputFoo', $inputSpecificationResult],
             'Traversable' => [$inputSpecificationAsTraversable, 'inputFoo', $inputSpecificationResult],
         ];
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable
         $dataSets = array_merge($dataSets, $inputFilterDataSets);
 
         return $dataSets;
@@ -83,10 +91,10 @@ class InputFilterTest extends BaseInputFilterTest
     {
         $filter1 = new InputFilter();
         $filter1->add([
-            'type' => InputFilter::class,
+            'type'         => InputFilter::class,
             'nestedField1' => [
-                'required' => false
-            ]
+                'required' => false,
+            ],
         ], 'nested');
 
         // Empty set of data

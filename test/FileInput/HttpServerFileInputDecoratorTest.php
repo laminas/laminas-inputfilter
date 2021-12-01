@@ -6,6 +6,13 @@ use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\HttpServerFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
+use Webmozart\Assert\Assert;
+
+use function count;
+use function json_encode;
+
+use const UPLOAD_ERR_NO_FILE;
+use const UPLOAD_ERR_OK;
 
 /**
  * @covers \Laminas\InputFilter\FileInput\HttpServerFileInputDecorator
@@ -53,7 +60,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         ];
         $this->input->setValue($values);
 
-        $newValue = ['tmp_name' => 'new'];
+        $newValue      = ['tmp_name' => 'new'];
         $filteredValue = [$newValue, $newValue, $newValue];
         $this->input->setFilterChain($this->createFilterChainMock([
             [$values[0], $newValue],
@@ -182,10 +189,10 @@ class HttpServerFileInputDecoratorTest extends InputTest
 
         $expectedNormalizedValue = [
             'tmp_name' => '',
-            'name' => '',
-            'size' => 0,
-            'type' => '',
-            'error' => UPLOAD_ERR_NO_FILE,
+            'name'     => '',
+            'size'     => 0,
+            'type'     => '',
+            'error'    => UPLOAD_ERR_NO_FILE,
         ];
         $this->input->setValidatorChain($this->createValidatorChainMock([[$expectedNormalizedValue, null, false]]));
         $this->assertFalse($this->input->isValid());
@@ -208,29 +215,36 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertFalse($this->input->isValid());
     }
 
+    /** @param mixed $value */
     public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null)
     {
         $this->markTestSkipped('Test is not enabled in FileInputTest');
     }
 
+    /** @param mixed $value */
     public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null)
     {
         $this->markTestSkipped('Test is not enabled in FileInputTest');
     }
 
+    /**
+     * @param null|string|string[] $fallbackValue
+     * @param null|string|string[] $originalValue
+     * @param null|string|string[] $expectedValue
+     */
     public function testFallbackValueVsIsValidRules(
-        $required = null,
+        ?bool $required = null,
         $fallbackValue = null,
         $originalValue = null,
-        $isValid = null,
+        ?bool $isValid = null,
         $expectedValue = null
     ) {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on FileInput');
     }
 
-
+    /** @param null|string|string[] $fallbackValue */
     public function testFallbackValueVsIsValidRulesWhenValueNotSet(
-        $required = null,
+        ?bool $required = null,
         $fallbackValue = null
     ) {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on FileInput');
@@ -246,7 +260,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
     {
         $rawValue = [
             'tmp_name' => '',
-            'error' => \UPLOAD_ERR_NO_FILE,
+            'error'    => UPLOAD_ERR_NO_FILE,
         ];
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
@@ -255,17 +269,19 @@ class HttpServerFileInputDecoratorTest extends InputTest
     {
         $rawValue = [
             'tmp_name' => 'name',
-            'error' => \UPLOAD_ERR_OK,
+            'error'    => UPLOAD_ERR_OK,
         ];
         $this->assertFalse($this->input->isEmptyFile($rawValue));
     }
 
     public function testIsEmptyMultiFileUploadNoFile()
     {
-        $rawValue = [[
-            'tmp_name' => 'foo',
-            'error'    => \UPLOAD_ERR_NO_FILE,
-        ]];
+        $rawValue = [
+            [
+                'tmp_name' => 'foo',
+                'error'    => UPLOAD_ERR_NO_FILE,
+            ],
+        ];
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
 
@@ -274,11 +290,11 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $rawValue = [
             [
                 'tmp_name' => 'foo',
-                'error'    => \UPLOAD_ERR_OK,
+                'error'    => UPLOAD_ERR_OK,
             ],
             [
                 'tmp_name' => 'bar',
-                'error'    => \UPLOAD_ERR_OK,
+                'error'    => UPLOAD_ERR_OK,
             ],
         ];
         $this->assertFalse($this->input->isEmptyFile($rawValue));
@@ -286,9 +302,9 @@ class HttpServerFileInputDecoratorTest extends InputTest
 
     public function testDefaultInjectedUploadValidatorRespectsRelease2Convention()
     {
-        $input = new FileInput('foo');
+        $input          = new FileInput('foo');
         $validatorChain = $input->getValidatorChain();
-        $pluginManager = $validatorChain->getPluginManager();
+        $pluginManager  = $validatorChain->getPluginManager();
         $pluginManager->setInvokableClass('fileuploadfile', TestAsset\FileUploadMock::class);
         $input->setValue('');
 
@@ -316,9 +332,10 @@ class HttpServerFileInputDecoratorTest extends InputTest
         );
     }
 
-    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider()
+    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $dataSets = parent::isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider();
+        Assert::isArrayAccessible($dataSets);
 
         // FileInput do not use NotEmpty validator so the only validator present in the chain is the custom one.
         unset($dataSets['Required: T; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty / tmp_name']);
@@ -328,58 +345,58 @@ class HttpServerFileInputDecoratorTest extends InputTest
         return $dataSets;
     }
 
-    public function emptyValueProvider()
+    public function emptyValueProvider(): iterable
     {
         return [
             'tmp_name' => [
-                'raw' => 'file',
+                'raw'      => 'file',
                 'filtered' => [
                     'tmp_name' => 'file',
-                    'name' => 'file',
-                    'size' => 0,
-                    'type' => '',
-                    'error' => UPLOAD_ERR_NO_FILE,
+                    'name'     => 'file',
+                    'size'     => 0,
+                    'type'     => '',
+                    'error'    => UPLOAD_ERR_NO_FILE,
                 ],
             ],
-            'single' => [
-                'raw' => [
+            'single'   => [
+                'raw'      => [
                     'tmp_name' => '',
-                    'error' => UPLOAD_ERR_NO_FILE,
+                    'error'    => UPLOAD_ERR_NO_FILE,
                 ],
                 'filtered' => [
                     'tmp_name' => '',
-                    'error' => UPLOAD_ERR_NO_FILE,
+                    'error'    => UPLOAD_ERR_NO_FILE,
                 ],
             ],
-            'multi' => [
-                'raw' => [
+            'multi'    => [
+                'raw'      => [
                     [
                         'tmp_name' => 'foo',
-                        'error' => UPLOAD_ERR_NO_FILE,
+                        'error'    => UPLOAD_ERR_NO_FILE,
                     ],
                 ],
                 'filtered' => [
                     'tmp_name' => 'foo',
-                    'error' => UPLOAD_ERR_NO_FILE,
+                    'error'    => UPLOAD_ERR_NO_FILE,
                 ],
             ],
         ];
     }
 
-    public function mixedValueProvider()
+    public function mixedValueProvider(): array
     {
         $fooUploadErrOk = [
             'tmp_name' => 'foo',
-            'error' => UPLOAD_ERR_OK,
+            'error'    => UPLOAD_ERR_OK,
         ];
 
         return [
             'single' => [
-                'raw' => $fooUploadErrOk,
+                'raw'      => $fooUploadErrOk,
                 'filtered' => $fooUploadErrOk,
             ],
-            'multi' => [
-                'raw' => [
+            'multi'  => [
+                'raw'      => [
                     $fooUploadErrOk,
                 ],
                 'filtered' => $fooUploadErrOk,
@@ -387,7 +404,8 @@ class HttpServerFileInputDecoratorTest extends InputTest
         ];
     }
 
-    protected function getDummyValue($raw = true)
+    /** @return array<string, string> */
+    protected function getDummyValue(bool $raw = true)
     {
         return ['tmp_name' => 'bar'];
     }

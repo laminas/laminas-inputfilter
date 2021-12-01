@@ -25,8 +25,6 @@ class ModuleTest extends TestCase
     {
         $config = $this->module->getConfig();
 
-        $this->assertIsArray($config);
-
         // Service manager
         $this->assertArrayHasKey('service_manager', $config);
 

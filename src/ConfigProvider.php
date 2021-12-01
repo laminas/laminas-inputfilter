@@ -12,7 +12,7 @@ class ConfigProvider
     public function __invoke()
     {
         return [
-            'dependencies' => $this->getDependencyConfig(),
+            'dependencies'  => $this->getDependencyConfig(),
             'input_filters' => $this->getInputFilterConfig(),
         ];
     }
@@ -25,7 +25,7 @@ class ConfigProvider
     public function getDependencyConfig()
     {
         return [
-            'aliases' => [
+            'aliases'   => [
                 'InputFilterManager' => InputFilterPluginManager::class,
 
                 // Legacy Zend Framework aliases

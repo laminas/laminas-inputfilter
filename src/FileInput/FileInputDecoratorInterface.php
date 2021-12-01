@@ -14,7 +14,7 @@ interface FileInputDecoratorInterface
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded
      *
-     * @param $rawValue
+     * @param mixed $rawValue
      * @return bool
      */
     public static function isEmptyFileDecorator($rawValue);

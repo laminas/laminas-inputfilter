@@ -12,9 +12,13 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Validator;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
-use PHPUnit\Framework\TestCase;
+use LaminasTest\InputFilter\TestAsset\Foo;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+
+use function call_user_func_array;
+use function count;
 
 /**
  * @covers \Laminas\InputFilter\InputFilterAbstractServiceFactory
@@ -23,19 +27,13 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ServiceManager
-     */
+    /** @var ServiceManager */
     protected $services;
 
-    /**
-     * @var InputFilterPluginManager
-    */
+    /** @var InputFilterPluginManager */
     protected $filters;
 
-    /**
-     * @var InputFilterAbstractServiceFactory
-     */
+    /** @var InputFilterAbstractServiceFactory */
     protected $factory;
 
     protected function setUp(): void
@@ -58,7 +56,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     {
         $this->services->setService('config', []);
         $method = 'canCreate';
-        $args = [$this->getCompatContainer(), 'filter'];
+        $args   = [$this->getCompatContainer(), 'filter'];
 
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
@@ -104,13 +102,13 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter()
     {
         $filters = new FilterPluginManager($this->services);
-        $filter  = function ($value) {
+        $filter  = function () {
         };
         $filters->setService('foo', $filter);
 
         $validators = new ValidatorPluginManager($this->services);
         /** @var ValidatorInterface|MockObject $validator */
-        $validator  = $this->createMock(ValidatorInterface::class);
+        $validator = $this->createMock(ValidatorInterface::class);
         $validators->setService('foo', $validator);
 
         $this->services->setService('FilterManager', $filters);
@@ -119,21 +117,21 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             'input_filter_specs' => [
                 'filter' => [
                     'input' => [
-                        'name' => 'input',
-                        'required' => true,
-                        'filters' => [
-                            [ 'name' => 'foo' ],
+                        'name'       => 'input',
+                        'required'   => true,
+                        'filters'    => [
+                            ['name' => 'foo'],
                         ],
                         'validators' => [
-                            [ 'name' => 'foo' ],
+                            ['name' => 'foo'],
                         ],
                     ],
                 ],
             ],
         ]);
 
-        $method = '__invoke';
-        $args = [$this->getCompatContainer(), 'filter'];
+        $method      = '__invoke';
+        $args        = [$this->getCompatContainer(), 'filter'];
         $inputFilter = call_user_func_array([$this->factory, $method], $args);
         $this->assertTrue($inputFilter->has('input'));
 
@@ -158,13 +156,13 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             'input_filter_specs' => [
                 'foobar' => [
                     'input' => [
-                        'name' => 'input',
-                        'required' => true,
-                        'filters' => [
-                            [ 'name' => 'foo' ],
+                        'name'       => 'input',
+                        'required'   => true,
+                        'filters'    => [
+                            ['name' => 'foo'],
                         ],
                         'validators' => [
-                            [ 'name' => 'foo' ],
+                            ['name' => 'foo'],
                         ],
                     ],
                 ],
@@ -172,12 +170,12 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         ]);
         $validators = new ValidatorPluginManager($this->services);
         /** @var ValidatorInterface|MockObject $validator */
-        $validator  = $this->createMock(ValidatorInterface::class);
+        $validator = $this->createMock(ValidatorInterface::class);
         $this->services->setService('ValidatorManager', $validators);
         $validators->setService('foo', $validator);
 
         $filters = new FilterPluginManager($this->services);
-        $filter  = function ($value) {
+        $filter  = function () {
         };
         $filters->setService('foo', $filter);
 
@@ -193,7 +191,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
      *
      * v3 passes the 'creationContext' (ie the root SM) to the AbstractFactory
      */
-    protected function getCompatContainer()
+    protected function getCompatContainer(): ServiceManager
     {
         return $this->services;
     }
@@ -209,11 +207,11 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
         $this->filters->addAbstractFactory(TestAsset\FooAbstractFactory::class);
-        $filter = $this->factory->__invoke($this->services, 'filter');
+        $filter             = $this->factory->__invoke($this->services, 'filter');
         $inputFilterManager = $filter->getFactory()->getInputFilterManager();
 
-        $this->assertInstanceOf('Laminas\InputFilter\InputFilterPluginManager', $inputFilterManager);
-        $this->assertInstanceOf('LaminasTest\InputFilter\TestAsset\Foo', $inputFilterManager->get('foo'));
+        $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilterManager);
+        $this->assertInstanceOf(Foo::class, $inputFilterManager->get('foo'));
     }
 
     /**
@@ -227,8 +225,8 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
         $canCreate = 'canCreate';
-        $create = '__invoke';
-        $args = [$this->services, 'filter'];
+        $create    = '__invoke';
+        $args      = [$this->services, 'filter'];
         $this->assertTrue(call_user_func_array([$this->factory, $canCreate], $args));
         $inputFilter = call_user_func_array([$this->factory, $create], $args);
         $this->assertInstanceOf(InputFilterInterface::class, $inputFilter);
@@ -253,32 +251,32 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             'input_filter_specs' => [
                 'test' => [
                     [
-                        'name' => 'a-file-element',
-                        'type' => FileInput::class,
-                        'required' => true,
+                        'name'       => 'a-file-element',
+                        'type'       => FileInput::class,
+                        'required'   => true,
                         'validators' => [
                             [
-                                'name' => Validator\File\UploadFile::class,
+                                'name'    => Validator\File\UploadFile::class,
                                 'options' => [
                                     'breakchainonfailure' => true,
                                 ],
                             ],
                             [
-                                'name' => Validator\File\Size::class,
+                                'name'    => Validator\File\Size::class,
                                 'options' => [
                                     'breakchainonfailure' => true,
-                                    'max' => '6GB',
+                                    'max'                 => '6GB',
                                 ],
                             ],
                             [
-                                'name' => Validator\File\Extension::class,
+                                'name'    => Validator\File\Extension::class,
                                 'options' => [
                                     'breakchainonfailure' => true,
-                                    'extension' => 'csv,zip',
+                                    'extension'           => 'csv,zip',
                                 ],
                             ],
                         ],
-                        'filters' => [
+                        'filters'    => [
                             ['name' => 'CustomFilter'],
                         ],
                     ],

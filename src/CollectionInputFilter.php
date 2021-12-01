@@ -5,41 +5,34 @@ namespace Laminas\InputFilter;
 use Laminas\Validator\NotEmpty;
 use Traversable;
 
+use function count;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_object;
+use function sprintf;
+
 class CollectionInputFilter extends InputFilter
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $isRequired = false;
 
-    /**
-     * @var int
-     */
-    protected $count = null;
+    /** @var null|int */
+    protected $count;
 
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     protected $collectionValues = [];
 
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     protected $collectionRawValues = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $collectionMessages = [];
 
-    /**
-     * @var BaseInputFilter
-     */
+    /** @var BaseInputFilter */
     protected $inputFilter;
 
-    /**
-     * @var NotEmpty
-     */
+    /** @var NotEmpty */
     protected $notEmptyValidator;
 
     /**
@@ -60,7 +53,7 @@ class CollectionInputFilter extends InputFilter
                 '%s expects an instance of %s; received "%s"',
                 __METHOD__,
                 BaseInputFilter::class,
-                (is_object($inputFilter) ? get_class($inputFilter) : gettype($inputFilter))
+                is_object($inputFilter) ? get_class($inputFilter) : gettype($inputFilter)
             ));
         }
 
@@ -188,7 +181,6 @@ class CollectionInputFilter extends InputFilter
      * This validator will be used to produce a validation failure message in
      * cases where the collection is empty but required.
      *
-     * @param NotEmpty $notEmptyValidator
      * @return $this
      */
     public function setNotEmptyValidator(NotEmpty $notEmptyValidator)
@@ -199,17 +191,17 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function isValid($context = null)
     {
         $this->collectionMessages = [];
-        $inputFilter = $this->getInputFilter();
-        $valid = true;
+        $inputFilter              = $this->getInputFilter();
+        $valid                    = true;
 
         if ($this->getCount() < 1 && $this->isRequired) {
             $this->collectionMessages[] = $this->prepareRequiredValidationFailureMessage();
-            $valid = false;
+            $valid                      = false;
         }
 
         if (count($this->data) < $this->getCount()) {
@@ -233,12 +225,12 @@ class CollectionInputFilter extends InputFilter
             if ($inputFilter->isValid($context)) {
                 $this->validInputs[$key] = $inputFilter->getValidInput();
             } else {
-                $valid = false;
+                $valid                          = false;
                 $this->collectionMessages[$key] = $inputFilter->getMessages();
-                $this->invalidInputs[$key] = $inputFilter->getInvalidInput();
+                $this->invalidInputs[$key]      = $inputFilter->getInvalidInput();
             }
 
-            $this->collectionValues[$key] = $inputFilter->getValues();
+            $this->collectionValues[$key]    = $inputFilter->getValues();
             $this->collectionRawValues[$key] = $inputFilter->getRawValues();
         }
 

@@ -22,7 +22,7 @@ class InputFilterAwareTraitTest extends TestCase
         $p->setAccessible(true);
         $this->assertNull($p->getValue($object));
 
-        $inputFilter = new InputFilter;
+        $inputFilter = new InputFilter();
 
         $object->setInputFilter($inputFilter);
 
@@ -35,7 +35,7 @@ class InputFilterAwareTraitTest extends TestCase
 
         $this->assertNull($object->getInputFilter());
 
-        $inputFilter = new InputFilter;
+        $inputFilter = new InputFilter();
 
         $object->setInputFilter($inputFilter);
 

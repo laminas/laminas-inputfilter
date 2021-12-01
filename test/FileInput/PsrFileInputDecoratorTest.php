@@ -2,6 +2,7 @@
 
 namespace LaminasTest\InputFilter\FileInput;
 
+use Generator;
 use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\PsrFileInputDecorator;
 use Laminas\Validator;
@@ -9,6 +10,14 @@ use LaminasTest\InputFilter\InputTest;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\UploadedFileInterface;
+
+use function count;
+use function in_array;
+use function json_encode;
+
+use const UPLOAD_ERR_CANT_WRITE;
+use const UPLOAD_ERR_NO_FILE;
+use const UPLOAD_ERR_OK;
 
 /**
  * @covers \Laminas\InputFilter\FileInput\PsrFileInputDecorator
@@ -42,10 +51,12 @@ class PsrFileInputDecoratorTest extends InputTest
 
         $filteredUpload = $this->prophesize(UploadedFileInterface::class);
 
-        $this->input->setFilterChain($this->createFilterChainMock([[
-            $upload->reveal(),
-            $filteredUpload->reveal(),
-        ]]));
+        $this->input->setFilterChain($this->createFilterChainMock([
+            [
+                $upload->reveal(),
+                $filteredUpload->reveal(),
+            ],
+        ]));
 
         $this->assertEquals($upload->reveal(), $this->input->getValue());
         $this->assertTrue(
@@ -68,7 +79,7 @@ class PsrFileInputDecoratorTest extends InputTest
 
         $filteredValues = [];
         for ($i = 0; $i < 3; $i += 1) {
-            $upload = $this->prophesize(UploadedFileInterface::class);
+            $upload           = $this->prophesize(UploadedFileInterface::class);
             $filteredValues[] = $upload->reveal();
         }
 
@@ -196,29 +207,36 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertEquals($validator->reveal(), $validators[0]['instance']);
     }
 
+    /** @param mixed $value */
     public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null)
     {
         $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
+    /** @param mixed $value */
     public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null)
     {
         $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
+    /**
+     * @param null|string|string[] $fallbackValue
+     * @param null|string|string[] $originalValue
+     * @param null|string|string[] $expectedValue
+     */
     public function testFallbackValueVsIsValidRules(
-        $required = null,
+        ?bool $required = null,
         $fallbackValue = null,
         $originalValue = null,
-        $isValid = null,
+        ?bool $isValid = null,
         $expectedValue = null
     ) {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
     }
 
-
+    /** @param null|string|string[] $fallbackValue */
     public function testFallbackValueVsIsValidRulesWhenValueNotSet(
-        $required = null,
+        ?bool $required = null,
         $fallbackValue = null
     ) {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
@@ -281,10 +299,21 @@ class PsrFileInputDecoratorTest extends InputTest
         );
     }
 
-    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider()
+    /**
+     * @psalm-return iterable<string, array{
+     *     0: bool,
+     *     1: bool,
+     *     2: bool,
+     *     3: callable,
+     *     4: mixed,
+     *     5: bool,
+     *     6: string[]
+     * }>
+     */
+    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $generator = parent::isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider();
-        if (! is_array($generator)) {
+        if ($generator instanceof Generator) {
             $generator = clone $generator;
             $generator->rewind();
         }
@@ -303,7 +332,13 @@ class PsrFileInputDecoratorTest extends InputTest
         }
     }
 
-    public function emptyValueProvider()
+    /**
+     * @psalm-return iterable<string, array{
+     *     raw: UploadedFileInterface|list<UploadedFileInterface>,
+     *     filtered: UploadedFileInterface
+     * }>
+     */
+    public function emptyValueProvider(): iterable
     {
         foreach (['single', 'multi'] as $type) {
             $raw = $this->prophesize(UploadedFileInterface::class);
@@ -321,18 +356,24 @@ class PsrFileInputDecoratorTest extends InputTest
         }
     }
 
-    public function mixedValueProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     raw: UploadedFileInterface|list<UploadedFileInterface>,
+     *     filtered: UploadedFileInterface
+     * }>
+     */
+    public function mixedValueProvider(): array
     {
         $fooUploadErrOk = $this->prophesize(UploadedFileInterface::class);
         $fooUploadErrOk->getError()->willReturn(UPLOAD_ERR_OK);
 
         return [
             'single' => [
-                'raw' => $fooUploadErrOk->reveal(),
+                'raw'      => $fooUploadErrOk->reveal(),
                 'filtered' => $fooUploadErrOk->reveal(),
             ],
-            'multi' => [
-                'raw' => [
+            'multi'  => [
+                'raw'      => [
                     $fooUploadErrOk->reveal(),
                 ],
                 'filtered' => $fooUploadErrOk->reveal(),
@@ -340,7 +381,8 @@ class PsrFileInputDecoratorTest extends InputTest
         ];
     }
 
-    protected function getDummyValue($raw = true)
+    /** @return UploadedFileInterface */
+    protected function getDummyValue(bool $raw = true)
     {
         $upload = $this->prophesize(UploadedFileInterface::class);
         $upload->getError()->willReturn(UPLOAD_ERR_OK);

@@ -6,6 +6,20 @@ use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\InitializableInterface;
 use Traversable;
 
+use function array_diff;
+use function array_intersect;
+use function array_key_exists;
+use function array_keys;
+use function array_merge;
+use function count;
+use function func_get_args;
+use function get_class;
+use function gettype;
+use function is_array;
+use function is_int;
+use function is_object;
+use function sprintf;
+
 class BaseInputFilter implements
     InputFilterInterface,
     UnknownInputsCapableInterface,
@@ -13,34 +27,22 @@ class BaseInputFilter implements
     ReplaceableInputInterface,
     UnfilteredDataInterface
 {
-    /**
-     * @var null|array
-     */
+    /** @var null|array */
     protected $data;
 
-    /**
-     * @var array|object
-     */
+    /** @var array|object */
     protected $unfilteredData = [];
 
-    /**
-     * @var InputInterface[]|InputFilterInterface[]
-     */
+    /** @var InputInterface[]|InputFilterInterface[] */
     protected $inputs = [];
 
-    /**
-     * @var InputInterface[]|InputFilterInterface[]
-     */
+    /** @var InputInterface[]|InputFilterInterface[] */
     protected $invalidInputs;
 
-    /**
-     * @var null|string[] Input names
-     */
+    /** @var null|string[] Input names */
     protected $validationGroup;
 
-    /**
-     * @var InputInterface[]|InputFilterInterface[]
-     */
+    /** @var InputInterface[]|InputFilterInterface[] */
     protected $validInputs;
 
     /**
@@ -81,7 +83,7 @@ class BaseInputFilter implements
                 __METHOD__,
                 InputInterface::class,
                 InputFilterInterface::class,
-                (is_object($input) ? get_class($input) : gettype($input))
+                is_object($input) ? get_class($input) : gettype($input)
             ));
         }
 
@@ -189,7 +191,7 @@ class BaseInputFilter implements
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable argument; received %s',
                 __METHOD__,
-                (is_object($data) ? get_class($data) : gettype($data))
+                is_object($data) ? get_class($data) : gettype($data)
             ));
         }
 
@@ -231,20 +233,20 @@ class BaseInputFilter implements
      */
     protected function validateInputs(array $inputs, array $data = [], $context = null)
     {
-        $inputContext = $context ?: (array_merge($this->getRawValues(), $data));
+        $inputContext = $context ?: array_merge($this->getRawValues(), $data);
 
         $this->validInputs   = [];
         $this->invalidInputs = [];
         $valid               = true;
 
         foreach ($inputs as $name) {
-            $input       = $this->inputs[$name];
+            $input = $this->inputs[$name];
 
             // Validate an input filter
             if ($input instanceof InputFilterInterface) {
                 if (! $input->isValid($context)) {
                     $this->invalidInputs[$name] = $input;
-                    $valid = false;
+                    $valid                      = false;
                     continue;
                 }
                 $this->validInputs[$name] = $input;
@@ -257,7 +259,8 @@ class BaseInputFilter implements
             }
 
             // If input is optional (not required), and value is not set, then ignore.
-            if (! array_key_exists($name, $data)
+            if (
+                ! array_key_exists($name, $data)
                 && ! $input->isRequired()
             ) {
                 continue;
@@ -267,7 +270,7 @@ class BaseInputFilter implements
             if (! $input->isValid($inputContext)) {
                 // Validation failure
                 $this->invalidInputs[$name] = $input;
-                $valid = false;
+                $valid                      = false;
 
                 if ($input->breakOnFailure()) {
                     return false;
@@ -591,8 +594,6 @@ class BaseInputFilter implements
 
     /**
      * Merges the inputs from an InputFilter into the current one
-     *
-     * @param BaseInputFilter $inputFilter
      *
      * @return self
      */

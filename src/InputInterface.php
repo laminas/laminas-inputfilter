@@ -28,7 +28,6 @@ interface InputInterface
     public function setErrorMessage($errorMessage);
 
     /**
-     * @param FilterChain $filterChain
      * @return self
      */
     public function setFilterChain(FilterChain $filterChain);
@@ -46,7 +45,6 @@ interface InputInterface
     public function setRequired($required);
 
     /**
-     * @param ValidatorChain $validatorChain
      * @return self
      */
     public function setValidatorChain(ValidatorChain $validatorChain);
@@ -58,7 +56,6 @@ interface InputInterface
     public function setValue($value);
 
     /**
-     * @param InputInterface $input
      * @return self
      */
     public function merge(InputInterface $input);

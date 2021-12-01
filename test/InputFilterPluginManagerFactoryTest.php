@@ -19,7 +19,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     public function testFactoryReturnsPluginManager()
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $factory = new InputFilterPluginManagerFactory();
+        $factory   = new InputFilterPluginManagerFactory();
 
         $filters = $factory($container, InputFilterPluginManagerFactory::class);
         $this->assertInstanceOf(InputFilterPluginManager::class, $filters);
@@ -30,10 +30,11 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $this->assertSame($container, $p->getValue($filters));
     }
 
-    public function pluginProvider()
+    /** @psalm-return array<string, array{0: class-string<InputInterface>}> */
+    public function pluginProvider(): array
     {
         return [
-            'input' => [InputInterface::class],
+            'input'        => [InputInterface::class],
             'input-filter' => [InputFilterInterface::class],
         ];
     }
@@ -41,11 +42,12 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      * @dataProvider pluginProvider
+     * @psalm-param class-string $pluginType
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop($pluginType)
+    public function testFactoryConfiguresPluginManagerUnderContainerInterop(string $pluginType)
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $plugin = $this->prophesize($pluginType)->reveal();
+        $plugin    = $this->prophesize($pluginType)->reveal();
 
         $factory = new InputFilterPluginManagerFactory();
         $filters = $factory($container, InputFilterPluginManagerFactory::class, [
@@ -59,8 +61,9 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      * @dataProvider pluginProvider
+     * @psalm-param class-string $pluginType
      */
-    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2($pluginType)
+    public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(string $pluginType)
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -81,13 +84,13 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     public function testConfiguresInputFilterServicesWhenFound()
     {
         $inputFilter = $this->prophesize(InputFilterInterface::class)->reveal();
-        $config = [
+        $config      = [
             'input_filters' => [
-                'aliases' => [
+                'aliases'   => [
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($inputFilter) {
+                    'test-too' => function () use ($inputFilter) {
                         return $inputFilter;
                     },
                 ],
@@ -101,7 +104,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn($config);
 
-        $factory = new InputFilterPluginManagerFactory();
+        $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container->reveal(), 'InputFilterManager');
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
@@ -113,20 +116,6 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
     public function testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent()
     {
-        $inputFilter = $this->prophesize(InputFilterInterface::class)->reveal();
-        $config = [
-            'input_filters' => [
-                'aliases' => [
-                    'test' => 'test-too',
-                ],
-                'factories' => [
-                    'test-too' => function ($container) use ($inputFilter) {
-                        return $inputFilter;
-                    },
-                ],
-            ],
-        ];
-
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
 
@@ -134,7 +123,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $container->has('config')->shouldNotBeCalled();
         $container->get('config')->shouldNotBeCalled();
 
-        $factory = new InputFilterPluginManagerFactory();
+        $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container->reveal(), 'InputFilterManager');
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
@@ -151,7 +140,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(false);
         $container->get('config')->shouldNotBeCalled();
 
-        $factory = new InputFilterPluginManagerFactory();
+        $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container->reveal(), 'InputFilterManager');
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
@@ -166,7 +155,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $container->has('config')->willReturn(true);
         $container->get('config')->willReturn(['foo' => 'bar']);
 
-        $factory = new InputFilterPluginManagerFactory();
+        $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container->reveal(), 'InputFilterManager');
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
