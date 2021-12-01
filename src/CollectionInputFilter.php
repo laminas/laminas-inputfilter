@@ -17,7 +17,7 @@ class CollectionInputFilter extends InputFilter
     /** @var bool */
     protected $isRequired = false;
 
-    /** @var int */
+    /** @var null|int */
     protected $count;
 
     /** @var array[] */

@@ -42,6 +42,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      * @dataProvider pluginProvider
+     * @psalm-param class-string $pluginType
      */
     public function testFactoryConfiguresPluginManagerUnderContainerInterop(string $pluginType)
     {
@@ -60,6 +61,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     /**
      * @depends testFactoryReturnsPluginManager
      * @dataProvider pluginProvider
+     * @psalm-param class-string $pluginType
      */
     public function testFactoryConfiguresPluginManagerUnderServiceManagerV2(string $pluginType)
     {
@@ -88,7 +90,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function ($container) use ($inputFilter) {
+                    'test-too' => function () use ($inputFilter) {
                         return $inputFilter;
                     },
                 ],
@@ -114,20 +116,6 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
     public function testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent()
     {
-        $inputFilter = $this->prophesize(InputFilterInterface::class)->reveal();
-        $config      = [
-            'input_filters' => [
-                'aliases'   => [
-                    'test' => 'test-too',
-                ],
-                'factories' => [
-                    'test-too' => function ($container) use ($inputFilter) {
-                        return $inputFilter;
-                    },
-                ],
-            ],
-        ];
-
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
 

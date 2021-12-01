@@ -6,6 +6,7 @@ use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\HttpServerFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
+use Webmozart\Assert\Assert;
 
 use function count;
 use function json_encode;
@@ -334,6 +335,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
     public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $dataSets = parent::isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider();
+        Assert::isArrayAccessible($dataSets);
 
         // FileInput do not use NotEmpty validator so the only validator present in the chain is the custom one.
         unset($dataSets['Required: T; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty / tmp_name']);

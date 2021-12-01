@@ -131,12 +131,12 @@ class InputFilterPluginManager extends AbstractPluginManager
     /**
      * {@inheritDoc} (v3)
      */
-    public function validate($plugin)
+    public function validate($instance)
     {
-        if ($plugin instanceof InputFilterInterface || $plugin instanceof InputInterface) {
+        if ($instance instanceof InputFilterInterface || $instance instanceof InputInterface) {
             // Hook to perform various initialization, when the inputFilter is not created through the factory
-            if ($plugin instanceof InitializableInterface) {
-                $plugin->init();
+            if ($instance instanceof InitializableInterface) {
+                $instance->init();
             }
 
             // we're okay
@@ -145,7 +145,7 @@ class InputFilterPluginManager extends AbstractPluginManager
 
         throw new InvalidServiceException(sprintf(
             'Plugin of type %s is invalid; must implement %s or %s',
-            is_object($plugin) ? get_class($plugin) : gettype($plugin),
+            is_object($instance) ? get_class($instance) : gettype($instance),
             InputFilterInterface::class,
             InputInterface::class
         ));

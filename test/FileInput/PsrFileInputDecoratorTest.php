@@ -2,6 +2,7 @@
 
 namespace LaminasTest\InputFilter\FileInput;
 
+use Generator;
 use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\PsrFileInputDecorator;
 use Laminas\Validator;
@@ -12,7 +13,6 @@ use Psr\Http\Message\UploadedFileInterface;
 
 use function count;
 use function in_array;
-use function is_array;
 use function json_encode;
 
 use const UPLOAD_ERR_CANT_WRITE;
@@ -313,7 +313,7 @@ class PsrFileInputDecoratorTest extends InputTest
     public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $generator = parent::isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider();
-        if (! is_array($generator)) {
+        if ($generator instanceof Generator) {
             $generator = clone $generator;
             $generator->rewind();
         }

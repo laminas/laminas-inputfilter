@@ -18,6 +18,7 @@ use Laminas\Validator\NotEmpty;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use Traversable;
 
 use function array_merge;
 use function array_walk;
@@ -116,7 +117,7 @@ class CollectionInputFilterTest extends TestCase
         bool $required,
         ?int $count,
         array $data,
-        InputFilterInterface $inputFilter,
+        BaseInputFilter $inputFilter,
         array $expectedRaw,
         array $expectedValues,
         bool $expectedValid,
@@ -811,7 +812,6 @@ class CollectionInputFilterTest extends TestCase
         $baseInputFilter = (new BaseInputFilter())
             ->add(new Input(), 'bar');
 
-        /** @var CollectionInputFilter $collectionInputFilter */
         $collectionInputFilter = (new CollectionInputFilter())->setInputFilter($baseInputFilter);
         $collectionInputFilter->setData($unfilteredArray);
 

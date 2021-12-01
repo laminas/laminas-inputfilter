@@ -15,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
+use Webmozart\Assert\Assert;
 
 use function array_diff_key;
 use function array_merge;
@@ -698,6 +699,9 @@ class InputTest extends TestCase
         $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
         $mixedValues = $mixedValues instanceof Iterator ? iterator_to_array($mixedValues) : $mixedValues;
 
+        Assert::isArray($emptyValues);
+        Assert::isArray($mixedValues);
+
         return array_merge($emptyValues, $mixedValues);
     }
 
@@ -718,6 +722,7 @@ class InputTest extends TestCase
 
         $emptyValues = $this->emptyValueProvider();
         $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
+        Assert::isArray($emptyValues);
 
         $nonEmptyValues = array_diff_key($allValues, $emptyValues);
 
@@ -806,10 +811,12 @@ class InputTest extends TestCase
                 'raw'      => '',
                 'filtered' => '',
             ],
-//            '"0"' => ['0'],
-//            '0' => [0],
-//            '0.0' => [0.0],
-//            'false' => [false],
+            /* @todo Should these cases be tested?
+            '"0"' => ['0'],
+            '0' => [0],
+            '0.0' => [0.0],
+            'false' => [false],
+             */
             '[]' => [
                 'raw'      => [],
                 'filtered' => [],
@@ -820,7 +827,7 @@ class InputTest extends TestCase
     /**
      * @psalm-return array<string, array{
      *     raw: bool|int|float|string|list<string>|object,
-     *     filtered:  bool|int|float|string|list<string>|object
+     *     filtered: bool|int|float|string|list<string>|object
      * }>
      */
     public function mixedValueProvider(): array
@@ -839,20 +846,22 @@ class InputTest extends TestCase
                 'raw'      => 0.0,
                 'filtered' => 0.0,
             ],
-//            TODO enable me
-//            'false' => [
-//                'raw' => false,
-//                'filtered' => false,
-//            ],
+            /* @todo enable me
+            'false' => [
+                'raw' => false,
+                'filtered' => false,
+            ],
+             */
             'php' => [
                 'raw'      => 'php',
                 'filtered' => 'php',
             ],
-//            TODO enable me
-//            'whitespace' => [
-//                'raw' => ' ',
-//                'filtered' => ' ',
-//            ],
+            /* @todo enable me
+            'whitespace' => [
+                'raw' => ' ',
+                'filtered' => ' ',
+            ],
+             */
             '1'       => [
                 'raw'      => 1,
                 'filtered' => 1,

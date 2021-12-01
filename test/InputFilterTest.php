@@ -7,6 +7,7 @@ use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Traversable;
 
 use function array_merge;
 

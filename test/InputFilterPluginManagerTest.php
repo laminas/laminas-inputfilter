@@ -70,8 +70,7 @@ class InputFilterPluginManagerTest extends TestCase
         $this->manager->get('test');
     }
 
-    /**
-     * @psalm-return array<string, array{0: string, 1: class-string<InputFilter>}> */
+    /** @psalm-return array<string, array{0: string, 1: class-string<InputFilter>}> */
     public function defaultInvokableClassesProvider(): array
     {
         return [
@@ -83,9 +82,11 @@ class InputFilterPluginManagerTest extends TestCase
 
     /**
      * @dataProvider defaultInvokableClassesProvider
+     * @psalm-param class-string $expectedInstance
      */
     public function testDefaultInvokableClasses(string $alias, string $expectedInstance)
     {
+        /** @var object $service */
         $service = $this->manager->get($alias);
 
         $this->assertInstanceOf($expectedInstance, $service, 'get() return type not match');
@@ -144,7 +145,7 @@ class InputFilterPluginManagerTest extends TestCase
     /**
      * @psalm-return array<string, array{
      *     0: string,
-     *     1: InputInterface::class,
+     *     1: InputInterface,
      *     2: class-string<InputInterface>
      * }>
      */
@@ -174,6 +175,7 @@ class InputFilterPluginManagerTest extends TestCase
 
     /**
      * @dataProvider serviceProvider
+     * @param class-string<InputInterface> $instanceOf
      */
     public function testServicesAreInitiatedIfImplementsInitializableInterface(
         string $serviceName,

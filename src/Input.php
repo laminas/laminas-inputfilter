@@ -34,7 +34,7 @@ class Input implements
     /** @var string|null */
     protected $errorMessage;
 
-    /** @var FilterChain */
+    /** @var null|FilterChain */
     protected $filterChain;
 
     /** @var null|string */
@@ -50,7 +50,7 @@ class Input implements
     /** @var bool */
     protected $required = true;
 
-    /** @var ValidatorChain */
+    /** @var null|ValidatorChain */
     protected $validatorChain;
 
     /** @var mixed */
@@ -250,7 +250,7 @@ class Input implements
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getName()
     {
@@ -383,7 +383,7 @@ class Input implements
             return true;
         }
 
-        if (! $hasValue && $required) {
+        if (! $hasValue) { // required, but no value
             if ($this->errorMessage === null) {
                 $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
             }

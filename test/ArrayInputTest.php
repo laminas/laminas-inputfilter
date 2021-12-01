@@ -4,6 +4,7 @@ namespace LaminasTest\InputFilter;
 
 use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
+use Webmozart\Assert\Assert;
 
 use function array_map;
 use function array_pop;
@@ -72,6 +73,7 @@ class ArrayInputTest extends InputTest
     public function fallbackValueVsIsValidProvider(): array
     {
         $dataSets = parent::fallbackValueVsIsValidProvider();
+        Assert::isArray($dataSets);
         array_walk($dataSets, function (&$set) {
             $set[1] = [$set[1]]; // Wrap fallback value into an array.
             $set[2] = [$set[2]]; // Wrap value into an array.
@@ -90,6 +92,7 @@ class ArrayInputTest extends InputTest
     public function emptyValueProvider(): iterable
     {
         $dataSets = parent::emptyValueProvider();
+        Assert::isArray($dataSets);
         array_walk($dataSets, function (&$set) {
             $set['raw'] = [$set['raw']]; // Wrap value into an array.
         });
@@ -106,6 +109,7 @@ class ArrayInputTest extends InputTest
     public function mixedValueProvider(): array
     {
         $dataSets = parent::mixedValueProvider();
+        Assert::isArray($dataSets);
         array_walk($dataSets, function (&$set) {
             $set['raw'] = [$set['raw']]; // Wrap value into an array.
         });
@@ -115,7 +119,7 @@ class ArrayInputTest extends InputTest
 
     /**
      * @param array $valueMap
-     * @return FilterChain|MockObject
+     * @return FilterChain&MockObject
      */
     protected function createFilterChainMock(array $valueMap = [])
     {
@@ -139,7 +143,7 @@ class ArrayInputTest extends InputTest
     /**
      * @param array $valueMap
      * @param string[] $messages
-     * @return ValidatorChain|MockObject
+     * @return ValidatorChain&MockObject
      */
     protected function createValidatorChainMock(array $valueMap = [], $messages = [])
     {
@@ -161,7 +165,7 @@ class ArrayInputTest extends InputTest
      * @param bool $isValid
      * @param mixed $value
      * @param mixed $context
-     * @return NotEmptyValidator|MockObject
+     * @return NotEmptyValidator&MockObject
      */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {

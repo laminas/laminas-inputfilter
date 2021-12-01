@@ -744,7 +744,7 @@ class FactoryTest extends TestCase
                     'name'     => 'Callback',
                     'priority' => Validator\ValidatorChain::DEFAULT_PRIORITY - 1, // 0
                     'options'  => [
-                        'callback' => static function ($value) use (&$order) {
+                        'callback' => static function () use (&$order) {
                             static::assertSame(2, $order);
                             ++$order;
 
@@ -756,7 +756,7 @@ class FactoryTest extends TestCase
                     'name'     => 'Callback',
                     'priority' => Validator\ValidatorChain::DEFAULT_PRIORITY + 1, // 2
                     'options'  => [
-                        'callback' => static function ($value) use (&$order) {
+                        'callback' => static function () use (&$order) {
                             static::assertSame(0, $order);
                             ++$order;
 
@@ -767,7 +767,7 @@ class FactoryTest extends TestCase
                 [
                     'name'    => 'Callback', // default priority 1
                     'options' => [
-                        'callback' => static function ($value) use (&$order) {
+                        'callback' => static function () use (&$order) {
                             static::assertSame(1, $order);
                             ++$order;
 

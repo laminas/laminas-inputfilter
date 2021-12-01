@@ -131,7 +131,7 @@ class BaseInputFilterTest extends TestCase
     {
         $inputFilter = $this->inputFilter;
 
-        /** @var InputInterface|MockObject $nestedInput */
+        /** @var InputInterface&MockObject $nestedInput */
         $nestedInput = $this->createMock(InputInterface::class);
         $inputFilter->add($nestedInput, 'fooInput');
 
@@ -149,11 +149,11 @@ class BaseInputFilterTest extends TestCase
 
         $nestedInputFilter = new BaseInputFilter();
 
-        /** @var InputInterface|MockObject $nestedInput1 */
+        /** @var InputInterface&MockObject $nestedInput1 */
         $nestedInput1 = $this->createMock(InputInterface::class);
         $nestedInputFilter->add($nestedInput1, 'nested-input1');
 
-        /** @var InputInterface|MockObject $nestedInput2 */
+        /** @var InputInterface&MockObject $nestedInput2 */
         $nestedInput2 = $this->createMock(InputInterface::class);
         $nestedInputFilter->add($nestedInput2, 'nested-input2');
 
@@ -377,7 +377,7 @@ class BaseInputFilterTest extends TestCase
             ],
         ];
         $expectedData = array_merge($data, ['notSet' => null]);
-        /** @var Input|MockObject $flatInput */
+        /** @var Input&MockObject $flatInput */
         $flatInput = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(['flat'])
@@ -386,7 +386,7 @@ class BaseInputFilterTest extends TestCase
             ->method('setValue')
             ->with('foo');
         // Inputs without value must be reset for to have clean states when use different setData arguments
-        /** @var Input|MockObject $resetInput */
+        /** @var Input&MockObject $resetInput */
         $resetInput = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(['notSet'])
@@ -500,7 +500,7 @@ class BaseInputFilterTest extends TestCase
         $filter = $this->inputFilter;
 
         $optionalInputName = 'fooOptionalInput';
-        /** @var InputInterface|MockObject $optionalInput */
+        /** @var InputInterface&MockObject $optionalInput */
         $optionalInput = $this->createMock(InputInterface::class);
         $optionalInput->method('getName')
             ->willReturn($optionalInputName);
@@ -927,7 +927,7 @@ class BaseInputFilterTest extends TestCase
      * @param mixed[] $getRawValues
      * @param mixed[] $getValues
      * @param string[] $getMessages
-     * @return MockObject|InputFilterInterface
+     * @return MockObject&InputFilterInterface
      */
     protected function createInputFilterInterfaceMock(
         $isValid = null,
@@ -936,7 +936,7 @@ class BaseInputFilterTest extends TestCase
         $getValues = [],
         $getMessages = []
     ) {
-        /** @var InputFilterInterface|MockObject $inputFilter */
+        /** @var InputFilterInterface&MockObject $inputFilter */
         $inputFilter = $this->createMock(InputFilterInterface::class);
         $inputFilter->method('getRawValues')
             ->willReturn($getRawValues);
@@ -977,7 +977,7 @@ class BaseInputFilterTest extends TestCase
         $getMessages = [],
         $breakOnFailure = false
     ) {
-        /** @var InputInterface|MockObject $input */
+        /** @var InputInterface&MockObject $input */
         $input = $this->createMock(InputInterface::class);
         $input->method('getName')
             ->willReturn($name);
