@@ -1547,10 +1547,4 @@
       <code>addServiceManager</code>
     </MissingReturnType>
   </file>
-  <file src="vendor/laminas/laminas-servicemanager/src/ServiceManager.php">
-    <ParseError occurrences="2">
-      <code>=&gt;</code>
-      <code>fn</code>
-    </ParseError>
-  </file>
 </files>
