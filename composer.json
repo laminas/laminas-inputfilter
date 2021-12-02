@@ -26,14 +26,15 @@
     },
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0",
-        "laminas/laminas-filter": "^2.9.1",
+        "laminas/laminas-filter": "^2.13",
         "laminas/laminas-servicemanager": "^3.3.1",
         "laminas/laminas-stdlib": "^3.0",
-        "laminas/laminas-validator": "^2.11"
+        "laminas/laminas-validator": "^2.15"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.2.1",
         "laminas/laminas-db": "^2.13.4",
+        "phpspec/prophecy": "^1.14",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5.5",
         "psalm/plugin-phpunit": "^0.15.1",

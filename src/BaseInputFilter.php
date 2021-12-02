@@ -4,6 +4,8 @@ namespace Laminas\InputFilter;
 
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\InitializableInterface;
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use ReturnTypeWillChange;
 use Traversable;
 
 use function array_diff;
@@ -62,6 +64,7 @@ class BaseInputFilter implements
      *
      * @return int
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->inputs);

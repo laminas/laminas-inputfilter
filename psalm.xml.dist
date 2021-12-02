@@ -28,6 +28,15 @@
                 <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with"/>
             </errorLevel>
         </InternalMethod>
+
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Zend\InputFilter\CollectionInputFilter" />
+                <referencedClass name="Zend\InputFilter\InputFilter" />
+                <referencedClass name="Zend\InputFilter\InputFilterPluginManager" />
+                <referencedClass name="Zend\InputFilter\OptionalInputFilter" />
+            </errorLevel>
+        </UndefinedClass>
     </issueHandlers>
 
     <plugins>
