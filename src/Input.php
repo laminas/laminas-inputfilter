@@ -302,7 +302,7 @@ class Input implements
      */
     public function getValue()
     {
-        if($this->allowNull && is_null($this->value)){
+        if ($this->allowNull && $this->value === null) {
             return null;
         }
         $filter = $this->getFilterChain();
@@ -409,7 +409,7 @@ class Input implements
         }
 
         // no need to run validators because null is valid value
-        if(is_null($value) && $allowNull){
+        if ($value === null && $allowNull) {
             return true;
         }
 
