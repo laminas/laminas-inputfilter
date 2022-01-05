@@ -116,4 +116,8 @@ interface InputInterface
      * @return string[]
      */
     public function getMessages();
+
+    public function setAllowNull(bool $allowNull): InputInterface;
+
+    public function allowNull(): bool;
 }

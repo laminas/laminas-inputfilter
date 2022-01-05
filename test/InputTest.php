@@ -657,6 +657,41 @@ class InputTest extends TestCase
         $this->assertSame($translatedMessage, $messages['isEmpty']);
     }
 
+    public function testInputDoesNotAllowNullValuesByDefault()
+    {
+        $this->assertFalse($this->input->allowNull());
+    }
+
+    public function testAllowNullFlagIsMutable()
+    {
+        $this->input->setAllowNull(true);
+        $this->assertTrue($this->input->allowNull());
+    }
+
+    public function testDoNotRunValidatorsOnNullableInputWithNullValue()
+    {
+        $input = new Input();
+        $input->setAllowNull(true);
+        $input->setValue(null);
+        $input->getValidatorChain()->attach($this->createValidatorMock(null));
+        $this->assertTrue(
+            $input->isValid(),
+            "The validators must not be executed when 'allow_null' set to true and value is null"
+        );
+    }
+
+    public function testDoNotRunFiltersOnNullableInputWithNullValue()
+    {
+        $input = new Input();
+        $input->setAllowNull(true);
+        $input->setValue(null);
+        $filterChain = $this->createFilterChainMock([[null, 'Value']]);
+        $filterChain->expects($this->never())
+            ->method('filter');
+        $input->setFilterChain($filterChain);
+        $this->assertNull($input->getValue(), 'getValue() must return null');
+    }
+
     /**
      * @psalm-return array<string, array{
      *     0: bool,

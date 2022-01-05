@@ -579,6 +579,7 @@ class FactoryTest extends TestCase
             'zomg' => [
                 'name'              => 'zomg',
                 'continue_if_empty' => true,
+                'allow_null'        => true,
             ],
         ]);
         $this->assertInstanceOf(InputFilter::class, $inputFilter);
@@ -617,6 +618,7 @@ class FactoryTest extends TestCase
                 case 'zomg':
                     $this->assertInstanceOf(Input::class, $input);
                     $this->assertTrue($input->continueIfEmpty());
+                    $this->assertTrue($input->allowNull());
             }
         }
     }

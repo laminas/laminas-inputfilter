@@ -254,6 +254,9 @@ class Factory
                     }
                     $this->populateValidators($input->getValidatorChain(), $value);
                     break;
+                case 'allow_null':
+                    $input->setAllowNull($value);
+                    break;
                 default:
                     // ignore unknown keys
                     break;

@@ -28,6 +28,8 @@ class Input implements
      */
     protected $continueIfEmpty = false;
 
+    protected bool $allowNull = false;
+
     /** @var bool */
     protected $breakOnFailure = false;
 
@@ -106,6 +108,12 @@ class Input implements
     public function setContinueIfEmpty($continueIfEmpty)
     {
         $this->continueIfEmpty = (bool) $continueIfEmpty;
+        return $this;
+    }
+
+    public function setAllowNull(bool $allowNull): InputInterface
+    {
+        $this->allowNull = $allowNull;
         return $this;
     }
 
@@ -230,6 +238,11 @@ class Input implements
         return $this->continueIfEmpty;
     }
 
+    public function allowNull(): bool
+    {
+        return $this->allowNull;
+    }
+
     /**
      * @return string|null
      */
@@ -289,6 +302,9 @@ class Input implements
      */
     public function getValue()
     {
+        if($this->allowNull && is_null($this->value)){
+            return null;
+        }
         $filter = $this->getFilterChain();
         return $filter->filter($this->value);
     }
@@ -340,6 +356,7 @@ class Input implements
         $this->setBreakOnFailure($input->breakOnFailure());
         if ($input instanceof Input) {
             $this->setContinueIfEmpty($input->continueIfEmpty());
+            $this->setAllowNull($input->allowNull());
         }
         $this->setErrorMessage($input->getErrorMessage());
         $this->setName($input->getName());
@@ -373,6 +390,7 @@ class Input implements
         $required        = $this->isRequired();
         $allowEmpty      = $this->allowEmpty();
         $continueIfEmpty = $this->continueIfEmpty();
+        $allowNull       = $this->allowNull();
 
         if (! $hasValue && $this->hasFallback()) {
             $this->setValue($this->getFallbackValue());
@@ -388,6 +406,11 @@ class Input implements
                 $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
             }
             return false;
+        }
+
+        // no need to run validators because null is valid value
+        if(is_null($value) && $allowNull){
+            return true;
         }
 
         if ($empty && ! $required && ! $continueIfEmpty) {
