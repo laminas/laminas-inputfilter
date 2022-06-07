@@ -36,13 +36,8 @@
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/BaseInputFilter.php">
-    <DocblockTypeContradiction occurrences="6">
-      <code>$input instanceof InputInterface &amp;&amp; (empty($name) || is_int($name))</code>
-      <code>[]</code>
-      <code>[]</code>
-      <code>gettype($input)</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>is_array($data)</code>
-      <code>is_int($name)</code>
     </DocblockTypeContradiction>
     <InvalidReturnStatement occurrences="2">
       <code>is_array($this-&gt;invalidInputs) ? $this-&gt;invalidInputs : []</code>
@@ -55,18 +50,6 @@
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array</code>
     </LessSpecificImplementedReturnType>
-    <MissingConstructor occurrences="10">
-      <code>$invalidInputs</code>
-      <code>$invalidInputs</code>
-      <code>$invalidInputs</code>
-      <code>$invalidInputs</code>
-      <code>$invalidInputs</code>
-      <code>$validInputs</code>
-      <code>$validInputs</code>
-      <code>$validInputs</code>
-      <code>$validInputs</code>
-      <code>$validInputs</code>
-    </MissingConstructor>
     <MixedArgument occurrences="1">
       <code>$input</code>
     </MixedArgument>
@@ -100,11 +83,6 @@
     <PossiblyNullArrayOffset occurrences="1">
       <code>$this-&gt;inputs</code>
     </PossiblyNullArrayOffset>
-    <RedundantConditionGivenDocblockType occurrences="3">
-      <code>is_array($this-&gt;invalidInputs)</code>
-      <code>is_array($this-&gt;validInputs)</code>
-      <code>is_object($input)</code>
-    </RedundantConditionGivenDocblockType>
     <TooManyArguments occurrences="2">
       <code>isValid</code>
       <code>isValid</code>
@@ -422,17 +400,9 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/InputFilter.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>null === $this-&gt;factory</code>
-    </DocblockTypeContradiction>
     <LessSpecificReturnStatement occurrences="1">
       <code>parent::add($input, $name)</code>
     </LessSpecificReturnStatement>
-    <MissingConstructor occurrences="3">
-      <code>$factory</code>
-      <code>$factory</code>
-      <code>$factory</code>
-    </MissingConstructor>
     <MoreSpecificReturnType occurrences="1">
       <code>InputFilter</code>
     </MoreSpecificReturnType>
@@ -492,9 +462,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$e-&gt;getCode()</code>
     </InvalidScalarArgument>
-    <MethodSignatureMismatch occurrences="1">
-      <code>InputFilterPluginManager</code>
-    </MethodSignatureMismatch>
     <MissingReturnType occurrences="1">
       <code>populateFactory</code>
     </MissingReturnType>

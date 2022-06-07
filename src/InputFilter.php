@@ -8,12 +8,13 @@ use function is_array;
 
 class InputFilter extends BaseInputFilter
 {
-    /** @var Factory */
+    /** @var Factory|null */
     protected $factory;
 
     /**
      * Set factory to use when adding inputs and filters by spec
      *
+     * @psalm-assert Factory $this->factory
      * @return InputFilter
      */
     public function setFactory(Factory $factory)
