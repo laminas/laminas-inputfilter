@@ -53,6 +53,9 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     /**
      * Determine if we can create a service with name (v2)
      *
+     * @deprecated This library is no longer compatible with Service manager V2 and this method will be dropped in the
+     *             next major release.
+     *
      * @param string $name
      * @param string $requestedName
      * @return bool
@@ -64,6 +67,9 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
 
     /**
      * Create the requested service (v2)
+     *
+     * @deprecated This library is no longer compatible with Service manager V2 and this method will be dropped in the
+     *             next major release.
      *
      * @param string                  $cName
      * @param string                  $rName
