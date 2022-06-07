@@ -88,8 +88,7 @@ class InputFilterPluginManager extends AbstractPluginManager
 
     /**
      * @param null|ConfigInterface|ContainerInterface|PsrContainerInterface $configOrContainer
-     * @param array $v3config
-     * @psalm-param ServiceManagerConfiguration $v3config
+     * @param ServiceManagerConfiguration $v3config
      */
     public function __construct($configOrContainer = null, array $v3config = [])
     {
