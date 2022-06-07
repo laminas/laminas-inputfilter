@@ -50,8 +50,6 @@ class InputTest extends TestCase
 
         $expectedKey = NotEmptyValidator::IS_EMPTY;
         $messages    = $input->getMessages();
-        /** @psalm-suppress RedundantConditionGivenDocblockType */
-        self::assertIsArray($messages, $message . ' non-array messages array');
         self::assertArrayHasKey($expectedKey, $messages);
 
         $notEmpty         = new NotEmptyValidator();
