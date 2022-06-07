@@ -44,6 +44,6 @@
     </plugins>
 
     <stubs>
-        <file name=".stub.php" preloadClasses="true" />
+        <file name=".psr-container-stub.php" preloadClasses="true" />
     </stubs>
 </psalm>
