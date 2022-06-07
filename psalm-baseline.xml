@@ -434,6 +434,9 @@
     </PossiblyNullReference>
   </file>
   <file src="src/InputFilterPluginManager.php">
+    <MethodSignatureMismatch occurrences="1">
+      <code>InputFilterPluginManager</code>
+    </MethodSignatureMismatch>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$factories</code>
     </NonInvariantDocblockPropertyType>
@@ -1069,7 +1072,6 @@
   <file src="test/InputFilterAbstractServiceFactoryTest.php">
     <MissingClosureReturnType occurrences="1">
       <code>function () {</code>
-      <code>function () {</code>
     </MissingClosureReturnType>
     <MissingReturnType occurrences="10">
       <code>testAllowsPassingNonPluginManagerContainerToFactoryWithServiceManagerV2</code>
@@ -1096,8 +1098,6 @@
       <code>$validatorChain</code>
     </MixedAssignment>
     <MixedMethodCall occurrences="9">
-      <code>get</code>
-      <code>get</code>
       <code>get</code>
       <code>getFilterChain</code>
       <code>getInputFilterManager</code>
