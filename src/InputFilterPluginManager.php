@@ -3,22 +3,28 @@
 namespace Laminas\InputFilter;
 
 use Interop\Container\ContainerInterface;
+use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Factory\InvokableFactory;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
+use Laminas\Validator\ValidatorPluginManager;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 use function get_class;
 use function gettype;
 use function is_object;
-use function property_exists;
 use function sprintf;
 
 /**
  * Plugin manager implementation for input filters.
  *
- * @method InputFilterInterface|InputInterface get($name, ?array $options = null)
+ * @link ServiceManager
+ *
+ * @method InputFilterInterface|InputInterface get(string $name, ?array $options = null)
+ * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  */
 class InputFilterPluginManager extends AbstractPluginManager
 {
@@ -73,15 +79,16 @@ class InputFilterPluginManager extends AbstractPluginManager
     /**
      * Whether or not to share by default (v2)
      *
+     * @deprecated Since 2.15.0 This property will be removed in version 3.0 because
+     *             it is only relevant to ServiceManager version 2.x
+     *
      * @var bool
      */
     protected $shareByDefault = false;
 
     /**
-     * @param null|ConfigInterface|ContainerInterface $configOrContainer For laminas-servicemanager v2,
-     *     null or a ConfigInterface instance are allowed; for v3, a
-     *     ContainerInterface is expected.
-     * @param array $v3config Optional configuration array (laminas-servicemanager v3 only)
+     * @param null|ConfigInterface|ContainerInterface|PsrContainerInterface $configOrContainer
+     * @param ServiceManagerConfiguration $v3config
      */
     public function __construct($configOrContainer = null, array $v3config = [])
     {
@@ -92,13 +99,13 @@ class InputFilterPluginManager extends AbstractPluginManager
     /**
      * Inject this and populate the factory with filter chain and validator chain
      *
-     * @param ContainerInterface|InputFilter $containerOrInputFilter    When using ServiceManager v3
-     *                                                                  this will be the plugin manager instance
-     * @param InputFilter                    $inputFilter               This is only used with ServiceManager v3
+     * @param self|InputFilter $containerOrInputFilter
+     * @param InputFilter|null $inputFilter
+     * @return void
      */
     public function populateFactory($containerOrInputFilter, $inputFilter = null)
     {
-        $inputFilter = $containerOrInputFilter instanceof ContainerInterface ? $inputFilter : $containerOrInputFilter;
+        $inputFilter = $inputFilter ?: $containerOrInputFilter;
 
         if (! $inputFilter instanceof InputFilter) {
             return;
@@ -115,21 +122,26 @@ class InputFilterPluginManager extends AbstractPluginManager
      */
     public function populateFactoryPluginManagers(Factory $factory)
     {
-        $container = property_exists($this, 'creationContext')
-            ? $this->creationContext // v3
-            : $this->serviceLocator; // v2
-
-        if ($container && $container->has('FilterManager')) {
-            $factory->getDefaultFilterChain()->setPluginManager($container->get('FilterManager'));
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (! $this->creationContext) {
+            return;
         }
 
-        if ($container && $container->has('ValidatorManager')) {
-            $factory->getDefaultValidatorChain()->setPluginManager($container->get('ValidatorManager'));
+        $filterChain = $factory->getDefaultFilterChain();
+        if ($filterChain !== null && $this->creationContext->has(FilterPluginManager::class)) {
+            $filterChain->setPluginManager($this->creationContext->get(FilterPluginManager::class));
+        }
+
+        $validatorChain = $factory->getDefaultValidatorChain();
+        if ($validatorChain !== null && $this->creationContext->has(ValidatorPluginManager::class)) {
+            $validatorChain->setPluginManager($this->creationContext->get(ValidatorPluginManager::class));
         }
     }
 
     /**
      * {@inheritDoc} (v3)
+     *
+     * @psalm-assert InputFilterInterface|InputInterface $instance
      */
     public function validate($instance)
     {
@@ -156,6 +168,11 @@ class InputFilterPluginManager extends AbstractPluginManager
      *
      * Checks that the filter loaded is either a valid callback or an instance
      * of FilterInterface.
+     *
+     * @deprecated Since 2.14.0. This method is only relevant to version 2 of laminas-servicemanager which is no
+     *             longer installable in this library.
+     *
+     * @see validate()
      *
      * @param  mixed                      $plugin
      * @return void

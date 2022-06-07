@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.13.1@5cf660f63b548ccd4a56f62d916ee4d6028e01a3">
+<files psalm-version="4.23.0@f1fe6ff483bf325c803df9f510d09a03fd796f88">
   <file src="src/ArrayInput.php">
     <DeprecatedInterface occurrences="1">
       <code>ArrayInput</code>
@@ -141,11 +141,10 @@
       <code>setAllowEmpty</code>
       <code>setContinueIfEmpty</code>
     </DeprecatedMethod>
-    <DocblockTypeContradiction occurrences="4">
+    <DocblockTypeContradiction occurrences="3">
       <code>! is_array($inputFilterSpecification) &amp;&amp; ! $inputFilterSpecification instanceof Traversable</code>
       <code>! is_array($inputSpecification) &amp;&amp; ! $inputSpecification instanceof Traversable</code>
       <code>is_array($validator)</code>
-      <code>null === $this-&gt;inputFilterManager</code>
     </DocblockTypeContradiction>
     <InvalidReturnStatement occurrences="1">
       <code>$inputFilter</code>
@@ -213,9 +212,6 @@
       <code>add</code>
       <code>add</code>
     </PossiblyUndefinedMethod>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>$inputFilterManager</code>
-    </PropertyNotSetInConstructor>
     <RedundantConditionGivenDocblockType occurrences="10">
       <code>$input-&gt;getFilterChain()</code>
       <code>$input-&gt;getValidatorChain()</code>
@@ -414,16 +410,8 @@
     <DeprecatedInterface occurrences="1">
       <code>InputFilterAbstractServiceFactory</code>
     </DeprecatedInterface>
-    <DeprecatedMethod occurrences="2">
-      <code>getServiceLocator</code>
-      <code>getServiceLocator</code>
-    </DeprecatedMethod>
-    <MissingConstructor occurrences="1">
-      <code>$factory</code>
-    </MissingConstructor>
-    <MixedArgument occurrences="2">
+    <MixedArgument occurrences="1">
       <code>$config</code>
-      <code>$container-&gt;get('InputFilterManager')</code>
     </MixedArgument>
     <MixedArrayAccess occurrences="1">
       <code>$allConfig['input_filter_specs']</code>
@@ -432,14 +420,6 @@
       <code>$allConfig</code>
       <code>$config</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
-      <code>FilterPluginManager</code>
-      <code>ValidatorPluginManager</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="2">
-      <code>$container-&gt;get('FilterManager')</code>
-      <code>$container-&gt;get('ValidatorManager')</code>
-    </MixedReturnStatement>
     <ParamNameMismatch occurrences="6">
       <code>$cName</code>
       <code>$container</code>
@@ -452,61 +432,22 @@
       <code>setPluginManager</code>
       <code>setPluginManager</code>
     </PossiblyNullReference>
-    <RedundantConditionGivenDocblockType occurrences="3">
-      <code>$container-&gt;getServiceLocator()</code>
-      <code>$container-&gt;getServiceLocator()</code>
-      <code>$this-&gt;factory instanceof Factory</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/InputFilterPluginManager.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$e-&gt;getCode()</code>
-    </InvalidScalarArgument>
-    <MissingReturnType occurrences="1">
-      <code>populateFactory</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="2">
-      <code>$container-&gt;get('FilterManager')</code>
-      <code>$container-&gt;get('ValidatorManager')</code>
-    </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$v3config</code>
-    </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="1">
-      <code>$container</code>
-    </MixedAssignment>
-    <MixedMethodCall occurrences="4">
-      <code>get</code>
-      <code>get</code>
-      <code>has</code>
-      <code>has</code>
-    </MixedMethodCall>
+    <MethodSignatureMismatch occurrences="1">
+      <code>InputFilterPluginManager</code>
+    </MethodSignatureMismatch>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$factories</code>
     </NonInvariantDocblockPropertyType>
-    <PossiblyNullReference occurrences="2">
-      <code>setPluginManager</code>
-      <code>setPluginManager</code>
-    </PossiblyNullReference>
     <PropertyTypeCoercion occurrences="1">
       <code>$this-&gt;initializers</code>
     </PropertyTypeCoercion>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;serviceLocator</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/InputFilterPluginManagerFactory.php">
     <DeprecatedInterface occurrences="1">
       <code>InputFilterPluginManagerFactory</code>
     </DeprecatedInterface>
-    <MissingParamType occurrences="3">
-      <code>$name</code>
-      <code>$name</code>
-      <code>$requestedName</code>
-    </MissingParamType>
-    <MixedArgument occurrences="1">
-      <code>$config['input_filters']</code>
-    </MixedArgument>
     <ParamNameMismatch occurrences="1">
       <code>$container</code>
     </ParamNameMismatch>
@@ -886,7 +827,7 @@
       <code>'invalid_value'</code>
       <code>'invalid_value'</code>
     </InvalidArgument>
-    <MissingReturnType occurrences="56">
+    <MissingReturnType occurrences="55">
       <code>testCanCreateInputFilterFromProvider</code>
       <code>testCanCreateInputFilterWithNullInputs</code>
       <code>testCanCreateInputFromProvider</code>
@@ -938,7 +879,6 @@
       <code>testGetInputFilterManagerWhenYouConstructFactoryWithIt</code>
       <code>testInputFromPluginManagerMayBeFurtherConfiguredWithSpec</code>
       <code>testSetInputFilterManagerOnConstruct</code>
-      <code>testSetInputFilterManagerWithServiceManager</code>
       <code>testSetInputFilterManagerWithoutServiceManager</code>
       <code>testSetsBreakChainOnFailure</code>
       <code>testSuggestedTypeMayBePluginNameInInputFilterPluginManager</code>
@@ -1130,8 +1070,7 @@
     </TypeDoesNotContainType>
   </file>
   <file src="test/InputFilterAbstractServiceFactoryTest.php">
-    <MissingClosureReturnType occurrences="2">
-      <code>function () {</code>
+    <MissingClosureReturnType occurrences="1">
       <code>function () {</code>
     </MissingClosureReturnType>
     <MissingReturnType occurrences="10">
@@ -1158,11 +1097,7 @@
       <code>$inputFilter</code>
       <code>$validatorChain</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="13">
-      <code>addAbstractFactory</code>
-      <code>addAbstractFactory</code>
-      <code>get</code>
-      <code>get</code>
+    <MixedMethodCall occurrences="9">
       <code>get</code>
       <code>getFilterChain</code>
       <code>getInputFilterManager</code>
@@ -1203,13 +1138,12 @@
     <MissingClosureReturnType occurrences="1">
       <code>function () use ($inputFilter) {</code>
     </MissingClosureReturnType>
-    <MissingReturnType occurrences="7">
+    <MissingReturnType occurrences="6">
       <code>testConfiguresInputFilterServicesWhenFound</code>
       <code>testDoesNotConfigureInputFilterServicesWhenConfigServiceDoesNotContainInputFiltersConfig</code>
       <code>testDoesNotConfigureInputFilterServicesWhenConfigServiceNotPresent</code>
       <code>testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent</code>
       <code>testFactoryConfiguresPluginManagerUnderContainerInterop</code>
-      <code>testFactoryConfiguresPluginManagerUnderServiceManagerV2</code>
       <code>testFactoryReturnsPluginManager</code>
     </MissingReturnType>
     <MoreSpecificReturnType occurrences="1">
@@ -1355,17 +1289,15 @@
       <code>testValidationOperatesOnFilteredValue</code>
       <code>testValueMayBeInjected</code>
     </MissingReturnType>
-    <MixedArrayAccess occurrences="5">
-      <code>$messageTemplates[NotEmptyValidator::IS_EMPTY]</code>
+    <MixedArrayAccess occurrences="4">
       <code>$validators[0]['instance']</code>
       <code>$validators[1]['instance']</code>
       <code>$value['filtered']</code>
       <code>$value['raw']</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment occurrences="4">
       <code>$isValidMethod</code>
       <code>$isValidMethod</code>
-      <code>$messageTemplates</code>
       <code>$tmpTemplate[4]</code>
       <code>$value</code>
     </MixedAssignment>
@@ -1443,9 +1375,6 @@
     <RedundantCondition occurrences="1">
       <code>isArray</code>
     </RedundantCondition>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>assertIsArray</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/ModuleTest.php">
     <InvalidArgument occurrences="1">
@@ -1480,11 +1409,6 @@
       <code>testValidatesSuccessfullyWhenValidNonEmptyDataSetProvided</code>
       <code>testValidationFailureWhenInvalidDataSetIsProvided</code>
     </MissingReturnType>
-  </file>
-  <file src="test/TestAsset/CustomFactory.php">
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>CustomFactory</code>
-    </PropertyNotSetInConstructor>
   </file>
   <file src="test/TestAsset/CustomInput.php">
     <DeprecatedInterface occurrences="1">

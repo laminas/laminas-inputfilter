@@ -27,7 +27,7 @@ class Factory
     /** @var ValidatorChain */
     protected $defaultValidatorChain;
 
-    /** @var InputFilterPluginManager */
+    /** @var InputFilterPluginManager|null */
     protected $inputFilterManager;
 
     public function __construct(?InputFilterPluginManager $inputFilterManager = null)
@@ -103,6 +103,7 @@ class Factory
     }
 
     /**
+     * @psalm-assert InputFilterPluginManager $this->inputFilterManager
      * @return self
      */
     public function setInputFilterManager(InputFilterPluginManager $inputFilterManager)

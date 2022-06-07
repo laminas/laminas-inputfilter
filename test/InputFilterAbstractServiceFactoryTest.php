@@ -40,7 +40,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     {
         $this->services = new ServiceManager();
         $this->filters  = new InputFilterPluginManager($this->services);
-        $this->services->setService('InputFilterManager', $this->filters);
+        $this->services->setService(InputFilterPluginManager::class, $this->filters);
 
         $this->factory = new InputFilterAbstractServiceFactory();
     }
@@ -48,7 +48,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     public function testCannotCreateServiceIfNoConfigServicePresent()
     {
         $method = 'canCreate';
-        $args   = [$this->getCompatContainer(), 'filter'];
+        $args   = [$this->services, 'filter'];
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
@@ -56,7 +56,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     {
         $this->services->setService('config', []);
         $method = 'canCreate';
-        $args   = [$this->getCompatContainer(), 'filter'];
+        $args   = [$this->services, 'filter'];
 
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
@@ -67,7 +67,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             'input_filter_specs' => [],
         ]);
         $method = 'canCreate';
-        $args   = [$this->getCompatContainer(), 'filter'];
+        $args   = [$this->services, 'filter'];
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
@@ -79,7 +79,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
         $method = 'canCreate';
-        $args   = [$this->getCompatContainer(), 'filter'];
+        $args   = [$this->services, 'filter'];
         $this->assertTrue(call_user_func_array([$this->factory, $method], $args));
     }
 
@@ -91,7 +91,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
         $method = '__invoke';
-        $args   = [$this->getCompatContainer(), 'filter'];
+        $args   = [$this->services, 'filter'];
         $filter = call_user_func_array([$this->factory, $method], $args);
         $this->assertInstanceOf(InputFilterInterface::class, $filter);
     }
@@ -111,8 +111,8 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $validator = $this->createMock(ValidatorInterface::class);
         $validators->setService('foo', $validator);
 
-        $this->services->setService('FilterManager', $filters);
-        $this->services->setService('ValidatorManager', $validators);
+        $this->services->setService(FilterPluginManager::class, $filters);
+        $this->services->setService(ValidatorPluginManager::class, $validators);
         $this->services->setService('config', [
             'input_filter_specs' => [
                 'filter' => [
@@ -131,7 +131,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         ]);
 
         $method      = '__invoke';
-        $args        = [$this->getCompatContainer(), 'filter'];
+        $args        = [$this->services, 'filter'];
         $inputFilter = call_user_func_array([$this->factory, $method], $args);
         $this->assertTrue($inputFilter->has('input'));
 
@@ -171,29 +171,20 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $validators = new ValidatorPluginManager($this->services);
         /** @var ValidatorInterface|MockObject $validator */
         $validator = $this->createMock(ValidatorInterface::class);
-        $this->services->setService('ValidatorManager', $validators);
+        $this->services->setService(ValidatorPluginManager::class, $validators);
         $validators->setService('foo', $validator);
 
         $filters = new FilterPluginManager($this->services);
-        $filter  = function () {
+        $filter  = static function (): void {
         };
         $filters->setService('foo', $filter);
 
-        $this->services->setService('FilterManager', $filters);
-        $this->services->get('InputFilterManager')->addAbstractFactory(InputFilterAbstractServiceFactory::class);
+        $this->services->setService(FilterPluginManager::class, $filters);
+        $this->services->get(InputFilterPluginManager::class)
+            ->addAbstractFactory(InputFilterAbstractServiceFactory::class);
 
-        $inputFilter = $this->services->get('InputFilterManager')->get('foobar');
+        $inputFilter = $this->services->get(InputFilterPluginManager::class)->get('foobar');
         $this->assertInstanceOf(InputFilterInterface::class, $inputFilter);
-    }
-
-    /**
-     * Returns appropriate instance to pass to `canCreate()` et al depending on SM version
-     *
-     * v3 passes the 'creationContext' (ie the root SM) to the AbstractFactory
-     */
-    protected function getCompatContainer(): ServiceManager
-    {
-        return $this->services;
     }
 
     /**
@@ -244,8 +235,8 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
 
         $validators = new ValidatorPluginManager($this->services);
 
-        $this->services->setService('FilterManager', $filters);
-        $this->services->setService('ValidatorManager', $validators);
+        $this->services->setService(FilterPluginManager::class, $filters);
+        $this->services->setService(ValidatorPluginManager::class, $validators);
 
         $this->services->setService('config', [
             'input_filter_specs' => [
@@ -284,10 +275,10 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
 
-        $this->services->get('InputFilterManager')
+        $this->services->get(InputFilterPluginManager::class)
             ->addAbstractFactory(InputFilterAbstractServiceFactory::class);
 
-        $inputFilter = $this->services->get('InputFilterManager')->get('test');
+        $inputFilter = $this->services->get(InputFilterPluginManager::class)->get('test');
         $this->assertInstanceOf(InputFilterInterface::class, $inputFilter);
 
         $input = $inputFilter->get('a-file-element');
