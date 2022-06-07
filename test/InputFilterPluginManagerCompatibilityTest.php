@@ -31,10 +31,4 @@ class InputFilterPluginManagerCompatibilityTest extends TestCase
     {
         // InputFilterManager accepts multiple instance types
     }
-
-    public function testShareByDefaultAndSharedByDefault(): void
-    {
-        // The plugin manager no longer supports V2 so this inherited test is forced to pass
-        self::assertTrue(true);
-    }
 }

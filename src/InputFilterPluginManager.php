@@ -77,6 +77,16 @@ class InputFilterPluginManager extends AbstractPluginManager
     protected $sharedByDefault = false;
 
     /**
+     * Whether or not to share by default (v2)
+     *
+     * @deprecated Since 2.15.0 This property will be removed in version 3.0 because
+     *             it is only relevant to ServiceManager version 2.x
+     *
+     * @var bool
+     */
+    protected $shareByDefault = false;
+
+    /**
      * @param null|ConfigInterface|ContainerInterface|PsrContainerInterface $configOrContainer
      * @param array $v3config
      * @psalm-param ServiceManagerConfiguration $v3config
