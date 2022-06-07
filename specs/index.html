@@ -392,9 +392,10 @@ enabled by default, assuming you are using the
         ],
     ],
 ];</code></pre>
-<p>When creating a controller, we might then pull the <code>InputFilterManager</code>, and
+<p>When creating a controller, we might then pull the <code>InputFilterPluginManager</code>, and
 retrieve the <code>foobar</code> input filter we've defined in order to inject it:</p>
-<pre class="highlight"><code class="language-php">use Laminas\ServiceManager\FactoryInterface;
+<pre class="highlight"><code class="language-php">use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MyValidatingControllerFactory implements FactoryInterface
@@ -405,7 +406,7 @@ class MyValidatingControllerFactory implements FactoryInterface
         $services = $controllers-&gt;getServiceLocator();
 
         // Retrieve the InputFilterManager
-        $filters = $services-&gt;get('InputFilterManager');
+        $filters = $services-&gt;get(InputFilterPluginManager::class);
 
         // Instantiate the controller and pass it the foobar input filter
         return new MyValidatingController($filters-&gt;get('foobar'));
