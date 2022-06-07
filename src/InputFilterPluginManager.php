@@ -18,7 +18,7 @@ use function sprintf;
 /**
  * Plugin manager implementation for input filters.
  *
- * @method InputFilterInterface|InputInterface get($name)
+ * @method InputFilterInterface|InputInterface get($name, ?array $options = null)
  */
 class InputFilterPluginManager extends AbstractPluginManager
 {

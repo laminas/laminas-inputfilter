@@ -38,13 +38,13 @@ class BaseInputFilter implements
     /** @var InputInterface[]|InputFilterInterface[] */
     protected $inputs = [];
 
-    /** @var InputInterface[]|InputFilterInterface[] */
+    /** @var InputInterface[]|InputFilterInterface[]|null */
     protected $invalidInputs;
 
-    /** @var null|string[] Input names */
+    /** @var null|string[]|null Input names */
     protected $validationGroup;
 
-    /** @var InputInterface[]|InputFilterInterface[] */
+    /** @var InputInterface[]|InputFilterInterface[]|null */
     protected $validInputs;
 
     /**
@@ -80,6 +80,7 @@ class BaseInputFilter implements
      */
     public function add($input, $name = null)
     {
+        /** @psalm-suppress RedundantConditionGivenDocblockType,DocblockTypeContradiction */
         if (! $input instanceof InputInterface && ! $input instanceof InputFilterInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an instance of %s or %s as its first argument; received "%s"',
@@ -90,6 +91,7 @@ class BaseInputFilter implements
             ));
         }
 
+        /** @psalm-suppress DocblockTypeContradiction */
         if ($input instanceof InputInterface && (empty($name) || is_int($name))) {
             $name = $input->getName();
         }
