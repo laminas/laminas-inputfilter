@@ -48,14 +48,26 @@ class InputTest extends TestCase
         $message  = $message ?: 'Expected failure message for required input';
         $message .= ';';
 
-        $messages = $input->getMessages();
-        $this->assertIsArray($messages, $message . ' non-array messages array');
+        $expectedKey = NotEmptyValidator::IS_EMPTY;
+        $messages    = $input->getMessages();
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
+        self::assertIsArray($messages, $message . ' non-array messages array');
+        self::assertArrayHasKey($expectedKey, $messages);
 
         $notEmpty         = new NotEmptyValidator();
         $messageTemplates = $notEmpty->getOption('messageTemplates');
-        $this->assertSame([
-            NotEmptyValidator::IS_EMPTY => $messageTemplates[NotEmptyValidator::IS_EMPTY],
-        ], $messages, $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages');
+        self::assertIsArray($messageTemplates);
+        self::assertArrayHasKey($expectedKey, $messageTemplates);
+        self::assertEquals(
+            $messageTemplates[$expectedKey],
+            $messages[$expectedKey],
+            $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages'
+        );
+        self::assertCount(
+            1,
+            $messages,
+            $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages'
+        );
     }
 
     public function testConstructorRequiresAName()

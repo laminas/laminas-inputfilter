@@ -59,10 +59,11 @@ return [
 ];
 ```
 
-When creating a controller, we might then pull the `InputFilterManager`, and
+When creating a controller, we might then pull the `InputFilterPluginManager`, and
 retrieve the `foobar` input filter we've defined in order to inject it:
 
 ```php
+use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -74,7 +75,7 @@ class MyValidatingControllerFactory implements FactoryInterface
         $services = $controllers->getServiceLocator();
 
         // Retrieve the InputFilterManager
-        $filters = $services->get('InputFilterManager');
+        $filters = $services->get(InputFilterPluginManager::class);
 
         // Instantiate the controller and pass it the foobar input filter
         return new MyValidatingController($filters->get('foobar'));

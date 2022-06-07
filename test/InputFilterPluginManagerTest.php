@@ -114,8 +114,8 @@ class InputFilterPluginManagerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->services->setService('FilterManager', $filterManager);
-        $this->services->setService('ValidatorManager', $validatorManager);
+        $this->services->setService(FilterPluginManager::class, $filterManager);
+        $this->services->setService(ValidatorPluginManager::class, $validatorManager);
 
         /** @var InputFilter $service */
         $service = $this->manager->get('inputfilter');

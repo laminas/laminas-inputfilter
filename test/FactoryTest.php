@@ -826,21 +826,18 @@ class FactoryTest extends TestCase
         $this->assertEquals('Custom error message', $input->getErrorMessage());
     }
 
-    public function testSetInputFilterManagerWithServiceManager()
+    public function testSetInputFilterManagerWithServiceManager(): void
     {
-        $serviceManager     = new ServiceManager\ServiceManager();
-        $inputFilterManager = new InputFilterPluginManager($serviceManager);
-        $serviceManager->setService('ValidatorManager', new Validator\ValidatorPluginManager($serviceManager));
-        $serviceManager->setService('FilterManager', new Filter\FilterPluginManager($serviceManager));
+        $serviceManager         = new ServiceManager\ServiceManager();
+        $inputFilterManager     = new InputFilterPluginManager($serviceManager);
+        $validatorPluginManager = new Validator\ValidatorPluginManager($serviceManager);
+        $filterPluginManager    = new Filter\FilterPluginManager($serviceManager);
+        $serviceManager->setService(Validator\ValidatorPluginManager::class, $validatorPluginManager);
+        $serviceManager->setService(Filter\FilterPluginManager::class, $filterPluginManager);
         $factory = new Factory($inputFilterManager);
-        $this->assertInstanceOf(
-            Validator\ValidatorPluginManager::class,
-            $factory->getDefaultValidatorChain()->getPluginManager()
-        );
-        $this->assertInstanceOf(
-            Filter\FilterPluginManager::class,
-            $factory->getDefaultFilterChain()->getPluginManager()
-        );
+
+        self::assertSame($validatorPluginManager, $factory->getDefaultValidatorChain()->getPluginManager());
+        self::assertSame($filterPluginManager, $factory->getDefaultFilterChain()->getPluginManager());
     }
 
     public function testSetInputFilterManagerWithoutServiceManager()
