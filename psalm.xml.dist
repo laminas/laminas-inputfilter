@@ -41,6 +41,9 @@
 
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
-        <pluginClass class="Lctrs\PsalmPsrContainerPlugin\Plugin"/>
     </plugins>
+
+    <stubs>
+        <file name=".stub.php" preloadClasses="true" />
+    </stubs>
 </psalm>

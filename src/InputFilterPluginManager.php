@@ -23,7 +23,7 @@ use function sprintf;
  *
  * @link ServiceManager
  *
- * @method InputFilterInterface|InputInterface get($name, ?array $options = null)
+ * @method InputFilterInterface|InputInterface get(string $name, ?array $options = null)
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  */
 class InputFilterPluginManager extends AbstractPluginManager
