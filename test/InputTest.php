@@ -24,7 +24,7 @@ use function iterator_to_array;
 use function json_encode;
 
 /**
- * @covers \Laminas\InputFilter\Input
+ * @psalm-suppress DeprecatedMethod
  */
 class InputTest extends TestCase
 {

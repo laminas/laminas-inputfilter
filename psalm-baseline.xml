@@ -36,165 +36,53 @@
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/BaseInputFilter.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>is_array($data)</code>
-    </DocblockTypeContradiction>
-    <InvalidReturnStatement occurrences="2">
-      <code>is_array($this-&gt;invalidInputs) ? $this-&gt;invalidInputs : []</code>
-      <code>is_array($this-&gt;validInputs) ? $this-&gt;validInputs : []</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>InputInterface[]</code>
-      <code>InputInterface[]</code>
-    </InvalidReturnType>
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>array</code>
-    </LessSpecificImplementedReturnType>
+    <InvalidReturnStatement occurrences="1"/>
+    <InvalidReturnType occurrences="1"/>
     <MixedArgument occurrences="1">
       <code>$input</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="4">
-      <code>$inputs</code>
-      <code>$inputs</code>
-      <code>$key</code>
-      <code>$name</code>
-    </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="7">
+    <MixedAssignment occurrences="2">
       <code>$inputContext</code>
-      <code>$inputs[]</code>
       <code>$unknownInputs[$key]</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$values[$name]</code>
-      <code>$values[$name]</code>
     </MixedAssignment>
-    <MixedPropertyTypeCoercion occurrences="1">
-      <code>$inputs</code>
-    </MixedPropertyTypeCoercion>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$input</code>
-    </MoreSpecificImplementedParamType>
     <PossiblyInvalidArgument occurrences="1">
       <code>$input</code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;data</code>
     </PossiblyNullArgument>
-    <PossiblyNullArrayOffset occurrences="1">
-      <code>$this-&gt;inputs</code>
-    </PossiblyNullArrayOffset>
     <TooManyArguments occurrences="2">
       <code>isValid</code>
       <code>isValid</code>
     </TooManyArguments>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <DocblockTypeContradiction occurrences="4">
-      <code>$this-&gt;notEmptyValidator === null</code>
-      <code>gettype($inputFilter)</code>
-      <code>is_object($data)</code>
-      <code>null === $this-&gt;inputFilter</code>
-    </DocblockTypeContradiction>
+    <DocblockTypeContradiction occurrences="2"/>
     <InvalidArgument occurrences="1">
       <code>$data</code>
     </InvalidArgument>
-    <InvalidPropertyAssignmentValue occurrences="3">
-      <code>$data</code>
-      <code>$this-&gt;invalidInputs</code>
-      <code>$this-&gt;validInputs</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingConstructor occurrences="2">
-      <code>$inputFilter</code>
-      <code>$notEmptyValidator</code>
-    </MissingConstructor>
-    <MixedArgument occurrences="4">
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$message</code>
-    </MixedArgument>
-    <MixedArrayAccess occurrences="1">
-      <code>$templates[NotEmpty::IS_EMPTY]</code>
-    </MixedArrayAccess>
-    <MixedAssignment occurrences="6">
-      <code>$data</code>
-      <code>$data</code>
-      <code>$item</code>
-      <code>$message</code>
-      <code>$templates</code>
-      <code>$this-&gt;validationGroup</code>
-    </MixedAssignment>
-    <MixedReturnTypeCoercion occurrences="2">
-      <code>array&lt;string, string&gt;</code>
-    </MixedReturnTypeCoercion>
-    <PossiblyNullArgument occurrences="2">
-      <code>$this-&gt;data</code>
-      <code>$this-&gt;data</code>
-    </PossiblyNullArgument>
-    <RedundantConditionGivenDocblockType occurrences="2">
-      <code>gettype($data)</code>
-      <code>is_object($inputFilter)</code>
-    </RedundantConditionGivenDocblockType>
+    <InvalidPropertyAssignmentValue occurrences="2"/>
   </file>
   <file src="src/Factory.php">
-    <DeprecatedMethod occurrences="2">
-      <code>setAllowEmpty</code>
-      <code>setContinueIfEmpty</code>
-    </DeprecatedMethod>
-    <DocblockTypeContradiction occurrences="3">
+    <DocblockTypeContradiction occurrences="2">
       <code>! is_array($inputFilterSpecification) &amp;&amp; ! $inputFilterSpecification instanceof Traversable</code>
       <code>! is_array($inputSpecification) &amp;&amp; ! $inputSpecification instanceof Traversable</code>
-      <code>is_array($validator)</code>
     </DocblockTypeContradiction>
-    <InvalidReturnStatement occurrences="1">
-      <code>$inputFilter</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>InputFilterInterface</code>
-    </InvalidReturnType>
-    <MixedArgument occurrences="24">
+    <MixedArgument occurrences="9">
       <code>$breakChainOnFailure</code>
-      <code>$class</code>
-      <code>$class</code>
-      <code>$class</code>
-      <code>$class</code>
-      <code>$class</code>
       <code>$inputFilterSpecification['count']</code>
       <code>$inputFilterSpecification['input_filter']</code>
       <code>$inputFilterSpecification['required']</code>
       <code>$inputFilterSpecification['required_message']</code>
-      <code>$inputSpecification['continue_if_empty']</code>
       <code>$key</code>
-      <code>$name</code>
-      <code>$name</code>
       <code>$options</code>
       <code>$priority</code>
       <code>$priority</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
       <code>$value['type']</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="2">
-      <code>$key</code>
-      <code>$value</code>
-    </MixedArgumentTypeCoercion>
-    <MixedArrayAccess occurrences="4">
-      <code>$validator['break_chain_on_failure']</code>
-      <code>$validator['name']</code>
-      <code>$validator['options']</code>
-      <code>$validator['priority']</code>
-    </MixedArrayAccess>
-    <MixedAssignment occurrences="11">
+    <MixedAssignment occurrences="6">
       <code>$breakChainOnFailure</code>
-      <code>$class</code>
-      <code>$filter</code>
       <code>$key</code>
-      <code>$name</code>
-      <code>$name</code>
       <code>$options</code>
       <code>$options</code>
       <code>$priority</code>
@@ -204,26 +92,6 @@
     <MixedMethodCall occurrences="1">
       <code>new $class()</code>
     </MixedMethodCall>
-    <PossiblyNullPropertyAssignmentValue occurrences="2">
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUndefinedMethod occurrences="2">
-      <code>add</code>
-      <code>add</code>
-    </PossiblyUndefinedMethod>
-    <RedundantConditionGivenDocblockType occurrences="10">
-      <code>$input-&gt;getFilterChain()</code>
-      <code>$input-&gt;getValidatorChain()</code>
-      <code>$this-&gt;defaultFilterChain</code>
-      <code>$this-&gt;defaultFilterChain</code>
-      <code>$this-&gt;defaultFilterChain</code>
-      <code>$this-&gt;defaultFilterChain</code>
-      <code>$this-&gt;defaultValidatorChain</code>
-      <code>$this-&gt;defaultValidatorChain</code>
-      <code>$this-&gt;defaultValidatorChain</code>
-      <code>$this-&gt;defaultValidatorChain</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/FileInput.php">
     <DeprecatedInterface occurrences="1">
@@ -242,30 +110,18 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;prepareRequiredValidationFailureMessage()</code>
     </InvalidPropertyAssignmentValue>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>parent::resetValue()</code>
-    </LessSpecificReturnStatement>
     <MixedAssignment occurrences="1">
       <code>$rawValue</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="1">
-      <code>Input</code>
-    </MixedInferredReturnType>
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
-    <MoreSpecificReturnType occurrences="1">
-      <code>self</code>
-    </MoreSpecificReturnType>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
     <PropertyNotSetInConstructor occurrences="1">
       <code>$implementation</code>
     </PropertyNotSetInConstructor>
-    <UndefinedDocblockClass occurrences="1">
-      <code>array|UploadedFile</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/FileInput/HttpServerFileInputDecorator.php">
     <DeprecatedInterface occurrences="1">
@@ -325,7 +181,7 @@
       <code>setAllowEmpty</code>
       <code>setContinueIfEmpty</code>
     </DeprecatedMethod>
-    <DeprecatedProperty occurrences="7">
+    <DeprecatedProperty occurrences="5">
       <code>$this-&gt;allowEmpty</code>
       <code>$this-&gt;allowEmpty</code>
       <code>$this-&gt;continueIfEmpty</code>
@@ -340,71 +196,21 @@
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>null|string</code>
     </ImplementedReturnTypeMismatch>
-    <InvalidNullableReturnType occurrences="2">
-      <code>FilterChain</code>
-      <code>ValidatorChain</code>
-    </InvalidNullableReturnType>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;prepareRequiredValidationFailureMessage()</code>
     </InvalidPropertyAssignmentValue>
     <MissingReturnType occurrences="1">
       <code>clearFallbackValue</code>
     </MissingReturnType>
-    <MixedArrayAccess occurrences="4">
-      <code>$templates[NotEmpty::IS_EMPTY]</code>
-      <code>$validator['instance']</code>
-      <code>$validator['instance']</code>
-      <code>$validator['instance']</code>
-    </MixedArrayAccess>
-    <MixedAssignment occurrences="8">
-      <code>$message</code>
-      <code>$message</code>
-      <code>$notEmpty</code>
-      <code>$templates</code>
-      <code>$translator</code>
-      <code>$validator</code>
-      <code>$validator</code>
+    <MixedAssignment occurrences="1">
       <code>$value</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="4">
-      <code>getOption</code>
-      <code>getTranslator</code>
-      <code>getTranslatorTextDomain</code>
-      <code>translate</code>
-    </MixedMethodCall>
-    <MixedReturnTypeCoercion occurrences="4">
-      <code>$validator-&gt;getMessages()</code>
-      <code>string[]</code>
-      <code>string[]</code>
-    </MixedReturnTypeCoercion>
-    <NullableReturnStatement occurrences="2">
-      <code>$this-&gt;filterChain</code>
-      <code>$this-&gt;validatorChain</code>
-    </NullableReturnStatement>
-    <PossiblyUndefinedMethod occurrences="3">
-      <code>getOption</code>
-      <code>getTranslator</code>
-      <code>getTranslatorTextDomain</code>
-    </PossiblyUndefinedMethod>
-    <RedundantCastGivenDocblockType occurrences="6">
+    <RedundantCastGivenDocblockType occurrences="4">
       <code>(bool) $allowEmpty</code>
       <code>(bool) $breakOnFailure</code>
       <code>(bool) $continueIfEmpty</code>
-      <code>(bool) $required</code>
       <code>(string) $errorMessage</code>
-      <code>(string) $name</code>
     </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/InputFilter.php">
-    <LessSpecificReturnStatement occurrences="1">
-      <code>parent::add($input, $name)</code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType occurrences="1">
-      <code>InputFilter</code>
-    </MoreSpecificReturnType>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$input</code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <DeprecatedInterface occurrences="1">
@@ -428,10 +234,6 @@
       <code>$rName</code>
       <code>$services</code>
     </ParamNameMismatch>
-    <PossiblyNullReference occurrences="2">
-      <code>setPluginManager</code>
-      <code>setPluginManager</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/InputFilterPluginManager.php">
     <MethodSignatureMismatch occurrences="1">
@@ -458,15 +260,7 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/OptionalInputFilter.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>array|null</code>
-    </ImplementedReturnTypeMismatch>
-    <MixedArgument occurrences="1">
-      <code>$data ?: []</code>
-    </MixedArgument>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$data ?: []</code>
-    </PossiblyInvalidArgument>
+    <ImplementedReturnTypeMismatch occurrences="1"/>
   </file>
   <file src="test/ArrayInputTest.php">
     <ImplementedReturnTypeMismatch occurrences="6">
@@ -551,8 +345,7 @@
     </UndefinedDocblockClass>
   </file>
   <file src="test/BaseInputFilterTest.php">
-    <InvalidArgument occurrences="5">
-      <code>$data</code>
+    <InvalidArgument occurrences="4">
       <code>$input</code>
       <code>$input</code>
       <code>new stdClass()</code>
@@ -736,34 +529,10 @@
       <code>testSettingDataWithNonArrayNonTraversableRaisesException</code>
       <code>testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty</code>
     </MissingReturnType>
-    <MixedArgument occurrences="15">
+    <MixedArgument occurrences="1">
       <code>$data</code>
-      <code>$messages[0]</code>
-      <code>$messages[0]</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[1]</code>
-      <code>$messages[1]</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="11">
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[0]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
-      <code>$messages[1]['phone']</code>
+    <MixedArrayAccess occurrences="1">
       <code>$set[3]</code>
     </MixedArrayAccess>
     <MixedArrayAssignment occurrences="1">
@@ -827,72 +596,11 @@
       <code>'invalid_value'</code>
       <code>'invalid_value'</code>
     </InvalidArgument>
-    <MissingReturnType occurrences="55">
-      <code>testCanCreateInputFilterFromProvider</code>
-      <code>testCanCreateInputFilterWithNullInputs</code>
-      <code>testCanCreateInputFromProvider</code>
-      <code>testCanSetInputErrorMessage</code>
-      <code>testClearDefaultFilterChain</code>
-      <code>testClearDefaultValidatorChain</code>
-      <code>testConflictNameWithInputFilterType</code>
-      <code>testCreateInputFilterConfiguredNameWhenSpecIsIntegerIndexed</code>
-      <code>testCreateInputFilterUsesAssociatedNameMappingOverConfiguredName</code>
-      <code>testCreateInputFilterUsesConfiguredNameForNestedInputFilters</code>
-      <code>testCreateInputFilterWithInvalidDataTypeThrowsInvalidArgumentException</code>
-      <code>testCreateInputWithFiltersAsAnCollectionOfInvalidTypesThrowException</code>
-      <code>testCreateInputWithFiltersAsAnInvalidTypeThrowException</code>
-      <code>testCreateInputWithFiltersAsAnSpecificationWithMissingNameThrowException</code>
-      <code>testCreateInputWithInvalidDataTypeThrowsInvalidArgumentException</code>
-      <code>testCreateInputWithSpecificInputTypeSettingsThrowException</code>
-      <code>testCreateInputWithTypeAsAnInvalidClassInstanceThrowException</code>
-      <code>testCreateInputWithTypeAsAnInvalidPluginInstanceThrowException</code>
-      <code>testCreateInputWithTypeAsAnUnknownPluginAndNotExistsAsClassNameThrowException</code>
-      <code>testCreateInputWithValidatorsAsAnCollectionOfInvalidTypesThrowException</code>
-      <code>testCreateInputWithValidatorsAsAnInvalidTypeThrowException</code>
-      <code>testCreateInputWithValidatorsAsAnSpecificationWithMissingNameThrowException</code>
-      <code>testCustomFactoryInCollection</code>
-      <code>testFactoryAcceptsCollectionInputFilter</code>
-      <code>testFactoryAcceptsInputFilterInterface</code>
-      <code>testFactoryAcceptsInputInterface</code>
-      <code>testFactoryAllowsInjectingFilterChain</code>
-      <code>testFactoryAllowsInjectingValidatorChain</code>
-      <code>testFactoryAllowsPassingFilterChainsInInputSpec</code>
-      <code>testFactoryAllowsPassingValidatorChainsInInputSpec</code>
-      <code>testFactoryCanCreateCollectionInputFilterWithRequiredMessage</code>
-      <code>testFactoryComposesFilterChainByDefault</code>
-      <code>testFactoryComposesValidatorChainByDefault</code>
-      <code>testFactoryInjectsComposedFilterAndValidatorChainsIntoInputObjectsWhenCreatingNewInputFilterObjects</code>
-      <code>testFactoryUsesComposedFilterChainWhenCreatingNewInputObjects</code>
-      <code>testFactoryUsesComposedValidatorChainWhenCreatingNewInputObjects</code>
-      <code>testFactoryValidatorsPriority</code>
-      <code>testFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfiguration</code>
-      <code>testFactoryWillCreateInputFilterMatchingInputNameWhenNotSpecified</code>
-      <code>testFactoryWillCreateInputWithContinueIfEmptyFlag</code>
-      <code>testFactoryWillCreateInputWithErrorMessage</code>
-      <code>testFactoryWillCreateInputWithSuggestedAllowEmptyFlagAndImpliesRequiredFlag</code>
-      <code>testFactoryWillCreateInputWithSuggestedFilters</code>
-      <code>testFactoryWillCreateInputWithSuggestedName</code>
-      <code>testFactoryWillCreateInputWithSuggestedRequiredFlagAndAlternativeAllowEmptyFlag</code>
-      <code>testFactoryWillCreateInputWithSuggestedValidators</code>
-      <code>testFactoryWillNotGetPrioritySetting</code>
-      <code>testGetInputFilterManagerSettedByItsSetter</code>
-      <code>testGetInputFilterManagerWhenYouConstructFactoryWithIt</code>
-      <code>testInputFromPluginManagerMayBeFurtherConfiguredWithSpec</code>
-      <code>testSetInputFilterManagerOnConstruct</code>
-      <code>testSetInputFilterManagerWithoutServiceManager</code>
-      <code>testSetsBreakChainOnFailure</code>
-      <code>testSuggestedTypeMayBePluginNameInInputFilterPluginManager</code>
-      <code>testWhenCreateInputPullsInputFromThePluginManagerItMustNotOverwriteFilterAndValidatorChains</code>
-    </MissingReturnType>
-    <MixedArrayAccess occurrences="1">
-      <code>$validator['instance']</code>
-    </MixedArrayAccess>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment occurrences="2">
       <code>$defaultFilterChain</code>
       <code>$defaultValidatorChain</code>
-      <code>$validator</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="18">
+    <MixedMethodCall occurrences="9">
       <code>count</code>
       <code>count</code>
       <code>getFilters</code>
@@ -905,17 +613,8 @@
       <code>method</code>
       <code>will</code>
       <code>will</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>with</code>
-      <code>with</code>
-      <code>with</code>
     </MixedMethodCall>
-    <PossiblyInvalidArgument occurrences="5">
-      <code>$pluginManager</code>
-      <code>$pluginManager</code>
-      <code>$pluginManager</code>
+    <PossiblyInvalidArgument occurrences="2">
       <code>$provider</code>
       <code>$provider</code>
     </PossiblyInvalidArgument>
@@ -923,7 +622,7 @@
       <code>getPluginManager</code>
       <code>getPluginManager</code>
     </PossiblyNullReference>
-    <PossiblyUndefinedMethod occurrences="16">
+    <PossiblyUndefinedMethod occurrences="13">
       <code>breakOnFailure</code>
       <code>breakOnFailure</code>
       <code>expects</code>
@@ -991,10 +690,6 @@
       <code>testValidationsRunWithoutFileArrayDueToAjaxPost</code>
       <code>testValidationsRunWithoutFileArrayIsSend</code>
     </MissingReturnType>
-    <MixedArrayAccess occurrences="2">
-      <code>$validators[0]['instance']</code>
-      <code>$validators[0]['instance']</code>
-    </MixedArrayAccess>
     <MoreSpecificReturnType occurrences="1">
       <code>array</code>
     </MoreSpecificReturnType>
@@ -1017,14 +712,6 @@
     <ImplementedReturnTypeMismatch occurrences="4">
       <code>UploadedFileInterface</code>
     </ImplementedReturnTypeMismatch>
-    <InvalidArgument occurrences="6">
-      <code>$badValue-&gt;reveal()</code>
-      <code>$upload-&gt;reveal()</code>
-      <code>$upload-&gt;reveal()</code>
-      <code>$uploadedFile-&gt;reveal()</code>
-      <code>$uploadedFile-&gt;reveal()</code>
-      <code>$value-&gt;reveal()</code>
-    </InvalidArgument>
     <InvalidReturnType occurrences="1"/>
     <MissingReturnType occurrences="19">
       <code>testAutoPrependUploadValidatorIsOnByDefault</code>
@@ -1050,10 +737,6 @@
     <MixedArgumentTypeCoercion occurrences="1">
       <code>[$upload, 'reveal']</code>
     </MixedArgumentTypeCoercion>
-    <MixedArrayAccess occurrences="2">
-      <code>$validators[0]['instance']</code>
-      <code>$validators[0]['instance']</code>
-    </MixedArrayAccess>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$input</code>
     </NonInvariantDocblockPropertyType>
@@ -1200,33 +883,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/InputTest.php">
-    <DeprecatedMethod occurrences="25">
-      <code>allowEmpty</code>
-      <code>allowEmpty</code>
-      <code>continueIfEmpty</code>
-      <code>continueIfEmpty</code>
-      <code>continueIfEmpty</code>
-      <code>continueIfEmpty</code>
-      <code>continueIfEmpty</code>
-      <code>setAllowEmpty</code>
-      <code>setAllowEmpty</code>
-      <code>setAllowEmpty</code>
-      <code>setAllowEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setContinueIfEmpty</code>
-      <code>setMethods</code>
-      <code>setMethods</code>
-    </DeprecatedMethod>
     <InvalidReturnStatement occurrences="2">
       <code>$dataSets</code>
     </InvalidReturnStatement>
@@ -1289,9 +945,7 @@
       <code>testValidationOperatesOnFilteredValue</code>
       <code>testValueMayBeInjected</code>
     </MissingReturnType>
-    <MixedArrayAccess occurrences="4">
-      <code>$validators[0]['instance']</code>
-      <code>$validators[1]['instance']</code>
+    <MixedArrayAccess occurrences="2">
       <code>$value['filtered']</code>
       <code>$value['raw']</code>
     </MixedArrayAccess>

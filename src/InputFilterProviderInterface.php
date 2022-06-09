@@ -6,7 +6,7 @@ interface InputFilterProviderInterface
 {
     /**
      * Should return an array specification compatible with
-     * {@link Laminas\InputFilter\Factory::createInputFilter()}.
+     * {@link Factory::createInputFilter()}.
      *
      * @return array
      */

@@ -15,7 +15,7 @@ final class FileUploadMock implements ValidatorInterface
         return true;
     }
 
-    /** @return array */
+    /** @return array<string, string> */
     public function getMessages()
     {
         return [];

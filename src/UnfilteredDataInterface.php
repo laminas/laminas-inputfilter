@@ -4,16 +4,18 @@ namespace Laminas\InputFilter;
 
 /**
  * Ensures Inputs store unfiltered data and are capable of returning it
+ *
+ * @psalm-import-type InputData from InputFilterInterface
  */
 interface UnfilteredDataInterface
 {
     /**
-     * @return array|object
+     * @return InputData
      */
     public function getUnfilteredData();
 
     /**
-     * @param array|object $data
+     * @param InputData $data
      * @return $this
      */
     public function setUnfilteredData($data);

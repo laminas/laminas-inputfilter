@@ -12,28 +12,55 @@ use function is_array;
 use function is_object;
 use function sprintf;
 
+/**
+ * @psalm-import-type InputData from InputFilterInterface
+ */
 class CollectionInputFilter extends InputFilter
 {
+    /**
+     * @var array<array-key, InputData>|null
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     */
+    protected $data;
+
     /** @var bool */
     protected $isRequired = false;
 
     /** @var null|int */
     protected $count;
 
-    /** @var array[] */
+    /** @var array<array-key, array<string, mixed>> */
     protected $collectionValues = [];
 
-    /** @var array[] */
+    /** @var array<array-key, array<string, mixed>> */
     protected $collectionRawValues = [];
 
-    /** @var array */
+    /** @var array<array-key, array<string, array<array-key, string>>> */
     protected $collectionMessages = [];
 
-    /** @var BaseInputFilter */
+    /** @var BaseInputFilter|null */
     protected $inputFilter;
 
-    /** @var NotEmpty */
+    /** @var NotEmpty|null */
     protected $notEmptyValidator;
+
+    /**
+     * @var array<array-key, array<string, InputInterface|InputFilterInterface>>|null
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     */
+    protected $validInputs;
+
+    /**
+     * @var array<array-key, array<string, InputInterface|InputFilterInterface>>|null
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     */
+    protected $invalidInputs;
+
+    /**
+     * @var array<array-key, list<string>>|null
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     */
+    protected $validationGroup;
 
     /**
      * Set the input filter to use when looping the data
@@ -41,6 +68,7 @@ class CollectionInputFilter extends InputFilter
      * @param BaseInputFilter|array|Traversable $inputFilter
      * @throws Exception\RuntimeException
      * @return CollectionInputFilter
+     * @psalm-assert BaseInputFilter $this->inputFilter
      */
     public function setInputFilter($inputFilter)
     {
@@ -48,6 +76,7 @@ class CollectionInputFilter extends InputFilter
             $inputFilter = $this->getFactory()->createInputFilter($inputFilter);
         }
 
+        /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
         if (! $inputFilter instanceof BaseInputFilter) {
             throw new Exception\RuntimeException(sprintf(
                 '%s expects an instance of %s; received "%s"',
@@ -120,17 +149,21 @@ class CollectionInputFilter extends InputFilter
     public function getCount()
     {
         if (null === $this->count) {
-            return count($this->data);
+            return $this->data !== null ? count($this->data) : 0;
         }
 
         return $this->count;
     }
 
     /**
-     * {@inheritdoc}
+     * @param array<array-key, InputData>|Traversable<array-key, InputData> $data
+     * @psalm-suppress ImplementedParamTypeMismatch
+     * @psalm-assert array<array-key, InputData>|Traversable<array-key, InputData> $this->data
+     * @return $this
      */
     public function setData($data)
     {
+        /** @psalm-suppress DocblockTypeContradiction, RedundantConditionGivenDocblockType */
         if (! (is_array($data) || $data instanceof Traversable)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable collection; invalid collection of type %s provided',
@@ -142,6 +175,7 @@ class CollectionInputFilter extends InputFilter
         $this->setUnfilteredData($data);
 
         foreach ($data as $item) {
+            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
             if (is_array($item) || $item instanceof Traversable) {
                 continue;
             }
@@ -154,6 +188,7 @@ class CollectionInputFilter extends InputFilter
             ));
         }
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $this->data = $data;
         return $this;
     }
@@ -204,7 +239,8 @@ class CollectionInputFilter extends InputFilter
             $valid                      = false;
         }
 
-        if (count($this->data) < $this->getCount()) {
+        $dataCount = $this->data !== null ? count($this->data) : 0;
+        if ($dataCount < $this->getCount()) {
             $valid = false;
         }
 
@@ -238,7 +274,8 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * {@inheritdoc}
+     * @param string|array<array-key, list<string>> $name
+     * @return $this
      */
     public function setValidationGroup($name)
     {
@@ -251,7 +288,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<array-key, array<string, mixed>>
      */
     public function getValues()
     {
@@ -259,7 +296,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<array-key, array<string, mixed>>
      */
     public function getRawValues()
     {
@@ -287,7 +324,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<array-key, array<string, array<array-key, string>>>
      */
     public function getMessages()
     {
@@ -326,9 +363,10 @@ class CollectionInputFilter extends InputFilter
     protected function prepareRequiredValidationFailureMessage()
     {
         $notEmptyValidator = $this->getNotEmptyValidator();
-        $templates         = $notEmptyValidator->getOption('messageTemplates');
-        $message           = $templates[NotEmpty::IS_EMPTY];
-        $translator        = $notEmptyValidator->getTranslator();
+        /** @var array<string, string> $templates */
+        $templates  = $notEmptyValidator->getOption('messageTemplates');
+        $message    = $templates[NotEmpty::IS_EMPTY];
+        $translator = $notEmptyValidator->getTranslator();
 
         return [
             NotEmpty::IS_EMPTY => $translator

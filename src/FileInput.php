@@ -33,8 +33,8 @@ class FileInput extends Input
     private $implementation;
 
     /**
-     * @param array|UploadedFile $value
-     * @return Input
+     * @inheritDoc
+     * @param array|UploadedFileInterface $value
      */
     public function setValue($value)
     {
@@ -43,7 +43,7 @@ class FileInput extends Input
         return $this;
     }
 
-    /** @return self */
+    /** @return $this */
     public function resetValue()
     {
         $this->implementation = null;
@@ -52,7 +52,7 @@ class FileInput extends Input
 
     /**
      * @param  bool $value Enable/Disable automatically prepending an Upload validator
-     * @return FileInput
+     * @return $this
      */
     public function setAutoPrependUploadValidator($value)
     {
@@ -138,7 +138,7 @@ class FileInput extends Input
     }
 
     /**
-     * @return FileInput
+     * @return $this
      */
     public function merge(InputInterface $input)
     {

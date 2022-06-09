@@ -8,13 +8,13 @@ use function sprintf;
 
 class ArrayInput extends Input
 {
-    /** @var array */
+    /** @var array<array-key, mixed> */
     protected $value = [];
 
     /**
-     * @param  array $value
+     * @inheritDoc
+     * @param  array<array-key, mixed> $value
      * @throws Exception\InvalidArgumentException
-     * @return Input
      */
     public function setValue($value)
     {
@@ -24,7 +24,9 @@ class ArrayInput extends Input
                 gettype($value)
             ));
         }
-        return parent::setValue($value);
+        parent::setValue($value);
+
+        return $this;
     }
 
     /**

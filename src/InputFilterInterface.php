@@ -1,10 +1,40 @@
-<?php
+<?php // phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 
 namespace Laminas\InputFilter;
 
 use Countable;
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterInterface;
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use Traversable;
 
+/**
+ * @psalm-type FilterSpecification = array{
+ *     name: string|class-string<FilterInterface>,
+ *     priority?: int,
+ *     options?: array<string, mixed>,
+ * }&array<string, mixed>
+ * @psalm-type ValidatorSpecification = array{
+ *     name: string|class-string<ValidatorInterface>,
+ *     priority?: int,
+ *     break_chain_on_failure?: bool,
+ *     options?: array<string, mixed>,
+ * }&array<string, mixed>
+ * @psalm-type InputSpecification = array{
+ *     type?: string|class-string<InputFilterInterface>,
+ *     name?: string,
+ *     required?: bool,
+ *     allow_empty?: bool,
+ *     continue_if_empty?: bool,
+ *     error_message?: string|null,
+ *     fallback_value?: mixed|null,
+ *     break_on_failure?: bool,
+ *     filters?: FilterChain|iterable<array-key, FilterSpecification|callable|FilterInterface>,
+ *     validators?: ValidatorChain|iterable<array-key, ValidatorSpecification|ValidatorInterface>,
+ * }&array<string, mixed>
+ * @psalm-type InputData = array<string, mixed>
+ */
 interface InputFilterInterface extends Countable
 {
     public const VALIDATE_ALL = 'INPUT_FILTER_ALL';
@@ -12,7 +42,7 @@ interface InputFilterInterface extends Countable
     /**
      * Add an input to the input filter
      *
-     * @param  InputInterface|InputFilterInterface|array|Traversable $input
+     * @param  InputInterface|InputFilterInterface|InputSpecification|Traversable $input
      *     Implementations MUST handle at least one of the specified types, and
      *     raise an exception for any they cannot process.
      * @param  null|string $name Name used to retrieve this input
@@ -48,7 +78,7 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
-     * @param  array|Traversable $data
+     * @param  InputData|Traversable<string, mixed>|null $data
      * @return InputFilterInterface
      */
     public function setData($data);
@@ -71,7 +101,7 @@ interface InputFilterInterface extends Countable
      * Implementations should allow passing a single array value, or multiple arguments,
      * each specifying a single input.
      *
-     * @param  mixed $name
+     * @param  string|list<string> $name
      * @return InputFilterInterface
      */
     public function setValidationGroup($name);
@@ -82,7 +112,7 @@ interface InputFilterInterface extends Countable
      * Implementations should return an associative array of name/input pairs
      * that failed validation.
      *
-     * @return InputInterface[]
+     * @return array<string, InputInterface|InputFilterInterface>
      */
     public function getInvalidInput();
 
@@ -92,7 +122,7 @@ interface InputFilterInterface extends Countable
      * Implementations should return an associative array of name/input pairs
      * that passed validation.
      *
-     * @return InputInterface[]
+     * @return array<string, InputInterface|InputFilterInterface>
      */
     public function getValidInput();
 
@@ -110,7 +140,7 @@ interface InputFilterInterface extends Countable
      * List should be an associative array, with the values filtered. If
      * validation failed, this should raise an exception.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getValues();
 
@@ -128,7 +158,7 @@ interface InputFilterInterface extends Countable
      * List should be an associative array of named input/value pairs,
      * with the values unfiltered.
      *
-     * @return array
+     * @return InputData
      */
     public function getRawValues();
 
@@ -138,7 +168,7 @@ interface InputFilterInterface extends Countable
      * Should return an associative array of named input/message list pairs.
      * Pairs should only be returned for inputs that failed validation.
      *
-     * @return string[]
+     * @return array<array-key, array<array-key, string>>
      */
     public function getMessages();
 }
