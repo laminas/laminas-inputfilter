@@ -52,36 +52,23 @@
     <PossiblyInvalidArgument occurrences="1">
       <code>$input</code>
     </PossiblyInvalidArgument>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;data</code>
-    </PossiblyNullArgument>
     <TooManyArguments occurrences="2">
       <code>isValid</code>
       <code>isValid</code>
     </TooManyArguments>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>setData</code>
-      <code>setData</code>
-    </DocblockTypeContradiction>
     <ImplementedParamTypeMismatch occurrences="1">
       <code>$name</code>
     </ImplementedParamTypeMismatch>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>array&lt;array-key, array&lt;string, array&lt;array-key, string&gt;&gt;&gt;</code>
     </ImplementedReturnTypeMismatch>
-    <InvalidArgument occurrences="1">
-      <code>$data</code>
-    </InvalidArgument>
     <InvalidPropertyAssignmentValue occurrences="2">
       <code>$this-&gt;collectionMessages</code>
       <code>$this-&gt;collectionMessages</code>
     </InvalidPropertyAssignmentValue>
-    <LessSpecificImplementedReturnType occurrences="2">
-      <code>array&lt;array-key, array&lt;string, mixed&gt;&gt;</code>
-      <code>array&lt;array-key, array&lt;string, mixed&gt;&gt;</code>
-    </LessSpecificImplementedReturnType>
+    <LessSpecificImplementedReturnType occurrences="1"/>
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$name</code>
     </MoreSpecificImplementedParamType>
@@ -221,9 +208,6 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;prepareRequiredValidationFailureMessage()</code>
     </InvalidPropertyAssignmentValue>
-    <MissingReturnType occurrences="1">
-      <code>clearFallbackValue</code>
-    </MissingReturnType>
     <MixedAssignment occurrences="1">
       <code>$value</code>
     </MixedAssignment>
@@ -282,74 +266,39 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/OptionalInputFilter.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>setData</code>
-    </DocblockTypeContradiction>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>array&lt;string, mixed&gt;|null</code>
     </ImplementedReturnTypeMismatch>
   </file>
   <file src="test/ArrayInputTest.php">
-    <ImplementedReturnTypeMismatch occurrences="6">
-      <code>FilterChain&amp;MockObject</code>
-      <code>NotEmptyValidator&amp;MockObject</code>
-      <code>ValidatorChain&amp;MockObject</code>
+    <ImplementedReturnTypeMismatch occurrences="3">
       <code>string[]</code>
     </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement occurrences="4">
+    <InvalidReturnStatement occurrences="1">
       <code>$dataSets</code>
-      <code>parent::createFilterChainMock($valueMap)</code>
-      <code>parent::createNonEmptyValidatorMock($isValid, $value, $context)</code>
-      <code>parent::createValidatorChainMock($valueMap, $messages)</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="4">
-      <code>FilterChain&amp;MockObject</code>
-      <code>NotEmptyValidator&amp;MockObject</code>
-      <code>ValidatorChain&amp;MockObject</code>
-    </InvalidReturnType>
+    <InvalidReturnType occurrences="1"/>
     <MissingClosureParamType occurrences="3">
       <code>$set</code>
       <code>$set</code>
       <code>$set</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="2">
-      <code>function ($values) {</code>
-      <code>function ($values) {</code>
-    </MissingClosureReturnType>
-    <MissingReturnType occurrences="4">
-      <code>testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays</code>
-      <code>testArrayInputMarkedRequiredWithoutAFallbackUsesProvidedErrorMessageOnFailureDueToEmptyArray</code>
-      <code>testDefaultGetValue</code>
-      <code>testSetValueWithInvalidInputTypeThrowsInvalidArgumentException</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="4">
+    <MixedArgument occurrences="1">
       <code>$this-&gt;input-&gt;getValue()</code>
-      <code>$values[0]</code>
-      <code>$values[0]</code>
-      <code>$values[1]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="11">
+    <MixedArrayAccess occurrences="5">
       <code>$set['raw']</code>
       <code>$set['raw']</code>
       <code>$set[1]</code>
       <code>$set[2]</code>
       <code>$set[4]</code>
-      <code>$values[0]</code>
-      <code>$values[0]</code>
-      <code>$values[0]</code>
-      <code>$values[0]</code>
-      <code>$values[1]</code>
-      <code>$values[1]</code>
     </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="8">
+    <MixedArrayAssignment occurrences="5">
       <code>$set['raw']</code>
       <code>$set['raw']</code>
       <code>$set[1]</code>
       <code>$set[2]</code>
       <code>$set[4]</code>
-      <code>$values[0]</code>
-      <code>$values[0]</code>
-      <code>$values[1]</code>
     </MixedArrayAssignment>
     <MixedAssignment occurrences="4">
       <code>$value</code>
@@ -365,27 +314,8 @@
       <code>isArray</code>
       <code>isArray</code>
     </RedundantCondition>
-    <UndefinedDocblockClass occurrences="3">
-      <code>FilterChain&amp;MockObject</code>
-      <code>NotEmptyValidator&amp;MockObject</code>
-      <code>ValidatorChain&amp;MockObject</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="test/BaseInputFilterTest.php">
-    <DocblockTypeContradiction occurrences="12">
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-    </DocblockTypeContradiction>
     <InvalidArgument occurrences="4">
       <code>$input</code>
       <code>$input</code>
@@ -411,44 +341,6 @@
       <code>function ($inputTypeData) {</code>
       <code>function ($inputTypeData) {</code>
     </MissingClosureReturnType>
-    <MissingReturnType occurrences="36">
-      <code>testAddHasGet</code>
-      <code>testAddRemove</code>
-      <code>testAddWithInvalidInputTypeThrowsInvalidArgumentException</code>
-      <code>testAddingExistingInputWillMergeIntoExisting</code>
-      <code>testAddingInputWithNameDoesNotInjectNameInInput</code>
-      <code>testBuildValidationContextUsingInputGetRawValue</code>
-      <code>testContextIsTheSameWhenARequiredInputIsGivenAndOptionalInputIsMissing</code>
-      <code>testGetInputs</code>
-      <code>testGetRawValueThrowExceptionIfInputDoesNotExists</code>
-      <code>testGetThrowExceptionIfInputDoesNotExists</code>
-      <code>testGetUnfilteredDataReturnsArray</code>
-      <code>testGetUnknownThrowExceptionIfDataWasNotSetYet</code>
-      <code>testGetValueThrowExceptionIfInputDoesNotExists</code>
-      <code>testHasUnknownThrowExceptionIfDataWasNotSetYet</code>
-      <code>testInputFilterIsEmptyByDefault</code>
-      <code>testInstanceOfUnfilteredDataInterface</code>
-      <code>testIsValidThrowExceptionIfDataWasNotSetYet</code>
-      <code>testMerge</code>
-      <code>testNestedInputFilterShouldAllowNonArrayValueForData</code>
-      <code>testReplace</code>
-      <code>testReplaceThrowExceptionIfInputToReplaceDoesNotExists</code>
-      <code>testReplaceWithInvalidInputTypeThrowsInvalidArgumentException</code>
-      <code>testResetEmptyValidationGroupRecursively</code>
-      <code>testSetDataAndGetRawValueGetValue</code>
-      <code>testSetDataUsingSetDataAndApplyFiltersReturningSameAsOriginalForUnfilteredData</code>
-      <code>testSetDataWithInvalidDataTypeThrowsInvalidArgumentException</code>
-      <code>testSetTraversableDataAndGetRawValueGetValue</code>
-      <code>testSetUnfilteredDataReturnsBaseInputFilter</code>
-      <code>testSetValidationGroupAllowsSpecifyingArrayOfInputsToNestedInputFilter</code>
-      <code>testSetValidationGroupSkipsRecursionWhenInputIsNotAnInputFilter</code>
-      <code>testSetValidationGroupThrowExceptionIfInputFilterInArgumentListNotExists</code>
-      <code>testSetValidationGroupThrowExceptionIfInputFilterNotExists</code>
-      <code>testSettingAndReturnDataArrayUsingSetDataForUnfilteredDataInterface</code>
-      <code>testSettingAndReturningDataArrayUnfilteredDataInterface</code>
-      <code>testValidationContext</code>
-      <code>testValidationSkipsFieldsMarkedNotRequiredWhenNoDataPresent</code>
-    </MissingReturnType>
     <MixedArgument occurrences="6">
       <code>$data</code>
       <code>$dataTypes['Traversable']($data)</code>
@@ -517,10 +409,6 @@
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
-    <PossiblyInvalidArgument occurrences="2">
-      <code>$data</code>
-      <code>$data</code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArgument occurrences="2">
       <code>$expectedInputName</code>
       <code>$expectedInputName</code>
@@ -536,24 +424,6 @@
       <code>$expectedType</code>
       <code>$inputFilter</code>
     </ArgumentTypeCoercion>
-    <DocblockTypeContradiction occurrences="16">
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-    </DocblockTypeContradiction>
     <InvalidArgument occurrences="2">
       <code>new stdClass()</code>
       <code>testDataVsValid</code>
@@ -570,36 +440,6 @@
       <code>function () use ($dataRaw, $dataFiltered) {</code>
       <code>function () use ($dataRaw, $dataFiltered, $errorMessage) {</code>
     </MissingClosureReturnType>
-    <MissingReturnType occurrences="22">
-      <code>testAllowsComposingANotEmptyValidator</code>
-      <code>testCollectionValidationDoesNotReuseMessagesBetweenInputs</code>
-      <code>testCollectionValidationUsesCustomInputErrorMessages</code>
-      <code>testDataVsValid</code>
-      <code>testDuplicatedErrorMessages</code>
-      <code>testGetCountReturnsRightCountOnConsecutiveCallsWithDifferentData</code>
-      <code>testGetDefaultInputFilter</code>
-      <code>testGetUnknownFieldIsUnknown</code>
-      <code>testGetUnknownWhenAllFieldsAreKnownReturnsAnEmptyArray</code>
-      <code>testGetUnknownWhenDataAreNotProvidedThrowsRuntimeException</code>
-      <code>testLazyLoadsANotEmptyValidatorWhenNoneProvided</code>
-      <code>testNestingCollectionCountCached</code>
-      <code>testSetCount</code>
-      <code>testSetDataUsingSetDataAndRunningIsValidReturningSameAsOriginalForUnfilteredData</code>
-      <code>testSetInputFilter</code>
-      <code>testSetInputFilterWithInvalidTypeThrowsInvalidArgumentException</code>
-      <code>testSetRequired</code>
-      <code>testSetValidationGroupUsingFormStyle</code>
-      <code>testSettingDataAsArrayWithInvalidCollectionsRaisesException</code>
-      <code>testSettingDataAsTraversableWithInvalidCollectionsRaisesException</code>
-      <code>testSettingDataWithNonArrayNonTraversableRaisesException</code>
-      <code>testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="1">
-      <code>$data</code>
-    </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$data</code>
-    </MixedArgumentTypeCoercion>
     <MixedArrayAccess occurrences="1">
       <code>$set[3]</code>
     </MixedArrayAccess>
@@ -629,13 +469,9 @@
     <MixedReturnTypeCoercion occurrences="2">
       <code>$dataSets</code>
     </MixedReturnTypeCoercion>
-    <PossiblyInvalidArgument occurrences="6">
+    <PossiblyInvalidArgument occurrences="2">
       <code>$baseInputFilter</code>
       <code>$baseInputFilter</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
-      <code>$data</code>
     </PossiblyInvalidArgument>
     <PossiblyUndefinedMethod occurrences="7">
       <code>expects</code>
@@ -650,13 +486,6 @@
       <code>setInputFilter</code>
       <code>setInputFilter</code>
     </RedundantConditionGivenDocblockType>
-  </file>
-  <file src="test/ConfigProviderTest.php">
-    <MissingReturnType occurrences="3">
-      <code>testInvocationProvidesDependencyConfiguration</code>
-      <code>testProvidesExpectedConfiguration</code>
-      <code>testProvidesExpectedInputFilterConfiguration</code>
-    </MissingReturnType>
   </file>
   <file src="test/FactoryTest.php">
     <DeprecatedMethod occurrences="7">
@@ -735,45 +564,12 @@
       <code>iterable</code>
     </InvalidReturnType>
     <LessSpecificReturnStatement occurrences="1"/>
-    <MissingReturnType occurrences="23">
-      <code>testAutoPrependUploadValidatorIsOnByDefault</code>
-      <code>testCanFilterArrayOfMultiFileData</code>
-      <code>testCanRetrieveRawValue</code>
-      <code>testDefaultInjectedUploadValidatorRespectsRelease2Convention</code>
-      <code>testFallbackValueVsIsValidRules</code>
-      <code>testFallbackValueVsIsValidRulesWhenValueNotSet</code>
-      <code>testFileInputMerge</code>
-      <code>testIsEmptyFileMultiFileOk</code>
-      <code>testIsEmptyFileNotArray</code>
-      <code>testIsEmptyFileOk</code>
-      <code>testIsEmptyFileUploadNoFile</code>
-      <code>testIsEmptyMultiFileUploadNoFile</code>
-      <code>testNotEmptyValidatorAddedWhenIsValidIsCalled</code>
-      <code>testRequiredNotEmptyValidatorNotAddedWhenOneExists</code>
-      <code>testRequiredUploadValidatorValidatorNotAddedWhenOneExists</code>
-      <code>testRetrievingValueFiltersTheValue</code>
-      <code>testRetrievingValueFiltersTheValueOnlyAfterValidating</code>
-      <code>testUploadValidatorIsAddedWhenIsValidIsCalled</code>
-      <code>testUploadValidatorIsNotAddedWhenIsValidIsCalled</code>
-      <code>testValidationOperatesBeforeFiltering</code>
-      <code>testValidationOperatesOnFilteredValue</code>
-      <code>testValidationsRunWithoutFileArrayDueToAjaxPost</code>
-      <code>testValidationsRunWithoutFileArrayIsSend</code>
-    </MissingReturnType>
     <MoreSpecificReturnType occurrences="1">
       <code>array</code>
     </MoreSpecificReturnType>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$input</code>
     </NonInvariantDocblockPropertyType>
-    <PossiblyInvalidArgument occurrences="7">
-      <code>$this-&gt;createFilterChainMock([[$badValue, $filteredValue]])</code>
-      <code>$this-&gt;createFilterChainMock([[$value, $newValue]])</code>
-      <code>$this-&gt;createFilterChainMock([[$value, $newValue]])</code>
-      <code>$this-&gt;createValidatorChainMock([[$badValue, null, false]])</code>
-      <code>$this-&gt;createValidatorChainMock([[$expectedNormalizedValue, null, false]])</code>
-      <code>$this-&gt;createValidatorChainMock([[$expectedNormalizedValue, null, false]])</code>
-    </PossiblyInvalidArgument>
     <PropertyTypeCoercion occurrences="1">
       <code>new FileInput('foo')</code>
     </PropertyTypeCoercion>
@@ -783,38 +579,12 @@
       <code>UploadedFileInterface</code>
     </ImplementedReturnTypeMismatch>
     <InvalidReturnType occurrences="1"/>
-    <MissingReturnType occurrences="19">
-      <code>testAutoPrependUploadValidatorIsOnByDefault</code>
-      <code>testCanFilterArrayOfMultiFileData</code>
-      <code>testCanRetrieveRawValue</code>
-      <code>testFallbackValueVsIsValidRules</code>
-      <code>testFallbackValueVsIsValidRulesWhenValueNotSet</code>
-      <code>testIsEmptyFileMultiFileOk</code>
-      <code>testIsEmptyFileOk</code>
-      <code>testIsEmptyFileUploadNoFile</code>
-      <code>testIsEmptyMultiFileUploadNoFile</code>
-      <code>testNotEmptyValidatorAddedWhenIsValidIsCalled</code>
-      <code>testPsrFileInputMerge</code>
-      <code>testRequiredNotEmptyValidatorNotAddedWhenOneExists</code>
-      <code>testRequiredUploadValidatorValidatorNotAddedWhenOneExists</code>
-      <code>testRetrievingValueFiltersTheValue</code>
-      <code>testRetrievingValueFiltersTheValueOnlyAfterValidating</code>
-      <code>testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled</code>
-      <code>testUploadValidatorIsNotAddedByDefaultDuringIsValidWhenAutoPrependUploadValidatorIsDisabled</code>
-      <code>testValidationOperatesBeforeFiltering</code>
-      <code>testValidationOperatesOnFilteredValue</code>
-    </MissingReturnType>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>[$upload, 'reveal']</code>
     </MixedArgumentTypeCoercion>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$input</code>
     </NonInvariantDocblockPropertyType>
-    <PossiblyInvalidArgument occurrences="5">
-      <code>$this-&gt;createFilterChainMock([[$badValue-&gt;reveal(), $filteredValue]])</code>
-      <code>$this-&gt;createFilterChainMock([[$value-&gt;reveal(), $filteredValue]])</code>
-      <code>$this-&gt;createValidatorChainMock([[$badValue-&gt;reveal(), null, false]])</code>
-    </PossiblyInvalidArgument>
     <PropertyTypeCoercion occurrences="1">
       <code>new FileInput('foo')</code>
     </PropertyTypeCoercion>
@@ -826,18 +596,6 @@
     <MissingClosureReturnType occurrences="1">
       <code>function () {</code>
     </MissingClosureReturnType>
-    <MissingReturnType occurrences="10">
-      <code>testAllowsPassingNonPluginManagerContainerToFactoryWithServiceManagerV2</code>
-      <code>testCanCreateServiceIfConfigInputFiltersContainsMatchingServiceName</code>
-      <code>testCannotCreateServiceIfConfigInputFiltersDoesNotContainMatchingServiceName</code>
-      <code>testCannotCreateServiceIfConfigServiceDoesNotHaveInputFiltersConfiguration</code>
-      <code>testCannotCreateServiceIfNoConfigServicePresent</code>
-      <code>testCreatesInputFilterInstance</code>
-      <code>testInjectsInputFilterManagerFromServiceManager</code>
-      <code>testRetrieveInputFilterFromInputFilterPluginManager</code>
-      <code>testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter</code>
-      <code>testWillUseCustomFiltersWhenProvided</code>
-    </MissingReturnType>
     <MixedArgument occurrences="4">
       <code>$filterChain</code>
       <code>$filterChain</code>
@@ -870,10 +628,6 @@
       <code>InputFilterAwareTrait::class</code>
       <code>InputFilterAwareTrait::class</code>
     </InvalidScalarArgument>
-    <MissingReturnType occurrences="2">
-      <code>testGetInputFilter</code>
-      <code>testSetInputFilter</code>
-    </MissingReturnType>
     <MixedMethodCall occurrences="4">
       <code>getInputFilter</code>
       <code>getInputFilter</code>
@@ -891,14 +645,6 @@
     <MissingClosureReturnType occurrences="1">
       <code>function () use ($inputFilter) {</code>
     </MissingClosureReturnType>
-    <MissingReturnType occurrences="6">
-      <code>testConfiguresInputFilterServicesWhenFound</code>
-      <code>testDoesNotConfigureInputFilterServicesWhenConfigServiceDoesNotContainInputFiltersConfig</code>
-      <code>testDoesNotConfigureInputFilterServicesWhenConfigServiceNotPresent</code>
-      <code>testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent</code>
-      <code>testFactoryConfiguresPluginManagerUnderContainerInterop</code>
-      <code>testFactoryReturnsPluginManager</code>
-    </MissingReturnType>
     <MoreSpecificReturnType occurrences="1">
       <code>array&lt;string, array{0: class-string&lt;InputInterface&gt;}&gt;</code>
     </MoreSpecificReturnType>
@@ -909,18 +655,6 @@
       <code>$this-&gt;getServiceNotFoundException()</code>
     </ArgumentTypeCoercion>
     <LessSpecificReturnStatement occurrences="1"/>
-    <MissingReturnType occurrences="10">
-      <code>testDefaultInvokableClasses</code>
-      <code>testGet</code>
-      <code>testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator</code>
-      <code>testInputFilterInvokableClassSMDependenciesArePopulatedWithoutServiceLocator</code>
-      <code>testIsASubclassOfAbstractPluginManager</code>
-      <code>testIsNotSharedByDefault</code>
-      <code>testLoadingInvalidElementRaisesException</code>
-      <code>testPopulateFactoryCanAcceptInputFilterAsFirstArgumentAndWillUseFactoryWhenItDoes</code>
-      <code>testRegisteringInvalidElementRaisesException</code>
-      <code>testServicesAreInitiatedIfImplementsInitializableInterface</code>
-    </MissingReturnType>
     <MoreSpecificReturnType occurrences="1"/>
     <PossiblyNullReference occurrences="2">
       <code>getPluginManager</code>
@@ -931,19 +665,10 @@
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/InputFilterTest.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>setData</code>
-      <code>setData</code>
-    </DocblockTypeContradiction>
     <ImplementedReturnTypeMismatch occurrences="1"/>
     <LessSpecificReturnStatement occurrences="1">
       <code>$dataSets</code>
     </LessSpecificReturnStatement>
-    <MissingReturnType occurrences="3">
-      <code>testCanComposeAFactory</code>
-      <code>testLazilyComposesAFactoryByDefault</code>
-      <code>testNestedInputFilterShouldAllowNullValueForData</code>
-    </MissingReturnType>
     <MixedArrayAccess occurrences="2">
       <code>$filter1-&gt;getValues()['nested']['nestedField1']</code>
       <code>$filter1-&gt;getValues()['nested']['nestedField1']</code>
@@ -957,10 +682,8 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/InputTest.php">
-    <InvalidReturnStatement occurrences="2">
-      <code>$dataSets</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2"/>
+    <InvalidReturnStatement occurrences="1"/>
+    <InvalidReturnType occurrences="1"/>
     <LessSpecificReturnStatement occurrences="1">
       <code>array_merge($emptyValues, $mixedValues)</code>
     </LessSpecificReturnStatement>
@@ -977,59 +700,15 @@
       <code>function ($value, $context = null) {</code>
       <code>function ($value, $context = null) {</code>
     </MissingClosureReturnType>
-    <MissingReturnType occurrences="40">
-      <code>testAllowEmptyFlagIsMutable</code>
-      <code>testBreakOnFailureFlagIsMutable</code>
-      <code>testBreakOnFailureFlagIsOffByDefault</code>
-      <code>testCanInjectFilterChain</code>
-      <code>testCanInjectValidatorChain</code>
-      <code>testCanRetrieveRawValue</code>
-      <code>testClearFallbackValue</code>
-      <code>testConstructorRequiresAName</code>
-      <code>testContinueIfEmptyFlagIsFalseByDefault</code>
-      <code>testContinueIfEmptyFlagIsMutable</code>
-      <code>testDefaultGetValue</code>
-      <code>testDoNotInjectNotEmptyValidatorIfAnywhereInChain</code>
-      <code>testFallbackValueVsIsValidRules</code>
-      <code>testFallbackValueVsIsValidRulesWhenValueNotSet</code>
-      <code>testInputDoesNotAllowEmptyValuesByDefault</code>
-      <code>testInputHasEmptyFilterChainByDefault</code>
-      <code>testInputHasEmptyValidatorChainByDefault</code>
-      <code>testInputIsMarkedAsRequiredByDefault</code>
-      <code>testInputMergeWithSourceValue</code>
-      <code>testInputMergeWithTargetValue</code>
-      <code>testInputMergeWithoutValues</code>
-      <code>testIsRequiredVsAllowEmptyVsContinueIfEmptyVsIsValid</code>
-      <code>testMerge</code>
-      <code>testNotEmptyMessageIsTranslated</code>
-      <code>testNotEmptyValidatorAddedWhenIsValidIsCalled</code>
-      <code>testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue</code>
-      <code>testNotRequiredWithoutFallbackAndValueNotSetThenIsValid</code>
-      <code>testRequiredFlagIsMutable</code>
-      <code>testRequiredNotEmptyValidatorNotAddedWhenOneExists</code>
-      <code>testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage</code>
-      <code>testRequiredWithoutFallbackAndValueNotSetProvidesCustomErrorMessageWhenSet</code>
-      <code>testRequiredWithoutFallbackAndValueNotSetProvidesNotEmptyValidatorIsEmptyErrorMessage</code>
-      <code>testRequiredWithoutFallbackAndValueNotSetThenFail</code>
-      <code>testRequiredWithoutFallbackAndValueNotSetThenFailReturnsCustomErrorMessageWhenSet</code>
-      <code>testResetValueReturnsInputValueToDefaultValue</code>
-      <code>testRetrievingValueFiltersTheValue</code>
-      <code>testSetFallbackValue</code>
-      <code>testSetValuePutInputInTheDesiredState</code>
-      <code>testValidationOperatesOnFilteredValue</code>
-      <code>testValueMayBeInjected</code>
-    </MissingReturnType>
     <MixedArrayAccess occurrences="2">
       <code>$value['filtered']</code>
       <code>$value['raw']</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="4">
-      <code>$isValidMethod</code>
-      <code>$isValidMethod</code>
+    <MixedAssignment occurrences="2">
       <code>$tmpTemplate[4]</code>
       <code>$value</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="27">
+    <MixedMethodCall occurrences="3">
       <code>method</code>
       <code>method</code>
       <code>method</code>
@@ -1050,8 +729,6 @@
       <code>willReturn</code>
       <code>willReturn</code>
       <code>willReturn</code>
-      <code>willReturnMap</code>
-      <code>willReturnMap</code>
       <code>with</code>
       <code>with</code>
       <code>with</code>
@@ -1059,26 +736,10 @@
       <code>with</code>
     </MixedMethodCall>
     <MoreSpecificReturnType occurrences="1"/>
-    <PossiblyInvalidArgument occurrences="17">
-      <code>$chain</code>
-      <code>$chain</code>
-      <code>$filterChain</code>
-      <code>$filterChain</code>
-      <code>$filterChain</code>
-      <code>$filterChain</code>
-      <code>$notEmptyMock</code>
-      <code>$notEmptyMock</code>
-      <code>$source</code>
-      <code>$targetFilterChain</code>
-      <code>$targetValidatorChain</code>
-      <code>$this-&gt;createValidatorChainMock()</code>
-      <code>$this-&gt;createValidatorChainMock([[$originalValue, null, $isValid]])</code>
-      <code>$this-&gt;createValidatorMock(null, null)</code>
-      <code>$this-&gt;createValidatorMock(true)</code>
+    <PossiblyInvalidArgument occurrences="1">
       <code>$translator</code>
-      <code>$validatorChain</code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod occurrences="20">
+    <PossiblyUndefinedMethod occurrences="1">
       <code>expects</code>
       <code>expects</code>
       <code>expects</code>
@@ -1087,18 +748,6 @@
       <code>expects</code>
       <code>expects</code>
       <code>expects</code>
-      <code>getFilterChain</code>
-      <code>getValidatorChain</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
     </PossiblyUndefinedMethod>
     <RedundantCondition occurrences="1">
       <code>isArray</code>
@@ -1108,13 +757,6 @@
     <InvalidArgument occurrences="1">
       <code>$moduleManager-&gt;reveal()</code>
     </InvalidArgument>
-    <MissingReturnType occurrences="5">
-      <code>testGetConfigMethodShouldReturnExpectedKeys</code>
-      <code>testInitMethodShouldRegisterPluginManagerSpecificationWithServiceListener</code>
-      <code>testInputFilterConfigShouldContainAbstractServiceFactory</code>
-      <code>testServiceManagerConfigShouldContainAliasForInputFilterManager</code>
-      <code>testServiceManagerConfigShouldContainInputFilterManager</code>
-    </MissingReturnType>
     <MixedArgument occurrences="3">
       <code>$config['input_filters']['abstract_factories']</code>
       <code>$config['service_manager']['aliases']</code>
@@ -1127,24 +769,6 @@
     </MixedArrayAccess>
   </file>
   <file src="test/OptionalInputFilterTest.php">
-    <DocblockTypeContradiction occurrences="6">
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-      <code>setData</code>
-    </DocblockTypeContradiction>
-    <MissingReturnType occurrences="8">
-      <code>assertGetValuesThrows</code>
-      <code>testIteratorBehavesTheSameAsArray</code>
-      <code>testStateIsClearedBetweenValidationAttempts</code>
-      <code>testValidatesSuccessfullyWhenEmptyDataSetProvided</code>
-      <code>testValidatesSuccessfullyWhenNoDataProvided</code>
-      <code>testValidatesSuccessfullyWhenSetDataIsNeverCalled</code>
-      <code>testValidatesSuccessfullyWhenValidNonEmptyDataSetProvided</code>
-      <code>testValidationFailureWhenInvalidDataSetIsProvided</code>
-    </MissingReturnType>
     <RedundantConditionGivenDocblockType occurrences="2">
       <code>setData</code>
       <code>setData</code>
@@ -1167,15 +791,5 @@
       <code>$container</code>
       <code>$name</code>
     </ParamNameMismatch>
-  </file>
-  <file src="test/TestAsset/ModuleManagerInterface.php">
-    <MissingReturnType occurrences="1">
-      <code>getEvent</code>
-    </MissingReturnType>
-  </file>
-  <file src="test/TestAsset/ServiceListenerInterface.php">
-    <MissingReturnType occurrences="1">
-      <code>addServiceManager</code>
-    </MissingReturnType>
   </file>
 </files>

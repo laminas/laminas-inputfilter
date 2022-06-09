@@ -230,7 +230,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $originalValue = null,
         ?bool $isValid = null,
         $expectedValue = null
-    ) {
+    ): void {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
     }
 

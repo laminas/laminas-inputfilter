@@ -2,8 +2,12 @@
 
 namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterChain;
 use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\ValidatorChain;
+use PHPUnit\Framework\MockObject\MockObject;
 use Webmozart\Assert\Assert;
 
 use function array_map;
@@ -118,7 +122,7 @@ class ArrayInputTest extends InputTest
     }
 
     /**
-     * @param array $valueMap
+     * @param list<list<mixed>> $valueMap
      * @return FilterChain&MockObject
      */
     protected function createFilterChainMock(array $valueMap = [])
@@ -141,7 +145,7 @@ class ArrayInputTest extends InputTest
     }
 
     /**
-     * @param array $valueMap
+     * @param list<list<mixed>> $valueMap
      * @param string[] $messages
      * @return ValidatorChain&MockObject
      */
@@ -165,7 +169,7 @@ class ArrayInputTest extends InputTest
      * @param bool $isValid
      * @param mixed $value
      * @param mixed $context
-     * @return NotEmptyValidator&MockObject
+     * @return NotEmpty&MockObject
      */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {

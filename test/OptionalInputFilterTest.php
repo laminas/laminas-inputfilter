@@ -105,7 +105,7 @@ class OptionalInputFilterTest extends TestCase
         $this->assertTrue($optionalInputFilter->isValid());
     }
 
-    protected function assertGetValuesThrows(InputFilterInterface $inputFilter)
+    protected function assertGetValuesThrows(InputFilterInterface $inputFilter): void
     {
         try {
             $inputFilter->getValues();

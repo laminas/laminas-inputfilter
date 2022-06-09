@@ -217,7 +217,7 @@ class BaseInputFilterTest extends TestCase
         ?string $name,
         ?string $expectedInputName,
         object $expectedInput
-    ) {
+    ): void {
         $inputFilter = $this->inputFilter;
         $this->assertFalse(
             $inputFilter->has($expectedInputName),
@@ -301,7 +301,7 @@ class BaseInputFilterTest extends TestCase
         array $expectedInvalidInputs,
         array $expectedValidInputs,
         array $expectedMessages
-    ) {
+    ): void {
         $inputFilter = $this->inputFilter;
         foreach ($inputs as $inputName => $input) {
             $inputFilter->add($input, $inputName);
@@ -353,7 +353,7 @@ class BaseInputFilterTest extends TestCase
         array $expectedInvalidInputs,
         array $expectedValidInputs,
         array $expectedMessages
-    ) {
+    ): void {
         $dataTypes = $this->dataTypes();
         $this->testSetDataAndGetRawValueGetValue(
             $inputs,

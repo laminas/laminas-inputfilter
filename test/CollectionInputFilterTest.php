@@ -54,14 +54,14 @@ class CollectionInputFilterTest extends TestCase
      * @dataProvider inputFilterProvider
      * @param array|Traversable|InputFilterInterface $inputFilter
      */
-    public function testSetInputFilter($inputFilter, string $expectedType)
+    public function testSetInputFilter($inputFilter, string $expectedType): void
     {
         $this->inputFilter->setInputFilter($inputFilter);
 
         $this->assertInstanceOf($expectedType, $this->inputFilter->getInputFilter(), 'getInputFilter() type not match');
     }
 
-    public function testGetDefaultInputFilter()
+    public function testGetDefaultInputFilter(): void
     {
         $this->assertInstanceOf(BaseInputFilter::class, $this->inputFilter->getInputFilter());
     }
@@ -69,7 +69,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider isRequiredProvider
      */
-    public function testSetRequired(bool $value)
+    public function testSetRequired(bool $value): void
     {
         $this->inputFilter->setIsRequired($value);
         $this->assertEquals($value, $this->inputFilter->getIsRequired());
@@ -78,7 +78,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider countVsDataProvider
      */
-    public function testSetCount(?int $count, ?array $data, int $expectedCount)
+    public function testSetCount(?int $count, ?array $data, int $expectedCount): void
     {
         if ($count !== null) {
             $this->inputFilter->setCount($count);
@@ -93,7 +93,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @group 6160
      */
-    public function testGetCountReturnsRightCountOnConsecutiveCallsWithDifferentData()
+    public function testGetCountReturnsRightCountOnConsecutiveCallsWithDifferentData(): void
     {
         $collectionData1 = [
             ['foo' => 'bar'],
@@ -122,7 +122,7 @@ class CollectionInputFilterTest extends TestCase
         array $expectedValues,
         bool $expectedValid,
         array $expectedMessages
-    ) {
+    ): void {
         $this->inputFilter->setInputFilter($inputFilter);
         $this->inputFilter->setData($data);
         if ($count !== null) {
@@ -205,7 +205,7 @@ class CollectionInputFilterTest extends TestCase
         return $dataSets;
     }
 
-    public function testSetValidationGroupUsingFormStyle()
+    public function testSetValidationGroupUsingFormStyle(): void
     {
         $validationGroup    = [
             'fooGroup',
@@ -268,7 +268,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider dataNestingCollection
      */
-    public function testNestingCollectionCountCached(?int $count, bool $expectedIsValid)
+    public function testNestingCollectionCountCached(?int $count, bool $expectedIsValid): void
     {
         $firstInputFilter = new InputFilter();
 
@@ -414,14 +414,14 @@ class CollectionInputFilterTest extends TestCase
         return $inputFilter;
     }
 
-    public function testGetUnknownWhenDataAreNotProvidedThrowsRuntimeException()
+    public function testGetUnknownWhenDataAreNotProvidedThrowsRuntimeException(): void
     {
         $this->expectException(RuntimeException::class);
 
         $this->inputFilter->getUnknown();
     }
 
-    public function testGetUnknownWhenAllFieldsAreKnownReturnsAnEmptyArray()
+    public function testGetUnknownWhenAllFieldsAreKnownReturnsAnEmptyArray(): void
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
@@ -442,7 +442,7 @@ class CollectionInputFilterTest extends TestCase
         $this->assertCount(0, $unknown);
     }
 
-    public function testGetUnknownFieldIsUnknown()
+    public function testGetUnknownFieldIsUnknown(): void
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
@@ -482,7 +482,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider invalidCollections
      */
-    public function testSettingDataAsArrayWithInvalidCollectionsRaisesException(array $data)
+    public function testSettingDataAsArrayWithInvalidCollectionsRaisesException(array $data): void
     {
         $collectionInputFilter = $this->inputFilter;
 
@@ -494,7 +494,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @dataProvider invalidCollections
      */
-    public function testSettingDataAsTraversableWithInvalidCollectionsRaisesException(array $data)
+    public function testSettingDataAsTraversableWithInvalidCollectionsRaisesException(array $data): void
     {
         $collectionInputFilter = $this->inputFilter;
         $data                  = new ArrayIterator($data);
@@ -524,7 +524,7 @@ class CollectionInputFilterTest extends TestCase
      * @dataProvider invalidDataType
      * @param mixed $data
      */
-    public function testSettingDataWithNonArrayNonTraversableRaisesException($data)
+    public function testSettingDataWithNonArrayNonTraversableRaisesException($data): void
     {
         $collectionInputFilter = $this->inputFilter;
 
@@ -533,7 +533,7 @@ class CollectionInputFilterTest extends TestCase
         $collectionInputFilter->setData($data);
     }
 
-    public function testCollectionValidationDoesNotReuseMessagesBetweenInputs()
+    public function testCollectionValidationDoesNotReuseMessagesBetweenInputs(): void
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
@@ -583,7 +583,7 @@ class CollectionInputFilterTest extends TestCase
         // @codingStandardsIgnoreEnd
     }
 
-    public function testCollectionValidationUsesCustomInputErrorMessages()
+    public function testCollectionValidationUsesCustomInputErrorMessages(): void
     {
         $inputFilter = new InputFilter();
         $inputFilter->add([
@@ -632,7 +632,7 @@ class CollectionInputFilterTest extends TestCase
         $this->assertContains('CUSTOM ERROR MESSAGE', $messages[1]['phone']);
     }
 
-    public function testDuplicatedErrorMessages()
+    public function testDuplicatedErrorMessages(): void
     {
         $factory     = new Factory();
         $inputFilter = $factory->createInputFilter(
@@ -760,19 +760,19 @@ class CollectionInputFilterTest extends TestCase
         ], $inputFilter->getMessages());
     }
 
-    public function testLazyLoadsANotEmptyValidatorWhenNoneProvided()
+    public function testLazyLoadsANotEmptyValidatorWhenNoneProvided(): void
     {
         $this->assertInstanceOf(NotEmpty::class, $this->inputFilter->getNotEmptyValidator());
     }
 
-    public function testAllowsComposingANotEmptyValidator()
+    public function testAllowsComposingANotEmptyValidator(): void
     {
         $notEmptyValidator = new NotEmpty();
         $this->inputFilter->setNotEmptyValidator($notEmptyValidator);
         $this->assertSame($notEmptyValidator, $this->inputFilter->getNotEmptyValidator());
     }
 
-    public function testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty()
+    public function testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty(): void
     {
         $message           = 'this is the validation message';
         $notEmptyValidator = new NotEmpty();
@@ -790,7 +790,7 @@ class CollectionInputFilterTest extends TestCase
         ], $this->inputFilter->getMessages());
     }
 
-    public function testSetDataUsingSetDataAndRunningIsValidReturningSameAsOriginalForUnfilteredData()
+    public function testSetDataUsingSetDataAndRunningIsValidReturningSameAsOriginalForUnfilteredData(): void
     {
         $filteredArray = [
             [

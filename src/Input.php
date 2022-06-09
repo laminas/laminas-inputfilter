@@ -333,6 +333,7 @@ class Input implements
         return $this->hasFallback;
     }
 
+    /** @return void */
     public function clearFallbackValue()
     {
         $this->hasFallback   = false;

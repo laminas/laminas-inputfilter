@@ -181,7 +181,7 @@ class InputFilterPluginManagerTest extends TestCase
         string $serviceName,
         object $service,
         string $instanceOf
-    ) {
+    ): void {
         $initializableProphecy = $this->prophesize($instanceOf)->willImplement(InitializableInterface::class);
         $service               = $initializableProphecy->reveal();
 
@@ -201,33 +201,33 @@ class InputFilterPluginManagerTest extends TestCase
     }
 
     /**
-     * @return MockObject|InputFilterInterface
+     * @return MockObject&InputFilterInterface
      */
     protected function createInputFilterInterfaceMock()
     {
-        /** @var InputFilterInterface|MockObject $inputFilter */
+        /** @var InputFilterInterface&MockObject $inputFilter */
         $inputFilter = $this->createMock(InputFilterInterface::class);
 
         return $inputFilter;
     }
 
     /**
-     * @return MockObject|InputInterface
+     * @return MockObject&InputInterface
      */
     protected function createInputInterfaceMock()
     {
-        /** @var InputInterface|MockObject $input */
+        /** @var InputInterface&MockObject $input */
         $input = $this->createMock(InputInterface::class);
 
         return $input;
     }
 
     /**
-     * @return MockObject|ServiceLocatorInterface
+     * @return MockObject&ServiceLocatorInterface
      */
     protected function createServiceLocatorInterfaceMock()
     {
-        /** @var ServiceLocatorInterface|MockObject $serviceLocator */
+        /** @var ServiceLocatorInterface&MockObject $serviceLocator */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
         return $serviceLocator;

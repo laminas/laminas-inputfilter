@@ -176,7 +176,7 @@ class InputTest extends TestCase
         $originalValue,
         bool $isValid,
         $expectedValue
-    ) {
+    ): void {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
 
@@ -495,7 +495,7 @@ class InputTest extends TestCase
         $value,
         bool $expectedIsValid,
         array $expectedMessages
-    ) {
+    ): void {
         $this->input->setRequired($required);
         $this->input->setAllowEmpty($allowEmpty);
         $this->input->setContinueIfEmpty($continueIfEmpty);
@@ -896,23 +896,23 @@ class InputTest extends TestCase
     }
 
     /**
-     * @return InputInterface|MockObject
+     * @return InputInterface&MockObject
      */
     protected function createInputInterfaceMock()
     {
-        /** @var InputInterface|MockObject $source */
+        /** @var InputInterface&MockObject $source */
         $source = $this->createMock(InputInterface::class);
 
         return $source;
     }
 
     /**
-     * @param array $valueMap
-     * @return FilterChain|MockObject
+     * @param list<list<mixed>> $valueMap
+     * @return FilterChain&MockObject
      */
     protected function createFilterChainMock(array $valueMap = [])
     {
-        /** @var FilterChain|MockObject $filterChain */
+        /** @var FilterChain&MockObject $filterChain */
         $filterChain = $this->createMock(FilterChain::class);
 
         $filterChain->method('filter')
@@ -922,13 +922,13 @@ class InputTest extends TestCase
     }
 
     /**
-     * @param array $valueMap
+     * @param list<list<mixed>> $valueMap
      * @param string[] $messages
-     * @return ValidatorChain|MockObject
+     * @return ValidatorChain&MockObject
      */
     protected function createValidatorChainMock(array $valueMap = [], $messages = [])
     {
-        /** @var ValidatorChain|MockObject $validatorChain */
+        /** @var ValidatorChain&MockObject $validatorChain */
         $validatorChain = $this->createMock(ValidatorChain::class);
 
         if (empty($valueMap)) {
@@ -951,11 +951,11 @@ class InputTest extends TestCase
      * @param mixed $value
      * @param mixed $context
      * @param string[] $messages
-     * @return ValidatorInterface|MockObject
+     * @return ValidatorInterface&MockObject
      */
     protected function createValidatorMock($isValid, $value = 'not-set', $context = null, $messages = [])
     {
-        /** @var ValidatorInterface|MockObject $validator */
+        /** @var ValidatorInterface&MockObject $validator */
         $validator = $this->createMock(ValidatorInterface::class);
 
         if (($isValid === false) || ($isValid === true)) {
@@ -980,11 +980,11 @@ class InputTest extends TestCase
      * @param bool $isValid
      * @param mixed $value
      * @param mixed $context
-     * @return NotEmptyValidator|MockObject
+     * @return NotEmptyValidator&MockObject
      */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {
-        /** @var NotEmptyValidator|MockObject $notEmptyMock */
+        /** @var NotEmptyValidator&MockObject $notEmptyMock */
         $notEmptyMock = $this->getMockBuilder(NotEmptyValidator::class)
             ->setMethods(['isValid'])
             ->getMock();
