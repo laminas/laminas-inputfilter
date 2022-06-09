@@ -732,13 +732,13 @@ class InputTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
-        $validatorNotCall = function ($value, $context = null) {
+        $validatorNotCall = function ($value, $context = null): ValidatorInterface {
             return $this->createValidatorMock(null, $value, $context);
         };
-        $validatorInvalid                              = function ($value, $context = null) use ($validatorMsg) {
+        $validatorInvalid = function ($value, $context = null) use ($validatorMsg): ValidatorInterface {
             return $this->createValidatorMock(false, $value, $context, $validatorMsg);
         };
-        $validatorValid = function ($value, $context = null) {
+        $validatorValid   = function ($value, $context = null): ValidatorInterface {
             return $this->createValidatorMock(true, $value, $context);
         };
 

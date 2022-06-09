@@ -695,11 +695,6 @@
       <code>$value</code>
       <code>$value</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="3">
-      <code>function ($value, $context = null) use ($validatorMsg) {</code>
-      <code>function ($value, $context = null) {</code>
-      <code>function ($value, $context = null) {</code>
-    </MissingClosureReturnType>
     <MixedArrayAccess occurrences="2">
       <code>$value['filtered']</code>
       <code>$value['raw']</code>
