@@ -58,7 +58,6 @@ class InputFilter extends BaseInputFilter
             $input   = $factory->createInput($input);
         }
 
-        /** @psalm-var InputInterface|InputFilterInterface $input */
         parent::add($input, $name);
 
         return $this;

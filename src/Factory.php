@@ -160,11 +160,9 @@ class Factory
             $inputSpecification = ArrayUtils::iteratorToArray($inputSpecification);
         }
 
-        /** @psalm-var InputSpecification $inputSpecification */
-
         $class = Input::class;
 
-        if (isset($inputSpecification['type'])) {
+        if (isset($inputSpecification['type']) && is_string($inputSpecification['type'])) {
             $class = $inputSpecification['type'];
         }
 
@@ -255,7 +253,6 @@ class Factory
                             is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
-                    /** @psalm-var iterable<array-key, FilterSpecification> $value */
                     $this->populateFilters($input->getFilterChain(), $value);
                     break;
                 case 'validators':
@@ -271,7 +268,7 @@ class Factory
                             is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
-                    /** @psalm-var iterable<array-key, ValidatorSpecification> $value */
+
                     $this->populateValidators($input->getValidatorChain(), $value);
                     break;
                 default:
@@ -317,7 +314,6 @@ class Factory
             unset($inputFilterSpecification['type']);
         }
 
-        /** @psalm-var InputFilterInterface $inputFilter */
         $inputFilter = $this->getInputFilterManager()->get($type);
 
         if ($inputFilter instanceof CollectionInputFilter) {
@@ -358,7 +354,6 @@ class Factory
                 && (isset($value['name']) && is_string($value['name']))
                 && $this->getInputFilterManager()->get($value['type']) instanceof InputFilter
             ) {
-                /** @psalm-var string $value['name'] */
                 // If $key is an integer, reset it to the specified name.
                 if (is_int($key)) {
                     $key = $value['name'];
@@ -368,11 +363,6 @@ class Factory
                 // name property!
                 unset($value['name']);
             }
-
-            /**
-             * @psalm-var InputSpecification $value
-             * @psalm-var string $key
-             */
 
             $inputFilter->add($this->createInput($value), $key);
         }
@@ -394,10 +384,7 @@ class Factory
                 continue;
             }
 
-            /**
-             * @psalm-var FilterSpecification $filter
-             * @psalm-suppress RedundantConditionGivenDocblockType
-             */
+            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
             if (is_array($filter)) {
                 if (! isset($filter['name'])) {
                     throw new Exception\RuntimeException(

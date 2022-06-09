@@ -168,7 +168,7 @@ class CollectionInputFilter extends InputFilter
 
         $this->setUnfilteredData($data);
 
-        /** @psalm-var mixed $item */
+        /** @psalm-suppress MixedAssignment */
         foreach ($data as $item) {
             /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
             if (is_array($item) || $item instanceof Traversable) {
@@ -246,8 +246,9 @@ class CollectionInputFilter extends InputFilter
             return $valid;
         }
 
-        /** @psalm-var array<array-key, mixed> $data */
+        /** @psalm-suppress MixedAssignment */
         foreach ($this->data as $key => $data) {
+            /** @psalm-suppress MixedArgument */
             $inputFilter->setData($data);
 
             if (null !== $this->validationGroup) {
@@ -342,7 +343,6 @@ class CollectionInputFilter extends InputFilter
         $inputFilter = $this->getInputFilter();
 
         $unknownInputs = [];
-        /** @psalm-var array<array-key, mixed> $data */
         foreach ($this->data as $key => $data) {
             $inputFilter->setData($data);
 

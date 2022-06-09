@@ -43,7 +43,7 @@ class BaseInputFilter implements
     /** @var array<string, InputInterface|InputFilterInterface>|null */
     protected $invalidInputs;
 
-    /** @var null|list<string> Input names */
+    /** @var null|array<array-key, string> Input names */
     protected $validationGroup;
 
     /** @var array<string, InputInterface|InputFilterInterface>|null */
@@ -106,8 +106,6 @@ class BaseInputFilter implements
             $original->merge($input);
             return $this;
         }
-
-        /** @psalm-var string $name */
 
         $this->inputs[$name] = $input;
         return $this;
@@ -238,7 +236,7 @@ class BaseInputFilter implements
     /**
      * Validate a set of inputs against the current data
      *
-     * @param  list<string> $inputs Array of input names.
+     * @param  array<array-key, string> $inputs Array of input names.
      * @param  array<array-key, mixed> $data
      * @param  mixed|null $context
      * @return bool
@@ -306,7 +304,7 @@ class BaseInputFilter implements
      * Implementations should allow passing a single array value, or multiple arguments,
      * each specifying a single input.
      *
-     * @param  string|list<string>|array<string, list<string>> $name
+     * @param  string|array<array-key, string> $name
      * @throws Exception\InvalidArgumentException
      * @return InputFilterInterface
      */
@@ -341,8 +339,6 @@ class BaseInputFilter implements
         } else {
             $inputs = func_get_args();
         }
-
-        /** @psalm-var list<string> $inputs */
 
         if (! empty($inputs)) {
             $this->validateValidationGroup($inputs);
@@ -418,7 +414,6 @@ class BaseInputFilter implements
         foreach ($inputs as $name) {
             $input = $this->inputs[$name];
 
-            /** @psalm-var mixed $value */
             $value = $input instanceof InputFilterInterface
                 ? $input->getValues()
                 : $input->getValue();
@@ -496,10 +491,9 @@ class BaseInputFilter implements
     /**
      * Ensure all names of a validation group exist as input in the filter
      *
-     * @param  array $inputs Input names
+     * @param  array<array-key, string> $inputs Input names
      * @return void
      * @throws Exception\InvalidArgumentException
-     * @psalm-assert list<string> $inputs
      */
     protected function validateValidationGroup(array $inputs)
     {
@@ -545,7 +539,7 @@ class BaseInputFilter implements
                 continue;
             }
 
-            /** @psalm-var mixed $value */
+            /** @psalm-suppress MixedAssignment */
             $value = $this->data[$name];
 
             if ($input instanceof InputFilterInterface) {
@@ -553,7 +547,6 @@ class BaseInputFilter implements
                 if (! is_array($value) && ! $value instanceof Traversable) {
                     $value = [];
                 }
-                /** @psalm-var iterable<array-key, mixed> $value */
 
                 $input->setData($value);
                 continue;
