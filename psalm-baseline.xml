@@ -36,8 +36,12 @@
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/BaseInputFilter.php">
-    <InvalidReturnStatement occurrences="1"/>
-    <InvalidReturnType occurrences="1"/>
+    <InvalidReturnStatement occurrences="1">
+      <code>$messages</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>array&lt;string, array&lt;array-key, string&gt;&gt;</code>
+    </InvalidReturnType>
     <MixedArgument occurrences="1">
       <code>$input</code>
     </MixedArgument>
@@ -57,11 +61,33 @@
     </TooManyArguments>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <DocblockTypeContradiction occurrences="2"/>
+    <DocblockTypeContradiction occurrences="2">
+      <code>setData</code>
+      <code>setData</code>
+    </DocblockTypeContradiction>
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$name</code>
+    </ImplementedParamTypeMismatch>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>array&lt;array-key, array&lt;string, array&lt;array-key, string&gt;&gt;&gt;</code>
+    </ImplementedReturnTypeMismatch>
     <InvalidArgument occurrences="1">
       <code>$data</code>
     </InvalidArgument>
-    <InvalidPropertyAssignmentValue occurrences="2"/>
+    <InvalidPropertyAssignmentValue occurrences="2">
+      <code>$this-&gt;collectionMessages</code>
+      <code>$this-&gt;collectionMessages</code>
+    </InvalidPropertyAssignmentValue>
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>array&lt;array-key, array&lt;string, mixed&gt;&gt;</code>
+      <code>array&lt;array-key, array&lt;string, mixed&gt;&gt;</code>
+    </LessSpecificImplementedReturnType>
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$name</code>
+    </MoreSpecificImplementedParamType>
+    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
+      <code>$name</code>
+    </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="src/Factory.php">
     <DocblockTypeContradiction occurrences="2">
@@ -77,7 +103,6 @@
       <code>$key</code>
       <code>$options</code>
       <code>$priority</code>
-      <code>$priority</code>
       <code>$value['type']</code>
     </MixedArgument>
     <MixedAssignment occurrences="6">
@@ -85,7 +110,6 @@
       <code>$key</code>
       <code>$options</code>
       <code>$options</code>
-      <code>$priority</code>
       <code>$priority</code>
       <code>$value</code>
     </MixedAssignment>
@@ -183,8 +207,6 @@
     </DeprecatedMethod>
     <DeprecatedProperty occurrences="5">
       <code>$this-&gt;allowEmpty</code>
-      <code>$this-&gt;allowEmpty</code>
-      <code>$this-&gt;continueIfEmpty</code>
       <code>$this-&gt;continueIfEmpty</code>
       <code>$this-&gt;notEmptyValidator</code>
       <code>$this-&gt;notEmptyValidator</code>
@@ -260,7 +282,12 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/OptionalInputFilter.php">
-    <ImplementedReturnTypeMismatch occurrences="1"/>
+    <DocblockTypeContradiction occurrences="1">
+      <code>setData</code>
+    </DocblockTypeContradiction>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>array&lt;string, mixed&gt;|null</code>
+    </ImplementedReturnTypeMismatch>
   </file>
   <file src="test/ArrayInputTest.php">
     <ImplementedReturnTypeMismatch occurrences="6">
@@ -345,14 +372,29 @@
     </UndefinedDocblockClass>
   </file>
   <file src="test/BaseInputFilterTest.php">
+    <DocblockTypeContradiction occurrences="12">
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+    </DocblockTypeContradiction>
     <InvalidArgument occurrences="4">
       <code>$input</code>
       <code>$input</code>
       <code>new stdClass()</code>
       <code>new stdClass()</code>
     </InvalidArgument>
-    <InvalidDocblock occurrences="1">
+    <InvalidDocblock occurrences="2">
       <code>public function addMethodArgumentsProvider(): array</code>
+      <code>setData</code>
     </InvalidDocblock>
     <LessSpecificReturnStatement occurrences="1"/>
     <MissingClosureParamType occurrences="7">
@@ -415,7 +457,8 @@
       <code>$set[5]</code>
       <code>$set[6]</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="6">
+    <MixedArgumentTypeCoercion occurrences="7">
+      <code>$data</code>
       <code>$inputName</code>
       <code>$inputName</code>
       <code>$inputName</code>
@@ -474,6 +517,10 @@
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
+    <PossiblyInvalidArgument occurrences="2">
+      <code>$data</code>
+      <code>$data</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullArgument occurrences="2">
       <code>$expectedInputName</code>
       <code>$expectedInputName</code>
@@ -489,6 +536,24 @@
       <code>$expectedType</code>
       <code>$inputFilter</code>
     </ArgumentTypeCoercion>
+    <DocblockTypeContradiction occurrences="16">
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+    </DocblockTypeContradiction>
     <InvalidArgument occurrences="2">
       <code>new stdClass()</code>
       <code>testDataVsValid</code>
@@ -532,6 +597,9 @@
     <MixedArgument occurrences="1">
       <code>$data</code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$data</code>
+    </MixedArgumentTypeCoercion>
     <MixedArrayAccess occurrences="1">
       <code>$set[3]</code>
     </MixedArrayAccess>
@@ -561,9 +629,13 @@
     <MixedReturnTypeCoercion occurrences="2">
       <code>$dataSets</code>
     </MixedReturnTypeCoercion>
-    <PossiblyInvalidArgument occurrences="2">
+    <PossiblyInvalidArgument occurrences="6">
       <code>$baseInputFilter</code>
       <code>$baseInputFilter</code>
+      <code>$data</code>
+      <code>$data</code>
+      <code>$data</code>
+      <code>$data</code>
     </PossiblyInvalidArgument>
     <PossiblyUndefinedMethod occurrences="7">
       <code>expects</code>
@@ -574,6 +646,10 @@
       <code>method</code>
       <code>method</code>
     </PossiblyUndefinedMethod>
+    <RedundantConditionGivenDocblockType occurrences="2">
+      <code>setInputFilter</code>
+      <code>setInputFilter</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/ConfigProviderTest.php">
     <MissingReturnType occurrences="3">
@@ -608,9 +684,6 @@
       <code>getPluginManager</code>
       <code>method</code>
       <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
       <code>will</code>
       <code>will</code>
     </MixedMethodCall>
@@ -625,9 +698,6 @@
     <PossiblyUndefinedMethod occurrences="13">
       <code>breakOnFailure</code>
       <code>breakOnFailure</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
       <code>expects</code>
       <code>expects</code>
       <code>getErrorMessage</code>
@@ -861,6 +931,10 @@
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/InputFilterTest.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>setData</code>
+      <code>setData</code>
+    </DocblockTypeContradiction>
     <ImplementedReturnTypeMismatch occurrences="1"/>
     <LessSpecificReturnStatement occurrences="1">
       <code>$dataSets</code>
@@ -1053,6 +1127,14 @@
     </MixedArrayAccess>
   </file>
   <file src="test/OptionalInputFilterTest.php">
+    <DocblockTypeContradiction occurrences="6">
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+      <code>setData</code>
+    </DocblockTypeContradiction>
     <MissingReturnType occurrences="8">
       <code>assertGetValuesThrows</code>
       <code>testIteratorBehavesTheSameAsArray</code>
@@ -1063,6 +1145,10 @@
       <code>testValidatesSuccessfullyWhenValidNonEmptyDataSetProvided</code>
       <code>testValidationFailureWhenInvalidDataSetIsProvided</code>
     </MissingReturnType>
+    <RedundantConditionGivenDocblockType occurrences="2">
+      <code>setData</code>
+      <code>setData</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/TestAsset/CustomInput.php">
     <DeprecatedInterface occurrences="1">
