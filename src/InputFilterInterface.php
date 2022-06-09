@@ -33,7 +33,6 @@ use Traversable;
  *     filters?: FilterChain|iterable<array-key, FilterSpecification|callable|FilterInterface>,
  *     validators?: ValidatorChain|iterable<array-key, ValidatorSpecification|ValidatorInterface>,
  * }&array<string, mixed>
- * @psalm-type InputData = array<string, mixed>
  */
 interface InputFilterInterface extends Countable
 {
@@ -78,7 +77,7 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
-     * @param  InputData|Traversable<string, mixed>|null $data
+     * @param  array<array-key, mixed>|Traversable<string, mixed>|null $data
      * @return InputFilterInterface
      */
     public function setData($data);
@@ -158,7 +157,7 @@ interface InputFilterInterface extends Countable
      * List should be an associative array of named input/value pairs,
      * with the values unfiltered.
      *
-     * @return InputData
+     * @return array<array-key, mixed>
      */
     public function getRawValues();
 

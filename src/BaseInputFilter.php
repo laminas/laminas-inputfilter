@@ -13,6 +13,7 @@ use function array_intersect;
 use function array_key_exists;
 use function array_keys;
 use function array_merge;
+use function assert;
 use function count;
 use function func_get_args;
 use function get_class;
@@ -23,9 +24,6 @@ use function is_object;
 use function is_string;
 use function sprintf;
 
-/**
- * @psalm-import-type InputData from InputFilterInterface
- */
 class BaseInputFilter implements
     InputFilterInterface,
     UnknownInputsCapableInterface,
@@ -33,10 +31,10 @@ class BaseInputFilter implements
     ReplaceableInputInterface,
     UnfilteredDataInterface
 {
-    /** @var InputData|null */
+    /** @var array<array-key, mixed>|null */
     protected $data;
 
-    /** @var InputData */
+    /** @var array<array-key, mixed> */
     protected $unfilteredData = [];
 
     /** @var array<string, InputInterface|InputFilterInterface> */
@@ -184,16 +182,15 @@ class BaseInputFilter implements
     /**
      * Set data to use when validating and filtering
      *
-     * @param  InputData|Traversable<string, mixed>|null $data null is cast to an empty array.
+     * @param  array<array-key, mixed>|Traversable<array-key, mixed>|null $data null is cast to an empty array.
      * @throws Exception\InvalidArgumentException
      * @return InputFilterInterface
-     * @psalm-assert InputData $this->data
+     * @psalm-assert array<array-key, mixed> $this->data
      */
     public function setData($data)
     {
         // A null value indicates an empty set
         if (null === $data) {
-            /** @psalm-var InputData $data */
             $data = [];
         }
 
@@ -461,7 +458,7 @@ class BaseInputFilter implements
      * List should be an associative array of named input/value pairs,
      * with the values unfiltered.
      *
-     * @return InputData|array<string, InputData>
+     * @return array<array-key, mixed>
      */
     public function getRawValues()
     {
@@ -523,6 +520,7 @@ class BaseInputFilter implements
      */
     protected function populate()
     {
+        assert($this->data !== null);
         foreach (array_keys($this->inputs) as $name) {
             $input = $this->inputs[$name];
 
@@ -547,7 +545,7 @@ class BaseInputFilter implements
                 continue;
             }
 
-            /** @psalm-var array|mixed $value */
+            /** @psalm-var mixed $value */
             $value = $this->data[$name];
 
             if ($input instanceof InputFilterInterface) {
@@ -555,8 +553,8 @@ class BaseInputFilter implements
                 if (! is_array($value) && ! $value instanceof Traversable) {
                     $value = [];
                 }
+                /** @psalm-var array<array-key, mixed> $value */
 
-                /** @psalm-var InputData $value */
                 $input->setData($value);
                 continue;
             }
@@ -631,7 +629,7 @@ class BaseInputFilter implements
     }
 
     /**
-     * @return InputData
+     * @return array<array-key, mixed>
      */
     public function getUnfilteredData()
     {
@@ -639,7 +637,7 @@ class BaseInputFilter implements
     }
 
     /**
-     * @param InputData $data
+     * @param array<array-key, mixed> $data
      * @return $this
      */
     public function setUnfilteredData($data)

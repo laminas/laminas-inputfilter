@@ -8,19 +8,17 @@ use Traversable;
  * InputFilter which only checks the containing Inputs when non-empty data is set,
  * else it reports valid
  * This is analog to {@see Input} with the option ->setRequired(false)
- *
- * @psalm-import-type InputData from InputFilterInterface
  */
 class OptionalInputFilter extends InputFilter
 {
     /**
      * Set data to use when validating and filtering
      *
-     * @param InputData|Traversable<string, mixed>|null $data must be a non-empty iterable in order trigger
+     * @param array<array-key, mixed>|Traversable<string, mixed>|null $data must be a non-empty iterable in order trigger
      *                                                        actual validation, else it is always valid
      * @return $this
      * @throws Exception\InvalidArgumentException
-     * @psalm-assert InputData $this->data
+     * @psalm-assert array<array-key, mixed> $this->data
      */
     public function setData($data)
     {

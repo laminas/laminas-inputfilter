@@ -2,6 +2,7 @@
 
 namespace Laminas\InputFilter;
 
+use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\NotEmpty;
 use Traversable;
 
@@ -12,27 +13,18 @@ use function is_array;
 use function is_object;
 use function sprintf;
 
-/**
- * @psalm-import-type InputData from InputFilterInterface
- */
 class CollectionInputFilter extends InputFilter
 {
-    /**
-     * @var array<array-key, InputData>|null
-     * @psalm-suppress NonInvariantDocblockPropertyType
-     */
-    protected $data;
-
     /** @var bool */
     protected $isRequired = false;
 
     /** @var null|int */
     protected $count;
 
-    /** @var array<array-key, array<string, mixed>> */
+    /** @var array<array-key, array> */
     protected $collectionValues = [];
 
-    /** @var array<array-key, array<string, mixed>> */
+    /** @var array<array-key, array> */
     protected $collectionRawValues = [];
 
     /** @var array<array-key, array<string, array<array-key, string>>> */
@@ -156,15 +148,15 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @param array<array-key, InputData>|Traversable<array-key, InputData> $data
+     * @param mixed $data
      * @psalm-suppress ImplementedParamTypeMismatch
-     * @psalm-assert array<array-key, InputData>|Traversable<array-key, InputData> $this->data
+     * @psalm-assert array<array-key, mixed> $this->data
      * @return $this
      */
     public function setData($data)
     {
         /** @psalm-suppress DocblockTypeContradiction, RedundantConditionGivenDocblockType */
-        if (! (is_array($data) || $data instanceof Traversable)) {
+        if (! is_array($data) && ! $data instanceof Traversable) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable collection; invalid collection of type %s provided',
                 __METHOD__,
@@ -172,8 +164,11 @@ class CollectionInputFilter extends InputFilter
             ));
         }
 
+        $data = ArrayUtils::iteratorToArray($data);
+
         $this->setUnfilteredData($data);
 
+        /** @psalm-var mixed $item */
         foreach ($data as $item) {
             /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
             if (is_array($item) || $item instanceof Traversable) {
@@ -251,6 +246,7 @@ class CollectionInputFilter extends InputFilter
             return $valid;
         }
 
+        /** @psalm-var array<array-key, mixed> $data */
         foreach ($this->data as $key => $data) {
             $inputFilter->setData($data);
 
@@ -288,7 +284,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @return array<array-key, array<string, mixed>>
+     * @return array<array-key, array>
      */
     public function getValues()
     {
@@ -296,7 +292,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @return array<array-key, array<string, mixed>>
+     * @return array<array-key, array>
      */
     public function getRawValues()
     {
@@ -346,6 +342,7 @@ class CollectionInputFilter extends InputFilter
         $inputFilter = $this->getInputFilter();
 
         $unknownInputs = [];
+        /** @psalm-var array<array-key, mixed> $data */
         foreach ($this->data as $key => $data) {
             $inputFilter->setData($data);
 
