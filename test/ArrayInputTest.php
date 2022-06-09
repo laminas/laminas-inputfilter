@@ -22,12 +22,12 @@ class ArrayInputTest extends InputTest
         $this->input = new ArrayInput('foo');
     }
 
-    public function testDefaultGetValue()
+    public function testDefaultGetValue(): void
     {
         $this->assertCount(0, $this->input->getValue());
     }
 
-    public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays()
+    public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays(): void
     {
         $input = $this->input;
         $input->setRequired(true);
@@ -37,7 +37,7 @@ class ArrayInputTest extends InputTest
         $this->assertRequiredValidationErrorMessage($input);
     }
 
-    public function testArrayInputMarkedRequiredWithoutAFallbackUsesProvidedErrorMessageOnFailureDueToEmptyArray()
+    public function testArrayInputMarkedRequiredWithoutAFallbackUsesProvidedErrorMessageOnFailureDueToEmptyArray(): void
     {
         $expected = 'error message';
 
@@ -54,7 +54,7 @@ class ArrayInputTest extends InputTest
         $this->assertEquals($expected, $message);
     }
 
-    public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException()
+    public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Value must be an array, string given');

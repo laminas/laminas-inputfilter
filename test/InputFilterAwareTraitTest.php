@@ -13,7 +13,7 @@ use ReflectionObject;
  */
 class InputFilterAwareTraitTest extends TestCase
 {
-    public function testSetInputFilter()
+    public function testSetInputFilter(): void
     {
         $object = $this->getObjectForTrait(InputFilterAwareTrait::class);
 
@@ -29,7 +29,7 @@ class InputFilterAwareTraitTest extends TestCase
         $this->assertSame($inputFilter, $p->getValue($object));
     }
 
-    public function testGetInputFilter()
+    public function testGetInputFilter(): void
     {
         $object = $this->getObjectForTrait(InputFilterAwareTrait::class);
 

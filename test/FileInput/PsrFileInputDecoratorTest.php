@@ -37,12 +37,12 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->input->setAutoPrependUploadValidator(false);
     }
 
-    public function testRetrievingValueFiltersTheValue()
+    public function testRetrievingValueFiltersTheValue(): void
     {
         $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
-    public function testRetrievingValueFiltersTheValueOnlyAfterValidating()
+    public function testRetrievingValueFiltersTheValueOnlyAfterValidating(): void
     {
         $upload = $this->prophesize(UploadedFileInterface::class);
         $upload->getError()->willReturn(UPLOAD_ERR_OK);
@@ -66,7 +66,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertEquals($filteredUpload->reveal(), $this->input->getValue());
     }
 
-    public function testCanFilterArrayOfMultiFileData()
+    public function testCanFilterArrayOfMultiFileData(): void
     {
         $values = [];
         for ($i = 0; $i < 3; $i += 1) {
@@ -100,7 +100,7 @@ class PsrFileInputDecoratorTest extends InputTest
         );
     }
 
-    public function testCanRetrieveRawValue()
+    public function testCanRetrieveRawValue(): void
     {
         $value = $this->prophesize(UploadedFileInterface::class);
         $value->getError()->shouldNotBeCalled();
@@ -113,12 +113,12 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertEquals($value->reveal(), $this->input->getRawValue());
     }
 
-    public function testValidationOperatesOnFilteredValue()
+    public function testValidationOperatesOnFilteredValue(): void
     {
         $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
-    public function testValidationOperatesBeforeFiltering()
+    public function testValidationOperatesBeforeFiltering(): void
     {
         $badValue = $this->prophesize(UploadedFileInterface::class);
         $badValue->getError()->willReturn(UPLOAD_ERR_NO_FILE);
@@ -133,13 +133,13 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertEquals($badValue->reveal(), $this->input->getValue());
     }
 
-    public function testAutoPrependUploadValidatorIsOnByDefault()
+    public function testAutoPrependUploadValidatorIsOnByDefault(): void
     {
         $input = new FileInput('foo');
         $this->assertTrue($input->getAutoPrependUploadValidator());
     }
 
-    public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled()
+    public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
@@ -159,7 +159,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertInstanceOf(Validator\File\UploadFile::class, $validators[0]['instance']);
     }
 
-    public function testUploadValidatorIsNotAddedByDefaultDuringIsValidWhenAutoPrependUploadValidatorIsDisabled()
+    public function testUploadValidatorIsNotAddedByDefaultDuringIsValidWhenAutoPrependUploadValidatorIsDisabled(): void
     {
         $this->assertFalse($this->input->getAutoPrependUploadValidator());
         $this->assertTrue($this->input->isRequired());
@@ -178,7 +178,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertEquals(0, count($validatorChain->getValidators()));
     }
 
-    public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists()
+    public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
@@ -208,13 +208,13 @@ class PsrFileInputDecoratorTest extends InputTest
     }
 
     /** @param mixed $value */
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null)
+    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null): void
     {
         $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
     /** @param mixed $value */
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null)
+    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null): void
     {
         $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
@@ -238,25 +238,25 @@ class PsrFileInputDecoratorTest extends InputTest
     public function testFallbackValueVsIsValidRulesWhenValueNotSet(
         ?bool $required = null,
         $fallbackValue = null
-    ) {
+    ): void {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
     }
 
-    public function testIsEmptyFileUploadNoFile()
+    public function testIsEmptyFileUploadNoFile(): void
     {
         $upload = $this->prophesize(UploadedFileInterface::class);
         $upload->getError()->willReturn(UPLOAD_ERR_NO_FILE);
         $this->assertTrue($this->input->isEmptyFile($upload->reveal()));
     }
 
-    public function testIsEmptyFileOk()
+    public function testIsEmptyFileOk(): void
     {
         $upload = $this->prophesize(UploadedFileInterface::class);
         $upload->getError()->willReturn(UPLOAD_ERR_OK);
         $this->assertFalse($this->input->isEmptyFile($upload->reveal()));
     }
 
-    public function testIsEmptyMultiFileUploadNoFile()
+    public function testIsEmptyMultiFileUploadNoFile(): void
     {
         $upload = $this->prophesize(UploadedFileInterface::class);
         $upload->getError()->willReturn(UPLOAD_ERR_NO_FILE);
@@ -266,7 +266,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
 
-    public function testIsEmptyFileMultiFileOk()
+    public function testIsEmptyFileMultiFileOk(): void
     {
         $rawValue = [];
         for ($i = 0; $i < 2; $i += 1) {
@@ -281,7 +281,7 @@ class PsrFileInputDecoratorTest extends InputTest
     /**
      * Specific PsrFileInput::merge extras
      */
-    public function testPsrFileInputMerge()
+    public function testPsrFileInputMerge(): void
     {
         $source = new FileInput();
         $source->setAutoPrependUploadValidator(true);

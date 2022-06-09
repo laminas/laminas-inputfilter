@@ -30,12 +30,12 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->input->setAutoPrependUploadValidator(false);
     }
 
-    public function testRetrievingValueFiltersTheValue()
+    public function testRetrievingValueFiltersTheValue(): void
     {
         $this->markTestSkipped('Test are not enabled in FileInputTest');
     }
 
-    public function testRetrievingValueFiltersTheValueOnlyAfterValidating()
+    public function testRetrievingValueFiltersTheValueOnlyAfterValidating(): void
     {
         $value = ['tmp_name' => 'bar'];
         $this->input->setValue($value);
@@ -51,7 +51,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals($newValue, $this->input->getValue());
     }
 
-    public function testCanFilterArrayOfMultiFileData()
+    public function testCanFilterArrayOfMultiFileData(): void
     {
         $values = [
             ['tmp_name' => 'foo'],
@@ -79,7 +79,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         );
     }
 
-    public function testCanRetrieveRawValue()
+    public function testCanRetrieveRawValue(): void
     {
         $value = ['tmp_name' => 'bar'];
         $this->input->setValue($value);
@@ -90,12 +90,12 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals($value, $this->input->getRawValue());
     }
 
-    public function testValidationOperatesOnFilteredValue()
+    public function testValidationOperatesOnFilteredValue(): void
     {
         $this->markTestSkipped('Test is not enabled in FileInputTest');
     }
 
-    public function testValidationOperatesBeforeFiltering()
+    public function testValidationOperatesBeforeFiltering(): void
     {
         $badValue = [
             'tmp_name' => ' ' . __FILE__ . ' ',
@@ -113,13 +113,13 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals($badValue, $this->input->getValue());
     }
 
-    public function testAutoPrependUploadValidatorIsOnByDefault()
+    public function testAutoPrependUploadValidatorIsOnByDefault(): void
     {
         $input = new FileInput('foo');
         $this->assertTrue($input->getAutoPrependUploadValidator());
     }
 
-    public function testUploadValidatorIsAddedWhenIsValidIsCalled()
+    public function testUploadValidatorIsAddedWhenIsValidIsCalled(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
@@ -139,7 +139,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertInstanceOf(Validator\File\UploadFile::class, $validators[0]['instance']);
     }
 
-    public function testUploadValidatorIsNotAddedWhenIsValidIsCalled()
+    public function testUploadValidatorIsNotAddedWhenIsValidIsCalled(): void
     {
         $this->assertFalse($this->input->getAutoPrependUploadValidator());
         $this->assertTrue($this->input->isRequired());
@@ -154,7 +154,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals(0, count($validatorChain->getValidators()));
     }
 
-    public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists()
+    public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
@@ -180,7 +180,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals($uploadMock, $validators[0]['instance']);
     }
 
-    public function testValidationsRunWithoutFileArrayDueToAjaxPost()
+    public function testValidationsRunWithoutFileArrayDueToAjaxPost(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
@@ -198,7 +198,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertFalse($this->input->isValid());
     }
 
-    public function testValidationsRunWithoutFileArrayIsSend()
+    public function testValidationsRunWithoutFileArrayIsSend(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
@@ -216,13 +216,13 @@ class HttpServerFileInputDecoratorTest extends InputTest
     }
 
     /** @param mixed $value */
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null)
+    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null): void
     {
         $this->markTestSkipped('Test is not enabled in FileInputTest');
     }
 
     /** @param mixed $value */
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null)
+    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null): void
     {
         $this->markTestSkipped('Test is not enabled in FileInputTest');
     }
@@ -238,7 +238,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $originalValue = null,
         ?bool $isValid = null,
         $expectedValue = null
-    ) {
+    ): void {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on FileInput');
     }
 
@@ -246,17 +246,17 @@ class HttpServerFileInputDecoratorTest extends InputTest
     public function testFallbackValueVsIsValidRulesWhenValueNotSet(
         ?bool $required = null,
         $fallbackValue = null
-    ) {
+    ): void {
         $this->markTestSkipped('Input::setFallbackValue is not implemented on FileInput');
     }
 
-    public function testIsEmptyFileNotArray()
+    public function testIsEmptyFileNotArray(): void
     {
         $rawValue = 'file';
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
 
-    public function testIsEmptyFileUploadNoFile()
+    public function testIsEmptyFileUploadNoFile(): void
     {
         $rawValue = [
             'tmp_name' => '',
@@ -265,7 +265,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
 
-    public function testIsEmptyFileOk()
+    public function testIsEmptyFileOk(): void
     {
         $rawValue = [
             'tmp_name' => 'name',
@@ -274,7 +274,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertFalse($this->input->isEmptyFile($rawValue));
     }
 
-    public function testIsEmptyMultiFileUploadNoFile()
+    public function testIsEmptyMultiFileUploadNoFile(): void
     {
         $rawValue = [
             [
@@ -285,7 +285,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
 
-    public function testIsEmptyFileMultiFileOk()
+    public function testIsEmptyFileMultiFileOk(): void
     {
         $rawValue = [
             [
@@ -300,7 +300,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertFalse($this->input->isEmptyFile($rawValue));
     }
 
-    public function testDefaultInjectedUploadValidatorRespectsRelease2Convention()
+    public function testDefaultInjectedUploadValidatorRespectsRelease2Convention(): void
     {
         $input          = new FileInput('foo');
         $validatorChain = $input->getValidatorChain();
@@ -314,7 +314,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
     /**
      * Specific FileInput::merge extras
      */
-    public function testFileInputMerge()
+    public function testFileInputMerge(): void
     {
         $source = new FileInput();
         $source->setAutoPrependUploadValidator(true);

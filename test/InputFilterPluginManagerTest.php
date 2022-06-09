@@ -41,12 +41,12 @@ class InputFilterPluginManagerTest extends TestCase
         $this->manager  = new InputFilterPluginManager($this->services);
     }
 
-    public function testIsASubclassOfAbstractPluginManager()
+    public function testIsASubclassOfAbstractPluginManager(): void
     {
         $this->assertInstanceOf(AbstractPluginManager::class, $this->manager);
     }
 
-    public function testIsNotSharedByDefault()
+    public function testIsNotSharedByDefault(): void
     {
         $r = new ReflectionObject($this->manager);
         $p = $r->getProperty('sharedByDefault');
@@ -54,7 +54,7 @@ class InputFilterPluginManagerTest extends TestCase
         $this->assertFalse($p->getValue($this->manager));
     }
 
-    public function testRegisteringInvalidElementRaisesException()
+    public function testRegisteringInvalidElementRaisesException(): void
     {
         $this->expectException($this->getServiceNotFoundException());
         $this->expectExceptionMessage(
@@ -63,7 +63,7 @@ class InputFilterPluginManagerTest extends TestCase
         $this->manager->setService('test', $this);
     }
 
-    public function testLoadingInvalidElementRaisesException()
+    public function testLoadingInvalidElementRaisesException(): void
     {
         $this->manager->setInvokableClass('test', static::class);
         $this->expectException($this->getServiceNotFoundException());
@@ -84,7 +84,7 @@ class InputFilterPluginManagerTest extends TestCase
      * @dataProvider defaultInvokableClassesProvider
      * @psalm-param class-string $expectedInstance
      */
-    public function testDefaultInvokableClasses(string $alias, string $expectedInstance)
+    public function testDefaultInvokableClasses(string $alias, string $expectedInstance): void
     {
         /** @var object $service */
         $service = $this->manager->get($alias);
@@ -92,7 +92,7 @@ class InputFilterPluginManagerTest extends TestCase
         $this->assertInstanceOf($expectedInstance, $service, 'get() return type not match');
     }
 
-    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithoutServiceLocator()
+    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithoutServiceLocator(): void
     {
         /** @var InputFilter $service */
         $service = $this->manager->get('inputfilter');
@@ -105,7 +105,7 @@ class InputFilterPluginManagerTest extends TestCase
         );
     }
 
-    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator()
+    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator(): void
     {
         $filterManager    = $this->getMockBuilder(FilterPluginManager::class)
             ->disableOriginalConstructor()
@@ -166,7 +166,7 @@ class InputFilterPluginManagerTest extends TestCase
     /**
      * @dataProvider serviceProvider
      */
-    public function testGet(string $serviceName, object $service)
+    public function testGet(string $serviceName, object $service): void
     {
         $this->manager->setService($serviceName, $service);
 
@@ -192,7 +192,7 @@ class InputFilterPluginManagerTest extends TestCase
         $initializableProphecy->init()->shouldBeCalled();
     }
 
-    public function testPopulateFactoryCanAcceptInputFilterAsFirstArgumentAndWillUseFactoryWhenItDoes()
+    public function testPopulateFactoryCanAcceptInputFilterAsFirstArgumentAndWillUseFactoryWhenItDoes(): void
     {
         $inputFilter = new InputFilter();
         $this->manager->populateFactory($inputFilter);

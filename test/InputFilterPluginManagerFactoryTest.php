@@ -16,7 +16,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testFactoryReturnsPluginManager()
+    public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $factory   = new InputFilterPluginManagerFactory();
@@ -44,7 +44,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
      * @dataProvider pluginProvider
      * @psalm-param class-string $pluginType
      */
-    public function testFactoryConfiguresPluginManagerUnderContainerInterop(string $pluginType)
+    public function testFactoryConfiguresPluginManagerUnderContainerInterop(string $pluginType): void
     {
         $container = $this->prophesize(ContainerInterface::class)->reveal();
         $plugin    = $this->prophesize($pluginType)->reveal();
@@ -58,7 +58,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $this->assertSame($plugin, $filters->get('test'));
     }
 
-    public function testConfiguresInputFilterServicesWhenFound()
+    public function testConfiguresInputFilterServicesWhenFound(): void
     {
         $inputFilter = $this->prophesize(InputFilterInterface::class)->reveal();
         $config      = [
@@ -91,7 +91,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $this->assertSame($inputFilter, $inputFilters->get('test-too'));
     }
 
-    public function testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent()
+    public function testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -108,7 +108,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $this->assertFalse($inputFilters->has('test-too'));
     }
 
-    public function testDoesNotConfigureInputFilterServicesWhenConfigServiceNotPresent()
+    public function testDoesNotConfigureInputFilterServicesWhenConfigServiceNotPresent(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);
@@ -123,7 +123,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
     }
 
-    public function testDoesNotConfigureInputFilterServicesWhenConfigServiceDoesNotContainInputFiltersConfig()
+    public function testDoesNotConfigureInputFilterServicesWhenConfigServiceDoesNotContainInputFiltersConfig(): void
     {
         $container = $this->prophesize(ServiceLocatorInterface::class);
         $container->willImplement(ContainerInterface::class);

@@ -39,13 +39,13 @@ class BaseInputFilterTest extends TestCase
         $this->inputFilter = new BaseInputFilter();
     }
 
-    public function testInputFilterIsEmptyByDefault()
+    public function testInputFilterIsEmptyByDefault(): void
     {
         $filter = $this->inputFilter;
         $this->assertEquals(0, count($filter));
     }
 
-    public function testAddWithInvalidInputTypeThrowsInvalidArgumentException()
+    public function testAddWithInvalidInputTypeThrowsInvalidArgumentException(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -58,7 +58,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->add(new stdClass());
     }
 
-    public function testGetThrowExceptionIfInputDoesNotExists()
+    public function testGetThrowExceptionIfInputDoesNotExists(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -67,7 +67,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->get('not exists');
     }
 
-    public function testReplaceWithInvalidInputTypeThrowsInvalidArgumentException()
+    public function testReplaceWithInvalidInputTypeThrowsInvalidArgumentException(): void
     {
         $inputFilter = $this->inputFilter;
         $inputFilter->add(new Input('foo'), 'replace_me');
@@ -81,7 +81,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->replace(new stdClass(), 'replace_me');
     }
 
-    public function testReplaceThrowExceptionIfInputToReplaceDoesNotExists()
+    public function testReplaceThrowExceptionIfInputToReplaceDoesNotExists(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -90,7 +90,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->replace(new Input('foo'), 'not exists');
     }
 
-    public function testGetValueThrowExceptionIfInputDoesNotExists()
+    public function testGetValueThrowExceptionIfInputDoesNotExists(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -99,7 +99,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->getValue('not exists');
     }
 
-    public function testGetRawValueThrowExceptionIfInputDoesNotExists()
+    public function testGetRawValueThrowExceptionIfInputDoesNotExists(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -108,7 +108,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->getRawValue('not exists');
     }
 
-    public function testSetDataWithInvalidDataTypeThrowsInvalidArgumentException()
+    public function testSetDataWithInvalidDataTypeThrowsInvalidArgumentException(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -118,7 +118,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->setData(new stdClass());
     }
 
-    public function testIsValidThrowExceptionIfDataWasNotSetYet()
+    public function testIsValidThrowExceptionIfDataWasNotSetYet(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -127,7 +127,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->isValid();
     }
 
-    public function testSetValidationGroupSkipsRecursionWhenInputIsNotAnInputFilter()
+    public function testSetValidationGroupSkipsRecursionWhenInputIsNotAnInputFilter(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -143,7 +143,7 @@ class BaseInputFilterTest extends TestCase
         $this->assertEquals(['fooInput'], $p->getValue($inputFilter));
     }
 
-    public function testSetValidationGroupAllowsSpecifyingArrayOfInputsToNestedInputFilter()
+    public function testSetValidationGroupAllowsSpecifyingArrayOfInputsToNestedInputFilter(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -168,7 +168,7 @@ class BaseInputFilterTest extends TestCase
         $this->assertEquals(['nested-input1', 'nested-input2'], $p->getValue($nestedInputFilter));
     }
 
-    public function testSetValidationGroupThrowExceptionIfInputFilterNotExists()
+    public function testSetValidationGroupThrowExceptionIfInputFilterNotExists(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -179,7 +179,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->setValidationGroup(['notExistInputFilter' => 'anotherNotExistsInputFilter']);
     }
 
-    public function testSetValidationGroupThrowExceptionIfInputFilterInArgumentListNotExists()
+    public function testSetValidationGroupThrowExceptionIfInputFilterInArgumentListNotExists(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -190,7 +190,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->setValidationGroup('notExistInputFilter');
     }
 
-    public function testHasUnknownThrowExceptionIfDataWasNotSetYet()
+    public function testHasUnknownThrowExceptionIfDataWasNotSetYet(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -198,7 +198,7 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->hasUnknown();
     }
 
-    public function testGetUnknownThrowExceptionIfDataWasNotSetYet()
+    public function testGetUnknownThrowExceptionIfDataWasNotSetYet(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -242,7 +242,7 @@ class BaseInputFilterTest extends TestCase
      * @dataProvider addMethodArgumentsProvider
      * @param array|object $input
      */
-    public function testAddRemove($input, ?string $name, ?string $expectedInputName)
+    public function testAddRemove($input, ?string $name, ?string $expectedInputName): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -256,7 +256,7 @@ class BaseInputFilterTest extends TestCase
         $this->assertCount($currentNumberOfFilters - 1, $inputFilter, 'Number of filters must be decreased by 1');
     }
 
-    public function testAddingInputWithNameDoesNotInjectNameInInput()
+    public function testAddingInputWithNameDoesNotInjectNameInInput(): void
     {
         $inputFilter = $this->inputFilter;
 
@@ -272,7 +272,7 @@ class BaseInputFilterTest extends TestCase
      * @dataProvider inputProvider
      * @param array|object $input
      */
-    public function testReplace($input, ?string $inputName, object $expectedInput)
+    public function testReplace($input, ?string $inputName, object $expectedInput): void
     {
         $inputFilter    = $this->inputFilter;
         $nameToReplace  = 'replace_me';
@@ -367,7 +367,7 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    public function testResetEmptyValidationGroupRecursively()
+    public function testResetEmptyValidationGroupRecursively(): void
     {
         $data         = [
             'flat' => 'foo',
@@ -439,7 +439,7 @@ class BaseInputFilterTest extends TestCase
      * @param array|ArrayObject $data
      * @param string|array<string, string> $expectedContext
      */
-    public function testValidationContext($data, ?string $customContext, $expectedContext)
+    public function testValidationContext($data, ?string $customContext, $expectedContext): void
     {
         $filter = $this->inputFilter;
 
@@ -454,7 +454,7 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    public function testBuildValidationContextUsingInputGetRawValue()
+    public function testBuildValidationContextUsingInputGetRawValue(): void
     {
         $data            = [];
         $expectedContext = ['fooInput' => 'fooRawValue'];
@@ -471,7 +471,7 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    public function testContextIsTheSameWhenARequiredInputIsGivenAndOptionalInputIsMissing()
+    public function testContextIsTheSameWhenARequiredInputIsGivenAndOptionalInputIsMissing(): void
     {
         $data            = [
             'inputRequired' => 'inputRequiredValue',
@@ -495,7 +495,7 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    public function testValidationSkipsFieldsMarkedNotRequiredWhenNoDataPresent()
+    public function testValidationSkipsFieldsMarkedNotRequiredWhenNoDataPresent(): void
     {
         $filter = $this->inputFilter;
 
@@ -544,7 +544,7 @@ class BaseInputFilterTest extends TestCase
         $this->assertEquals($hasUnknown, $inputFilter->hasUnknown(), 'hasUnknown() value not match');
     }
 
-    public function testGetInputs()
+    public function testGetInputs(): void
     {
         $filter = $this->inputFilter;
 
@@ -564,7 +564,7 @@ class BaseInputFilterTest extends TestCase
     /**
      * @group 4996
      */
-    public function testAddingExistingInputWillMergeIntoExisting()
+    public function testAddingExistingInputWillMergeIntoExisting(): void
     {
         $filter = $this->inputFilter;
 
@@ -582,7 +582,7 @@ class BaseInputFilterTest extends TestCase
     /**
      * @group 6431
      */
-    public function testMerge()
+    public function testMerge(): void
     {
         $inputFilter       = $this->inputFilter;
         $originInputFilter = new BaseInputFilter();
@@ -604,7 +604,7 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    public function testNestedInputFilterShouldAllowNonArrayValueForData()
+    public function testNestedInputFilterShouldAllowNonArrayValueForData(): void
     {
         $filter1      = new BaseInputFilter();
         $nestedFilter = new BaseInputFilter();
@@ -622,7 +622,7 @@ class BaseInputFilterTest extends TestCase
         self::assertNull($filter1->getValues()['nested']['nestedField1']);
     }
 
-    public function testInstanceOfUnfilteredDataInterface()
+    public function testInstanceOfUnfilteredDataInterface(): void
     {
         $baseInputFilter = new BaseInputFilter();
 
@@ -633,21 +633,21 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    public function testGetUnfilteredDataReturnsArray()
+    public function testGetUnfilteredDataReturnsArray(): void
     {
         $baseInputFilter = new BaseInputFilter();
 
         self::assertIsArray($baseInputFilter->getUnfilteredData());
     }
 
-    public function testSetUnfilteredDataReturnsBaseInputFilter()
+    public function testSetUnfilteredDataReturnsBaseInputFilter(): void
     {
         $baseInputFilter = new BaseInputFilter();
 
         self::assertInstanceOf(BaseInputFilter::class, $baseInputFilter->setUnfilteredData([]));
     }
 
-    public function testSettingAndReturningDataArrayUnfilteredDataInterface()
+    public function testSettingAndReturningDataArrayUnfilteredDataInterface(): void
     {
         $testArray = [
             'foo' => 'bar',
@@ -659,7 +659,7 @@ class BaseInputFilterTest extends TestCase
         self::assertSame($testArray, $baseInputFilter->getUnfilteredData());
     }
 
-    public function testSettingAndReturnDataArrayUsingSetDataForUnfilteredDataInterface()
+    public function testSettingAndReturnDataArrayUsingSetDataForUnfilteredDataInterface(): void
     {
         $testArray = [
             'foo' => 'bar',
@@ -671,7 +671,7 @@ class BaseInputFilterTest extends TestCase
         self::assertSame($testArray, $baseInputFilter->getUnfilteredData());
     }
 
-    public function testSetDataUsingSetDataAndApplyFiltersReturningSameAsOriginalForUnfilteredData()
+    public function testSetDataUsingSetDataAndApplyFiltersReturningSameAsOriginalForUnfilteredData(): void
     {
         $filteredArray = [
             'bar' => 'foo',

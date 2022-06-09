@@ -38,7 +38,7 @@ class CollectionInputFilterTest extends TestCase
         $this->inputFilter = new CollectionInputFilter();
     }
 
-    public function testSetInputFilterWithInvalidTypeThrowsInvalidArgumentException()
+    public function testSetInputFilterWithInvalidTypeThrowsInvalidArgumentException(): void
     {
         $inputFilter = $this->inputFilter;
 
