@@ -1,4 +1,4 @@
-<?php
+<?php //phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase.Invalid
 
 namespace LaminasTest\InputFilter;
 
@@ -319,10 +319,8 @@ class FactoryTest extends TestCase
         $this->assertSame($validatorPlugins, $inputValidatorChain->getPluginManager());
     }
 
-    // @codingStandardsIgnoreStart
-    public function testFactoryInjectsComposedFilterAndValidatorChainsIntoInputObjectsWhenCreatingNewInputFilterObjects(): void
+    public function testFactoryInjectsComposedFilterAndValidatorChainsIntoInputObjectsWhenCreatingNewInputFilterObjects(): void // phpcs:ignore
     {
-        // @codingStandardsIgnoreEnd
         $smMock           = $this->createMock(ContainerInterface::class);
         $factory          = $this->createDefaultFactory();
         $filterPlugins    = new Filter\FilterPluginManager($smMock);

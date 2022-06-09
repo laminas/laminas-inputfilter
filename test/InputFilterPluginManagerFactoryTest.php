@@ -1,4 +1,4 @@
-<?php
+<?php //phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase.Invalid
 
 namespace LaminasTest\InputFilter;
 
