@@ -245,10 +245,6 @@ class InputTest extends TestCase
         $this->assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
 
-    /**
-     * @group 28
-     * @group 60
-     */
     public function testRequiredWithoutFallbackAndValueNotSetProvidesNotEmptyValidatorIsEmptyErrorMessage(): void
     {
         $input = $this->input;
@@ -262,10 +258,6 @@ class InputTest extends TestCase
         $this->assertRequiredValidationErrorMessage($input);
     }
 
-    /**
-     * @group 28
-     * @group 69
-     */
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
         $input = new Input();
@@ -295,10 +287,6 @@ class InputTest extends TestCase
         $this->assertEquals($customMessage, $input->getMessages());
     }
 
-    /**
-     * @group 28
-     * @group 60
-     */
     public function testRequiredWithoutFallbackAndValueNotSetProvidesCustomErrorMessageWhenSet(): void
     {
         $input = $this->input;

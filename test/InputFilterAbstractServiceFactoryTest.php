@@ -205,9 +205,6 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertInstanceOf(Foo::class, $inputFilterManager->get('foo'));
     }
 
-    /**
-     * @group zendframework/zend-servicemanager#123
-     */
     public function testAllowsPassingNonPluginManagerContainerToFactoryWithServiceManagerV2(): void
     {
         $this->services->setService('config', [

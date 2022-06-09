@@ -90,9 +90,6 @@ class CollectionInputFilterTest extends TestCase
         $this->assertEquals($expectedCount, $this->inputFilter->getCount(), 'getCount() value not match');
     }
 
-    /**
-     * @group 6160
-     */
     public function testGetCountReturnsRightCountOnConsecutiveCallsWithDifferentData(): void
     {
         $collectionData1 = [

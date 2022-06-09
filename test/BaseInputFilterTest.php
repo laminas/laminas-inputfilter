@@ -561,9 +561,6 @@ class BaseInputFilterTest extends TestCase
         $this->assertEquals('bar', $filters['bar']->getName());
     }
 
-    /**
-     * @group 4996
-     */
     public function testAddingExistingInputWillMergeIntoExisting(): void
     {
         $filter = $this->inputFilter;
@@ -579,9 +576,6 @@ class BaseInputFilterTest extends TestCase
         $this->assertFalse($filter->get('foo')->isRequired());
     }
 
-    /**
-     * @group 6431
-     */
     public function testMerge(): void
     {
         $inputFilter       = $this->inputFilter;
