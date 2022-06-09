@@ -150,6 +150,7 @@ class Factory
         }
 
         if (! is_array($inputSpecification) && ! $inputSpecification instanceof Traversable) {
+            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,

@@ -104,7 +104,6 @@
   <file src="src/Factory.php">
     <DocblockTypeContradiction occurrences="2">
       <code>! is_array($inputFilterSpecification) &amp;&amp; ! $inputFilterSpecification instanceof Traversable</code>
-      <code>! is_array($inputSpecification) &amp;&amp; ! $inputSpecification instanceof Traversable</code>
     </DocblockTypeContradiction>
     <InvalidReturnStatement occurrences="1">
       <code>$inputFilter</code>
@@ -112,8 +111,7 @@
     <InvalidReturnType occurrences="1">
       <code>InputFilterInterface</code>
     </InvalidReturnType>
-    <MixedArgument occurrences="13">
-      <code>$breakChainOnFailure</code>
+    <MixedArgument occurrences="10">
       <code>$inputFilterSpecification['count']</code>
       <code>$inputFilterSpecification['input_filter']</code>
       <code>$inputFilterSpecification['required']</code>
@@ -121,7 +119,6 @@
       <code>$key</code>
       <code>$key</code>
       <code>$name</code>
-      <code>$options</code>
       <code>$priority</code>
       <code>$priority</code>
       <code>$value</code>
@@ -132,8 +129,7 @@
       <code>$filter['options']</code>
       <code>$filter['priority']</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="10">
-      <code>$breakChainOnFailure</code>
+    <MixedAssignment occurrences="6">
       <code>$key</code>
       <code>$key</code>
       <code>$key</code>

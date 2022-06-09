@@ -14,13 +14,13 @@ use Traversable;
  *     name: string|class-string<FilterInterface>,
  *     priority?: int,
  *     options?: array<string, mixed>,
- * }&array<string, mixed>
+ * }
  * @psalm-type ValidatorSpecification = array{
  *     name: string|class-string<ValidatorInterface>,
  *     priority?: int,
  *     break_chain_on_failure?: bool,
  *     options?: array<string, mixed>,
- * }&array<string, mixed>
+ * }
  * @psalm-type InputSpecification = array{
  *     type?: string|class-string<InputFilterInterface>,
  *     name?: string,
@@ -32,7 +32,7 @@ use Traversable;
  *     break_on_failure?: bool,
  *     filters?: FilterChain|iterable<array-key, FilterSpecification|callable|FilterInterface>,
  *     validators?: ValidatorChain|iterable<array-key, ValidatorSpecification|ValidatorInterface>,
- * }&array<string, mixed>
+ * }
  */
 interface InputFilterInterface extends Countable
 {
