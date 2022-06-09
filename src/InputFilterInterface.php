@@ -77,7 +77,7 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
-     * @param  array<array-key, mixed>|Traversable<string, mixed>|null $data
+     * @param  iterable<array-key, mixed>|null $data
      * @return InputFilterInterface
      */
     public function setData($data);

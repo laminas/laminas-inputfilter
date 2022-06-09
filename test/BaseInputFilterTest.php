@@ -415,7 +415,7 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: array<string, string>|ArrayObject,
+     *     0: iterable<array-key, mixed>,
      *     1: null|string,
      *     2: array<string, string>|string
      * }>
@@ -436,7 +436,7 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @dataProvider contextProvider
-     * @param array|ArrayObject $data
+     * @param iterable<array-key, mixed> $data
      * @param string|array<string, string> $expectedContext
      */
     public function testValidationContext($data, ?string $customContext, $expectedContext): void

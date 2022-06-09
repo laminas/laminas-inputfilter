@@ -266,7 +266,7 @@ class InputTest extends TestCase
      * @group 28
      * @group 69
      */
-    public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void
+    public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
         $input = new Input();
         $input->setRequired(true);

@@ -182,7 +182,7 @@ class BaseInputFilter implements
     /**
      * Set data to use when validating and filtering
      *
-     * @param  array<array-key, mixed>|Traversable<array-key, mixed>|null $data null is cast to an empty array.
+     * @param  iterable<array-key, mixed>|null $data null is cast to an empty array.
      * @throws Exception\InvalidArgumentException
      * @return InputFilterInterface
      * @psalm-assert array<array-key, mixed> $this->data
@@ -553,7 +553,7 @@ class BaseInputFilter implements
                 if (! is_array($value) && ! $value instanceof Traversable) {
                     $value = [];
                 }
-                /** @psalm-var array<array-key, mixed> $value */
+                /** @psalm-var iterable<array-key, mixed> $value */
 
                 $input->setData($value);
                 continue;
