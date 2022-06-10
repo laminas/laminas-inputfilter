@@ -12,8 +12,8 @@ class OptionalInputFilter extends InputFilter
     /**
      * Set data to use when validating and filtering
      *
-     * @param iterable<array-key, mixed>|null $data must be a non-empty iterable in order trigger
-     *                                              actual validation, else it is always valid
+     * @param iterable|null $data must be a non-empty iterable in order trigger
+     *                            actual validation, else it is always valid
      * @return $this
      * @throws Exception\InvalidArgumentException
      */

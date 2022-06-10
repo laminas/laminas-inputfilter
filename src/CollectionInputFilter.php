@@ -146,8 +146,7 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @param mixed $data
-     * @psalm-suppress ImplementedParamTypeMismatch
+     * @param iterable|null $data
      * @return $this
      */
     public function setData($data)

@@ -180,7 +180,7 @@ class BaseInputFilter implements
     /**
      * Set data to use when validating and filtering
      *
-     * @param  iterable<array-key, mixed>|null $data null is cast to an empty array.
+     * @param  iterable|null $data null is cast to an empty array.
      * @throws Exception\InvalidArgumentException
      * @return InputFilterInterface
      */

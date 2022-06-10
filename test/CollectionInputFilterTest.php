@@ -527,6 +527,7 @@ class CollectionInputFilterTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('invalid collection');
+        /** @psalm-suppress MixedArgument */
         $collectionInputFilter->setData($data);
     }
 

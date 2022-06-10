@@ -51,9 +51,8 @@
     <MixedArgument occurrences="1">
       <code>$input</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="2">
+    <MixedArgumentTypeCoercion occurrences="1">
       <code>$inputs</code>
-      <code>$value</code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment occurrences="3">
       <code>$inputContext</code>
@@ -84,6 +83,9 @@
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>array&lt;array-key, array&lt;string, array&lt;array-key, string&gt;&gt;&gt;</code>
     </ImplementedReturnTypeMismatch>
+    <InvalidArgument occurrences="1">
+      <code>$data</code>
+    </InvalidArgument>
     <InvalidPropertyAssignmentValue occurrences="2">
       <code>$this-&gt;collectionMessages</code>
       <code>$this-&gt;collectionMessages</code>
@@ -91,15 +93,13 @@
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array&lt;array-key, array&gt;</code>
     </LessSpecificImplementedReturnType>
-    <MixedArgument occurrences="1">
+    <MixedArgument occurrences="2">
+      <code>$data</code>
       <code>$data</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$data</code>
     </MixedAssignment>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$data</code>
-    </PossiblyInvalidArgument>
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$name</code>
     </PossiblyInvalidPropertyAssignmentValue>
@@ -403,8 +403,7 @@
       <code>$set[5]</code>
       <code>$set[6]</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="7">
-      <code>$data</code>
+    <MixedArgumentTypeCoercion occurrences="6">
       <code>$inputName</code>
       <code>$inputName</code>
       <code>$inputName</code>
