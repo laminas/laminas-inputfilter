@@ -105,34 +105,33 @@
     </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="src/Factory.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($inputFilterSpecification) &amp;&amp; ! $inputFilterSpecification instanceof Traversable</code>
-    </DocblockTypeContradiction>
     <InvalidReturnStatement occurrences="1">
       <code>$inputFilter</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="1">
       <code>InputFilterInterface</code>
     </InvalidReturnType>
-    <MixedArgument occurrences="10">
+    <MixedArgument occurrences="9">
       <code>$inputFilterSpecification['count']</code>
       <code>$inputFilterSpecification['input_filter']</code>
       <code>$inputFilterSpecification['required']</code>
       <code>$inputFilterSpecification['required_message']</code>
-      <code>$key</code>
       <code>$key</code>
       <code>$name</code>
       <code>$priority</code>
       <code>$value</code>
       <code>$value['type']</code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="2">
+      <code>$inputSpecification</code>
+      <code>$key</code>
+    </MixedArgumentTypeCoercion>
     <MixedArrayAccess occurrences="3">
       <code>$filter['name']</code>
       <code>$filter['options']</code>
       <code>$filter['priority']</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="6">
-      <code>$key</code>
+    <MixedAssignment occurrences="5">
       <code>$key</code>
       <code>$name</code>
       <code>$options</code>
@@ -473,9 +472,8 @@
     </PossiblyUndefinedMethod>
   </file>
   <file src="test/CollectionInputFilterTest.php">
-    <ArgumentTypeCoercion occurrences="2">
+    <ArgumentTypeCoercion occurrences="1">
       <code>$expectedType</code>
-      <code>$inputFilter</code>
     </ArgumentTypeCoercion>
     <InvalidArgument occurrences="2">
       <code>new stdClass()</code>
@@ -493,6 +491,9 @@
       <code>function () use ($dataRaw, $dataFiltered) {</code>
       <code>function () use ($dataRaw, $dataFiltered, $errorMessage) {</code>
     </MissingClosureReturnType>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$inputFilter</code>
+    </MixedArgumentTypeCoercion>
     <MixedArrayAccess occurrences="1">
       <code>$set[3]</code>
     </MixedArrayAccess>
@@ -546,7 +547,7 @@
       <code>setMethods</code>
       <code>setMethods</code>
     </DeprecatedMethod>
-    <InvalidArgument occurrences="2">
+    <InvalidArgument occurrences="3">
       <code>'invalid_value'</code>
       <code>'invalid_value'</code>
     </InvalidArgument>

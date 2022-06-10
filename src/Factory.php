@@ -24,6 +24,8 @@ use function sprintf;
  * @psalm-import-type InputSpecification from InputFilterInterface
  * @psalm-import-type FilterSpecification from InputFilterInterface
  * @psalm-import-type ValidatorSpecification from InputFilterInterface
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
+ * @psalm-import-type CollectionSpecification from InputFilterInterface
  */
 class Factory
 {
@@ -144,16 +146,17 @@ class Factory
             $inputSpecification = $inputSpecification->getInputSpecification();
         }
 
-        if (! is_array($inputSpecification) && ! $inputSpecification instanceof Traversable) {
-            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
+        if ($inputSpecification instanceof Traversable) {
+            $inputSpecification = ArrayUtils::iteratorToArray($inputSpecification);
+        }
+
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (! is_array($inputSpecification)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
                 is_object($inputSpecification) ? get_class($inputSpecification) : gettype($inputSpecification)
             ));
-        }
-        if ($inputSpecification instanceof Traversable) {
-            $inputSpecification = ArrayUtils::iteratorToArray($inputSpecification);
         }
 
         $class = Input::class;
@@ -279,10 +282,11 @@ class Factory
     /**
      * Factory for input filters
      *
-     * @param  array|Traversable|InputFilterProviderInterface $inputFilterSpecification
-     * @throws Exception\InvalidArgumentException
-     * @throws Exception\RuntimeException
+     * phpcs:ignore Generic.Files.LineLength.TooLong
+     * @param InputFilterSpecification|CollectionSpecification|Traversable|InputFilterProviderInterface $inputFilterSpecification
      * @return InputFilterInterface
+     * @throws Exception\RuntimeException
+     * @throws Exception\InvalidArgumentException
      */
     public function createInputFilter($inputFilterSpecification)
     {
@@ -290,7 +294,12 @@ class Factory
             $inputFilterSpecification = $inputFilterSpecification->getInputFilterSpecification();
         }
 
-        if (! is_array($inputFilterSpecification) && ! $inputFilterSpecification instanceof Traversable) {
+        if ($inputFilterSpecification instanceof Traversable) {
+            $inputFilterSpecification = ArrayUtils::iteratorToArray($inputFilterSpecification);
+        }
+
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (! is_array($inputFilterSpecification)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
@@ -298,9 +307,6 @@ class Factory
                     ? get_class($inputFilterSpecification)
                     : gettype($inputFilterSpecification)
             ));
-        }
-        if ($inputFilterSpecification instanceof Traversable) {
-            $inputFilterSpecification = ArrayUtils::iteratorToArray($inputFilterSpecification);
         }
 
         $type = InputFilter::class;

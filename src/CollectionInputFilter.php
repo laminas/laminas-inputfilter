@@ -12,6 +12,9 @@ use function is_array;
 use function is_object;
 use function sprintf;
 
+/**
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
+ */
 class CollectionInputFilter extends InputFilter
 {
     /** @var bool */
@@ -56,7 +59,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * Set the input filter to use when looping the data
      *
-     * @param BaseInputFilter|array|Traversable $inputFilter
+     * @param BaseInputFilter|InputFilterSpecification|Traversable $inputFilter
      * @throws Exception\RuntimeException
      * @return CollectionInputFilter
      */

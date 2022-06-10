@@ -33,6 +33,16 @@ use Traversable;
  *     filters?: FilterChain|iterable<array-key, FilterSpecification|callable|FilterInterface>,
  *     validators?: ValidatorChain|iterable<array-key, ValidatorSpecification|ValidatorInterface>,
  * }
+ * @psalm-type InputFilterSpecification = array{
+ *     type?: class-string<InputFilterInterface>|string,
+ * }&array<array-key, InputSpecification>
+ * @psalm-type CollectionSpecification = array{
+ *     type?: class-string<InputFilterInterface>|string,
+ *     input_filter?: InputFilterSpecification|InputFilterInterface,
+ *     count?: int,
+ *     required?: bool,
+ *     required_message?: string,
+ * }&array<array-key, InputSpecification>
  */
 interface InputFilterInterface extends Countable
 {
