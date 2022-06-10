@@ -4,5 +4,5 @@ namespace LaminasTest\InputFilter\TestAsset;
 
 interface ModuleManagerInterface
 {
-    public function getEvent();
+    public function getEvent(): ModuleEventInterface;
 }

@@ -24,13 +24,13 @@ class InputFilterTest extends BaseInputFilterTest
         $this->inputFilter = new InputFilter();
     }
 
-    public function testLazilyComposesAFactoryByDefault()
+    public function testLazilyComposesAFactoryByDefault(): void
     {
         $factory = $this->inputFilter->getFactory();
         $this->assertInstanceOf(Factory::class, $factory);
     }
 
-    public function testCanComposeAFactory()
+    public function testCanComposeAFactory(): void
     {
         $factory = $this->createFactoryMock();
         $this->inputFilter->setFactory($factory);
@@ -87,7 +87,7 @@ class InputFilterTest extends BaseInputFilterTest
      *
      * @see https://github.com/zendframework/zend-inputfilter/issues/159
      */
-    public function testNestedInputFilterShouldAllowNullValueForData()
+    public function testNestedInputFilterShouldAllowNullValueForData(): void
     {
         $filter1 = new InputFilter();
         $filter1->add([

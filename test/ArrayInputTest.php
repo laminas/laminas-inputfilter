@@ -2,8 +2,12 @@
 
 namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterChain;
 use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\ValidatorChain;
+use PHPUnit\Framework\MockObject\MockObject;
 use Webmozart\Assert\Assert;
 
 use function array_map;
@@ -22,12 +26,12 @@ class ArrayInputTest extends InputTest
         $this->input = new ArrayInput('foo');
     }
 
-    public function testDefaultGetValue()
+    public function testDefaultGetValue(): void
     {
         $this->assertCount(0, $this->input->getValue());
     }
 
-    public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays()
+    public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays(): void
     {
         $input = $this->input;
         $input->setRequired(true);
@@ -37,7 +41,7 @@ class ArrayInputTest extends InputTest
         $this->assertRequiredValidationErrorMessage($input);
     }
 
-    public function testArrayInputMarkedRequiredWithoutAFallbackUsesProvidedErrorMessageOnFailureDueToEmptyArray()
+    public function testArrayInputMarkedRequiredWithoutAFallbackUsesProvidedErrorMessageOnFailureDueToEmptyArray(): void
     {
         $expected = 'error message';
 
@@ -54,7 +58,7 @@ class ArrayInputTest extends InputTest
         $this->assertEquals($expected, $message);
     }
 
-    public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException()
+    public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Value must be an array, string given');
@@ -118,7 +122,7 @@ class ArrayInputTest extends InputTest
     }
 
     /**
-     * @param array $valueMap
+     * @param list<list<mixed>> $valueMap
      * @return FilterChain&MockObject
      */
     protected function createFilterChainMock(array $valueMap = [])
@@ -141,7 +145,7 @@ class ArrayInputTest extends InputTest
     }
 
     /**
-     * @param array $valueMap
+     * @param list<list<mixed>> $valueMap
      * @param string[] $messages
      * @return ValidatorChain&MockObject
      */
@@ -165,7 +169,7 @@ class ArrayInputTest extends InputTest
      * @param bool $isValid
      * @param mixed $value
      * @param mixed $context
-     * @return NotEmptyValidator&MockObject
+     * @return NotEmpty&MockObject
      */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {

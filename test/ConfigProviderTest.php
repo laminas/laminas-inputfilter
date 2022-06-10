@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ConfigProviderTest extends TestCase
 {
-    public function testProvidesExpectedConfiguration()
+    public function testProvidesExpectedConfiguration(): void
     {
         $provider = new ConfigProvider();
 
@@ -27,7 +27,7 @@ final class ConfigProviderTest extends TestCase
         $this->assertEquals($expected, $provider->getDependencyConfig());
     }
 
-    public function testProvidesExpectedInputFilterConfiguration()
+    public function testProvidesExpectedInputFilterConfiguration(): void
     {
         $provider = new ConfigProvider();
 
@@ -40,7 +40,7 @@ final class ConfigProviderTest extends TestCase
         $this->assertEquals($expected, $provider->getInputFilterConfig());
     }
 
-    public function testInvocationProvidesDependencyConfiguration()
+    public function testInvocationProvidesDependencyConfiguration(): void
     {
         $provider = new ConfigProvider();
 

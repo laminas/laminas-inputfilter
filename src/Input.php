@@ -5,6 +5,7 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
+use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 
 use function class_exists;
@@ -63,7 +64,7 @@ class Input implements
      */
     protected $hasValue = false;
 
-    /** @var mixed */
+    /** @var mixed|null */
     protected $fallbackValue;
 
     /** @var bool */
@@ -79,7 +80,7 @@ class Input implements
      * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain and set this to `true`.
      *
      * @param  bool $allowEmpty
-     * @return Input
+     * @return $this
      */
     public function setAllowEmpty($allowEmpty)
     {
@@ -89,7 +90,7 @@ class Input implements
 
     /**
      * @param  bool $breakOnFailure
-     * @return Input
+     * @return $this
      */
     public function setBreakOnFailure($breakOnFailure)
     {
@@ -101,7 +102,7 @@ class Input implements
      * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain and set this to `true`.
      *
      * @param bool $continueIfEmpty
-     * @return Input
+     * @return $this
      */
     public function setContinueIfEmpty($continueIfEmpty)
     {
@@ -111,7 +112,7 @@ class Input implements
 
     /**
      * @param  string|null $errorMessage
-     * @return Input
+     * @return $this
      */
     public function setErrorMessage($errorMessage)
     {
@@ -120,7 +121,7 @@ class Input implements
     }
 
     /**
-     * @return Input
+     * @return $this
      */
     public function setFilterChain(FilterChain $filterChain)
     {
@@ -130,26 +131,28 @@ class Input implements
 
     /**
      * @param  string $name
-     * @return Input
+     * @return $this
      */
     public function setName($name)
     {
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->name = (string) $name;
         return $this;
     }
 
     /**
      * @param  bool $required
-     * @return Input
+     * @return $this
      */
     public function setRequired($required)
     {
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->required = (bool) $required;
         return $this;
     }
 
     /**
-     * @return Input
+     * @return $this
      */
     public function setValidatorChain(ValidatorChain $validatorChain)
     {
@@ -167,7 +170,7 @@ class Input implements
      * @see Input::resetValue() For reset the input value to the default state.
      *
      * @param  mixed $value
-     * @return Input
+     * @return $this
      */
     public function setValue($value)
     {
@@ -182,7 +185,7 @@ class Input implements
      * @see Input::hasValue() For to know if input value was set.
      * @see Input::setValue() For set a new value.
      *
-     * @return Input
+     * @return $this
      */
     public function resetValue()
     {
@@ -193,7 +196,7 @@ class Input implements
 
     /**
      * @param  mixed $value
-     * @return Input
+     * @return $this
      */
     public function setFallbackValue($value)
     {
@@ -244,7 +247,7 @@ class Input implements
     public function getFilterChain()
     {
         if (! $this->filterChain) {
-            $this->setFilterChain(new FilterChain());
+            $this->filterChain = new FilterChain();
         }
         return $this->filterChain;
     }
@@ -279,7 +282,7 @@ class Input implements
     public function getValidatorChain()
     {
         if (! $this->validatorChain) {
-            $this->setValidatorChain(new ValidatorChain());
+            $this->validatorChain = new ValidatorChain();
         }
         return $this->validatorChain;
     }
@@ -326,6 +329,7 @@ class Input implements
         return $this->hasFallback;
     }
 
+    /** @return void */
     public function clearFallbackValue()
     {
         $this->hasFallback   = false;
@@ -333,7 +337,7 @@ class Input implements
     }
 
     /**
-     * @return Input
+     * @return $this
      */
     public function merge(InputInterface $input)
     {
@@ -417,7 +421,7 @@ class Input implements
     }
 
     /**
-     * @return string[]
+     * @return array<array-key, string>
      */
     public function getMessages()
     {
@@ -468,7 +472,7 @@ class Input implements
     /**
      * Create and return the validation failure message for required input.
      *
-     * @return string[]
+     * @return array<string, string>
      */
     protected function prepareRequiredValidationFailureMessage()
     {
@@ -482,11 +486,12 @@ class Input implements
             }
         }
 
+        /** @psalm-var array<string, string> $templates */
         $templates  = $notEmpty->getOption('messageTemplates');
         $message    = $templates[NotEmpty::IS_EMPTY];
         $translator = $notEmpty->getTranslator();
 
-        if ($translator) {
+        if ($translator instanceof TranslatorInterface) {
             $message = $translator->translate($message, $notEmpty->getTranslatorTextDomain());
         }
 

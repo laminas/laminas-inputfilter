@@ -24,7 +24,7 @@ use function iterator_to_array;
 use function json_encode;
 
 /**
- * @covers \Laminas\InputFilter\Input
+ * @psalm-suppress DeprecatedMethod
  */
 class InputTest extends TestCase
 {
@@ -68,68 +68,68 @@ class InputTest extends TestCase
         );
     }
 
-    public function testConstructorRequiresAName()
+    public function testConstructorRequiresAName(): void
     {
         $this->assertEquals('foo', $this->input->getName());
     }
 
-    public function testInputHasEmptyFilterChainByDefault()
+    public function testInputHasEmptyFilterChainByDefault(): void
     {
         $filters = $this->input->getFilterChain();
         $this->assertInstanceOf(FilterChain::class, $filters);
         $this->assertEquals(0, count($filters));
     }
 
-    public function testInputHasEmptyValidatorChainByDefault()
+    public function testInputHasEmptyValidatorChainByDefault(): void
     {
         $validators = $this->input->getValidatorChain();
         $this->assertInstanceOf(ValidatorChain::class, $validators);
         $this->assertEquals(0, count($validators));
     }
 
-    public function testCanInjectFilterChain()
+    public function testCanInjectFilterChain(): void
     {
         $chain = $this->createFilterChainMock();
         $this->input->setFilterChain($chain);
         $this->assertSame($chain, $this->input->getFilterChain());
     }
 
-    public function testCanInjectValidatorChain()
+    public function testCanInjectValidatorChain(): void
     {
         $chain = $this->createValidatorChainMock();
         $this->input->setValidatorChain($chain);
         $this->assertSame($chain, $this->input->getValidatorChain());
     }
 
-    public function testInputIsMarkedAsRequiredByDefault()
+    public function testInputIsMarkedAsRequiredByDefault(): void
     {
         $this->assertTrue($this->input->isRequired());
     }
 
-    public function testRequiredFlagIsMutable()
+    public function testRequiredFlagIsMutable(): void
     {
         $this->input->setRequired(false);
         $this->assertFalse($this->input->isRequired());
     }
 
-    public function testInputDoesNotAllowEmptyValuesByDefault()
+    public function testInputDoesNotAllowEmptyValuesByDefault(): void
     {
         $this->assertFalse($this->input->allowEmpty());
     }
 
-    public function testAllowEmptyFlagIsMutable()
+    public function testAllowEmptyFlagIsMutable(): void
     {
         $this->input->setAllowEmpty(true);
         $this->assertTrue($this->input->allowEmpty());
     }
 
-    public function testContinueIfEmptyFlagIsFalseByDefault()
+    public function testContinueIfEmptyFlagIsFalseByDefault(): void
     {
         $input = $this->input;
         $this->assertFalse($input->continueIfEmpty());
     }
 
-    public function testContinueIfEmptyFlagIsMutable()
+    public function testContinueIfEmptyFlagIsMutable(): void
     {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -140,7 +140,7 @@ class InputTest extends TestCase
      * @dataProvider setValueProvider
      * @param mixed $fallbackValue
      */
-    public function testSetFallbackValue($fallbackValue)
+    public function testSetFallbackValue($fallbackValue): void
     {
         $input = $this->input;
 
@@ -155,7 +155,7 @@ class InputTest extends TestCase
      * @dataProvider setValueProvider
      * @param mixed $fallbackValue
      */
-    public function testClearFallbackValue($fallbackValue)
+    public function testClearFallbackValue($fallbackValue): void
     {
         $input = $this->input;
         $input->setFallbackValue($fallbackValue);
@@ -176,7 +176,7 @@ class InputTest extends TestCase
         $originalValue,
         bool $isValid,
         $expectedValue
-    ) {
+    ): void {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
 
@@ -199,7 +199,7 @@ class InputTest extends TestCase
      * @dataProvider fallbackValueVsIsValidProvider
      * @param string|string[] $fallbackValue
      */
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, $fallbackValue)
+    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, $fallbackValue): void
     {
         $expectedValue = $fallbackValue; // Should always return the fallback value
 
@@ -220,7 +220,7 @@ class InputTest extends TestCase
         $this->assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
 
-    public function testRequiredWithoutFallbackAndValueNotSetThenFail()
+    public function testRequiredWithoutFallbackAndValueNotSetThenFail(): void
     {
         $input = $this->input;
         $input->setRequired(true);
@@ -232,7 +232,7 @@ class InputTest extends TestCase
         $this->assertRequiredValidationErrorMessage($input);
     }
 
-    public function testRequiredWithoutFallbackAndValueNotSetThenFailReturnsCustomErrorMessageWhenSet()
+    public function testRequiredWithoutFallbackAndValueNotSetThenFailReturnsCustomErrorMessageWhenSet(): void
     {
         $input = $this->input;
         $input->setRequired(true);
@@ -245,11 +245,7 @@ class InputTest extends TestCase
         $this->assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
 
-    /**
-     * @group 28
-     * @group 60
-     */
-    public function testRequiredWithoutFallbackAndValueNotSetProvidesNotEmptyValidatorIsEmptyErrorMessage()
+    public function testRequiredWithoutFallbackAndValueNotSetProvidesNotEmptyValidatorIsEmptyErrorMessage(): void
     {
         $input = $this->input;
         $input->setRequired(true);
@@ -262,11 +258,7 @@ class InputTest extends TestCase
         $this->assertRequiredValidationErrorMessage($input);
     }
 
-    /**
-     * @group 28
-     * @group 69
-     */
-    public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage()
+    public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
         $input = new Input();
         $input->setRequired(true);
@@ -295,11 +287,7 @@ class InputTest extends TestCase
         $this->assertEquals($customMessage, $input->getMessages());
     }
 
-    /**
-     * @group 28
-     * @group 60
-     */
-    public function testRequiredWithoutFallbackAndValueNotSetProvidesCustomErrorMessageWhenSet()
+    public function testRequiredWithoutFallbackAndValueNotSetProvidesCustomErrorMessageWhenSet(): void
     {
         $input = $this->input;
         $input->setRequired(true);
@@ -313,7 +301,7 @@ class InputTest extends TestCase
         $this->assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
 
-    public function testNotRequiredWithoutFallbackAndValueNotSetThenIsValid()
+    public function testNotRequiredWithoutFallbackAndValueNotSetThenIsValid(): void
     {
         $input = $this->input;
         $input->setRequired(false);
@@ -335,7 +323,7 @@ class InputTest extends TestCase
      * @dataProvider emptyValueProvider
      * @param mixed $value
      */
-    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue($value)
+    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue($value): void
     {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -346,12 +334,12 @@ class InputTest extends TestCase
         $this->assertEmpty($validators);
     }
 
-    public function testDefaultGetValue()
+    public function testDefaultGetValue(): void
     {
         $this->assertNull($this->input->getValue());
     }
 
-    public function testValueMayBeInjected()
+    public function testValueMayBeInjected(): void
     {
         $valueRaw = $this->getDummyValue();
 
@@ -359,7 +347,7 @@ class InputTest extends TestCase
         $this->assertEquals($valueRaw, $this->input->getValue());
     }
 
-    public function testRetrievingValueFiltersTheValue()
+    public function testRetrievingValueFiltersTheValue(): void
     {
         $valueRaw      = $this->getDummyValue();
         $valueFiltered = $this->getDummyValue(false);
@@ -372,7 +360,7 @@ class InputTest extends TestCase
         $this->assertSame($valueFiltered, $this->input->getValue());
     }
 
-    public function testCanRetrieveRawValue()
+    public function testCanRetrieveRawValue(): void
     {
         $valueRaw = $this->getDummyValue();
 
@@ -384,7 +372,7 @@ class InputTest extends TestCase
         $this->assertEquals($valueRaw, $this->input->getRawValue());
     }
 
-    public function testValidationOperatesOnFilteredValue()
+    public function testValidationOperatesOnFilteredValue(): void
     {
         $valueRaw      = $this->getDummyValue();
         $valueFiltered = $this->getDummyValue(false);
@@ -404,12 +392,12 @@ class InputTest extends TestCase
         );
     }
 
-    public function testBreakOnFailureFlagIsOffByDefault()
+    public function testBreakOnFailureFlagIsOffByDefault(): void
     {
         $this->assertFalse($this->input->breakOnFailure());
     }
 
-    public function testBreakOnFailureFlagIsMutable()
+    public function testBreakOnFailureFlagIsMutable(): void
     {
         $this->input->setBreakOnFailure(true);
         $this->assertTrue($this->input->breakOnFailure());
@@ -419,7 +407,7 @@ class InputTest extends TestCase
      * @dataProvider emptyValueProvider
      * @param mixed $value
      */
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value)
+    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value): void
     {
         $this->assertTrue($this->input->isRequired());
         $this->input->setValue($value);
@@ -440,7 +428,7 @@ class InputTest extends TestCase
      * @dataProvider emptyValueProvider
      * @param mixed $value
      */
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value)
+    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value): void
     {
         $this->input->setRequired(true);
         $this->input->setValue($value);
@@ -461,7 +449,7 @@ class InputTest extends TestCase
      * @param mixed $valueRaw
      * @param mixed $valueFiltered
      */
-    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain($valueRaw, $valueFiltered)
+    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain($valueRaw, $valueFiltered): void
     {
         $filterChain    = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
         $validatorChain = $this->input->getValidatorChain();
@@ -495,7 +483,7 @@ class InputTest extends TestCase
         $value,
         bool $expectedIsValid,
         array $expectedMessages
-    ) {
+    ): void {
         $this->input->setRequired($required);
         $this->input->setAllowEmpty($allowEmpty);
         $this->input->setContinueIfEmpty($continueIfEmpty);
@@ -517,7 +505,7 @@ class InputTest extends TestCase
      * @dataProvider setValueProvider
      * @param mixed $value
      */
-    public function testSetValuePutInputInTheDesiredState($value)
+    public function testSetValuePutInputInTheDesiredState($value): void
     {
         $input = $this->input;
         $this->assertFalse($input->hasValue(), 'Input should not have value by default');
@@ -530,7 +518,7 @@ class InputTest extends TestCase
      * @dataProvider setValueProvider
      * @param mixed $value
      */
-    public function testResetValueReturnsInputValueToDefaultValue($value)
+    public function testResetValueReturnsInputValueToDefaultValue($value): void
     {
         $input         = $this->input;
         $originalInput = clone $input;
@@ -544,7 +532,7 @@ class InputTest extends TestCase
         $this->assertEquals($originalInput, $input, 'Input was not reset to the default value state');
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $sourceRawValue = $this->getDummyValue();
 
@@ -589,7 +577,7 @@ class InputTest extends TestCase
     /**
      * Specific Input::merge extras
      */
-    public function testInputMergeWithoutValues()
+    public function testInputMergeWithoutValues(): void
     {
         $source = new Input();
         $source->setContinueIfEmpty(true);
@@ -609,7 +597,7 @@ class InputTest extends TestCase
     /**
      * Specific Input::merge extras
      */
-    public function testInputMergeWithSourceValue()
+    public function testInputMergeWithSourceValue(): void
     {
         $source = new Input();
         $source->setContinueIfEmpty(true);
@@ -630,7 +618,7 @@ class InputTest extends TestCase
     /**
      * Specific Input::merge extras
      */
-    public function testInputMergeWithTargetValue()
+    public function testInputMergeWithTargetValue(): void
     {
         $source = new Input();
         $source->setContinueIfEmpty(true);
@@ -648,7 +636,7 @@ class InputTest extends TestCase
         $this->assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 
-    public function testNotEmptyMessageIsTranslated()
+    public function testNotEmptyMessageIsTranslated(): void
     {
         /** @var TranslatorInterface|MockObject $translator */
         $translator = $this->createMock(TranslatorInterface::class);
@@ -744,13 +732,13 @@ class InputTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
-        $validatorNotCall = function ($value, $context = null) {
+        $validatorNotCall = function ($value, $context = null): ValidatorInterface {
             return $this->createValidatorMock(null, $value, $context);
         };
-        $validatorInvalid                              = function ($value, $context = null) use ($validatorMsg) {
+        $validatorInvalid = function ($value, $context = null) use ($validatorMsg): ValidatorInterface {
             return $this->createValidatorMock(false, $value, $context, $validatorMsg);
         };
-        $validatorValid = function ($value, $context = null) {
+        $validatorValid   = function ($value, $context = null): ValidatorInterface {
             return $this->createValidatorMock(true, $value, $context);
         };
 
@@ -896,23 +884,23 @@ class InputTest extends TestCase
     }
 
     /**
-     * @return InputInterface|MockObject
+     * @return InputInterface&MockObject
      */
     protected function createInputInterfaceMock()
     {
-        /** @var InputInterface|MockObject $source */
+        /** @var InputInterface&MockObject $source */
         $source = $this->createMock(InputInterface::class);
 
         return $source;
     }
 
     /**
-     * @param array $valueMap
-     * @return FilterChain|MockObject
+     * @param list<list<mixed>> $valueMap
+     * @return FilterChain&MockObject
      */
     protected function createFilterChainMock(array $valueMap = [])
     {
-        /** @var FilterChain|MockObject $filterChain */
+        /** @var FilterChain&MockObject $filterChain */
         $filterChain = $this->createMock(FilterChain::class);
 
         $filterChain->method('filter')
@@ -922,13 +910,13 @@ class InputTest extends TestCase
     }
 
     /**
-     * @param array $valueMap
+     * @param list<list<mixed>> $valueMap
      * @param string[] $messages
-     * @return ValidatorChain|MockObject
+     * @return ValidatorChain&MockObject
      */
     protected function createValidatorChainMock(array $valueMap = [], $messages = [])
     {
-        /** @var ValidatorChain|MockObject $validatorChain */
+        /** @var ValidatorChain&MockObject $validatorChain */
         $validatorChain = $this->createMock(ValidatorChain::class);
 
         if (empty($valueMap)) {
@@ -951,11 +939,11 @@ class InputTest extends TestCase
      * @param mixed $value
      * @param mixed $context
      * @param string[] $messages
-     * @return ValidatorInterface|MockObject
+     * @return ValidatorInterface&MockObject
      */
     protected function createValidatorMock($isValid, $value = 'not-set', $context = null, $messages = [])
     {
-        /** @var ValidatorInterface|MockObject $validator */
+        /** @var ValidatorInterface&MockObject $validator */
         $validator = $this->createMock(ValidatorInterface::class);
 
         if (($isValid === false) || ($isValid === true)) {
@@ -980,11 +968,11 @@ class InputTest extends TestCase
      * @param bool $isValid
      * @param mixed $value
      * @param mixed $context
-     * @return NotEmptyValidator|MockObject
+     * @return NotEmptyValidator&MockObject
      */
     protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
     {
-        /** @var NotEmptyValidator|MockObject $notEmptyMock */
+        /** @var NotEmptyValidator&MockObject $notEmptyMock */
         $notEmptyMock = $this->getMockBuilder(NotEmptyValidator::class)
             ->setMethods(['isValid'])
             ->getMock();

@@ -2,7 +2,7 @@
 
 namespace LaminasTest\InputFilter;
 
-use Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\InputFilter\InputFilterAbstractServiceFactory;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\Module;
@@ -21,7 +21,7 @@ class ModuleTest extends TestCase
         $this->module = new Module();
     }
 
-    public function testGetConfigMethodShouldReturnExpectedKeys()
+    public function testGetConfigMethodShouldReturnExpectedKeys(): void
     {
         $config = $this->module->getConfig();
 
@@ -32,7 +32,7 @@ class ModuleTest extends TestCase
         $this->assertArrayHasKey('input_filters', $config);
     }
 
-    public function testServiceManagerConfigShouldContainInputFilterManager()
+    public function testServiceManagerConfigShouldContainInputFilterManager(): void
     {
         $config = $this->module->getConfig();
 
@@ -42,7 +42,7 @@ class ModuleTest extends TestCase
         );
     }
 
-    public function testServiceManagerConfigShouldContainAliasForInputFilterManager()
+    public function testServiceManagerConfigShouldContainAliasForInputFilterManager(): void
     {
         $config = $this->module->getConfig();
 
@@ -52,7 +52,7 @@ class ModuleTest extends TestCase
         );
     }
 
-    public function testInputFilterConfigShouldContainAbstractServiceFactory()
+    public function testInputFilterConfigShouldContainAbstractServiceFactory(): void
     {
         $config = $this->module->getConfig();
 
@@ -62,7 +62,7 @@ class ModuleTest extends TestCase
         );
     }
 
-    public function testInitMethodShouldRegisterPluginManagerSpecificationWithServiceListener()
+    public function testInitMethodShouldRegisterPluginManagerSpecificationWithServiceListener(): void
     {
         // Service listener
         $serviceListener = $this->prophesize(TestAsset\ServiceListenerInterface::class);

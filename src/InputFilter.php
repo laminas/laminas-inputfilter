@@ -6,6 +6,9 @@ use Traversable;
 
 use function is_array;
 
+/**
+ * @psalm-import-type InputSpecification from InputFilterInterface
+ **/
 class InputFilter extends BaseInputFilter
 {
     /** @var Factory|null */
@@ -14,7 +17,6 @@ class InputFilter extends BaseInputFilter
     /**
      * Set factory to use when adding inputs and filters by spec
      *
-     * @psalm-assert Factory $this->factory
      * @return InputFilter
      */
     public function setFactory(Factory $factory)
@@ -33,7 +35,7 @@ class InputFilter extends BaseInputFilter
     public function getFactory()
     {
         if (null === $this->factory) {
-            $this->setFactory(new Factory());
+            $this->factory = new Factory();
         }
         return $this->factory;
     }
@@ -41,9 +43,9 @@ class InputFilter extends BaseInputFilter
     /**
      * Add an input to the input filter
      *
-     * @param  array|Traversable|InputInterface|InputFilterInterface $input
+     * @param  InputSpecification|Traversable|InputInterface|InputFilterInterface $input
      * @param  null|string $name
-     * @return InputFilter
+     * @return $this
      */
     public function add($input, $name = null)
     {
@@ -54,6 +56,9 @@ class InputFilter extends BaseInputFilter
             $factory = $this->getFactory();
             $input   = $factory->createInput($input);
         }
-        return parent::add($input, $name);
+
+        parent::add($input, $name);
+
+        return $this;
     }
 }

@@ -2,12 +2,15 @@
 
 namespace Laminas\InputFilter;
 
-use Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface; // phpcs:ignore
+use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorPluginManager;
 
+use function assert;
 use function is_array;
 
 class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
@@ -89,13 +92,14 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
             return $this->factory;
         }
 
-        $this->factory = new Factory();
-        $this->factory
-            ->getDefaultFilterChain()
-            ->setPluginManager($this->getFilterPluginManager($container));
-        $this->factory
-            ->getDefaultValidatorChain()
-            ->setPluginManager($this->getValidatorPluginManager($container));
+        $this->factory  = new Factory();
+        $filterChain    = $this->factory->getDefaultFilterChain();
+        $validatorChain = $this->factory->getDefaultValidatorChain();
+        assert($filterChain instanceof FilterChain);
+        assert($validatorChain instanceof ValidatorChain);
+
+        $filterChain->setPluginManager($this->getFilterPluginManager($container));
+        $validatorChain->setPluginManager($this->getValidatorPluginManager($container));
 
         $this->factory->setInputFilterManager($container->get(InputFilterPluginManager::class));
 

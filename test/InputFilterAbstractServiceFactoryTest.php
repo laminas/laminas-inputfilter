@@ -45,14 +45,14 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->factory = new InputFilterAbstractServiceFactory();
     }
 
-    public function testCannotCreateServiceIfNoConfigServicePresent()
+    public function testCannotCreateServiceIfNoConfigServicePresent(): void
     {
         $method = 'canCreate';
         $args   = [$this->services, 'filter'];
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
-    public function testCannotCreateServiceIfConfigServiceDoesNotHaveInputFiltersConfiguration()
+    public function testCannotCreateServiceIfConfigServiceDoesNotHaveInputFiltersConfiguration(): void
     {
         $this->services->setService('config', []);
         $method = 'canCreate';
@@ -61,7 +61,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
-    public function testCannotCreateServiceIfConfigInputFiltersDoesNotContainMatchingServiceName()
+    public function testCannotCreateServiceIfConfigInputFiltersDoesNotContainMatchingServiceName(): void
     {
         $this->services->setService('config', [
             'input_filter_specs' => [],
@@ -71,7 +71,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
-    public function testCanCreateServiceIfConfigInputFiltersContainsMatchingServiceName()
+    public function testCanCreateServiceIfConfigInputFiltersContainsMatchingServiceName(): void
     {
         $this->services->setService('config', [
             'input_filter_specs' => [
@@ -83,7 +83,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertTrue(call_user_func_array([$this->factory, $method], $args));
     }
 
-    public function testCreatesInputFilterInstance()
+    public function testCreatesInputFilterInstance(): void
     {
         $this->services->setService('config', [
             'input_filter_specs' => [
@@ -99,7 +99,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     /**
      * @depends testCreatesInputFilterInstance
      */
-    public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter()
+    public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
         $filters = new FilterPluginManager($this->services);
         $filter  = function () {
@@ -150,7 +150,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertEquals(1, count($validatorChain));
     }
 
-    public function testRetrieveInputFilterFromInputFilterPluginManager()
+    public function testRetrieveInputFilterFromInputFilterPluginManager(): void
     {
         $this->services->setService('config', [
             'input_filter_specs' => [
@@ -190,7 +190,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     /**
      * @depends testCreatesInputFilterInstance
      */
-    public function testInjectsInputFilterManagerFromServiceManager()
+    public function testInjectsInputFilterManagerFromServiceManager(): void
     {
         $this->services->setService('config', [
             'input_filter_specs' => [
@@ -205,10 +205,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->assertInstanceOf(Foo::class, $inputFilterManager->get('foo'));
     }
 
-    /**
-     * @group zendframework/zend-servicemanager#123
-     */
-    public function testAllowsPassingNonPluginManagerContainerToFactoryWithServiceManagerV2()
+    public function testAllowsPassingNonPluginManagerContainerToFactoryWithServiceManagerV2(): void
     {
         $this->services->setService('config', [
             'input_filter_specs' => [
@@ -226,7 +223,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     /**
      * @see https://github.com/zendframework/zend-inputfilter/issues/155
      */
-    public function testWillUseCustomFiltersWhenProvided()
+    public function testWillUseCustomFiltersWhenProvided(): void
     {
         $filter = $this->prophesize(Filter\FilterInterface::class)->reveal();
 

@@ -15,12 +15,12 @@ use PHPUnit\Framework\TestCase;
  */
 class OptionalInputFilterTest extends TestCase
 {
-    public function testValidatesSuccessfullyWhenSetDataIsNeverCalled()
+    public function testValidatesSuccessfullyWhenSetDataIsNeverCalled(): void
     {
         $this->assertTrue($this->getNestedCarInputFilter()->get('car')->isValid());
     }
 
-    public function testValidatesSuccessfullyWhenValidNonEmptyDataSetProvided()
+    public function testValidatesSuccessfullyWhenValidNonEmptyDataSetProvided(): void
     {
         $data = [
             'car' => [
@@ -36,7 +36,7 @@ class OptionalInputFilterTest extends TestCase
         $this->assertEquals($data, $inputFilter->getValues());
     }
 
-    public function testValidatesSuccessfullyWhenEmptyDataSetProvided()
+    public function testValidatesSuccessfullyWhenEmptyDataSetProvided(): void
     {
         $data = [
             'car' => null,
@@ -49,7 +49,7 @@ class OptionalInputFilterTest extends TestCase
         $this->assertEquals($data, $inputFilter->getValues());
     }
 
-    public function testValidatesSuccessfullyWhenNoDataProvided()
+    public function testValidatesSuccessfullyWhenNoDataProvided(): void
     {
         $data = [];
 
@@ -60,7 +60,7 @@ class OptionalInputFilterTest extends TestCase
         $this->assertEquals(['car' => null], $inputFilter->getValues());
     }
 
-    public function testValidationFailureWhenInvalidDataSetIsProvided()
+    public function testValidationFailureWhenInvalidDataSetIsProvided(): void
     {
         $inputFilter = $this->getNestedCarInputFilter();
         $inputFilter->setData([
@@ -73,7 +73,7 @@ class OptionalInputFilterTest extends TestCase
         $this->assertGetValuesThrows($inputFilter);
     }
 
-    public function testStateIsClearedBetweenValidationAttempts()
+    public function testStateIsClearedBetweenValidationAttempts(): void
     {
         $data = [
             'car' => null,
@@ -90,7 +90,7 @@ class OptionalInputFilterTest extends TestCase
      * We are doing some boolean shenanigans in the implementation
      * we want to check that Iterator objects work the same as arrays
      */
-    public function testIteratorBehavesTheSameAsArray()
+    public function testIteratorBehavesTheSameAsArray(): void
     {
         $optionalInputFilter = new OptionalInputFilter();
         $optionalInputFilter->add(new Input('brand'));
@@ -105,7 +105,7 @@ class OptionalInputFilterTest extends TestCase
         $this->assertTrue($optionalInputFilter->isValid());
     }
 
-    protected function assertGetValuesThrows(InputFilterInterface $inputFilter)
+    protected function assertGetValuesThrows(InputFilterInterface $inputFilter): void
     {
         try {
             $inputFilter->getValues();

@@ -2,13 +2,16 @@
 
 namespace Laminas\InputFilter;
 
+/**
+ * @psalm-import-type InputSpecification from InputFilterInterface
+ */
 interface InputProviderInterface
 {
     /**
      * Should return an array specification compatible with
-     * {@link Laminas\InputFilter\Factory::createInput()}.
+     * {@link Factory::createInput()}.
      *
-     * @return array
+     * @return InputSpecification
      */
     public function getInputSpecification();
 }
