@@ -39,24 +39,6 @@ class CollectionInputFilter extends InputFilter
     protected $notEmptyValidator;
 
     /**
-     * @var array<array-key, array<string, InputInterface|InputFilterInterface>>|null
-     * @psalm-suppress NonInvariantDocblockPropertyType
-     */
-    protected $validInputs;
-
-    /**
-     * @var array<array-key, array<string, InputInterface|InputFilterInterface>>|null
-     * @psalm-suppress NonInvariantDocblockPropertyType
-     */
-    protected $invalidInputs;
-
-    /**
-     * @var array<array-key, list<string>>|null
-     * @psalm-suppress NonInvariantDocblockPropertyType
-     */
-    protected $validationGroup;
-
-    /**
      * Set the input filter to use when looping the data
      *
      * @param BaseInputFilter|InputFilterSpecification|Traversable $inputFilter

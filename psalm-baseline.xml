@@ -86,9 +86,12 @@
     <InvalidArgument occurrences="1">
       <code>$data</code>
     </InvalidArgument>
-    <InvalidPropertyAssignmentValue occurrences="2">
+    <InvalidPropertyAssignmentValue occurrences="5">
+      <code>$name</code>
       <code>$this-&gt;collectionMessages</code>
       <code>$this-&gt;collectionMessages</code>
+      <code>$this-&gt;invalidInputs</code>
+      <code>$this-&gt;validInputs</code>
     </InvalidPropertyAssignmentValue>
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array&lt;array-key, array&gt;</code>
@@ -100,9 +103,6 @@
     <MixedAssignment occurrences="1">
       <code>$data</code>
     </MixedAssignment>
-    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
-      <code>$name</code>
-    </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="src/Factory.php">
     <InvalidReturnStatement occurrences="1">
