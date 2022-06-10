@@ -212,7 +212,6 @@ class Input implements
      */
     public function allowEmpty()
     {
-        /** @psalm-suppress DeprecatedProperty */
         return $this->allowEmpty;
     }
 
@@ -231,7 +230,6 @@ class Input implements
      */
     public function continueIfEmpty()
     {
-        /** @psalm-suppress DeprecatedProperty */
         return $this->continueIfEmpty;
     }
 

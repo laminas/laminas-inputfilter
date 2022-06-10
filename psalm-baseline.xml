@@ -120,7 +120,6 @@
       <code>$key</code>
       <code>$name</code>
       <code>$priority</code>
-      <code>$priority</code>
       <code>$value</code>
       <code>$value['type']</code>
     </MixedArgument>
@@ -132,11 +131,8 @@
     <MixedAssignment occurrences="6">
       <code>$key</code>
       <code>$key</code>
-      <code>$key</code>
       <code>$name</code>
       <code>$options</code>
-      <code>$options</code>
-      <code>$priority</code>
       <code>$priority</code>
       <code>$value</code>
     </MixedAssignment>
@@ -240,8 +236,10 @@
       <code>setAllowEmpty</code>
       <code>setContinueIfEmpty</code>
     </DeprecatedMethod>
-    <DeprecatedProperty occurrences="5">
+    <DeprecatedProperty occurrences="7">
       <code>$this-&gt;allowEmpty</code>
+      <code>$this-&gt;allowEmpty</code>
+      <code>$this-&gt;continueIfEmpty</code>
       <code>$this-&gt;continueIfEmpty</code>
       <code>$this-&gt;notEmptyValidator</code>
       <code>$this-&gt;notEmptyValidator</code>
