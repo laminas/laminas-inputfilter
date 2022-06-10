@@ -2,7 +2,6 @@
 
 namespace Laminas\InputFilter;
 
-use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\NotEmpty;
 use Traversable;
 
@@ -161,8 +160,6 @@ class CollectionInputFilter extends InputFilter
                 is_object($data) ? get_class($data) : gettype($data)
             ));
         }
-
-        $data = ArrayUtils::iteratorToArray($data);
 
         $this->setUnfilteredData($data);
 

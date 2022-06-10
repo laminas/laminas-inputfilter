@@ -97,6 +97,9 @@
     <MixedAssignment occurrences="1">
       <code>$data</code>
     </MixedAssignment>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$data</code>
+    </PossiblyInvalidArgument>
     <PossiblyInvalidPropertyAssignmentValue occurrences="1">
       <code>$name</code>
     </PossiblyInvalidPropertyAssignmentValue>
