@@ -122,7 +122,6 @@ class Input implements
 
     /**
      * @return $this
-     * @psalm-assert FilterChain $this->filterChain
      */
     public function setFilterChain(FilterChain $filterChain)
     {
@@ -154,7 +153,6 @@ class Input implements
 
     /**
      * @return $this
-     * @psalm-assert ValidatorChain $this->validatorChain
      */
     public function setValidatorChain(ValidatorChain $validatorChain)
     {
@@ -251,7 +249,7 @@ class Input implements
     public function getFilterChain()
     {
         if (! $this->filterChain) {
-            $this->setFilterChain(new FilterChain());
+            $this->filterChain = new FilterChain();
         }
         return $this->filterChain;
     }
@@ -286,7 +284,7 @@ class Input implements
     public function getValidatorChain()
     {
         if (! $this->validatorChain) {
-            $this->setValidatorChain(new ValidatorChain());
+            $this->validatorChain = new ValidatorChain();
         }
         return $this->validatorChain;
     }

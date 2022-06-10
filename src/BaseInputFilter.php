@@ -183,7 +183,6 @@ class BaseInputFilter implements
      * @param  iterable<array-key, mixed>|null $data null is cast to an empty array.
      * @throws Exception\InvalidArgumentException
      * @return InputFilterInterface
-     * @psalm-assert array<array-key, mixed> $this->data
      */
     public function setData($data)
     {

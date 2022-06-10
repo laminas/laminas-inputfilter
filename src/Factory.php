@@ -49,7 +49,6 @@ class Factory
     /**
      * Set default filter chain to use
      *
-     * @psalm-assert FilterChain $this->defaultFilterChain
      * @return $this
      */
     public function setDefaultFilterChain(FilterChain $filterChain)
@@ -71,7 +70,6 @@ class Factory
     /**
      * Clear the default filter chain (i.e., don't inject one into new inputs)
      *
-     * @psalm-assert null $this->defaultFilterChain
      * @return void
      */
     public function clearDefaultFilterChain()
@@ -82,7 +80,6 @@ class Factory
     /**
      * Set default validator chain to use
      *
-     * @psalm-assert ValidatorChain $this->defaultValidatorChain
      * @return $this
      */
     public function setDefaultValidatorChain(ValidatorChain $validatorChain)
@@ -104,7 +101,6 @@ class Factory
     /**
      * Clear the default validator chain (i.e., don't inject one into new inputs)
      *
-     * @psalm-assert null $this->defaultValidatorChain
      * @return void
      */
     public function clearDefaultValidatorChain()
@@ -113,8 +109,7 @@ class Factory
     }
 
     /**
-     * @psalm-assert InputFilterPluginManager $this->inputFilterManager
-     * @return self
+     * @return $this
      */
     public function setInputFilterManager(InputFilterPluginManager $inputFilterManager)
     {

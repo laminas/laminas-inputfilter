@@ -102,7 +102,7 @@
     </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="src/Factory.php">
-    <DocblockTypeContradiction occurrences="2">
+    <DocblockTypeContradiction occurrences="1">
       <code>! is_array($inputFilterSpecification) &amp;&amp; ! $inputFilterSpecification instanceof Traversable</code>
     </DocblockTypeContradiction>
     <InvalidReturnStatement occurrences="1">
@@ -376,9 +376,8 @@
       <code>new stdClass()</code>
       <code>new stdClass()</code>
     </InvalidArgument>
-    <InvalidDocblock occurrences="2">
+    <InvalidDocblock occurrences="1">
       <code>public function addMethodArgumentsProvider(): array</code>
-      <code>setData</code>
     </InvalidDocblock>
     <LessSpecificReturnStatement occurrences="1"/>
     <MissingClosureParamType occurrences="7">
@@ -536,10 +535,6 @@
       <code>method</code>
       <code>method</code>
     </PossiblyUndefinedMethod>
-    <RedundantConditionGivenDocblockType occurrences="2">
-      <code>setInputFilter</code>
-      <code>setInputFilter</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/FactoryTest.php">
     <DeprecatedMethod occurrences="7">
@@ -787,12 +782,6 @@
       <code>$config['service_manager']['aliases']</code>
       <code>$config['service_manager']['factories']</code>
     </MixedArrayAccess>
-  </file>
-  <file src="test/OptionalInputFilterTest.php">
-    <RedundantConditionGivenDocblockType occurrences="2">
-      <code>setData</code>
-      <code>setData</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/TestAsset/CustomInput.php">
     <DeprecatedInterface occurrences="1">

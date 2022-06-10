@@ -16,7 +16,6 @@ class OptionalInputFilter extends InputFilter
      *                                              actual validation, else it is always valid
      * @return $this
      * @throws Exception\InvalidArgumentException
-     * @psalm-assert array<array-key, mixed> $this->data
      */
     public function setData($data)
     {

@@ -17,7 +17,6 @@ class InputFilter extends BaseInputFilter
     /**
      * Set factory to use when adding inputs and filters by spec
      *
-     * @psalm-assert Factory $this->factory
      * @return InputFilter
      */
     public function setFactory(Factory $factory)
@@ -36,7 +35,7 @@ class InputFilter extends BaseInputFilter
     public function getFactory()
     {
         if (null === $this->factory) {
-            $this->setFactory(new Factory());
+            $this->factory = new Factory();
         }
         return $this->factory;
     }

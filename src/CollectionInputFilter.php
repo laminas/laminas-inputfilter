@@ -60,7 +60,6 @@ class CollectionInputFilter extends InputFilter
      * @param BaseInputFilter|array|Traversable $inputFilter
      * @throws Exception\RuntimeException
      * @return CollectionInputFilter
-     * @psalm-assert BaseInputFilter $this->inputFilter
      */
     public function setInputFilter($inputFilter)
     {
@@ -91,7 +90,7 @@ class CollectionInputFilter extends InputFilter
     public function getInputFilter()
     {
         if (null === $this->inputFilter) {
-            $this->setInputFilter(new InputFilter());
+            $this->inputFilter = new InputFilter();
         }
 
         return $this->inputFilter;
@@ -101,7 +100,7 @@ class CollectionInputFilter extends InputFilter
      * Set if the collection can be empty
      *
      * @param bool $isRequired
-     * @return CollectionInputFilter
+     * @return $this
      */
     public function setIsRequired($isRequired)
     {
@@ -150,7 +149,6 @@ class CollectionInputFilter extends InputFilter
     /**
      * @param mixed $data
      * @psalm-suppress ImplementedParamTypeMismatch
-     * @psalm-assert array<array-key, mixed> $this->data
      * @return $this
      */
     public function setData($data)
