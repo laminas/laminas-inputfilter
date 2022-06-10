@@ -1112,17 +1112,13 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @param string $pluginName
      * @param mixed $pluginValue
-     * @return MockObject&InputFilterPluginManager
      */
-    protected function createInputFilterPluginManagerMockForPlugin($pluginName, $pluginValue)
-    {
-        /** @var InputFilterPluginManager&MockObject $pluginManager */
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
+    protected function createInputFilterPluginManagerMockForPlugin(
+        string $pluginName,
+        $pluginValue
+    ): InputFilterPluginManager {
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $pluginManager->expects($this->atLeastOnce())
             ->method('has')
             ->with($pluginName)
