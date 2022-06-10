@@ -1,12 +1,12 @@
-<?php // phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+<?php
 
 namespace Laminas\InputFilter;
 
 use Countable;
-use Laminas\Filter\FilterChain;
-use Laminas\Filter\FilterInterface;
-use Laminas\Validator\ValidatorChain;
-use Laminas\Validator\ValidatorInterface;
+use Laminas\Filter\FilterChain; // phpcs:ignore
+use Laminas\Filter\FilterInterface; // phpcs:ignore
+use Laminas\Validator\ValidatorChain; // phpcs:ignore
+use Laminas\Validator\ValidatorInterface; // phpcs:ignore
 use Traversable;
 
 /**

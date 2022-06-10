@@ -1,9 +1,9 @@
-<?php //phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase.Invalid
+<?php
 
 namespace Laminas\InputFilter;
 
 use ArrayAccess;
-use Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\ServiceManager\Config;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;

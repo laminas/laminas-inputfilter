@@ -1,8 +1,8 @@
-<?php //phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase.Invalid
+<?php
 
 namespace Laminas\InputFilter;
 
-use Interop\Container\ContainerInterface;
+use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractFactoryInterface;
