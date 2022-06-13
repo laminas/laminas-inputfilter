@@ -53,6 +53,7 @@ class FactoryTest extends TestCase
             ->with($type)
             ->willReturn(false);
 
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory = new Factory($pluginManager);
 
         $this->expectException(RuntimeException::class);
@@ -68,6 +69,7 @@ class FactoryTest extends TestCase
     {
         $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $factory       = new Factory();
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory->setInputFilterManager($pluginManager);
         $this->assertSame($pluginManager, $factory->getInputFilterManager());
     }
@@ -75,7 +77,8 @@ class FactoryTest extends TestCase
     public function testGetInputFilterManagerWhenYouConstructFactoryWithIt(): void
     {
         $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        $factory       = new Factory($pluginManager);
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        $factory = new Factory($pluginManager);
         $this->assertSame($pluginManager, $factory->getInputFilterManager());
     }
 
