@@ -46,16 +46,14 @@ class FactoryTest extends TestCase
 
     public function testCreateInputWithTypeAsAnUnknownPluginAndNotExistsAsClassNameThrowException(): void
     {
-        $type = 'foo';
-        /** @var InputFilterPluginManager&MockObject $pluginManager */
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $type          = 'foo';
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $pluginManager->expects($this->atLeastOnce())
             ->method('has')
             ->with($type)
             ->willReturn(false);
 
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory = new Factory($pluginManager);
 
         $this->expectException(RuntimeException::class);
@@ -69,20 +67,18 @@ class FactoryTest extends TestCase
 
     public function testGetInputFilterManagerSettedByItsSetter(): void
     {
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $factory       = new Factory();
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory->setInputFilterManager($pluginManager);
         $this->assertSame($pluginManager, $factory->getInputFilterManager());
     }
 
     public function testGetInputFilterManagerWhenYouConstructFactoryWithIt(): void
     {
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $factory       = new Factory($pluginManager);
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        $factory = new Factory($pluginManager);
         $this->assertSame($pluginManager, $factory->getInputFilterManager());
     }
 

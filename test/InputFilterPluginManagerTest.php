@@ -60,6 +60,7 @@ class InputFilterPluginManagerTest extends TestCase
         $this->expectExceptionMessage(
             'must implement Laminas\InputFilter\InputFilterInterface or Laminas\InputFilter\InputInterface'
         );
+        /** @psalm-suppress InvalidArgument */
         $this->manager->setService('test', $this);
     }
 
@@ -165,6 +166,7 @@ class InputFilterPluginManagerTest extends TestCase
 
     /**
      * @dataProvider serviceProvider
+     * @param InputInterface|InputFilterInterface $service
      */
     public function testGet(string $serviceName, object $service): void
     {
