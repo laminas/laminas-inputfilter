@@ -46,11 +46,8 @@ class FactoryTest extends TestCase
 
     public function testCreateInputWithTypeAsAnUnknownPluginAndNotExistsAsClassNameThrowException(): void
     {
-        $type = 'foo';
-        /** @var InputFilterPluginManager&MockObject $pluginManager */
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $type          = 'foo';
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $pluginManager->expects($this->atLeastOnce())
             ->method('has')
             ->with($type)
@@ -69,9 +66,7 @@ class FactoryTest extends TestCase
 
     public function testGetInputFilterManagerSettedByItsSetter(): void
     {
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $factory       = new Factory();
         $factory->setInputFilterManager($pluginManager);
         $this->assertSame($pluginManager, $factory->getInputFilterManager());
@@ -79,9 +74,7 @@ class FactoryTest extends TestCase
 
     public function testGetInputFilterManagerWhenYouConstructFactoryWithIt(): void
     {
-        $pluginManager = $this->getMockBuilder(InputFilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $factory       = new Factory($pluginManager);
         $this->assertSame($pluginManager, $factory->getInputFilterManager());
     }
