@@ -13,6 +13,7 @@ use Webmozart\Assert\Assert;
 use function count;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
 
@@ -48,7 +49,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals($value, $this->input->getValue());
         $this->assertTrue(
             $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals($newValue, $this->input->getValue());
     }
@@ -73,7 +74,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $this->assertEquals($values, $this->input->getValue());
         $this->assertTrue(
             $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals(
             $filteredValue,
@@ -151,7 +152,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
 
         $this->assertTrue(
             $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals(0, count($validatorChain->getValidators()));
     }
@@ -174,7 +175,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         $validatorChain->prependValidator($uploadMock);
         $this->assertTrue(
             $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
 
         $validators = $validatorChain->getValidators();

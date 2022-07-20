@@ -100,7 +100,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
         $filters = new FilterPluginManager($this->services);
-        $filter  = function () {
+        $filter  = static function () {
         };
         $filters->setService('foo', $filter);
 

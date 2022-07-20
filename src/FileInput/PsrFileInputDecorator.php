@@ -29,8 +29,7 @@ use const UPLOAD_ERR_NO_FILE;
  */
 class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInterface
 {
-    /** @var FileInput */
-    private $subject;
+    private FileInput $subject;
 
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded
