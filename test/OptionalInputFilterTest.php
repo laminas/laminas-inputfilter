@@ -118,8 +118,7 @@ class OptionalInputFilterTest extends TestCase
         }
     }
 
-    /** @var null|InputFilter */
-    private $nestedCarInputFilter;
+    private ?\Laminas\InputFilter\InputFilter $nestedCarInputFilter = null;
 
     protected function getNestedCarInputFilter(): InputFilter
     {

@@ -450,7 +450,7 @@ class BaseInputFilterTest extends TestCase
 
         $this->assertTrue(
             $filter->isValid($customContext),
-            'isValid() value not match. Detail: ' . json_encode($filter->getMessages())
+            'isValid() value not match. Detail: ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
     }
 
@@ -467,7 +467,7 @@ class BaseInputFilterTest extends TestCase
 
         $this->assertTrue(
             $filter->isValid(),
-            'isValid() value not match. Detail: ' . json_encode($filter->getMessages())
+            'isValid() value not match. Detail: ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
     }
 
@@ -491,7 +491,7 @@ class BaseInputFilterTest extends TestCase
 
         $this->assertTrue(
             $filter->isValid(),
-            'isValid() value not match. Detail: ' . json_encode($filter->getMessages())
+            'isValid() value not match. Detail: ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
     }
 
@@ -514,7 +514,7 @@ class BaseInputFilterTest extends TestCase
 
         $this->assertTrue(
             $filter->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($filter->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertArrayNotHasKey(
             $optionalInputName,
@@ -700,13 +700,9 @@ class BaseInputFilterTest extends TestCase
     {
         $inputTypes = $this->inputProvider();
 
-        $inputName = function ($inputTypeData) {
-            return $inputTypeData[1];
-        };
+        $inputName = static fn($inputTypeData) => $inputTypeData[1];
 
-        $sameInput = function ($inputTypeData) {
-            return $inputTypeData[2];
-        };
+        $sameInput = static fn($inputTypeData) => $inputTypeData[2];
 
         // phpcs:disable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
         $dataTemplates = [
@@ -782,27 +778,23 @@ class BaseInputFilterTest extends TestCase
         ): callable {
             // phpcs:disable Generic.Files.LineLength.TooLong
             /** @param mixed $context */
-            return function ($context) use ($iName, $required, $bOnFail, $isValid, $vRaw, $vFiltered, $msg): InputInterface {
-                return $this->createInputInterfaceMock(
-                    $iName,
-                    $required,
-                    $isValid,
-                    $context,
-                    $vRaw,
-                    $vFiltered,
-                    $msg,
-                    $bOnFail
-                );
-            };
+            return fn($context): InputInterface => $this->createInputInterfaceMock(
+                $iName,
+                $required,
+                $isValid,
+                $context,
+                $vRaw,
+                $vFiltered,
+                $msg,
+                $bOnFail
+            );
             // phpcs:enable Generic.Files.LineLength.TooLong
         };
 
-        $inputFilter = function (bool $isValid, array $msg = []) use ($vRaw, $vFiltered): callable {
-            return function ($context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
-                $vRaw      = ['fooInput' => $vRaw];
-                $vFiltered = ['fooInput' => $vFiltered];
-                return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
-            };
+        $inputFilter = fn(bool $isValid, array $msg = []): callable => function ($context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
+            $vRaw      = ['fooInput' => $vRaw];
+            $vFiltered = ['fooInput' => $vFiltered];
+            return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
         };
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame,Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma
@@ -853,7 +845,7 @@ class BaseInputFilterTest extends TestCase
 
         array_walk(
             $dataSets,
-            function (&$set) {
+            static function (&$set) {
                 // Create unique mock input instances for each set
                 foreach ($set[0] as $name => $createMock) {
                     $input = $createMock($set[2]);
@@ -1006,14 +998,10 @@ class BaseInputFilterTest extends TestCase
     {
         return [
             // Description => callable
-            'array'       => function ($data) {
-                return $data;
-            },
-            'Traversable' => function ($data) {
-                return $this->getMockBuilder(FilterIterator::class)
-                    ->setConstructorArgs([new ArrayIterator($data)])
-                    ->getMock();
-            },
+            'array'       => static fn($data) => $data,
+            'Traversable' => fn($data) => $this->getMockBuilder(FilterIterator::class)
+                ->setConstructorArgs([new ArrayIterator($data)])
+                ->getMock(),
         ];
     }
 }

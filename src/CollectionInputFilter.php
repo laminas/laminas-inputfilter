@@ -49,7 +49,7 @@ class CollectionInputFilter extends InputFilter
      */
     public function setInputFilter($inputFilter)
     {
-        if (is_array($inputFilter) || $inputFilter instanceof Traversable) {
+        if (is_iterable($inputFilter)) {
             $inputFilter = $this->getFactory()->createInputFilter($inputFilter);
         }
 
@@ -152,7 +152,7 @@ class CollectionInputFilter extends InputFilter
         /** @psalm-suppress MixedAssignment */
         foreach ($data as $item) {
             /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
-            if (is_array($item) || $item instanceof Traversable) {
+            if (is_iterable($item)) {
                 continue;
             }
 

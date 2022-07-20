@@ -31,8 +31,7 @@ class FileInput extends Input
     /** @var bool */
     protected $autoPrependUploadValidator = true;
 
-    /** @var FileInput\FileInputDecoratorInterface */
-    private $implementation;
+    private ?\Laminas\InputFilter\FileInput\FileInputDecoratorInterface $implementation = null;
 
     /**
      * @inheritDoc
