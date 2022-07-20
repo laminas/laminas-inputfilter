@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\InputFilter;
 
 use Interop\Container\ContainerInterface; // phpcs:ignore
