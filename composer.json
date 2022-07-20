@@ -38,7 +38,7 @@
         "laminas/laminas-validator": "^2.15"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~2.2.1",
+        "laminas/laminas-coding-standard": "~2.3.0",
         "laminas/laminas-db": "^2.13.4",
         "phpspec/prophecy": "^1.14",
         "phpspec/prophecy-phpunit": "^2.0",
