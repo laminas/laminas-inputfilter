@@ -7,6 +7,7 @@ namespace Laminas\InputFilter;
 use Laminas\InputFilter\FileInput\FileInputDecoratorInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
+use function assert;
 use function is_array;
 
 /**
