@@ -136,7 +136,9 @@ class FileInput extends Input
             return true;
         }
 
-        return $this->implementation->isValid($context);
+        /** @var FileInputDecoratorInterface $implementation */
+        $implementation = $this->implementation;
+        return $implementation->isValid($context);
     }
 
     /**

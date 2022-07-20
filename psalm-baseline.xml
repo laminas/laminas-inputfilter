@@ -396,10 +396,11 @@
       <code>$inputTypeData</code>
       <code>$set</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="3">
+    <MissingClosureReturnType occurrences="5">
       <code>function ($data) {</code>
       <code>function ($inputTypeData) {</code>
       <code>function ($inputTypeData) {</code>
+      <code>fn ($inputTypeData)</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="6">
       <code>$data</code>
@@ -493,10 +494,11 @@
     <MissingClosureParamType occurrences="1">
       <code>$set</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="3">
+    <MissingClosureReturnType occurrences="6">
       <code>function () use ($dataRaw, $dataFiltered) {</code>
       <code>function () use ($dataRaw, $dataFiltered) {</code>
       <code>function () use ($dataRaw, $dataFiltered, $errorMessage) {</code>
+      <code>fn ()</code>
     </MissingClosureReturnType>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>$inputFilter</code>
@@ -670,6 +672,9 @@
     <UndefinedInterfaceMethod occurrences="1">
       <code>getFactory</code>
     </UndefinedInterfaceMethod>
+    <MissingClosureReturnType occurrences="1">
+      <code>static function () {</code>
+    </MissingClosureReturnType>
   </file>
   <file src="test/InputFilterAwareTraitTest.php">
     <InvalidScalarArgument occurrences="2">
