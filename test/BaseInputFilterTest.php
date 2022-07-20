@@ -798,7 +798,7 @@ class BaseInputFilterTest extends TestCase
                 $vRaw      = ['fooInput' => $vRaw];
                 $vFiltered = ['fooInput' => $vFiltered];
                 return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
-            }
+            };
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame,Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma
         $iAri      = [$iAName => $input($iAName, $required, ! $bOnFail, ! $valid, ['Invalid ' . $iAName])];
