@@ -81,12 +81,9 @@ class ArrayInputTest extends InputTest
         $dataSets = parent::fallbackValueVsIsValidProvider();
         Assert::isArray($dataSets);
         array_walk($dataSets, static function (&$set) {
-            // Wrap fallback value into an array.
-            $set[1] = [$set[1]];
-            // Wrap value into an array.
-            $set[2] = [$set[2]];
-            // Wrap expected value into an array.
-            $set[4] = [$set[4]];
+            $set[1] = [$set[1]]; // Wrap fallback value into an array.
+            $set[2] = [$set[2]]; // Wrap value into an array.
+            $set[4] = [$set[4]]; // Wrap expected value into an array.
         });
 
         return $dataSets;
@@ -103,8 +100,7 @@ class ArrayInputTest extends InputTest
         $dataSets = parent::emptyValueProvider();
         Assert::isArray($dataSets);
         array_walk($dataSets, static function (&$set) {
-            // Wrap value into an array.
-            $set['raw'] = [$set['raw']];
+            $set['raw'] = [$set['raw']]; // Wrap value into an array.
         });
 
         return $dataSets;
@@ -121,8 +117,7 @@ class ArrayInputTest extends InputTest
         $dataSets = parent::mixedValueProvider();
         Assert::isArray($dataSets);
         array_walk($dataSets, static function (&$set) {
-            // Wrap value into an array.
-            $set['raw'] = [$set['raw']];
+            $set['raw'] = [$set['raw']]; // Wrap value into an array.
         });
 
         return $dataSets;
