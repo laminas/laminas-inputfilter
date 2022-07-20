@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleTest extends TestCase
 {
-    private \Laminas\InputFilter\Module $module;
+    private Module $module;
 
     protected function setUp(): void
     {

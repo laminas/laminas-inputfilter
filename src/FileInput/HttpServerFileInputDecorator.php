@@ -29,7 +29,7 @@ use const UPLOAD_ERR_NO_FILE;
  */
 class HttpServerFileInputDecorator extends FileInput implements FileInputDecoratorInterface
 {
-    private \Laminas\InputFilter\FileInput $subject;
+    private FileInput $subject;
 
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded

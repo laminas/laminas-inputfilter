@@ -13,6 +13,7 @@ use Webmozart\Assert\Assert;
 use function count;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
 

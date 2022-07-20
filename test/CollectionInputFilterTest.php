@@ -20,10 +20,11 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Traversable;
 
-use function array_merge;
 use function array_walk;
 use function count;
 use function json_encode;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * @covers \Laminas\InputFilter\CollectionInputFilter
@@ -188,7 +189,7 @@ class CollectionInputFilterTest extends TestCase
             static function (&$set) {
                 // Create unique mock input instances for each set
                 $inputFilter = $set[3]();
-                $set[3] = $inputFilter;
+                $set[3]      = $inputFilter;
             }
         );
 
@@ -790,11 +791,14 @@ class CollectionInputFilterTest extends TestCase
             ],
         ];
 
-        $unfilteredArray = [...$filteredArray, ...[
-            [
-                'foo' => 'bar',
+        $unfilteredArray = [
+            ...$filteredArray,
+            ...[
+                [
+                    'foo' => 'bar',
+                ],
             ],
-        ]];
+        ];
 
         /** @var BaseInputFilter $baseInputFilter */
         $baseInputFilter = (new BaseInputFilter())
@@ -841,7 +845,10 @@ class CollectionInputFilterTest extends TestCase
 
         $this->assertTrue(
             $collectionInputFilter->isValid($customContext),
-            'isValid() value not match. Detail: ' . json_encode($collectionInputFilter->getMessages(), JSON_THROW_ON_ERROR)
+            'isValid() value not match. Detail: ' . json_encode(
+                $collectionInputFilter->getMessages(),
+                JSON_THROW_ON_ERROR
+            )
         );
     }
 }

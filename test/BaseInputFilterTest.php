@@ -26,6 +26,8 @@ use function is_callable;
 use function json_encode;
 use function sprintf;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * @covers \Laminas\InputFilter\BaseInputFilter
  */
@@ -791,11 +793,12 @@ class BaseInputFilterTest extends TestCase
             // phpcs:enable Generic.Files.LineLength.TooLong
         };
 
-        $inputFilter = fn(bool $isValid, array $msg = []): callable => function ($context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
-            $vRaw      = ['fooInput' => $vRaw];
-            $vFiltered = ['fooInput' => $vFiltered];
-            return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
-        };
+        $inputFilter = fn(bool $isValid, array $msg = []): callable =>
+            function ($context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
+                $vRaw      = ['fooInput' => $vRaw];
+                $vFiltered = ['fooInput' => $vFiltered];
+                return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
+            }
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame,Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma
         $iAri      = [$iAName => $input($iAName, $required, ! $bOnFail, ! $valid, ['Invalid ' . $iAName])];

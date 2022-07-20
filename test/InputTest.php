@@ -22,6 +22,8 @@ use function count;
 use function iterator_to_array;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * @psalm-suppress DeprecatedMethod
  */
@@ -730,9 +732,12 @@ class InputTest extends TestCase
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame
-        $validatorNotCall = fn($value, $context = null): ValidatorInterface => $this->createValidatorMock(null, $value, $context);
-        $validatorInvalid = fn($value, $context = null): ValidatorInterface => $this->createValidatorMock(false, $value, $context, $validatorMsg);
-        $validatorValid = fn($value, $context = null): ValidatorInterface => $this->createValidatorMock(true, $value, $context);
+        $validatorNotCall = fn($value, $context = null): ValidatorInterface =>
+            $this->createValidatorMock(null, $value, $context);
+        $validatorInvalid = fn($value, $context = null): ValidatorInterface =>
+            $this->createValidatorMock(false, $value, $context, $validatorMsg);
+        $validatorValid = fn($value, $context = null): ValidatorInterface =>
+            $this->createValidatorMock(true, $value, $context);
 
         // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
         $dataTemplates = [

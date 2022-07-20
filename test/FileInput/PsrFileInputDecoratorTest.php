@@ -15,6 +15,7 @@ use function count;
 use function in_array;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_CANT_WRITE;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
