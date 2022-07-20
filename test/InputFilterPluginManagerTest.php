@@ -177,7 +177,8 @@ class InputFilterPluginManagerTest extends TestCase
     public function testServicesAreInitiatedIfImplementsInitializableInterface(): void
     {
         $mock = $this->createMock(InitializableInputFilterInterface::class);
-        $mock->expects(self::once())->method('init');
+        // Init is called twice. Once during `setService` and once during `get`
+        $mock->expects(self::exactly(2))->method('init');
         $this->manager->setService('PluginName', $mock);
         $this->assertSame($mock, $this->manager->get('PluginName'), 'get() value not match');
     }
