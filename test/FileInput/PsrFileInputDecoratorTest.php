@@ -9,8 +9,6 @@ use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\PsrFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function count;
@@ -27,8 +25,6 @@ use const UPLOAD_ERR_OK;
  */
 class PsrFileInputDecoratorTest extends InputTest
 {
-    use ProphecyTrait;
-
     /** @var PsrFileInputDecorator */
     protected $input;
 
@@ -46,43 +42,45 @@ class PsrFileInputDecoratorTest extends InputTest
 
     public function testRetrievingValueFiltersTheValueOnlyAfterValidating(): void
     {
-        $upload = $this->prophesize(UploadedFileInterface::class);
-        $upload->getError()->willReturn(UPLOAD_ERR_OK);
+        $upload = $this->createMock(UploadedFileInterface::class);
+        $upload->expects(self::once())
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
 
-        $this->input->setValue($upload->reveal());
+        $this->input->setValue($upload);
 
-        $filteredUpload = $this->prophesize(UploadedFileInterface::class);
+        $filteredUpload = $this->createMock(UploadedFileInterface::class);
 
         $this->input->setFilterChain($this->createFilterChainMock([
             [
-                $upload->reveal(),
-                $filteredUpload->reveal(),
+                $upload,
+                $filteredUpload,
             ],
         ]));
 
-        $this->assertEquals($upload->reveal(), $this->input->getValue());
+        $this->assertEquals($upload, $this->input->getValue());
         $this->assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
         );
-        $this->assertEquals($filteredUpload->reveal(), $this->input->getValue());
+        $this->assertEquals($filteredUpload, $this->input->getValue());
     }
 
     public function testCanFilterArrayOfMultiFileData(): void
     {
         $values = [];
         for ($i = 0; $i < 3; $i += 1) {
-            $upload = $this->prophesize(UploadedFileInterface::class);
-            $upload->getError()->willReturn(UPLOAD_ERR_OK);
-            $values[] = $upload->reveal();
+            $upload = $this->createMock(UploadedFileInterface::class);
+            $upload->method('getError')
+                ->willReturn(UPLOAD_ERR_OK);
+            $values[] = $upload;
         }
 
         $this->input->setValue($values);
 
         $filteredValues = [];
         for ($i = 0; $i < 3; $i += 1) {
-            $upload           = $this->prophesize(UploadedFileInterface::class);
-            $filteredValues[] = $upload->reveal();
+            $filteredValues[] = $this->createMock(UploadedFileInterface::class);
         }
 
         $this->input->setFilterChain($this->createFilterChainMock([
@@ -104,15 +102,15 @@ class PsrFileInputDecoratorTest extends InputTest
 
     public function testCanRetrieveRawValue(): void
     {
-        $value = $this->prophesize(UploadedFileInterface::class);
-        $value->getError()->shouldNotBeCalled();
+        $value = $this->createMock(UploadedFileInterface::class);
+        $value->expects(self::never())->method('getError');
 
-        $this->input->setValue($value->reveal());
+        $this->input->setValue($value);
 
-        $filteredValue = $this->prophesize(UploadedFileInterface::class)->reveal();
-        $this->input->setFilterChain($this->createFilterChainMock([[$value->reveal(), $filteredValue]]));
+        $filteredValue = $this->createMock(UploadedFileInterface::class);
+        $this->input->setFilterChain($this->createFilterChainMock([[$value, $filteredValue]]));
 
-        $this->assertEquals($value->reveal(), $this->input->getRawValue());
+        $this->assertEquals($value, $this->input->getRawValue());
     }
 
     public function testValidationOperatesOnFilteredValue(): void
@@ -122,17 +120,19 @@ class PsrFileInputDecoratorTest extends InputTest
 
     public function testValidationOperatesBeforeFiltering(): void
     {
-        $badValue = $this->prophesize(UploadedFileInterface::class);
-        $badValue->getError()->willReturn(UPLOAD_ERR_NO_FILE);
-        $filteredValue = $this->prophesize(UploadedFileInterface::class)->reveal();
+        $badValue = $this->createMock(UploadedFileInterface::class);
+        $badValue->expects(self::once())
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_NO_FILE);
+        $filteredValue = $this->createMock(UploadedFileInterface::class);
 
-        $this->input->setValue($badValue->reveal());
+        $this->input->setValue($badValue);
 
-        $this->input->setFilterChain($this->createFilterChainMock([[$badValue->reveal(), $filteredValue]]));
-        $this->input->setValidatorChain($this->createValidatorChainMock([[$badValue->reveal(), null, false]]));
+        $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
+        $this->input->setValidatorChain($this->createValidatorChainMock([[$badValue, null, false]]));
 
         $this->assertFalse($this->input->isValid());
-        $this->assertEquals($badValue->reveal(), $this->input->getValue());
+        $this->assertEquals($badValue, $this->input->getValue());
     }
 
     public function testAutoPrependUploadValidatorIsOnByDefault(): void
@@ -147,10 +147,12 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
         $this->assertTrue($this->input->isRequired());
 
-        $uploadedFile = $this->prophesize(UploadedFileInterface::class);
-        $uploadedFile->getError()->willReturn(UPLOAD_ERR_CANT_WRITE);
+        $uploadedFile = $this->createMock(UploadedFileInterface::class);
+        $uploadedFile->expects(self::atLeast(1))
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_CANT_WRITE);
 
-        $this->input->setValue($uploadedFile->reveal());
+        $this->input->setValue($uploadedFile);
 
         $validatorChain = $this->input->getValidatorChain();
         $this->assertCount(0, $validatorChain->getValidators());
@@ -166,10 +168,12 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertFalse($this->input->getAutoPrependUploadValidator());
         $this->assertTrue($this->input->isRequired());
 
-        $uploadedFile = $this->prophesize(UploadedFileInterface::class);
-        $uploadedFile->getError()->willReturn(UPLOAD_ERR_OK);
+        $uploadedFile = $this->createMock(UploadedFileInterface::class);
+        $uploadedFile->expects(self::atLeast(1))
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
 
-        $this->input->setValue($uploadedFile->reveal());
+        $this->input->setValue($uploadedFile);
         $validatorChain = $this->input->getValidatorChain();
         $this->assertEquals(0, count($validatorChain->getValidators()));
 
@@ -186,19 +190,21 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->assertTrue($this->input->getAutoPrependUploadValidator());
         $this->assertTrue($this->input->isRequired());
 
-        $upload = $this->prophesize(UploadedFileInterface::class);
-        $upload->getError()->willReturn(UPLOAD_ERR_OK);
+        $upload = $this->createMock(UploadedFileInterface::class);
+        $upload->expects(self::atLeast(1))
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
 
-        $this->input->setValue($upload->reveal());
+        $this->input->setValue($upload);
 
-        $validator = $this->prophesize(Validator\File\UploadFile::class);
-        $validator
-            ->isValid(Argument::that([$upload, 'reveal']), null)
-            ->willReturn(true)
-            ->shouldBeCalledTimes(1);
+        $validator = $this->createMock(Validator\File\UploadFile::class);
+        $validator->expects(self::once())
+            ->method('isValid')
+            ->with($upload)
+            ->willReturn(true);
 
         $validatorChain = $this->input->getValidatorChain();
-        $validatorChain->prependValidator($validator->reveal());
+        $validatorChain->prependValidator($validator);
         $this->assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
@@ -206,7 +212,7 @@ class PsrFileInputDecoratorTest extends InputTest
 
         $validators = $validatorChain->getValidators();
         $this->assertEquals(1, count($validators));
-        $this->assertEquals($validator->reveal(), $validators[0]['instance']);
+        $this->assertEquals($validator, $validators[0]['instance']);
     }
 
     /** @param mixed $value */
@@ -246,24 +252,30 @@ class PsrFileInputDecoratorTest extends InputTest
 
     public function testIsEmptyFileUploadNoFile(): void
     {
-        $upload = $this->prophesize(UploadedFileInterface::class);
-        $upload->getError()->willReturn(UPLOAD_ERR_NO_FILE);
-        $this->assertTrue($this->input->isEmptyFile($upload->reveal()));
+        $upload = $this->createMock(UploadedFileInterface::class);
+        $upload->expects(self::atLeast(1))
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_NO_FILE);
+        $this->assertTrue($this->input->isEmptyFile($upload));
     }
 
     public function testIsEmptyFileOk(): void
     {
-        $upload = $this->prophesize(UploadedFileInterface::class);
-        $upload->getError()->willReturn(UPLOAD_ERR_OK);
-        $this->assertFalse($this->input->isEmptyFile($upload->reveal()));
+        $upload = $this->createMock(UploadedFileInterface::class);
+        $upload->expects(self::atLeast(1))
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_OK);
+        $this->assertFalse($this->input->isEmptyFile($upload));
     }
 
     public function testIsEmptyMultiFileUploadNoFile(): void
     {
-        $upload = $this->prophesize(UploadedFileInterface::class);
-        $upload->getError()->willReturn(UPLOAD_ERR_NO_FILE);
+        $upload = $this->createMock(UploadedFileInterface::class);
+        $upload->expects(self::atLeast(1))
+            ->method('getError')
+            ->willReturn(UPLOAD_ERR_NO_FILE);
 
-        $rawValue = [$upload->reveal()];
+        $rawValue = [$upload];
 
         $this->assertTrue($this->input->isEmptyFile($rawValue));
     }
@@ -272,9 +284,11 @@ class PsrFileInputDecoratorTest extends InputTest
     {
         $rawValue = [];
         for ($i = 0; $i < 2; $i += 1) {
-            $upload = $this->prophesize(UploadedFileInterface::class);
-            $upload->getError()->willReturn(UPLOAD_ERR_OK);
-            $rawValue[] = $upload->reveal();
+            $upload = $this->createMock(UploadedFileInterface::class);
+            $upload->expects(self::any())
+                ->method('getError')
+                ->willReturn(UPLOAD_ERR_OK);
+            $rawValue[] = $upload;
         }
 
         $this->assertFalse($this->input->isEmptyFile($rawValue));
@@ -343,17 +357,16 @@ class PsrFileInputDecoratorTest extends InputTest
     public function emptyValueProvider(): iterable
     {
         foreach (['single', 'multi'] as $type) {
-            $raw = $this->prophesize(UploadedFileInterface::class);
-            $raw->getError()->willReturn(UPLOAD_ERR_NO_FILE);
-
-            $filtered = $this->prophesize(UploadedFileInterface::class);
-            $filtered->getError()->willReturn(UPLOAD_ERR_NO_FILE);
+            $raw = $this->createMock(UploadedFileInterface::class);
+            $raw->expects(self::atLeast(1))
+                ->method('getError')
+                ->willReturn(UPLOAD_ERR_NO_FILE);
 
             yield $type => [
                 'raw'      => $type === 'multi'
-                    ? [$raw->reveal()]
-                    : $raw->reveal(),
-                'filtered' => $raw->reveal(),
+                    ? [$raw]
+                    : $raw,
+                'filtered' => $raw,
             ];
         }
     }
@@ -366,19 +379,19 @@ class PsrFileInputDecoratorTest extends InputTest
      */
     public function mixedValueProvider(): array
     {
-        $fooUploadErrOk = $this->prophesize(UploadedFileInterface::class);
-        $fooUploadErrOk->getError()->willReturn(UPLOAD_ERR_OK);
+        $fooUploadErrOk = $this->createMock(UploadedFileInterface::class);
+        $fooUploadErrOk->method('getError')->willReturn(UPLOAD_ERR_OK);
 
         return [
             'single' => [
-                'raw'      => $fooUploadErrOk->reveal(),
-                'filtered' => $fooUploadErrOk->reveal(),
+                'raw'      => $fooUploadErrOk,
+                'filtered' => $fooUploadErrOk,
             ],
             'multi'  => [
                 'raw'      => [
-                    $fooUploadErrOk->reveal(),
+                    $fooUploadErrOk,
                 ],
-                'filtered' => $fooUploadErrOk->reveal(),
+                'filtered' => $fooUploadErrOk,
             ],
         ];
     }
@@ -386,8 +399,8 @@ class PsrFileInputDecoratorTest extends InputTest
     /** @return UploadedFileInterface */
     protected function getDummyValue(bool $raw = true)
     {
-        $upload = $this->prophesize(UploadedFileInterface::class);
-        $upload->getError()->willReturn(UPLOAD_ERR_OK);
-        return $upload->reveal();
+        $upload = $this->createMock(UploadedFileInterface::class);
+        $upload->method('getError')->willReturn(UPLOAD_ERR_OK);
+        return $upload;
     }
 }
