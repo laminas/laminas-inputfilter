@@ -18,7 +18,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
     public function testFactoryReturnsPluginManager(): void
     {
-        $container = $this->prophesize(ContainerInterface::class)->reveal();
+        $container = $this->createMock(ContainerInterface::class);
         $factory   = new InputFilterPluginManagerFactory();
 
         $filters = $factory($container, InputFilterPluginManagerFactory::class);
@@ -46,8 +46,8 @@ class InputFilterPluginManagerFactoryTest extends TestCase
      */
     public function testFactoryConfiguresPluginManagerUnderContainerInterop(string $pluginType): void
     {
-        $container = $this->prophesize(ContainerInterface::class)->reveal();
-        $plugin    = $this->prophesize($pluginType)->reveal();
+        $container = $this->createMock(ContainerInterface::class);
+        $plugin    = $this->createMock($pluginType);
 
         $factory = new InputFilterPluginManagerFactory();
         $filters = $factory($container, InputFilterPluginManagerFactory::class, [
@@ -60,7 +60,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
     public function testConfiguresInputFilterServicesWhenFound(): void
     {
-        $inputFilter = $this->prophesize(InputFilterInterface::class)->reveal();
+        $inputFilter = $this->createMock(InputFilterInterface::class);
         $config      = [
             'input_filters' => [
                 'aliases'   => [
