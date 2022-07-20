@@ -11,13 +11,10 @@ use Laminas\InputFilter\InputFilterPluginManagerFactory;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use ReflectionObject;
 
 class InputFilterPluginManagerFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     public function testFactoryReturnsPluginManager(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -69,22 +66,23 @@ class InputFilterPluginManagerFactoryTest extends TestCase
                     'test' => 'test-too',
                 ],
                 'factories' => [
-                    'test-too' => function () use ($inputFilter) {
-                        return $inputFilter;
-                    },
+                    'test-too' => static fn (): InputFilterInterface => $inputFilter,
                 ],
             ],
         ];
 
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $container->has('ServiceListener')->willReturn(false);
-        $container->has('config')->willReturn(true);
-        $container->get('config')->willReturn($config);
+        $container = $this->createMock(ServiceLocatorInterface::class);
+        $container->method('has')
+            ->willReturnMap([
+                ['ServiceListener', false],
+                ['config', true],
+            ]);
+        $container->method('get')
+            ->with('config')
+            ->willReturn($config);
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container->reveal());
+        $inputFilters = $factory($container);
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
         $this->assertTrue($inputFilters->has('test'));
@@ -95,15 +93,16 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
     public function testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent(): void
     {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
+        $container = $this->createMock(ServiceLocatorInterface::class);
+        $container->expects(self::once())
+            ->method('has')
+            ->with('ServiceListener')
+            ->willReturn(true);
 
-        $container->has('ServiceListener')->willReturn(true);
-        $container->has('config')->shouldNotBeCalled();
-        $container->get('config')->shouldNotBeCalled();
+        $container->expects(self::never())->method('get');
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container->reveal());
+        $inputFilters = $factory($container);
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
         $this->assertFalse($inputFilters->has('test'));
@@ -112,30 +111,35 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
     public function testDoesNotConfigureInputFilterServicesWhenConfigServiceNotPresent(): void
     {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $container->has('ServiceListener')->willReturn(false);
-        $container->has('config')->willReturn(false);
-        $container->get('config')->shouldNotBeCalled();
+        $container = $this->createMock(ServiceLocatorInterface::class);
+        $container->method('has')
+            ->willReturnMap([
+                ['ServiceListener', false],
+                ['config', false],
+            ]);
+        $container->expects(self::never())->method('get');
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container->reveal());
+        $inputFilters = $factory($container);
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
     }
 
     public function testDoesNotConfigureInputFilterServicesWhenConfigServiceDoesNotContainInputFiltersConfig(): void
     {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
-
-        $container->has('ServiceListener')->willReturn(false);
-        $container->has('config')->willReturn(true);
-        $container->get('config')->willReturn(['foo' => 'bar']);
+        $container = $this->createMock(ServiceLocatorInterface::class);
+        $container->method('has')
+            ->willReturnMap([
+                ['ServiceListener', false],
+                ['config', true],
+            ]);
+        $container->expects(self::once())
+            ->method('get')
+            ->with('config')
+            ->willReturn(['foo' => 'bar']);
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container->reveal());
+        $inputFilters = $factory($container);
 
         $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
         $this->assertFalse($inputFilters->has('foo'));

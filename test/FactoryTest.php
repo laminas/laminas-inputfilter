@@ -22,9 +22,6 @@ use Laminas\Validator;
 use LaminasTest\InputFilter\TestAsset\CustomInput;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use ReflectionProperty;
 
 use function count;
 use function sprintf;
@@ -34,8 +31,6 @@ use function sprintf;
  */
 class FactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     public function testCreateInputWithInvalidDataTypeThrowsInvalidArgumentException(): void
     {
         $factory = $this->createDefaultFactory();
@@ -1049,37 +1044,29 @@ class FactoryTest extends TestCase
 
     public function testWhenCreateInputPullsInputFromThePluginManagerItMustNotOverwriteFilterAndValidatorChains(): void
     {
-        $input = $this->prophesize(InputInterface::class);
-        $input->setFilterChain(Argument::any())->shouldNotBeCalled();
-        $input->setValidatorChain(Argument::any())->shouldNotBeCalled();
+        $input          = new Input();
+        $filterChain    = new Filter\FilterChain();
+        $validatorChain = new Validator\ValidatorChain();
+        $input->setFilterChain($filterChain);
+        $input->setValidatorChain($validatorChain);
 
-        $pluginManager = $this->prophesize(InputFilterPluginManager::class);
-        $pluginManager->populateFactoryPluginManagers(Argument::type(Factory::class))->shouldBeCalled();
-        $pluginManager->has('Some\Test\Input')->willReturn(true);
-        $pluginManager->get('Some\Test\Input')->will([$input, 'reveal']);
+        $pluginManager = new InputFilterPluginManager(new ServiceManager\ServiceManager());
+        $pluginManager->setService('Some\Test\Input', $input);
 
-        $spec = ['type' => 'Some\Test\Input'];
+        $factory               = new Factory($pluginManager);
+        $defaultFilterChain    = new Filter\FilterChain();
+        $defaultValidatorChain = new Validator\ValidatorChain();
+        $factory->setDefaultFilterChain($defaultFilterChain);
+        $factory->setDefaultValidatorChain($defaultValidatorChain);
 
-        $factory = new Factory($pluginManager->reveal());
+        $spec         = ['type' => 'Some\Test\Input'];
+        $createdInput = $factory->createInput($spec);
 
-        $r = new ReflectionProperty($factory, 'defaultFilterChain');
-        $r->setAccessible(true);
-        $defaultFilterChain = $r->getValue($factory);
-
-        $filterChain = $this->prophesize(Filter\FilterChain::class);
-        $filterChain->setPluginManager($defaultFilterChain->getPluginManager())->shouldBeCalled();
-
-        $r = new ReflectionProperty($factory, 'defaultValidatorChain');
-        $r->setAccessible(true);
-        $defaultValidatorChain = $r->getValue($factory);
-
-        $validatorChain = $this->prophesize(Validator\ValidatorChain::class);
-        $validatorChain->setPluginManager($defaultValidatorChain->getPluginManager())->shouldBeCalled();
-
-        $input->getFilterChain()->will([$filterChain, 'reveal'])->shouldBeCalled();
-        $input->getValidatorChain()->will([$validatorChain, 'reveal'])->shouldBeCalled();
-
-        $this->assertSame($input->reveal(), $factory->createInput($spec));
+        self::assertSame($input, $createdInput);
+        self::assertSame($filterChain, $input->getFilterChain());
+        self::assertSame($validatorChain, $input->getValidatorChain());
+        self::assertNotSame($defaultFilterChain, $input->getFilterChain());
+        self::assertNotSame($defaultValidatorChain, $input->getValidatorChain());
     }
 
     public function testFactoryCanCreateCollectionInputFilterWithRequiredMessage(): void

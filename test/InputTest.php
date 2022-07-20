@@ -13,7 +13,6 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 use Webmozart\Assert\Assert;
 
@@ -28,8 +27,6 @@ use function json_encode;
  */
 class InputTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var Input */
     protected $input;
 
@@ -732,13 +729,14 @@ class InputTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
+        // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame
         $validatorNotCall = function ($value, $context = null): ValidatorInterface {
             return $this->createValidatorMock(null, $value, $context);
         };
         $validatorInvalid = function ($value, $context = null) use ($validatorMsg): ValidatorInterface {
             return $this->createValidatorMock(false, $value, $context, $validatorMsg);
         };
-        $validatorValid   = function ($value, $context = null): ValidatorInterface {
+        $validatorValid = function ($value, $context = null): ValidatorInterface {
             return $this->createValidatorMock(true, $value, $context);
         };
 
