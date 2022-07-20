@@ -26,8 +26,6 @@ use PHPUnit\Framework\TestCase;
 use function count;
 use function sprintf;
 
-// phpcs:ignore
-
 /**
  * @covers \Laminas\InputFilter\Factory
  */
