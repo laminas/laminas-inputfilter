@@ -497,7 +497,7 @@ class BaseInputFilter implements
     protected function validateValidationGroup(array $inputs)
     {
         foreach ($inputs as $name) {
-            if (! is_string($name) || ! array_key_exists($name, $this->inputs)) {
+            if (! array_key_exists($name, $this->inputs)) {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'setValidationGroup() expects a list of valid input names; "%s" was not found',
                     (string) $name
