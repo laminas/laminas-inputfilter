@@ -13,7 +13,6 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use stdClass;
 use Webmozart\Assert\Assert;
 
@@ -23,13 +22,13 @@ use function count;
 use function iterator_to_array;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * @psalm-suppress DeprecatedMethod
  */
 class InputTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var Input */
     protected $input;
 
@@ -188,7 +187,7 @@ class InputTest extends TestCase
         $this->assertTrue(
             $input->isValid(),
             'isValid() should be return always true when fallback value is set. Detail: '
-            . json_encode($input->getMessages())
+            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
         $this->assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
@@ -213,7 +212,7 @@ class InputTest extends TestCase
         $this->assertTrue(
             $input->isValid(),
             'isValid() should be return always true when fallback value is set. Detail: '
-            . json_encode($input->getMessages())
+            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
         $this->assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
@@ -314,7 +313,7 @@ class InputTest extends TestCase
         $this->assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
-            . json_encode($input->getMessages())
+            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
     }
@@ -388,7 +387,7 @@ class InputTest extends TestCase
 
         $this->assertTrue(
             $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
     }
 
@@ -494,7 +493,7 @@ class InputTest extends TestCase
         $this->assertEquals(
             $expectedIsValid,
             $this->input->isValid(),
-            'isValid() value not match. Detail: ' . json_encode($this->input->getMessages())
+            'isValid() value not match. Detail: ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals($expectedMessages, $this->input->getMessages(), 'getMessages() value not match');
         $this->assertEquals($value, $this->input->getRawValue(), 'getRawValue() must return the value always');
@@ -732,15 +731,13 @@ class InputTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
-        $validatorNotCall = function ($value, $context = null): ValidatorInterface {
-            return $this->createValidatorMock(null, $value, $context);
-        };
-        $validatorInvalid = function ($value, $context = null) use ($validatorMsg): ValidatorInterface {
-            return $this->createValidatorMock(false, $value, $context, $validatorMsg);
-        };
-        $validatorValid   = function ($value, $context = null): ValidatorInterface {
-            return $this->createValidatorMock(true, $value, $context);
-        };
+        // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame
+        $validatorNotCall = fn($value, $context = null): ValidatorInterface =>
+            $this->createValidatorMock(null, $value, $context);
+        $validatorInvalid = fn($value, $context = null): ValidatorInterface =>
+            $this->createValidatorMock(false, $value, $context, $validatorMsg);
+        $validatorValid = fn($value, $context = null): ValidatorInterface =>
+            $this->createValidatorMock(true, $value, $context);
 
         // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
         $dataTemplates = [

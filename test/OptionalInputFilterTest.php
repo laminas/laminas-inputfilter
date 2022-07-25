@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
@@ -116,8 +118,7 @@ class OptionalInputFilterTest extends TestCase
         }
     }
 
-    /** @var null|InputFilter */
-    private $nestedCarInputFilter;
+    private ?InputFilter $nestedCarInputFilter = null;
 
     protected function getNestedCarInputFilter(): InputFilter
     {

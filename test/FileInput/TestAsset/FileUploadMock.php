@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\InputFilter\FileInput\TestAsset;
 
 use Laminas\Validator\ValidatorInterface;

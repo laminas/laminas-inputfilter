@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter;
@@ -13,9 +15,7 @@ use Laminas\Validator;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\Foo;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 use function call_user_func_array;
 use function count;
@@ -25,8 +25,6 @@ use function count;
  */
 class InputFilterAbstractServiceFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var ServiceManager */
     protected $services;
 
@@ -102,13 +100,12 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
         $filters = new FilterPluginManager($this->services);
-        $filter  = function () {
+        $filter  = static function () {
         };
         $filters->setService('foo', $filter);
 
         $validators = new ValidatorPluginManager($this->services);
-        /** @var ValidatorInterface|MockObject $validator */
-        $validator = $this->createMock(ValidatorInterface::class);
+        $validator  = $this->createMock(ValidatorInterface::class);
         $validators->setService('foo', $validator);
 
         $this->services->setService(FilterPluginManager::class, $filters);
@@ -169,8 +166,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
         $validators = new ValidatorPluginManager($this->services);
-        /** @var ValidatorInterface|MockObject $validator */
-        $validator = $this->createMock(ValidatorInterface::class);
+        $validator  = $this->createMock(ValidatorInterface::class);
         $this->services->setService(ValidatorPluginManager::class, $validators);
         $validators->setService('foo', $validator);
 
@@ -225,7 +221,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
      */
     public function testWillUseCustomFiltersWhenProvided(): void
     {
-        $filter = $this->prophesize(Filter\FilterInterface::class)->reveal();
+        $filter = $this->createMock(Filter\FilterInterface::class);
 
         $filters = new FilterPluginManager($this->services);
         $filters->setService('CustomFilter', $filter);

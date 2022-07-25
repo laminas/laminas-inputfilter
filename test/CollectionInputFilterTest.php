@@ -20,10 +20,11 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Traversable;
 
-use function array_merge;
 use function array_walk;
 use function count;
 use function json_encode;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * @covers \Laminas\InputFilter\CollectionInputFilter
@@ -130,7 +131,7 @@ class CollectionInputFilterTest extends TestCase
         $this->assertEquals(
             $expectedValid,
             $this->inputFilter->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->inputFilter->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->inputFilter->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals($expectedRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
         $this->assertEquals($expectedValues, $this->inputFilter->getValues(), 'getValues() value not match');
@@ -164,15 +165,9 @@ class CollectionInputFilterTest extends TestCase
         ];
         $colMessages  = [$errorMessage];
 
-        $invalidIF  = function () use ($dataRaw, $dataFiltered, $errorMessage) {
-            return $this->createBaseInputFilterMock(false, $dataRaw, $dataFiltered, $errorMessage);
-        };
-        $validIF    = function () use ($dataRaw, $dataFiltered) {
-            return $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
-        };
-        $noValidIF  = function () use ($dataRaw, $dataFiltered) {
-            return $this->createBaseInputFilterMock(null, $dataRaw, $dataFiltered);
-        };
+        $invalidIF  = fn() => $this->createBaseInputFilterMock(false, $dataRaw, $dataFiltered, $errorMessage);
+        $validIF    = fn() => $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
+        $noValidIF  = fn() => $this->createBaseInputFilterMock(null, $dataRaw, $dataFiltered);
         $isRequired = true;
 
         // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
@@ -191,11 +186,10 @@ class CollectionInputFilterTest extends TestCase
 
         array_walk(
             $dataSets,
-            function (&$set) {
+            static function (&$set) {
                 // Create unique mock input instances for each set
                 $inputFilter = $set[3]();
-
-                $set[3] = $inputFilter;
+                $set[3]      = $inputFilter;
             }
         );
 
@@ -228,7 +222,7 @@ class CollectionInputFilterTest extends TestCase
 
         $this->assertTrue(
             $this->inputFilter->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->inputFilter->getMessages())
+            'isValid() value not match. Detail . ' . json_encode($this->inputFilter->getMessages(), JSON_THROW_ON_ERROR)
         );
         $this->assertEquals($colRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
         $this->assertEquals($colFiltered, $this->inputFilter->getValues(), 'getValues() value not match');
@@ -797,14 +791,14 @@ class CollectionInputFilterTest extends TestCase
             ],
         ];
 
-        $unfilteredArray = array_merge(
-            $filteredArray,
-            [
+        $unfilteredArray = [
+            ...$filteredArray,
+            ...[
                 [
                     'foo' => 'bar',
                 ],
-            ]
-        );
+            ],
+        ];
 
         /** @var BaseInputFilter $baseInputFilter */
         $baseInputFilter = (new BaseInputFilter())
@@ -851,7 +845,10 @@ class CollectionInputFilterTest extends TestCase
 
         $this->assertTrue(
             $collectionInputFilter->isValid($customContext),
-            'isValid() value not match. Detail: ' . json_encode($collectionInputFilter->getMessages())
+            'isValid() value not match. Detail: ' . json_encode(
+                $collectionInputFilter->getMessages(),
+                JSON_THROW_ON_ERROR
+            )
         );
     }
 }

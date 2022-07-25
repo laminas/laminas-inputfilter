@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterChain;
@@ -78,7 +80,7 @@ class ArrayInputTest extends InputTest
     {
         $dataSets = parent::fallbackValueVsIsValidProvider();
         Assert::isArray($dataSets);
-        array_walk($dataSets, function (&$set) {
+        array_walk($dataSets, static function (&$set) {
             $set[1] = [$set[1]]; // Wrap fallback value into an array.
             $set[2] = [$set[2]]; // Wrap value into an array.
             $set[4] = [$set[4]]; // Wrap expected value into an array.
@@ -97,7 +99,7 @@ class ArrayInputTest extends InputTest
     {
         $dataSets = parent::emptyValueProvider();
         Assert::isArray($dataSets);
-        array_walk($dataSets, function (&$set) {
+        array_walk($dataSets, static function (&$set) {
             $set['raw'] = [$set['raw']]; // Wrap value into an array.
         });
 
@@ -114,7 +116,7 @@ class ArrayInputTest extends InputTest
     {
         $dataSets = parent::mixedValueProvider();
         Assert::isArray($dataSets);
-        array_walk($dataSets, function (&$set) {
+        array_walk($dataSets, static function (&$set) {
             $set['raw'] = [$set['raw']]; // Wrap value into an array.
         });
 
@@ -129,7 +131,7 @@ class ArrayInputTest extends InputTest
     {
         // ArrayInput filters per each array value
         $valueMap = array_map(
-            function ($values) {
+            static function ($values) {
                 if (is_array($values[0])) {
                     $values[0] = current($values[0]);
                 }
@@ -153,7 +155,7 @@ class ArrayInputTest extends InputTest
     {
         // ArrayInput validates per each array value
         $valueMap = array_map(
-            function ($values) {
+            static function ($values) {
                 if (is_array($values[0])) {
                     $values[0] = current($values[0]);
                 }

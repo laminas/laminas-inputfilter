@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\InputFilter;
 
+use Laminas\InputFilter\FileInput\FileInputDecoratorInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
+use function assert;
 use function is_array;
 
 /**
@@ -29,8 +33,7 @@ class FileInput extends Input
     /** @var bool */
     protected $autoPrependUploadValidator = true;
 
-    /** @var FileInput\FileInputDecoratorInterface */
-    private $implementation;
+    private ?FileInputDecoratorInterface $implementation = null;
 
     /**
      * @inheritDoc
@@ -134,6 +137,7 @@ class FileInput extends Input
             return true;
         }
 
+        assert($this->implementation !== null);
         return $this->implementation->isValid($context);
     }
 
@@ -164,7 +168,7 @@ class FileInput extends Input
 
     /**
      * @param mixed $value
-     * @return FileInput\FileInputDecoratorInterface
+     * @return FileInputDecoratorInterface
      */
     private function createDecoratorImplementation($value)
     {

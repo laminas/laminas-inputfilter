@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\InputFilter\FileInput;
 
 use Laminas\InputFilter\FileInput;
@@ -27,8 +29,7 @@ use const UPLOAD_ERR_NO_FILE;
  */
 class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInterface
 {
-    /** @var FileInput */
-    private $subject;
+    private FileInput $subject;
 
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded

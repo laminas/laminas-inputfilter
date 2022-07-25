@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterPluginManager;
@@ -13,11 +15,10 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Stdlib\InitializableInterface;
 use Laminas\Validator\ValidatorPluginManager;
+use LaminasTest\InputFilter\FileInput\TestAsset\InitializableInputFilterInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use ReflectionObject;
 
 use function method_exists;
@@ -27,8 +28,6 @@ use function method_exists;
  */
 class InputFilterPluginManagerTest extends TestCase
 {
-    use ProphecyTrait;
-
     /** @var InputFilterPluginManager */
     protected $manager;
 
@@ -155,7 +154,7 @@ class InputFilterPluginManagerTest extends TestCase
         $inputFilterInterfaceMock = $this->createInputFilterInterfaceMock();
         $inputInterfaceMock       = $this->createInputInterfaceMock();
 
-        // phpcs:disable
+        // phpcs:disable Generic.Files.LineLength.TooLong
         return [
             // Description         => [$serviceName,                  $service,                  $instanceOf]
             'InputFilterInterface' => ['inputFilterInterfaceService', $inputFilterInterfaceMock, InputFilterInterface::class],
@@ -175,23 +174,13 @@ class InputFilterPluginManagerTest extends TestCase
         $this->assertSame($service, $this->manager->get($serviceName), 'get() value not match');
     }
 
-    /**
-     * @dataProvider serviceProvider
-     * @param class-string<InputInterface> $instanceOf
-     */
-    public function testServicesAreInitiatedIfImplementsInitializableInterface(
-        string $serviceName,
-        object $service,
-        string $instanceOf
-    ): void {
-        $initializableProphecy = $this->prophesize($instanceOf)->willImplement(InitializableInterface::class);
-        $service               = $initializableProphecy->reveal();
-
-        $this->manager->setService($serviceName, $service);
-        $this->assertSame($service, $this->manager->get($serviceName), 'get() value not match');
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $initializableProphecy->init()->shouldBeCalled();
+    public function testServicesAreInitiatedIfImplementsInitializableInterface(): void
+    {
+        $mock = $this->createMock(InitializableInputFilterInterface::class);
+        // Init is called twice. Once during `setService` and once during `get`
+        $mock->expects(self::exactly(2))->method('init');
+        $this->manager->setService('PluginName', $mock);
+        $this->assertSame($mock, $this->manager->get('PluginName'), 'get() value not match');
     }
 
     public function testPopulateFactoryCanAcceptInputFilterAsFirstArgumentAndWillUseFactoryWhenItDoes(): void
