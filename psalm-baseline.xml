@@ -36,9 +36,9 @@
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/BaseInputFilter.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_string($name)</code>
-    </DocblockTypeContradiction>
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>$this-&gt;inputs</code>
+    </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement occurrences="1">
       <code>$messages</code>
     </InvalidReturnStatement>
