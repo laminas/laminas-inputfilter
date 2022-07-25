@@ -21,7 +21,6 @@ use function gettype;
 use function is_array;
 use function is_int;
 use function is_object;
-use function is_string;
 use function sprintf;
 
 class BaseInputFilter implements

@@ -9,6 +9,8 @@ use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use PHPUnit\Framework\TestCase;
 
+use const PHP_VERSION_ID;
+
 final class InputFilterCollectionsValidationGroupTest extends TestCase
 {
     private InputFilter $inputFilter;
@@ -127,6 +129,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $this->setCollectionCount($count);
         $collection = $this->inputFilter->get('stuff');
         self::assertInstanceOf(CollectionInputFilter::class, $collection);
+        /** @psalm-suppress InvalidArgument */
         $collection->setValidationGroup([
             0 => 'first',
             1 => 'second',
@@ -147,7 +150,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
     }
 
     /**
-     * This test fails because of an undefined offset - the validation group must be set for elements 0 through 3
+     * This test documents existing behaviour - the validation group must be set for elements 0 through 3
      *
      * @dataProvider collectionCountProvider
      */
@@ -157,6 +160,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $collection = $this->inputFilter->get('stuff');
         self::assertInstanceOf(CollectionInputFilter::class, $collection);
 
+        /** @psalm-suppress InvalidArgument */
         $collection->setValidationGroup([
             0 => 'first',
         ]);
@@ -170,13 +174,22 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
             ],
         ]);
 
-        self::assertTrue($this->inputFilter->isValid());
+        if (PHP_VERSION_ID >= 80000) {
+            $this->expectWarning();
+            $this->expectWarningMessage('Undefined array key 1');
+        } else {
+            $this->expectNotice();
+            $this->expectNoticeMessage('Undefined offset: 1');
+        }
+
+        $this->inputFilter->isValid();
     }
 
     /** @dataProvider collectionCountProvider */
     public function testValidationGroupViaTopLevelInputFilter(?int $count): void
     {
         $this->setCollectionCount($count);
+        /** @psalm-suppress InvalidArgument */
         $this->inputFilter->setValidationGroup([
             'stuff' => [
                 0 => 'first',
