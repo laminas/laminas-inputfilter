@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.24.0@06dd975cb55d36af80f242561738f16c5f58264f">
+<files psalm-version="4.27.0@faf106e717c37b8c81721845dba9de3d8deed8ff">
   <file src="src/ArrayInput.php">
     <DeprecatedInterface occurrences="1">
       <code>ArrayInput</code>
@@ -36,9 +36,6 @@
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/BaseInputFilter.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$this-&gt;inputs</code>
-    </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement occurrences="1">
       <code>$messages</code>
     </InvalidReturnStatement>
@@ -159,9 +156,6 @@
     <DeprecatedProperty occurrences="1">
       <code>$this-&gt;notEmptyValidator</code>
     </DeprecatedProperty>
-    <DocblockTypeContradiction occurrences="1">
-      <code>$this-&gt;implementation === null</code>
-    </DocblockTypeContradiction>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;prepareRequiredValidationFailureMessage()</code>
     </InvalidPropertyAssignmentValue>
@@ -171,12 +165,6 @@
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyAssignmentValue occurrences="1">
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>$implementation</code>
-    </PropertyNotSetInConstructor>
   </file>
   <file src="src/FileInput/HttpServerFileInputDecorator.php">
     <DeprecatedInterface occurrences="1">
@@ -331,7 +319,7 @@
     </ImplementedReturnTypeMismatch>
   </file>
   <file src="test/ArrayInputTest.php">
-    <ImplementedReturnTypeMismatch occurrences="3">
+    <ImplementedReturnTypeMismatch occurrences="2">
       <code>string[]</code>
     </ImplementedReturnTypeMismatch>
     <InvalidReturnStatement occurrences="1">
@@ -376,12 +364,10 @@
     </RedundantCondition>
   </file>
   <file src="test/BaseInputFilterTest.php">
-    <InvalidArgument occurrences="5">
+    <InvalidArgument occurrences="3">
       <code>$input</code>
       <code>$input</code>
       <code>['nested' =&gt; ['nested-input1', 'nested-input2']]</code>
-      <code>new stdClass()</code>
-      <code>new stdClass()</code>
     </InvalidArgument>
     <InvalidDocblock occurrences="1">
       <code>public function addMethodArgumentsProvider(): array</code>
@@ -396,12 +382,7 @@
       <code>$inputTypeData</code>
       <code>$set</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="5">
-      <code>function ($data) {</code>
-      <code>function ($inputTypeData) {</code>
-      <code>function ($inputTypeData) {</code>
-      <code>fn ($inputTypeData)</code>
-    </MissingClosureReturnType>
+    <MissingClosureReturnType occurrences="3"/>
     <MixedArgument occurrences="6">
       <code>$data</code>
       <code>$dataTypes['Traversable']($data)</code>
@@ -483,8 +464,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$expectedType</code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="2">
-      <code>new stdClass()</code>
+    <InvalidArgument occurrences="1">
       <code>testDataVsValid</code>
     </InvalidArgument>
     <InvalidReturnStatement occurrences="2"/>
@@ -494,12 +474,7 @@
     <MissingClosureParamType occurrences="1">
       <code>$set</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="6">
-      <code>function () use ($dataRaw, $dataFiltered) {</code>
-      <code>function () use ($dataRaw, $dataFiltered) {</code>
-      <code>function () use ($dataRaw, $dataFiltered, $errorMessage) {</code>
-      <code>fn ()</code>
-    </MissingClosureReturnType>
+    <MissingClosureReturnType occurrences="3"/>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>$inputFilter</code>
     </MixedArgumentTypeCoercion>
@@ -516,81 +491,26 @@
     <MixedFunctionCall occurrences="1">
       <code>$set[3]()</code>
     </MixedFunctionCall>
-    <MixedMethodCall occurrences="11">
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>with</code>
-      <code>with</code>
-    </MixedMethodCall>
     <MixedReturnTypeCoercion occurrences="2">
       <code>$dataSets</code>
     </MixedReturnTypeCoercion>
-    <PossiblyInvalidArgument occurrences="2">
-      <code>$baseInputFilter</code>
-      <code>$baseInputFilter</code>
-    </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod occurrences="7">
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>method</code>
-      <code>method</code>
-      <code>method</code>
-    </PossiblyUndefinedMethod>
   </file>
   <file src="test/FactoryTest.php">
-    <DeprecatedMethod occurrences="7">
+    <DeprecatedMethod occurrences="5">
       <code>allowEmpty</code>
       <code>allowEmpty</code>
       <code>allowEmpty</code>
       <code>allowEmpty</code>
       <code>continueIfEmpty</code>
-      <code>setMethods</code>
-      <code>setMethods</code>
     </DeprecatedMethod>
-    <InvalidArgument occurrences="3">
-      <code>'invalid_value'</code>
-      <code>'invalid_value'</code>
-    </InvalidArgument>
-    <MixedMethodCall occurrences="7">
-      <code>count</code>
-      <code>count</code>
-      <code>getFilters</code>
-      <code>method</code>
-      <code>method</code>
-      <code>will</code>
-      <code>will</code>
-    </MixedMethodCall>
-    <PossiblyInvalidArgument occurrences="2">
-      <code>$provider</code>
-      <code>$provider</code>
-    </PossiblyInvalidArgument>
+    <InvalidArgument occurrences="1"/>
     <PossiblyNullReference occurrences="2">
       <code>getPluginManager</code>
       <code>getPluginManager</code>
     </PossiblyNullReference>
-    <PossiblyUndefinedMethod occurrences="13">
+    <PossiblyUndefinedMethod occurrences="2">
       <code>breakOnFailure</code>
       <code>breakOnFailure</code>
-      <code>expects</code>
-      <code>expects</code>
-      <code>getErrorMessage</code>
-      <code>getErrorMessage</code>
-      <code>getFilterChain</code>
-      <code>getFilterChain</code>
-      <code>getName</code>
-      <code>getName</code>
-      <code>getValidatorChain</code>
-      <code>isRequired</code>
-      <code>setValue</code>
     </PossiblyUndefinedMethod>
     <RawObjectIteration occurrences="1">
       <code>$chain</code>
@@ -600,9 +520,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="test/FileInput/HttpServerFileInputDecoratorTest.php">
-    <DeprecatedMethod occurrences="1">
-      <code>setMethods</code>
-    </DeprecatedMethod>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>array&lt;string, string&gt;</code>
     </ImplementedReturnTypeMismatch>
@@ -616,10 +533,6 @@
     <InvalidReturnType occurrences="1">
       <code>iterable</code>
     </InvalidReturnType>
-    <LessSpecificReturnStatement occurrences="1"/>
-    <MoreSpecificReturnType occurrences="1">
-      <code>array</code>
-    </MoreSpecificReturnType>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$input</code>
     </NonInvariantDocblockPropertyType>
@@ -628,7 +541,7 @@
     </PropertyTypeCoercion>
   </file>
   <file src="test/FileInput/PsrFileInputDecoratorTest.php">
-    <ImplementedReturnTypeMismatch occurrences="4">
+    <ImplementedReturnTypeMismatch occurrences="3">
       <code>UploadedFileInterface</code>
     </ImplementedReturnTypeMismatch>
     <InvalidReturnType occurrences="1"/>
@@ -641,40 +554,6 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$generator instanceof Generator</code>
     </TypeDoesNotContainType>
-  </file>
-  <file src="test/InputFilterAbstractServiceFactoryTest.php">
-    <MissingClosureReturnType occurrences="1">
-      <code>function () {</code>
-    </MissingClosureReturnType>
-    <MixedArgument occurrences="4">
-      <code>$filterChain</code>
-      <code>$filterChain</code>
-      <code>$validatorChain</code>
-      <code>$validatorChain</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="4">
-      <code>$filterChain</code>
-      <code>$input</code>
-      <code>$inputFilter</code>
-      <code>$validatorChain</code>
-    </MixedAssignment>
-    <MixedMethodCall occurrences="9">
-      <code>get</code>
-      <code>getFilterChain</code>
-      <code>getInputFilterManager</code>
-      <code>getPluginManager</code>
-      <code>getPluginManager</code>
-      <code>getValidatorChain</code>
-      <code>has</code>
-      <code>plugin</code>
-      <code>plugin</code>
-    </MixedMethodCall>
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>getFactory</code>
-    </UndefinedInterfaceMethod>
-    <MissingClosureReturnType occurrences="1">
-      <code>static function () {</code>
-    </MissingClosureReturnType>
   </file>
   <file src="test/InputFilterAwareTraitTest.php">
     <InvalidScalarArgument occurrences="2">
@@ -693,33 +572,15 @@
       <code>getInstanceOf</code>
     </InvalidReturnType>
   </file>
-  <file src="test/InputFilterPluginManagerFactoryTest.php">
-    <LessSpecificReturnStatement occurrences="1"/>
-    <MoreSpecificReturnType occurrences="1">
-      <code>array&lt;string, array{0: class-string&lt;InputInterface&gt;}&gt;</code>
-    </MoreSpecificReturnType>
-  </file>
   <file src="test/InputFilterPluginManagerTest.php">
-    <ArgumentTypeCoercion occurrences="2">
-      <code>$this-&gt;getServiceNotFoundException()</code>
-      <code>$this-&gt;getServiceNotFoundException()</code>
-    </ArgumentTypeCoercion>
     <LessSpecificReturnStatement occurrences="1"/>
     <MoreSpecificReturnType occurrences="1"/>
-    <PossiblyNullReference occurrences="2">
-      <code>getPluginManager</code>
-      <code>getPluginManager</code>
-    </PossiblyNullReference>
   </file>
   <file src="test/InputFilterTest.php">
     <ImplementedReturnTypeMismatch occurrences="1"/>
     <LessSpecificReturnStatement occurrences="1">
       <code>$dataSets</code>
     </LessSpecificReturnStatement>
-    <MixedArrayAccess occurrences="2">
-      <code>$filter1-&gt;getValues()['nested']['nestedField1']</code>
-      <code>$filter1-&gt;getValues()['nested']['nestedField1']</code>
-    </MixedArrayAccess>
     <MoreSpecificReturnType occurrences="1"/>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$inputFilter</code>
@@ -766,37 +627,9 @@
       <code>isArray</code>
     </RedundantCondition>
   </file>
-  <file src="test/ModuleTest.php">
-    <InvalidArgument occurrences="1">
-      <code>$moduleManager</code>
-    </InvalidArgument>
-    <MixedArgument occurrences="3">
-      <code>$config['input_filters']['abstract_factories']</code>
-      <code>$config['service_manager']['aliases']</code>
-      <code>$config['service_manager']['factories']</code>
-    </MixedArgument>
-    <MixedArrayAccess occurrences="3">
-      <code>$config['input_filters']['abstract_factories']</code>
-      <code>$config['service_manager']['aliases']</code>
-      <code>$config['service_manager']['factories']</code>
-    </MixedArrayAccess>
-  </file>
   <file src="test/TestAsset/CustomInput.php">
     <DeprecatedInterface occurrences="1">
       <code>CustomInput</code>
     </DeprecatedInterface>
-  </file>
-  <file src="test/TestAsset/FooAbstractFactory.php">
-    <DeprecatedInterface occurrences="1">
-      <code>FooAbstractFactory</code>
-    </DeprecatedInterface>
-    <InvalidNullableReturnType occurrences="1">
-      <code>canCreate</code>
-    </InvalidNullableReturnType>
-    <ParamNameMismatch occurrences="3">
-      <code>$container</code>
-      <code>$container</code>
-      <code>$name</code>
-    </ParamNameMismatch>
   </file>
 </files>

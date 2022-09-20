@@ -31,8 +31,7 @@ use const JSON_THROW_ON_ERROR;
  */
 class CollectionInputFilterTest extends TestCase
 {
-    /** @var CollectionInputFilter */
-    protected $inputFilter;
+    private CollectionInputFilter $inputFilter;
 
     protected function setUp(): void
     {
@@ -47,7 +46,7 @@ class CollectionInputFilterTest extends TestCase
         $this->expectExceptionMessage(
             'expects an instance of Laminas\InputFilter\BaseInputFilter; received "stdClass"'
         );
-        /** @noinspection PhpParamsInspection */
+        /** @psalm-suppress InvalidArgument */
         $inputFilter->setInputFilter(new stdClass());
     }
 
@@ -59,12 +58,12 @@ class CollectionInputFilterTest extends TestCase
     {
         $this->inputFilter->setInputFilter($inputFilter);
 
-        $this->assertInstanceOf($expectedType, $this->inputFilter->getInputFilter(), 'getInputFilter() type not match');
+        self::assertInstanceOf($expectedType, $this->inputFilter->getInputFilter(), 'getInputFilter() type not match');
     }
 
     public function testGetDefaultInputFilter(): void
     {
-        $this->assertInstanceOf(BaseInputFilter::class, $this->inputFilter->getInputFilter());
+        self::assertInstanceOf(BaseInputFilter::class, $this->inputFilter->getInputFilter());
     }
 
     /**
@@ -73,7 +72,7 @@ class CollectionInputFilterTest extends TestCase
     public function testSetRequired(bool $value): void
     {
         $this->inputFilter->setIsRequired($value);
-        $this->assertEquals($value, $this->inputFilter->getIsRequired());
+        self::assertEquals($value, $this->inputFilter->getIsRequired());
     }
 
     /**
@@ -88,7 +87,7 @@ class CollectionInputFilterTest extends TestCase
             $this->inputFilter->setData($data);
         }
 
-        $this->assertEquals($expectedCount, $this->inputFilter->getCount(), 'getCount() value not match');
+        self::assertEquals($expectedCount, $this->inputFilter->getCount(), 'getCount() value not match');
     }
 
     public function testGetCountReturnsRightCountOnConsecutiveCallsWithDifferentData(): void
@@ -103,9 +102,9 @@ class CollectionInputFilterTest extends TestCase
         ];
 
         $this->inputFilter->setData($collectionData1);
-        $this->assertEquals(2, $this->inputFilter->getCount());
+        self::assertEquals(2, $this->inputFilter->getCount());
         $this->inputFilter->setData($collectionData2);
-        $this->assertEquals(1, $this->inputFilter->getCount());
+        self::assertEquals(1, $this->inputFilter->getCount());
     }
 
     /**
@@ -128,14 +127,14 @@ class CollectionInputFilterTest extends TestCase
         }
         $this->inputFilter->setIsRequired($required);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedValid,
             $this->inputFilter->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->inputFilter->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals($expectedRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
-        $this->assertEquals($expectedValues, $this->inputFilter->getValues(), 'getValues() value not match');
-        $this->assertEquals($expectedMessages, $this->inputFilter->getMessages(), 'getMessages() value not match');
+        self::assertEquals($expectedRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
+        self::assertEquals($expectedValues, $this->inputFilter->getValues(), 'getValues() value not match');
+        self::assertEquals($expectedMessages, $this->inputFilter->getMessages(), 'getMessages() value not match');
     }
 
     /**
@@ -212,7 +211,7 @@ class CollectionInputFilterTest extends TestCase
         $colRaw          = [$dataRaw];
         $colFiltered     = [$dataFiltered];
         $baseInputFilter = $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
-        $baseInputFilter->expects($this->once())
+        $baseInputFilter->expects(self::once())
             ->method('setValidationGroup')
             ->with($validationGroup);
 
@@ -220,13 +219,13 @@ class CollectionInputFilterTest extends TestCase
         $this->inputFilter->setData($colRaw);
         $this->inputFilter->setValidationGroup($colValidationGroup);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->inputFilter->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->inputFilter->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals($colRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
-        $this->assertEquals($colFiltered, $this->inputFilter->getValues(), 'getValues() value not match');
-        $this->assertEquals([], $this->inputFilter->getMessages(), 'getMessages() value not match');
+        self::assertEquals($colRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
+        self::assertEquals($colFiltered, $this->inputFilter->getValues(), 'getValues() value not match');
+        self::assertEquals([], $this->inputFilter->getMessages(), 'getMessages() value not match');
     }
 
     /** @psalm-return array<string, array{0: null|int, 1: bool}> */
@@ -304,7 +303,7 @@ class CollectionInputFilterTest extends TestCase
         ];
 
         $mainInputFilter->setData($data);
-        $this->assertSame($expectedIsValid, $mainInputFilter->isValid());
+        self::assertSame($expectedIsValid, $mainInputFilter->isValid());
     }
 
     /**
@@ -377,7 +376,7 @@ class CollectionInputFilterTest extends TestCase
      * @param mixed[] $getRawValues
      * @param mixed[] $getValues
      * @param string[] $getMessages
-     * @return MockObject|BaseInputFilter
+     * @return MockObject&BaseInputFilter
      */
     protected function createBaseInputFilterMock(
         $isValid = null,
@@ -385,18 +384,18 @@ class CollectionInputFilterTest extends TestCase
         $getValues = [],
         $getMessages = []
     ) {
-        /** @var BaseInputFilter|MockObject $inputFilter */
+        /** @var BaseInputFilter&MockObject $inputFilter */
         $inputFilter = $this->createMock(BaseInputFilter::class);
         $inputFilter->method('getRawValues')
             ->willReturn($getRawValues);
         $inputFilter->method('getValues')
             ->willReturn($getValues);
         if (($isValid === false) || ($isValid === true)) {
-            $inputFilter->expects($this->once())
+            $inputFilter->expects(self::once())
                 ->method('isValid')
                 ->willReturn($isValid);
         } else {
-            $inputFilter->expects($this->never())
+            $inputFilter->expects(self::never())
                 ->method('isValid');
         }
         $inputFilter->method('getMessages')
@@ -429,8 +428,8 @@ class CollectionInputFilterTest extends TestCase
 
         $unknown = $collectionInputFilter->getUnknown();
 
-        $this->assertFalse($collectionInputFilter->hasUnknown());
-        $this->assertCount(0, $unknown);
+        self::assertFalse($collectionInputFilter->hasUnknown());
+        self::assertCount(0, $unknown);
     }
 
     public function testGetUnknownFieldIsUnknown(): void
@@ -450,8 +449,8 @@ class CollectionInputFilterTest extends TestCase
 
         $unknown = $collectionInputFilter->getUnknown();
 
-        $this->assertTrue($collectionInputFilter->hasUnknown());
-        $this->assertEquals([['baz' => 'hey'], ['tor' => 'ver']], $unknown);
+        self::assertTrue($collectionInputFilter->hasUnknown());
+        self::assertEquals([['baz' => 'hey'], ['tor' => 'ver']], $unknown);
     }
 
     /** @psalm-return array<string, array{0: array}> */
@@ -561,17 +560,17 @@ class CollectionInputFilterTest extends TestCase
         $messages = $collectionInputFilter->getMessages();
 
         // @codingStandardsIgnoreStart
-        $this->assertFalse($isValid);
-        $this->assertCount(2, $messages);
+        self::assertFalse($isValid);
+        self::assertCount(2, $messages);
 
-        $this->assertArrayHasKey('phone', $messages[0]);
-        $this->assertCount(1, $messages[0]['phone']);
-        $this->assertContains('Value is required and can\'t be empty', $messages[0]['phone']);
+        self::assertArrayHasKey('phone', $messages[0]);
+        self::assertCount(1, $messages[0]['phone']);
+        self::assertContains('Value is required and can\'t be empty', $messages[0]['phone']);
 
-        $this->assertArrayHasKey('phone', $messages[1]);
-        $this->assertCount(1, $messages[1]['phone']);
-        $this->assertNotContains('Value is required and can\'t be empty', $messages[1]['phone']);
-        $this->assertContains('The input must contain only digits', $messages[1]['phone']);
+        self::assertArrayHasKey('phone', $messages[1]);
+        self::assertCount(1, $messages[1]['phone']);
+        self::assertNotContains('Value is required and can\'t be empty', $messages[1]['phone']);
+        self::assertContains('The input must contain only digits', $messages[1]['phone']);
         // @codingStandardsIgnoreEnd
     }
 
@@ -611,17 +610,17 @@ class CollectionInputFilterTest extends TestCase
         $isValid  = $collectionInputFilter->isValid();
         $messages = $collectionInputFilter->getMessages();
 
-        $this->assertFalse($isValid);
-        $this->assertCount(2, $messages);
+        self::assertFalse($isValid);
+        self::assertCount(2, $messages);
 
-        $this->assertArrayHasKey('phone', $messages[0]);
-        $this->assertCount(1, $messages[0]['phone']);
-        $this->assertContains('CUSTOM ERROR MESSAGE', $messages[0]['phone']);
-        $this->assertNotContains('Value is required and can\'t be empty', $messages[0]['phone']);
+        self::assertArrayHasKey('phone', $messages[0]);
+        self::assertCount(1, $messages[0]['phone']);
+        self::assertContains('CUSTOM ERROR MESSAGE', $messages[0]['phone']);
+        self::assertNotContains('Value is required and can\'t be empty', $messages[0]['phone']);
 
-        $this->assertArrayHasKey('phone', $messages[1]);
-        $this->assertCount(1, $messages[1]['phone']);
-        $this->assertContains('CUSTOM ERROR MESSAGE', $messages[1]['phone']);
+        self::assertArrayHasKey('phone', $messages[1]);
+        self::assertCount(1, $messages[1]['phone']);
+        self::assertContains('CUSTOM ERROR MESSAGE', $messages[1]['phone']);
     }
 
     public function testDuplicatedErrorMessages(): void
@@ -703,8 +702,8 @@ class CollectionInputFilterTest extends TestCase
                 ],
             ]
         );
-        $this->assertFalse($inputFilter->isValid());
-        $this->assertEquals([
+        self::assertFalse($inputFilter->isValid());
+        self::assertEquals([
             'element' => [
                 'type1' => [
                     [
@@ -754,14 +753,14 @@ class CollectionInputFilterTest extends TestCase
 
     public function testLazyLoadsANotEmptyValidatorWhenNoneProvided(): void
     {
-        $this->assertInstanceOf(NotEmpty::class, $this->inputFilter->getNotEmptyValidator());
+        self::assertInstanceOf(NotEmpty::class, $this->inputFilter->getNotEmptyValidator());
     }
 
     public function testAllowsComposingANotEmptyValidator(): void
     {
         $notEmptyValidator = new NotEmpty();
         $this->inputFilter->setNotEmptyValidator($notEmptyValidator);
-        $this->assertSame($notEmptyValidator, $this->inputFilter->getNotEmptyValidator());
+        self::assertSame($notEmptyValidator, $this->inputFilter->getNotEmptyValidator());
     }
 
     public function testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty(): void
@@ -775,9 +774,9 @@ class CollectionInputFilterTest extends TestCase
 
         $this->inputFilter->setData([]);
 
-        $this->assertFalse($this->inputFilter->isValid());
+        self::assertFalse($this->inputFilter->isValid());
 
-        $this->assertEquals([
+        self::assertEquals([
             [NotEmpty::IS_EMPTY => $message],
         ], $this->inputFilter->getMessages());
     }
@@ -800,7 +799,6 @@ class CollectionInputFilterTest extends TestCase
             ],
         ];
 
-        /** @var BaseInputFilter $baseInputFilter */
         $baseInputFilter = (new BaseInputFilter())
             ->add(new Input(), 'bar');
 
@@ -833,9 +831,8 @@ class CollectionInputFilterTest extends TestCase
      */
     public function testValidationContext(array $data, ?array $customContext, ?array $expectedContext): void
     {
-        /** @var MockObject|BaseInputFilter $baseInputFilter */
         $baseInputFilter = $this->createMock(BaseInputFilter::class);
-        $baseInputFilter->expects($this->exactly(count($data)))
+        $baseInputFilter->expects(self::exactly(count($data)))
             ->method('isValid')
             ->with($expectedContext)
             ->willReturn(true);
@@ -843,7 +840,7 @@ class CollectionInputFilterTest extends TestCase
         $collectionInputFilter = (new CollectionInputFilter())->setInputFilter($baseInputFilter);
         $collectionInputFilter->setData($data);
 
-        $this->assertTrue(
+        self::assertTrue(
             $collectionInputFilter->isValid($customContext),
             'isValid() value not match. Detail: ' . json_encode(
                 $collectionInputFilter->getMessages(),

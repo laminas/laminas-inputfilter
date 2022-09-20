@@ -48,9 +48,9 @@ class InputFilterPluginManager extends AbstractPluginManager
         'OptionalInputFilter' => OptionalInputFilter::class,
 
         // Legacy Zend Framework aliases
-        \Zend\InputFilter\InputFilter::class           => InputFilter::class,
-        \Zend\InputFilter\CollectionInputFilter::class => CollectionInputFilter::class,
-        \Zend\InputFilter\OptionalInputFilter::class   => OptionalInputFilter::class,
+        'Zend\InputFilter\InputFilter'           => InputFilter::class,
+        'Zend\InputFilter\CollectionInputFilter' => CollectionInputFilter::class,
+        'Zend\InputFilter\OptionalInputFilter'   => OptionalInputFilter::class,
 
         // v2 normalized FQCNs
         'zendinputfilterinputfilter'           => InputFilter::class,

@@ -1,32 +1,27 @@
-<?php // phpcs:disable
+<?php
+
+declare(strict_types=1);
 
 namespace LaminasTest\InputFilter\TestAsset;
 
-use Laminas\ServiceManager\AbstractFactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Psr\Container\ContainerInterface;
 
 class FooAbstractFactory implements AbstractFactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $name, ?array $options = null)
+    /** @param string $requestedName */
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Foo
     {
         return new Foo();
     }
 
-    public function canCreate(ContainerInterface $container, $name)
+    /** @param string $requestedName */
+    public function canCreate(ContainerInterface $container, $requestedName): bool
     {
-        if ($name == 'foo') {
+        if ($requestedName === 'foo') {
             return true;
         }
-    }
 
-    public function canCreateServiceWithName(ServiceLocatorInterface $container, $name, $requestedName)
-    {
-        return $this->canCreate($container, $requestedName ?: $name);
-    }
-
-    public function createServiceWithName(ServiceLocatorInterface $container, $name, $requestedName)
-    {
-        return $this($container, $requestedName ?: $name);
+        return false;
     }
 }

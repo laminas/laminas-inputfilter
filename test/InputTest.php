@@ -69,70 +69,70 @@ class InputTest extends TestCase
 
     public function testConstructorRequiresAName(): void
     {
-        $this->assertEquals('foo', $this->input->getName());
+        self::assertEquals('foo', $this->input->getName());
     }
 
     public function testInputHasEmptyFilterChainByDefault(): void
     {
         $filters = $this->input->getFilterChain();
-        $this->assertInstanceOf(FilterChain::class, $filters);
-        $this->assertEquals(0, count($filters));
+        self::assertInstanceOf(FilterChain::class, $filters);
+        self::assertCount(0, $filters);
     }
 
     public function testInputHasEmptyValidatorChainByDefault(): void
     {
         $validators = $this->input->getValidatorChain();
-        $this->assertInstanceOf(ValidatorChain::class, $validators);
-        $this->assertEquals(0, count($validators));
+        self::assertInstanceOf(ValidatorChain::class, $validators);
+        self::assertCount(0, $validators);
     }
 
     public function testCanInjectFilterChain(): void
     {
         $chain = $this->createFilterChainMock();
         $this->input->setFilterChain($chain);
-        $this->assertSame($chain, $this->input->getFilterChain());
+        self::assertSame($chain, $this->input->getFilterChain());
     }
 
     public function testCanInjectValidatorChain(): void
     {
         $chain = $this->createValidatorChainMock();
         $this->input->setValidatorChain($chain);
-        $this->assertSame($chain, $this->input->getValidatorChain());
+        self::assertSame($chain, $this->input->getValidatorChain());
     }
 
     public function testInputIsMarkedAsRequiredByDefault(): void
     {
-        $this->assertTrue($this->input->isRequired());
+        self::assertTrue($this->input->isRequired());
     }
 
     public function testRequiredFlagIsMutable(): void
     {
         $this->input->setRequired(false);
-        $this->assertFalse($this->input->isRequired());
+        self::assertFalse($this->input->isRequired());
     }
 
     public function testInputDoesNotAllowEmptyValuesByDefault(): void
     {
-        $this->assertFalse($this->input->allowEmpty());
+        self::assertFalse($this->input->allowEmpty());
     }
 
     public function testAllowEmptyFlagIsMutable(): void
     {
         $this->input->setAllowEmpty(true);
-        $this->assertTrue($this->input->allowEmpty());
+        self::assertTrue($this->input->allowEmpty());
     }
 
     public function testContinueIfEmptyFlagIsFalseByDefault(): void
     {
         $input = $this->input;
-        $this->assertFalse($input->continueIfEmpty());
+        self::assertFalse($input->continueIfEmpty());
     }
 
     public function testContinueIfEmptyFlagIsMutable(): void
     {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
-        $this->assertTrue($input->continueIfEmpty());
+        self::assertTrue($input->continueIfEmpty());
     }
 
     /**
@@ -144,10 +144,10 @@ class InputTest extends TestCase
         $input = $this->input;
 
         $return = $input->setFallbackValue($fallbackValue);
-        $this->assertSame($input, $return, 'setFallbackValue() must return it self');
+        self::assertSame($input, $return, 'setFallbackValue() must return it self');
 
-        $this->assertEquals($fallbackValue, $input->getFallbackValue(), 'getFallbackValue() value not match');
-        $this->assertTrue($input->hasFallback(), 'hasFallback() value not match');
+        self::assertEquals($fallbackValue, $input->getFallbackValue(), 'getFallbackValue() value not match');
+        self::assertTrue($input->hasFallback(), 'hasFallback() value not match');
     }
 
     /**
@@ -159,8 +159,8 @@ class InputTest extends TestCase
         $input = $this->input;
         $input->setFallbackValue($fallbackValue);
         $input->clearFallbackValue();
-        $this->assertNull($input->getFallbackValue(), 'getFallbackValue() value not match');
-        $this->assertFalse($input->hasFallback(), 'hasFallback() value not match');
+        self::assertNull($input->getFallbackValue(), 'getFallbackValue() value not match');
+        self::assertFalse($input->hasFallback(), 'hasFallback() value not match');
     }
 
     /**
@@ -184,14 +184,14 @@ class InputTest extends TestCase
         $input->setFallbackValue($fallbackValue);
         $input->setValue($originalValue);
 
-        $this->assertTrue(
+        self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when fallback value is set. Detail: '
             . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
-        $this->assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
-        $this->assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
+        self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
+        self::assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
+        self::assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
 
     /**
@@ -209,14 +209,14 @@ class InputTest extends TestCase
         $input->setValidatorChain($this->createValidatorChainMock());
         $input->setFallbackValue($fallbackValue);
 
-        $this->assertTrue(
+        self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when fallback value is set. Detail: '
             . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
-        $this->assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
-        $this->assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
+        self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
+        self::assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
+        self::assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
 
     public function testRequiredWithoutFallbackAndValueNotSetThenFail(): void
@@ -224,7 +224,7 @@ class InputTest extends TestCase
         $input = $this->input;
         $input->setRequired(true);
 
-        $this->assertFalse(
+        self::assertFalse(
             $input->isValid(),
             'isValid() should be return always false when no fallback value, is required, and not data is set.'
         );
@@ -237,11 +237,11 @@ class InputTest extends TestCase
         $input->setRequired(true);
         $input->setErrorMessage('FAILED TO VALIDATE');
 
-        $this->assertFalse(
+        self::assertFalse(
             $input->isValid(),
             'isValid() should be return always false when no fallback value, is required, and not data is set.'
         );
-        $this->assertSame(['FAILED TO VALIDATE'], $input->getMessages());
+        self::assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesNotEmptyValidatorIsEmptyErrorMessage(): void
@@ -249,7 +249,7 @@ class InputTest extends TestCase
         $input = $this->input;
         $input->setRequired(true);
 
-        $this->assertFalse(
+        self::assertFalse(
             $input->isValid(),
             'isValid() should always return false when no fallback value is present, '
             . 'the input is required, and no data is set.'
@@ -266,11 +266,8 @@ class InputTest extends TestCase
             NotEmptyValidator::IS_EMPTY => "Custom message",
         ];
 
-        $notEmpty = $this->getMockBuilder(NotEmptyValidator::class)
-            ->setMethods(['getOption'])
-            ->getMock();
-
-        $notEmpty->expects($this->once())
+        $notEmpty = $this->createMock(NotEmptyValidator::class);
+        $notEmpty->expects(self::once())
             ->method('getOption')
             ->with('messageTemplates')
             ->willReturn($customMessage);
@@ -278,12 +275,12 @@ class InputTest extends TestCase
         $input->getValidatorChain()
             ->attach($notEmpty);
 
-        $this->assertFalse(
+        self::assertFalse(
             $input->isValid(),
             'isValid() should always return false when no fallback value is present, '
             . 'the input is required, and no data is set.'
         );
-        $this->assertEquals($customMessage, $input->getMessages());
+        self::assertEquals($customMessage, $input->getMessages());
     }
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesCustomErrorMessageWhenSet(): void
@@ -292,12 +289,12 @@ class InputTest extends TestCase
         $input->setRequired(true);
         $input->setErrorMessage('FAILED TO VALIDATE');
 
-        $this->assertFalse(
+        self::assertFalse(
             $input->isValid(),
             'isValid() should always return false when no fallback value is present, '
             . 'the input is required, and no data is set.'
         );
-        $this->assertSame(['FAILED TO VALIDATE'], $input->getMessages());
+        self::assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
 
     public function testNotRequiredWithoutFallbackAndValueNotSetThenIsValid(): void
@@ -310,12 +307,12 @@ class InputTest extends TestCase
         // Validator should not to be called
         $input->getValidatorChain()
             ->attach($this->createValidatorMock(null, null));
-        $this->assertTrue(
+        self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
             . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
+        self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
     }
 
     /**
@@ -330,12 +327,12 @@ class InputTest extends TestCase
         $input->isValid();
         $validators = $input->getValidatorChain()
                                 ->getValidators();
-        $this->assertEmpty($validators);
+        self::assertEmpty($validators);
     }
 
     public function testDefaultGetValue(): void
     {
-        $this->assertNull($this->input->getValue());
+        self::assertNull($this->input->getValue());
     }
 
     public function testValueMayBeInjected(): void
@@ -343,7 +340,7 @@ class InputTest extends TestCase
         $valueRaw = $this->getDummyValue();
 
         $this->input->setValue($valueRaw);
-        $this->assertEquals($valueRaw, $this->input->getValue());
+        self::assertEquals($valueRaw, $this->input->getValue());
     }
 
     public function testRetrievingValueFiltersTheValue(): void
@@ -356,7 +353,7 @@ class InputTest extends TestCase
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($valueRaw);
 
-        $this->assertSame($valueFiltered, $this->input->getValue());
+        self::assertSame($valueFiltered, $this->input->getValue());
     }
 
     public function testCanRetrieveRawValue(): void
@@ -368,7 +365,7 @@ class InputTest extends TestCase
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($valueRaw);
 
-        $this->assertEquals($valueRaw, $this->input->getRawValue());
+        self::assertEquals($valueRaw, $this->input->getRawValue());
     }
 
     public function testValidationOperatesOnFilteredValue(): void
@@ -385,7 +382,7 @@ class InputTest extends TestCase
         $this->input->setValidatorChain($validatorChain);
         $this->input->setValue($valueRaw);
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
@@ -393,13 +390,13 @@ class InputTest extends TestCase
 
     public function testBreakOnFailureFlagIsOffByDefault(): void
     {
-        $this->assertFalse($this->input->breakOnFailure());
+        self::assertFalse($this->input->breakOnFailure());
     }
 
     public function testBreakOnFailureFlagIsMutable(): void
     {
         $this->input->setBreakOnFailure(true);
-        $this->assertTrue($this->input->breakOnFailure());
+        self::assertTrue($this->input->breakOnFailure());
     }
 
     /**
@@ -408,19 +405,19 @@ class InputTest extends TestCase
      */
     public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value): void
     {
-        $this->assertTrue($this->input->isRequired());
+        self::assertTrue($this->input->isRequired());
         $this->input->setValue($value);
         $validatorChain = $this->input->getValidatorChain();
-        $this->assertEquals(0, count($validatorChain->getValidators()));
+        self::assertEquals(0, count($validatorChain->getValidators()));
 
-        $this->assertFalse($this->input->isValid());
+        self::assertFalse($this->input->isValid());
         $messages = $this->input->getMessages();
-        $this->assertArrayHasKey('isEmpty', $messages);
-        $this->assertEquals(1, count($validatorChain->getValidators()));
+        self::assertArrayHasKey('isEmpty', $messages);
+        self::assertEquals(1, count($validatorChain->getValidators()));
 
         // Assert that NotEmpty validator wasn't added again
-        $this->assertFalse($this->input->isValid());
-        $this->assertEquals(1, count($validatorChain->getValidators()));
+        self::assertFalse($this->input->isValid());
+        self::assertEquals(1, count($validatorChain->getValidators()));
     }
 
     /**
@@ -436,11 +433,11 @@ class InputTest extends TestCase
 
         $validatorChain = $this->input->getValidatorChain();
         $validatorChain->prependValidator($notEmptyMock);
-        $this->assertFalse($this->input->isValid());
+        self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
-        $this->assertEquals(1, count($validators));
-        $this->assertEquals($notEmptyMock, $validators[0]['instance']);
+        self::assertEquals(1, count($validators));
+        self::assertEquals($notEmptyMock, $validators[0]['instance']);
     }
 
     /**
@@ -462,11 +459,11 @@ class InputTest extends TestCase
         $validatorChain->attach($this->createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
 
-        $this->assertFalse($this->input->isValid());
+        self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
-        $this->assertEquals(2, count($validators));
-        $this->assertEquals($notEmptyMock, $validators[1]['instance']);
+        self::assertEquals(2, count($validators));
+        self::assertEquals($notEmptyMock, $validators[1]['instance']);
     }
 
     /**
@@ -490,14 +487,14 @@ class InputTest extends TestCase
             ->attach($validator);
         $this->input->setValue($value);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectedIsValid,
             $this->input->isValid(),
             'isValid() value not match. Detail: ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals($expectedMessages, $this->input->getMessages(), 'getMessages() value not match');
-        $this->assertEquals($value, $this->input->getRawValue(), 'getRawValue() must return the value always');
-        $this->assertEquals($value, $this->input->getValue(), 'getValue() must return the filtered value always');
+        self::assertEquals($expectedMessages, $this->input->getMessages(), 'getMessages() value not match');
+        self::assertEquals($value, $this->input->getRawValue(), 'getRawValue() must return the value always');
+        self::assertEquals($value, $this->input->getValue(), 'getValue() must return the filtered value always');
     }
 
     /**
@@ -507,10 +504,10 @@ class InputTest extends TestCase
     public function testSetValuePutInputInTheDesiredState($value): void
     {
         $input = $this->input;
-        $this->assertFalse($input->hasValue(), 'Input should not have value by default');
+        self::assertFalse($input->hasValue(), 'Input should not have value by default');
 
         $input->setValue($value);
-        $this->assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
+        self::assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
     }
 
     /**
@@ -521,14 +518,14 @@ class InputTest extends TestCase
     {
         $input         = $this->input;
         $originalInput = clone $input;
-        $this->assertFalse($input->hasValue(), 'Input should not have value by default');
+        self::assertFalse($input->hasValue(), 'Input should not have value by default');
 
         $input->setValue($value);
-        $this->assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
+        self::assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
 
         $return = $input->resetValue();
-        $this->assertSame($input, $return, 'resetValue() must return itself');
-        $this->assertEquals($originalInput, $input, 'Input was not reset to the default value state');
+        self::assertSame($input, $return, 'resetValue() must return itself');
+        self::assertEquals($originalInput, $input, 'Input was not reset to the default value state');
     }
 
     public function testMerge(): void
@@ -563,14 +560,14 @@ class InputTest extends TestCase
         $target->setValidatorChain($targetValidatorChain);
 
         $return = $target->merge($source);
-        $this->assertSame($target, $return, 'merge() must return it self');
+        self::assertSame($target, $return, 'merge() must return it self');
 
-        $this->assertEquals('bazInput', $target->getName(), 'getName() value not match');
-        $this->assertEquals('bazErrorMessage', $target->getErrorMessage(), 'getErrorMessage() value not match');
-        $this->assertTrue($target->breakOnFailure(), 'breakOnFailure() value not match');
-        $this->assertTrue($target->isRequired(), 'isRequired() value not match');
-        $this->assertEquals($sourceRawValue, $target->getRawValue(), 'getRawValue() value not match');
-        $this->assertTrue($target->hasValue(), 'hasValue() value not match');
+        self::assertEquals('bazInput', $target->getName(), 'getName() value not match');
+        self::assertEquals('bazErrorMessage', $target->getErrorMessage(), 'getErrorMessage() value not match');
+        self::assertTrue($target->breakOnFailure(), 'breakOnFailure() value not match');
+        self::assertTrue($target->isRequired(), 'isRequired() value not match');
+        self::assertEquals($sourceRawValue, $target->getRawValue(), 'getRawValue() value not match');
+        self::assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 
     /**
@@ -580,17 +577,17 @@ class InputTest extends TestCase
     {
         $source = new Input();
         $source->setContinueIfEmpty(true);
-        $this->assertFalse($source->hasValue(), 'Source should not have a value');
+        self::assertFalse($source->hasValue(), 'Source should not have a value');
 
         $target = $this->input;
         $target->setContinueIfEmpty(false);
-        $this->assertFalse($target->hasValue(), 'Target should not have a value');
+        self::assertFalse($target->hasValue(), 'Target should not have a value');
 
         $return = $target->merge($source);
-        $this->assertSame($target, $return, 'merge() must return it self');
+        self::assertSame($target, $return, 'merge() must return it self');
 
-        $this->assertTrue($target->continueIfEmpty(), 'continueIfEmpty() value not match');
-        $this->assertFalse($target->hasValue(), 'hasValue() value not match');
+        self::assertTrue($target->continueIfEmpty(), 'continueIfEmpty() value not match');
+        self::assertFalse($target->hasValue(), 'hasValue() value not match');
     }
 
     /**
@@ -604,14 +601,14 @@ class InputTest extends TestCase
 
         $target = $this->input;
         $target->setContinueIfEmpty(false);
-        $this->assertFalse($target->hasValue(), 'Target should not have a value');
+        self::assertFalse($target->hasValue(), 'Target should not have a value');
 
         $return = $target->merge($source);
-        $this->assertSame($target, $return, 'merge() must return it self');
+        self::assertSame($target, $return, 'merge() must return it self');
 
-        $this->assertTrue($target->continueIfEmpty(), 'continueIfEmpty() value not match');
-        $this->assertEquals(['foo'], $target->getRawValue(), 'getRawValue() value not match');
-        $this->assertTrue($target->hasValue(), 'hasValue() value not match');
+        self::assertTrue($target->continueIfEmpty(), 'continueIfEmpty() value not match');
+        self::assertEquals(['foo'], $target->getRawValue(), 'getRawValue() value not match');
+        self::assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 
     /**
@@ -621,18 +618,18 @@ class InputTest extends TestCase
     {
         $source = new Input();
         $source->setContinueIfEmpty(true);
-        $this->assertFalse($source->hasValue(), 'Source should not have a value');
+        self::assertFalse($source->hasValue(), 'Source should not have a value');
 
         $target = $this->input;
         $target->setContinueIfEmpty(false);
         $target->setValue(['foo']);
 
         $return = $target->merge($source);
-        $this->assertSame($target, $return, 'merge() must return it self');
+        self::assertSame($target, $return, 'merge() must return it self');
 
-        $this->assertTrue($target->continueIfEmpty(), 'continueIfEmpty() value not match');
-        $this->assertEquals(['foo'], $target->getRawValue(), 'getRawValue() value not match');
-        $this->assertTrue($target->hasValue(), 'hasValue() value not match');
+        self::assertTrue($target->continueIfEmpty(), 'continueIfEmpty() value not match');
+        self::assertEquals(['foo'], $target->getRawValue(), 'getRawValue() value not match');
+        self::assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 
     public function testNotEmptyMessageIsTranslated(): void
@@ -643,15 +640,15 @@ class InputTest extends TestCase
         $notEmpty = new NotEmptyValidator();
 
         $translatedMessage = 'some translation';
-        $translator->expects($this->atLeastOnce())
+        $translator->expects(self::atLeastOnce())
             ->method('translate')
             ->with($notEmpty->getMessageTemplates()[NotEmptyValidator::IS_EMPTY])
             ->willReturn($translatedMessage);
 
-        $this->assertFalse($this->input->isValid());
+        self::assertFalse($this->input->isValid());
         $messages = $this->input->getMessages();
-        $this->assertArrayHasKey('isEmpty', $messages);
-        $this->assertSame($translatedMessage, $messages['isEmpty']);
+        self::assertArrayHasKey('isEmpty', $messages);
+        self::assertSame($translatedMessage, $messages['isEmpty']);
     }
 
     /**
@@ -821,8 +818,8 @@ class InputTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     raw: bool|int|float|string|list<string>|object,
-     *     filtered: bool|int|float|string|list<string>|object
+     *     raw: mixed,
+     *     filtered: mixed,
      * }>
      */
     public function mixedValueProvider(): array
@@ -917,10 +914,10 @@ class InputTest extends TestCase
         $validatorChain = $this->createMock(ValidatorChain::class);
 
         if (empty($valueMap)) {
-            $validatorChain->expects($this->never())
+            $validatorChain->expects(self::never())
                 ->method('isValid');
         } else {
-            $validatorChain->expects($this->atLeastOnce())
+            $validatorChain->expects(self::atLeastOnce())
                 ->method('isValid')
                 ->willReturnMap($valueMap);
         }
@@ -944,11 +941,11 @@ class InputTest extends TestCase
         $validator = $this->createMock(ValidatorInterface::class);
 
         if (($isValid === false) || ($isValid === true)) {
-            $isValidMethod = $validator->expects($this->once())
+            $isValidMethod = $validator->expects(self::once())
                 ->method('isValid')
                 ->willReturn($isValid);
         } else {
-            $isValidMethod = $validator->expects($this->never())
+            $isValidMethod = $validator->expects(self::never())
                 ->method('isValid');
         }
         if ($value !== 'not-set') {

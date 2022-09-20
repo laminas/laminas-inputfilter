@@ -18,15 +18,15 @@ final class ConfigProviderTest extends TestCase
 
         $expected = [
             'aliases'   => [
-                'InputFilterManager'                              => InputFilterPluginManager::class,
-                \Zend\InputFilter\InputFilterPluginManager::class => InputFilterPluginManager::class,
+                'InputFilterManager'                        => InputFilterPluginManager::class,
+                'Zend\InputFilter\InputFilterPluginManager' => InputFilterPluginManager::class,
             ],
             'factories' => [
                 InputFilterPluginManager::class => InputFilterPluginManagerFactory::class,
             ],
         ];
 
-        $this->assertEquals($expected, $provider->getDependencyConfig());
+        self::assertEquals($expected, $provider->getDependencyConfig());
     }
 
     public function testProvidesExpectedInputFilterConfiguration(): void
@@ -39,7 +39,7 @@ final class ConfigProviderTest extends TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $provider->getInputFilterConfig());
+        self::assertEquals($expected, $provider->getInputFilterConfig());
     }
 
     public function testInvocationProvidesDependencyConfiguration(): void
@@ -50,6 +50,6 @@ final class ConfigProviderTest extends TestCase
             'dependencies'  => $provider->getDependencyConfig(),
             'input_filters' => $provider->getInputFilterConfig(),
         ];
-        $this->assertEquals($expected, $provider());
+        self::assertEquals($expected, $provider());
     }
 }

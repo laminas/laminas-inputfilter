@@ -24,19 +24,19 @@ class ModuleTest extends TestCase
         $config = $this->module->getConfig();
 
         // Service manager
-        $this->assertArrayHasKey('service_manager', $config);
+        self::assertArrayHasKey('service_manager', $config);
 
         // Input filters
-        $this->assertArrayHasKey('input_filters', $config);
+        self::assertArrayHasKey('input_filters', $config);
     }
 
     public function testServiceManagerConfigShouldContainInputFilterManager(): void
     {
         $config = $this->module->getConfig();
 
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             InputFilterPluginManager::class,
-            $config['service_manager']['factories']
+            $config['service_manager']['factories'] ?? []
         );
     }
 
@@ -44,9 +44,9 @@ class ModuleTest extends TestCase
     {
         $config = $this->module->getConfig();
 
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             'InputFilterManager',
-            $config['service_manager']['aliases']
+            $config['service_manager']['aliases'] ?? []
         );
     }
 
@@ -54,9 +54,9 @@ class ModuleTest extends TestCase
     {
         $config = $this->module->getConfig();
 
-        $this->assertContains(
+        self::assertContains(
             InputFilterAbstractServiceFactory::class,
-            $config['input_filters']['abstract_factories']
+            $config['input_filters']['abstract_factories'] ?? []
         );
     }
 
@@ -93,6 +93,7 @@ class ModuleTest extends TestCase
             ->method('getEvent')
             ->willReturn($event);
 
+        /** @psalm-suppress InvalidArgument Prevents dev dependency on the Module manager component */
         $this->module->init($moduleManager);
     }
 }

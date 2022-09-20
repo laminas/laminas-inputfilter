@@ -38,6 +38,7 @@
         "laminas/laminas-validator": "^2.15"
     },
     "require-dev": {
+        "ext-json": "*",
         "laminas/laminas-coding-standard": "~2.4.0",
         "laminas/laminas-db": "^2.15.0",
         "phpunit/phpunit": "^9.5.24",
@@ -62,6 +63,7 @@
     "scripts": {
         "check": [
             "@cs-check",
+            "@static-analysis",
             "@test"
         ],
         "cs-check": "phpcs",
