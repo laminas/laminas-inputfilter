@@ -2,9 +2,9 @@
 
 namespace LaminasTest\InputFilter\TestAsset;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 class FooAbstractFactory implements AbstractFactoryInterface
 {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
@@ -13,6 +12,7 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
 use Laminas\Validator\ValidatorPluginManager;
+use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 use function get_class;

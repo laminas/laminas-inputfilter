@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\Filter;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
@@ -22,6 +21,7 @@ use Laminas\Validator;
 use LaminasTest\InputFilter\TestAsset\CustomInput;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 use function count;
 use function sprintf;

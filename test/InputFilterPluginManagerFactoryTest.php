@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputFilterPluginManagerFactory;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use ReflectionObject;
 
 class InputFilterPluginManagerFactoryTest extends TestCase
