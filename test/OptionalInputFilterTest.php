@@ -19,7 +19,7 @@ class OptionalInputFilterTest extends TestCase
 {
     public function testValidatesSuccessfullyWhenSetDataIsNeverCalled(): void
     {
-        $this->assertTrue($this->getNestedCarInputFilter()->get('car')->isValid());
+        self::assertTrue($this->getNestedCarInputFilter()->get('car')->isValid());
     }
 
     public function testValidatesSuccessfullyWhenValidNonEmptyDataSetProvided(): void
@@ -34,8 +34,8 @@ class OptionalInputFilterTest extends TestCase
         $inputFilter = $this->getNestedCarInputFilter();
         $inputFilter->setData($data);
 
-        $this->assertTrue($inputFilter->isValid());
-        $this->assertEquals($data, $inputFilter->getValues());
+        self::assertTrue($inputFilter->isValid());
+        self::assertEquals($data, $inputFilter->getValues());
     }
 
     public function testValidatesSuccessfullyWhenEmptyDataSetProvided(): void
@@ -47,8 +47,8 @@ class OptionalInputFilterTest extends TestCase
         $inputFilter = $this->getNestedCarInputFilter();
         $inputFilter->setData($data);
 
-        $this->assertTrue($inputFilter->isValid());
-        $this->assertEquals($data, $inputFilter->getValues());
+        self::assertTrue($inputFilter->isValid());
+        self::assertEquals($data, $inputFilter->getValues());
     }
 
     public function testValidatesSuccessfullyWhenNoDataProvided(): void
@@ -58,8 +58,8 @@ class OptionalInputFilterTest extends TestCase
         $inputFilter = $this->getNestedCarInputFilter();
         $inputFilter->setData($data);
 
-        $this->assertTrue($inputFilter->isValid());
-        $this->assertEquals(['car' => null], $inputFilter->getValues());
+        self::assertTrue($inputFilter->isValid());
+        self::assertEquals(['car' => null], $inputFilter->getValues());
     }
 
     public function testValidationFailureWhenInvalidDataSetIsProvided(): void
@@ -71,7 +71,7 @@ class OptionalInputFilterTest extends TestCase
             ],
         ]);
 
-        $this->assertFalse($inputFilter->isValid());
+        self::assertFalse($inputFilter->isValid());
         $this->assertGetValuesThrows($inputFilter);
     }
 
@@ -84,8 +84,8 @@ class OptionalInputFilterTest extends TestCase
         $inputFilter = $this->getNestedCarInputFilter();
         $inputFilter->setData($data);
 
-        $this->assertTrue($inputFilter->isValid());
-        $this->assertEquals($data, $inputFilter->getValues());
+        self::assertTrue($inputFilter->isValid());
+        self::assertEquals($data, $inputFilter->getValues());
     }
 
     /**
@@ -98,23 +98,23 @@ class OptionalInputFilterTest extends TestCase
         $optionalInputFilter->add(new Input('brand'));
 
         $optionalInputFilter->setData(['model' => 'Golf']);
-        $this->assertFalse($optionalInputFilter->isValid());
+        self::assertFalse($optionalInputFilter->isValid());
 
         $optionalInputFilter->setData(new ArrayIterator([]));
-        $this->assertTrue($optionalInputFilter->isValid());
+        self::assertTrue($optionalInputFilter->isValid());
 
         $optionalInputFilter->setData([]);
-        $this->assertTrue($optionalInputFilter->isValid());
+        self::assertTrue($optionalInputFilter->isValid());
     }
 
     protected function assertGetValuesThrows(InputFilterInterface $inputFilter): void
     {
         try {
             $inputFilter->getValues();
-            $this->assertTrue(false);
+            self::fail('No exception was thrown');
         // TODO: issue #143 narrow which exception should be thrown
         } catch (Exception $exception) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
         }
     }
 

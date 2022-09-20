@@ -30,7 +30,7 @@ class ArrayInputTest extends InputTest
 
     public function testDefaultGetValue(): void
     {
-        $this->assertCount(0, $this->input->getValue());
+        self::assertCount(0, $this->input->getValue());
     }
 
     public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays(): void
@@ -39,7 +39,7 @@ class ArrayInputTest extends InputTest
         $input->setRequired(true);
         $input->setValue([]);
 
-        $this->assertFalse($input->isValid());
+        self::assertFalse($input->isValid());
         $this->assertRequiredValidationErrorMessage($input);
     }
 
@@ -52,12 +52,12 @@ class ArrayInputTest extends InputTest
         $input->setErrorMessage($expected);
         $input->setValue([]);
 
-        $this->assertFalse($input->isValid());
+        self::assertFalse($input->isValid());
 
         $messages = $input->getMessages();
-        $this->assertCount(1, $messages);
+        self::assertCount(1, $messages);
         $message = array_pop($messages);
-        $this->assertEquals($expected, $message);
+        self::assertEquals($expected, $message);
     }
 
     public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException(): void

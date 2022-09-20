@@ -5,34 +5,32 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter;
+use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAbstractServiceFactory;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Validator;
+use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\Foo;
 use PHPUnit\Framework\TestCase;
 
 use function call_user_func_array;
-use function count;
 
 /**
  * @covers \Laminas\InputFilter\InputFilterAbstractServiceFactory
  */
 class InputFilterAbstractServiceFactoryTest extends TestCase
 {
-    /** @var ServiceManager */
-    protected $services;
-
-    /** @var InputFilterPluginManager */
-    protected $filters;
-
-    /** @var InputFilterAbstractServiceFactory */
-    protected $factory;
+    private ServiceManager $services;
+    private InputFilterPluginManager $filters;
+    private InputFilterAbstractServiceFactory $factory;
 
     protected function setUp(): void
     {
@@ -47,7 +45,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     {
         $method = 'canCreate';
         $args   = [$this->services, 'filter'];
-        $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
+        self::assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
     public function testCannotCreateServiceIfConfigServiceDoesNotHaveInputFiltersConfiguration(): void
@@ -56,7 +54,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $method = 'canCreate';
         $args   = [$this->services, 'filter'];
 
-        $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
+        self::assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
     public function testCannotCreateServiceIfConfigInputFiltersDoesNotContainMatchingServiceName(): void
@@ -66,7 +64,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         ]);
         $method = 'canCreate';
         $args   = [$this->services, 'filter'];
-        $this->assertFalse(call_user_func_array([$this->factory, $method], $args));
+        self::assertFalse(call_user_func_array([$this->factory, $method], $args));
     }
 
     public function testCanCreateServiceIfConfigInputFiltersContainsMatchingServiceName(): void
@@ -78,7 +76,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         ]);
         $method = 'canCreate';
         $args   = [$this->services, 'filter'];
-        $this->assertTrue(call_user_func_array([$this->factory, $method], $args));
+        self::assertTrue(call_user_func_array([$this->factory, $method], $args));
     }
 
     public function testCreatesInputFilterInstance(): void
@@ -91,7 +89,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $method = '__invoke';
         $args   = [$this->services, 'filter'];
         $filter = call_user_func_array([$this->factory, $method], $args);
-        $this->assertInstanceOf(InputFilterInterface::class, $filter);
+        self::assertInstanceOf(InputFilterInterface::class, $filter);
     }
 
     /**
@@ -100,7 +98,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
         $filters = new FilterPluginManager($this->services);
-        $filter  = static function () {
+        $filter  = static function (): void {
         };
         $filters->setService('foo', $filter);
 
@@ -130,21 +128,25 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $method      = '__invoke';
         $args        = [$this->services, 'filter'];
         $inputFilter = call_user_func_array([$this->factory, $method], $args);
-        $this->assertTrue($inputFilter->has('input'));
+        self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
+        self::assertTrue($inputFilter->has('input'));
 
         $input = $inputFilter->get('input');
+        self::assertInstanceOf(InputInterface::class, $input);
 
         $filterChain = $input->getFilterChain();
-        $this->assertSame($filters, $filterChain->getPluginManager());
-        $this->assertEquals(1, count($filterChain));
-        $this->assertSame($filter, $filterChain->plugin('foo'));
-        $this->assertEquals(1, count($filterChain));
+        self::assertInstanceOf(FilterChain::class, $filterChain);
+        self::assertSame($filters, $filterChain->getPluginManager());
+        self::assertCount(1, $filterChain);
+        self::assertSame($filter, $filterChain->plugin('foo'));
+        self::assertCount(1, $filterChain);
 
         $validatorChain = $input->getValidatorChain();
-        $this->assertSame($validators, $validatorChain->getPluginManager());
-        $this->assertEquals(1, count($validatorChain));
-        $this->assertSame($validator, $validatorChain->plugin('foo'));
-        $this->assertEquals(1, count($validatorChain));
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+        self::assertSame($validators, $validatorChain->getPluginManager());
+        self::assertCount(1, $validatorChain);
+        self::assertSame($validator, $validatorChain->plugin('foo'));
+        self::assertCount(1, $validatorChain);
     }
 
     public function testRetrieveInputFilterFromInputFilterPluginManager(): void
@@ -180,7 +182,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ->addAbstractFactory(InputFilterAbstractServiceFactory::class);
 
         $inputFilter = $this->services->get(InputFilterPluginManager::class)->get('foobar');
-        $this->assertInstanceOf(InputFilterInterface::class, $inputFilter);
+        self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
     }
 
     /**
@@ -194,11 +196,12 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ],
         ]);
         $this->filters->addAbstractFactory(TestAsset\FooAbstractFactory::class);
-        $filter             = $this->factory->__invoke($this->services, 'filter');
+        $filter = $this->factory->__invoke($this->services, 'filter');
+        self::assertInstanceOf(InputFilter::class, $filter);
         $inputFilterManager = $filter->getFactory()->getInputFilterManager();
 
-        $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilterManager);
-        $this->assertInstanceOf(Foo::class, $inputFilterManager->get('foo'));
+        self::assertInstanceOf(InputFilterPluginManager::class, $inputFilterManager);
+        self::assertInstanceOf(Foo::class, $inputFilterManager->get('foo'));
     }
 
     public function testAllowsPassingNonPluginManagerContainerToFactoryWithServiceManagerV2(): void
@@ -211,9 +214,9 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $canCreate = 'canCreate';
         $create    = '__invoke';
         $args      = [$this->services, 'filter'];
-        $this->assertTrue(call_user_func_array([$this->factory, $canCreate], $args));
+        self::assertTrue(call_user_func_array([$this->factory, $canCreate], $args));
         $inputFilter = call_user_func_array([$this->factory, $create], $args);
-        $this->assertInstanceOf(InputFilterInterface::class, $inputFilter);
+        self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
     }
 
     /**
@@ -272,16 +275,16 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             ->addAbstractFactory(InputFilterAbstractServiceFactory::class);
 
         $inputFilter = $this->services->get(InputFilterPluginManager::class)->get('test');
-        $this->assertInstanceOf(InputFilterInterface::class, $inputFilter);
+        self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
 
         $input = $inputFilter->get('a-file-element');
-        $this->assertInstanceOf(FileInput::class, $input);
+        self::assertInstanceOf(FileInput::class, $input);
 
         $filters = $input->getFilterChain();
-        $this->assertCount(1, $filters);
+        self::assertCount(1, $filters);
 
         $callback = $filters->getFilters()->top();
-        $this->assertIsArray($callback);
-        $this->assertSame($filter, $callback[0]);
+        self::assertIsArray($callback);
+        self::assertSame($filter, $callback[0]);
     }
 }

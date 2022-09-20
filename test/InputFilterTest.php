@@ -29,14 +29,14 @@ class InputFilterTest extends BaseInputFilterTest
     public function testLazilyComposesAFactoryByDefault(): void
     {
         $factory = $this->inputFilter->getFactory();
-        $this->assertInstanceOf(Factory::class, $factory);
+        self::assertInstanceOf(Factory::class, $factory);
     }
 
     public function testCanComposeAFactory(): void
     {
         $factory = $this->createFactoryMock();
         $this->inputFilter->setFactory($factory);
-        $this->assertSame($factory, $this->inputFilter->getFactory());
+        self::assertSame($factory, $this->inputFilter->getFactory());
     }
 
     /**
@@ -99,12 +99,14 @@ class InputFilterTest extends BaseInputFilterTest
             ],
         ], 'nested');
 
+        $expect = ['nested' => ['nestedField1' => null]];
+
         // Empty set of data
         $filter1->setData([]);
-        self::assertNull($filter1->getValues()['nested']['nestedField1']);
+        self::assertEquals($expect, $filter1->getValues());
 
         // null provided for nested filter
         $filter1->setData(['nested' => null]);
-        self::assertNull($filter1->getValues()['nested']['nestedField1']);
+        self::assertEquals($expect, $filter1->getValues());
     }
 }

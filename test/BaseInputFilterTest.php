@@ -44,7 +44,7 @@ class BaseInputFilterTest extends TestCase
     public function testInputFilterIsEmptyByDefault(): void
     {
         $filter = $this->inputFilter;
-        $this->assertEquals(0, count($filter));
+        self::assertCount(0, $filter);
     }
 
     public function testAddWithInvalidInputTypeThrowsInvalidArgumentException(): void
@@ -56,7 +56,7 @@ class BaseInputFilterTest extends TestCase
             'expects an instance of Laminas\InputFilter\InputInterface or Laminas\InputFilter\InputFilterInterface '
             . 'as its first argument; received "stdClass"'
         );
-        /** @noinspection PhpParamsInspection */
+        /** @psalm-suppress InvalidArgument */
         $inputFilter->add(new stdClass());
     }
 
@@ -116,7 +116,7 @@ class BaseInputFilterTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('expects an array or Traversable argument; received stdClass');
-        /** @noinspection PhpParamsInspection */
+        /** @psalm-suppress InvalidArgument */
         $inputFilter->setData(new stdClass());
     }
 
@@ -142,7 +142,7 @@ class BaseInputFilterTest extends TestCase
         $r = new ReflectionObject($inputFilter);
         $p = $r->getProperty('validationGroup');
         $p->setAccessible(true);
-        $this->assertEquals(['fooInput'], $p->getValue($inputFilter));
+        self::assertEquals(['fooInput'], $p->getValue($inputFilter));
     }
 
     public function testSetValidationGroupAllowsSpecifyingArrayOfInputsToNestedInputFilter(): void
@@ -166,8 +166,8 @@ class BaseInputFilterTest extends TestCase
         $r = new ReflectionObject($inputFilter);
         $p = $r->getProperty('validationGroup');
         $p->setAccessible(true);
-        $this->assertEquals(['nested'], $p->getValue($inputFilter));
-        $this->assertEquals(['nested-input1', 'nested-input2'], $p->getValue($nestedInputFilter));
+        self::assertEquals(['nested'], $p->getValue($inputFilter));
+        self::assertEquals(['nested-input1', 'nested-input2'], $p->getValue($nestedInputFilter));
     }
 
     public function testSetValidationGroupThrowExceptionIfInputFilterNotExists(): void
@@ -221,21 +221,21 @@ class BaseInputFilterTest extends TestCase
         object $expectedInput
     ): void {
         $inputFilter = $this->inputFilter;
-        $this->assertFalse(
+        self::assertFalse(
             $inputFilter->has($expectedInputName),
             "InputFilter shouldn't have an input with the name $expectedInputName yet"
         );
         $currentNumberOfFilters = count($inputFilter);
 
         $return = $inputFilter->add($input, $name);
-        $this->assertSame($inputFilter, $return, "add() must return it self");
+        self::assertSame($inputFilter, $return, "add() must return it self");
 
         // **Check input collection state**
-        $this->assertTrue($inputFilter->has($expectedInputName), "There is no input with name $expectedInputName");
-        $this->assertCount($currentNumberOfFilters + 1, $inputFilter, 'Number of filters must be increased by 1');
+        self::assertTrue($inputFilter->has($expectedInputName), "There is no input with name $expectedInputName");
+        self::assertCount($currentNumberOfFilters + 1, $inputFilter, 'Number of filters must be increased by 1');
 
         $returnInput = $inputFilter->get($expectedInputName);
-        $this->assertEquals($expectedInput, $returnInput, 'get() does not match the expected input');
+        self::assertEquals($expectedInput, $returnInput, 'get() does not match the expected input');
     }
 
     /**
@@ -252,10 +252,10 @@ class BaseInputFilterTest extends TestCase
         $currentNumberOfFilters = count($inputFilter);
 
         $return = $inputFilter->remove($expectedInputName);
-        $this->assertSame($inputFilter, $return, 'remove() must return it self');
+        self::assertSame($inputFilter, $return, 'remove() must return it self');
 
-        $this->assertFalse($inputFilter->has($expectedInputName), "There is no input with name $expectedInputName");
-        $this->assertCount($currentNumberOfFilters - 1, $inputFilter, 'Number of filters must be decreased by 1');
+        self::assertFalse($inputFilter->has($expectedInputName), "There is no input with name $expectedInputName");
+        self::assertCount($currentNumberOfFilters - 1, $inputFilter, 'Number of filters must be decreased by 1');
     }
 
     public function testAddingInputWithNameDoesNotInjectNameInInput(): void
@@ -266,8 +266,8 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->add($foo, 'bas');
 
         $test = $inputFilter->get('bas');
-        $this->assertSame($foo, $test, 'get() does not match the input added');
-        $this->assertEquals('foo', $foo->getName(), 'Input name should not change');
+        self::assertSame($foo, $test, 'get() does not match the input added');
+        self::assertEquals('foo', $foo->getName(), 'Input name should not change');
     }
 
     /**
@@ -284,11 +284,11 @@ class BaseInputFilterTest extends TestCase
         $currentNumberOfFilters = count($inputFilter);
 
         $return = $inputFilter->replace($input, $nameToReplace);
-        $this->assertSame($inputFilter, $return, 'replace() must return it self');
-        $this->assertCount($currentNumberOfFilters, $inputFilter, "Number of filters shouldn't change");
+        self::assertSame($inputFilter, $return, 'replace() must return it self');
+        self::assertCount($currentNumberOfFilters, $inputFilter, "Number of filters shouldn't change");
 
         $returnInput = $inputFilter->get($nameToReplace);
-        $this->assertEquals($expectedInput, $returnInput, 'get() does not match the expected input');
+        self::assertEquals($expectedInput, $returnInput, 'get() does not match the expected input');
     }
 
     /**
@@ -309,21 +309,21 @@ class BaseInputFilterTest extends TestCase
             $inputFilter->add($input, $inputName);
         }
         $return = $inputFilter->setData($data);
-        $this->assertSame($inputFilter, $return, 'setData() must return it self');
+        self::assertSame($inputFilter, $return, 'setData() must return it self');
 
         // ** Check filter state **
-        $this->assertSame($expectedRawValues, $inputFilter->getRawValues(), 'getRawValues() value not match');
+        self::assertSame($expectedRawValues, $inputFilter->getRawValues(), 'getRawValues() value not match');
         foreach ($expectedRawValues as $inputName => $expectedRawValue) {
-            $this->assertSame(
+            self::assertSame(
                 $expectedRawValue,
                 $inputFilter->getRawValue($inputName),
                 'getRawValue() value not match for input ' . $inputName
             );
         }
 
-        $this->assertSame($expectedValues, $inputFilter->getValues(), 'getValues() value not match');
+        self::assertSame($expectedValues, $inputFilter->getValues(), 'getValues() value not match');
         foreach ($expectedValues as $inputName => $expectedValue) {
-            $this->assertSame(
+            self::assertSame(
                 $expectedValue,
                 $inputFilter->getValue($inputName),
                 'getValue() value not match for input ' . $inputName
@@ -332,15 +332,15 @@ class BaseInputFilterTest extends TestCase
 
         // ** Check validation state **
         // phpcs:disable Generic.Files.LineLength.TooLong
-        $this->assertEquals($expectedIsValid, $inputFilter->isValid(), 'isValid() value not match');
-        $this->assertEquals($expectedInvalidInputs, $inputFilter->getInvalidInput(), 'getInvalidInput() value not match');
-        $this->assertEquals($expectedValidInputs, $inputFilter->getValidInput(), 'getValidInput() value not match');
-        $this->assertEquals($expectedMessages, $inputFilter->getMessages(), 'getMessages() value not match');
+        self::assertEquals($expectedIsValid, $inputFilter->isValid(), 'isValid() value not match');
+        self::assertEquals($expectedInvalidInputs, $inputFilter->getInvalidInput(), 'getInvalidInput() value not match');
+        self::assertEquals($expectedValidInputs, $inputFilter->getValidInput(), 'getValidInput() value not match');
+        self::assertEquals($expectedMessages, $inputFilter->getMessages(), 'getMessages() value not match');
         // phpcs:enable Generic.Files.LineLength.TooLong
 
         // ** Check unknown fields **
-        $this->assertFalse($inputFilter->hasUnknown(), 'hasUnknown() value not match');
-        $this->assertEmpty($inputFilter->getUnknown(), 'getUnknown() value not match');
+        self::assertFalse($inputFilter->hasUnknown(), 'hasUnknown() value not match');
+        self::assertEmpty($inputFilter->getUnknown(), 'getUnknown() value not match');
     }
 
     /**
@@ -384,7 +384,7 @@ class BaseInputFilterTest extends TestCase
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(['flat'])
             ->getMock();
-        $flatInput->expects($this->once())
+        $flatInput->expects(self::once())
             ->method('setValue')
             ->with('foo');
         // Inputs without value must be reset for to have clean states when use different setData arguments
@@ -393,7 +393,7 @@ class BaseInputFilterTest extends TestCase
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(['notSet'])
             ->getMock();
-        $resetInput->expects($this->once())
+        $resetInput->expects(self::once())
             ->method('resetValue');
 
         $filter = $this->inputFilter;
@@ -407,7 +407,7 @@ class BaseInputFilterTest extends TestCase
         $filter->setValidationGroup(['deep' => 'deep-input1']);
         // reset validation group
         $filter->setValidationGroup(InputFilterInterface::VALIDATE_ALL);
-        $this->assertEquals($expectedData, $filter->getValues());
+        self::assertEquals($expectedData, $filter->getValues());
     }
 
     /*
@@ -450,7 +450,7 @@ class BaseInputFilterTest extends TestCase
 
         $filter->setData($data);
 
-        $this->assertTrue(
+        self::assertTrue(
             $filter->isValid($customContext),
             'isValid() value not match. Detail: ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
@@ -467,7 +467,7 @@ class BaseInputFilterTest extends TestCase
 
         $filter->setData($data);
 
-        $this->assertTrue(
+        self::assertTrue(
             $filter->isValid(),
             'isValid() value not match. Detail: ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
@@ -491,7 +491,7 @@ class BaseInputFilterTest extends TestCase
 
         $filter->setData($data);
 
-        $this->assertTrue(
+        self::assertTrue(
             $filter->isValid(),
             'isValid() value not match. Detail: ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
@@ -506,7 +506,7 @@ class BaseInputFilterTest extends TestCase
         $optionalInput = $this->createMock(InputInterface::class);
         $optionalInput->method('getName')
             ->willReturn($optionalInputName);
-        $optionalInput->expects($this->never())
+        $optionalInput->expects(self::never())
             ->method('isValid');
         $data = [];
 
@@ -514,16 +514,16 @@ class BaseInputFilterTest extends TestCase
 
         $filter->setData($data);
 
-        $this->assertTrue(
+        self::assertTrue(
             $filter->isValid(),
             'isValid() value not match. Detail . ' . json_encode($filter->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertArrayNotHasKey(
+        self::assertArrayNotHasKey(
             $optionalInputName,
             $filter->getValidInput(),
             'Missing optional fields must not appear as valid input neither invalid input'
         );
-        $this->assertArrayNotHasKey(
+        self::assertArrayNotHasKey(
             $optionalInputName,
             $filter->getInvalidInput(),
             'Missing optional fields must not appear as valid input neither invalid input'
@@ -542,8 +542,8 @@ class BaseInputFilterTest extends TestCase
 
         $inputFilter->setData($data);
 
-        $this->assertEquals($getUnknown, $inputFilter->getUnknown(), 'getUnknown() value not match');
-        $this->assertEquals($hasUnknown, $inputFilter->hasUnknown(), 'hasUnknown() value not match');
+        self::assertEquals($getUnknown, $inputFilter->getUnknown(), 'getUnknown() value not match');
+        self::assertEquals($hasUnknown, $inputFilter->hasUnknown(), 'hasUnknown() value not match');
     }
 
     public function testGetInputs(): void
@@ -558,9 +558,9 @@ class BaseInputFilterTest extends TestCase
 
         $filters = $filter->getInputs();
 
-        $this->assertCount(2, $filters);
-        $this->assertEquals('foo', $filters['foo']->getName());
-        $this->assertEquals('bar', $filters['bar']->getName());
+        self::assertCount(2, $filters);
+        self::assertEquals('foo', $filters['foo']->getName());
+        self::assertEquals('bar', $filters['bar']->getName());
     }
 
     public function testAddingExistingInputWillMergeIntoExisting(): void
@@ -575,7 +575,7 @@ class BaseInputFilterTest extends TestCase
         $foo2->setRequired(false);
         $filter->add($foo2);
 
-        $this->assertFalse($filter->get('foo')->isRequired());
+        self::assertFalse($filter->get('foo')->isRequired());
     }
 
     public function testMerge(): void
@@ -590,7 +590,7 @@ class BaseInputFilterTest extends TestCase
 
         $inputFilter->merge($originInputFilter);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'foo',
                 'bar',
@@ -932,11 +932,11 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->method('getValues')
             ->willReturn($getValues);
         if (($isValid === false) || ($isValid === true)) {
-            $inputFilter->expects($this->once())
+            $inputFilter->expects(self::once())
                 ->method('isValid')
                 ->willReturn($isValid);
         } else {
-            $inputFilter->expects($this->never())
+            $inputFilter->expects(self::never())
                 ->method('isValid');
         }
         $inputFilter->method('getMessages')
@@ -979,12 +979,12 @@ class BaseInputFilterTest extends TestCase
         $input->method('breakOnFailure')
             ->willReturn($breakOnFailure);
         if (($isValid === false) || ($isValid === true)) {
-            $input->expects($this->any())
+            $input->expects(self::any())
                 ->method('isValid')
                 ->with($context)
                 ->willReturn($isValid);
         } else {
-            $input->expects($this->never())
+            $input->expects(self::never())
                 ->method('isValid')
                 ->with($context);
         }

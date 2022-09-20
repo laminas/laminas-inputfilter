@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\ModuleManager\ModuleManager;
+use Laminas\ServiceManager\ConfigInterface;
 
+/** @psalm-import-type ServiceManagerConfigurationType from ConfigInterface */
 class Module
 {
     /**
      * Return default laminas-inputfilter configuration for laminas-mvc applications.
      *
-     * @return array
+     * @return array<string, mixed>
+     * @psalm-return array{
+     *     service_manager: ServiceManagerConfigurationType,
+     *     input_filters: ServiceManagerConfigurationType,
+     * }
      */
     public function getConfig()
     {

@@ -21,15 +21,15 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $factory   = new InputFilterPluginManagerFactory();
 
         $filters = $factory($container, InputFilterPluginManagerFactory::class);
-        $this->assertInstanceOf(InputFilterPluginManager::class, $filters);
+        self::assertInstanceOf(InputFilterPluginManager::class, $filters);
 
         $r = new ReflectionObject($filters);
         $p = $r->getProperty('creationContext');
         $p->setAccessible(true);
-        $this->assertSame($container, $p->getValue($filters));
+        self::assertSame($container, $p->getValue($filters));
     }
 
-    /** @psalm-return array<string, array{0: class-string<InputInterface>}> */
+    /** @psalm-return array<string, array{0: class-string}> */
     public function pluginProvider(): array
     {
         return [
@@ -54,7 +54,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
                 'test' => $plugin,
             ],
         ]);
-        $this->assertSame($plugin, $filters->get('test'));
+        self::assertSame($plugin, $filters->get('test'));
     }
 
     public function testConfiguresInputFilterServicesWhenFound(): void
@@ -84,11 +84,11 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container);
 
-        $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
-        $this->assertTrue($inputFilters->has('test'));
-        $this->assertSame($inputFilter, $inputFilters->get('test'));
-        $this->assertTrue($inputFilters->has('test-too'));
-        $this->assertSame($inputFilter, $inputFilters->get('test-too'));
+        self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
+        self::assertTrue($inputFilters->has('test'));
+        self::assertSame($inputFilter, $inputFilters->get('test'));
+        self::assertTrue($inputFilters->has('test-too'));
+        self::assertSame($inputFilter, $inputFilters->get('test-too'));
     }
 
     public function testDoesNotConfigureInputFilterServicesWhenServiceListenerPresent(): void
@@ -104,9 +104,9 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container);
 
-        $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
-        $this->assertFalse($inputFilters->has('test'));
-        $this->assertFalse($inputFilters->has('test-too'));
+        self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
+        self::assertFalse($inputFilters->has('test'));
+        self::assertFalse($inputFilters->has('test-too'));
     }
 
     public function testDoesNotConfigureInputFilterServicesWhenConfigServiceNotPresent(): void
@@ -122,7 +122,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container);
 
-        $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
+        self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
     }
 
     public function testDoesNotConfigureInputFilterServicesWhenConfigServiceDoesNotContainInputFiltersConfig(): void
@@ -141,7 +141,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
         $factory      = new InputFilterPluginManagerFactory();
         $inputFilters = $factory($container);
 
-        $this->assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
-        $this->assertFalse($inputFilters->has('foo'));
+        self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
+        self::assertFalse($inputFilters->has('foo'));
     }
 }

@@ -11,7 +11,6 @@ use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
 use Psr\Http\Message\UploadedFileInterface;
 
-use function count;
 use function in_array;
 use function json_encode;
 
@@ -38,7 +37,7 @@ class PsrFileInputDecoratorTest extends InputTest
 
     public function testRetrievingValueFiltersTheValue(): void
     {
-        $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
+        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
     public function testRetrievingValueFiltersTheValueOnlyAfterValidating(): void
@@ -59,12 +58,12 @@ class PsrFileInputDecoratorTest extends InputTest
             ],
         ]));
 
-        $this->assertEquals($upload, $this->input->getValue());
-        $this->assertTrue(
+        self::assertEquals($upload, $this->input->getValue());
+        self::assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals($filteredUpload, $this->input->getValue());
+        self::assertEquals($filteredUpload, $this->input->getValue());
     }
 
     public function testCanFilterArrayOfMultiFileData(): void
@@ -90,12 +89,12 @@ class PsrFileInputDecoratorTest extends InputTest
             [$values[2], $filteredValues[2]],
         ]));
 
-        $this->assertEquals($values, $this->input->getValue());
-        $this->assertTrue(
+        self::assertEquals($values, $this->input->getValue());
+        self::assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals(
+        self::assertEquals(
             $filteredValues,
             $this->input->getValue()
         );
@@ -111,12 +110,12 @@ class PsrFileInputDecoratorTest extends InputTest
         $filteredValue = $this->createMock(UploadedFileInterface::class);
         $this->input->setFilterChain($this->createFilterChainMock([[$value, $filteredValue]]));
 
-        $this->assertEquals($value, $this->input->getRawValue());
+        self::assertEquals($value, $this->input->getRawValue());
     }
 
     public function testValidationOperatesOnFilteredValue(): void
     {
-        $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
+        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
     public function testValidationOperatesBeforeFiltering(): void
@@ -132,21 +131,21 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
         $this->input->setValidatorChain($this->createValidatorChainMock([[$badValue, null, false]]));
 
-        $this->assertFalse($this->input->isValid());
-        $this->assertEquals($badValue, $this->input->getValue());
+        self::assertFalse($this->input->isValid());
+        self::assertEquals($badValue, $this->input->getValue());
     }
 
     public function testAutoPrependUploadValidatorIsOnByDefault(): void
     {
         $input = new FileInput('foo');
-        $this->assertTrue($input->getAutoPrependUploadValidator());
+        self::assertTrue($input->getAutoPrependUploadValidator());
     }
 
     public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
-        $this->assertTrue($this->input->getAutoPrependUploadValidator());
-        $this->assertTrue($this->input->isRequired());
+        self::assertTrue($this->input->getAutoPrependUploadValidator());
+        self::assertTrue($this->input->isRequired());
 
         $uploadedFile = $this->createMock(UploadedFileInterface::class);
         $uploadedFile->expects(self::atLeast(1))
@@ -156,18 +155,18 @@ class PsrFileInputDecoratorTest extends InputTest
         $this->input->setValue($uploadedFile);
 
         $validatorChain = $this->input->getValidatorChain();
-        $this->assertCount(0, $validatorChain->getValidators());
+        self::assertCount(0, $validatorChain->getValidators());
 
-        $this->assertFalse($this->input->isValid());
+        self::assertFalse($this->input->isValid());
         $validators = $validatorChain->getValidators();
-        $this->assertCount(1, $validators);
-        $this->assertInstanceOf(Validator\File\UploadFile::class, $validators[0]['instance']);
+        self::assertCount(1, $validators);
+        self::assertInstanceOf(Validator\File\UploadFile::class, $validators[0]['instance']);
     }
 
     public function testUploadValidatorIsNotAddedByDefaultDuringIsValidWhenAutoPrependUploadValidatorIsDisabled(): void
     {
-        $this->assertFalse($this->input->getAutoPrependUploadValidator());
-        $this->assertTrue($this->input->isRequired());
+        self::assertFalse($this->input->getAutoPrependUploadValidator());
+        self::assertTrue($this->input->isRequired());
 
         $uploadedFile = $this->createMock(UploadedFileInterface::class);
         $uploadedFile->expects(self::atLeast(1))
@@ -176,20 +175,20 @@ class PsrFileInputDecoratorTest extends InputTest
 
         $this->input->setValue($uploadedFile);
         $validatorChain = $this->input->getValidatorChain();
-        $this->assertEquals(0, count($validatorChain->getValidators()));
+        self::assertCount(0, $validatorChain->getValidators());
 
-        $this->assertTrue(
+        self::assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        $this->assertEquals(0, count($validatorChain->getValidators()));
+        self::assertCount(0, $validatorChain->getValidators());
     }
 
     public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists(): void
     {
         $this->input->setAutoPrependUploadValidator(true);
-        $this->assertTrue($this->input->getAutoPrependUploadValidator());
-        $this->assertTrue($this->input->isRequired());
+        self::assertTrue($this->input->getAutoPrependUploadValidator());
+        self::assertTrue($this->input->isRequired());
 
         $upload = $this->createMock(UploadedFileInterface::class);
         $upload->expects(self::atLeast(1))
@@ -206,26 +205,26 @@ class PsrFileInputDecoratorTest extends InputTest
 
         $validatorChain = $this->input->getValidatorChain();
         $validatorChain->prependValidator($validator);
-        $this->assertTrue(
+        self::assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
 
         $validators = $validatorChain->getValidators();
-        $this->assertEquals(1, count($validators));
-        $this->assertEquals($validator, $validators[0]['instance']);
+        self::assertCount(1, $validators);
+        self::assertEquals($validator, $validators[0]['instance']);
     }
 
     /** @param mixed $value */
     public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null): void
     {
-        $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
+        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
     /** @param mixed $value */
     public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null): void
     {
-        $this->markTestSkipped('Test is not enabled in PsrFileInputTest');
+        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
     /**
@@ -240,7 +239,7 @@ class PsrFileInputDecoratorTest extends InputTest
         ?bool $isValid = null,
         $expectedValue = null
     ): void {
-        $this->markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
+        self::markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
     }
 
     /** @param null|string|string[] $fallbackValue */
@@ -248,7 +247,7 @@ class PsrFileInputDecoratorTest extends InputTest
         ?bool $required = null,
         $fallbackValue = null
     ): void {
-        $this->markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
+        self::markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
     }
 
     public function testIsEmptyFileUploadNoFile(): void
@@ -257,7 +256,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $upload->expects(self::atLeast(1))
             ->method('getError')
             ->willReturn(UPLOAD_ERR_NO_FILE);
-        $this->assertTrue($this->input->isEmptyFile($upload));
+        self::assertTrue($this->input->isEmptyFile($upload));
     }
 
     public function testIsEmptyFileOk(): void
@@ -266,7 +265,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $upload->expects(self::atLeast(1))
             ->method('getError')
             ->willReturn(UPLOAD_ERR_OK);
-        $this->assertFalse($this->input->isEmptyFile($upload));
+        self::assertFalse($this->input->isEmptyFile($upload));
     }
 
     public function testIsEmptyMultiFileUploadNoFile(): void
@@ -278,7 +277,7 @@ class PsrFileInputDecoratorTest extends InputTest
 
         $rawValue = [$upload];
 
-        $this->assertTrue($this->input->isEmptyFile($rawValue));
+        self::assertTrue($this->input->isEmptyFile($rawValue));
     }
 
     public function testIsEmptyFileMultiFileOk(): void
@@ -292,7 +291,7 @@ class PsrFileInputDecoratorTest extends InputTest
             $rawValue[] = $upload;
         }
 
-        $this->assertFalse($this->input->isEmptyFile($rawValue));
+        self::assertFalse($this->input->isEmptyFile($rawValue));
     }
 
     /**
@@ -307,9 +306,9 @@ class PsrFileInputDecoratorTest extends InputTest
         $target->setAutoPrependUploadValidator(false);
 
         $return = $target->merge($source);
-        $this->assertSame($target, $return, 'merge() must return it self');
+        self::assertSame($target, $return, 'merge() must return it self');
 
-        $this->assertEquals(
+        self::assertEquals(
             true,
             $target->getAutoPrependUploadValidator(),
             'getAutoPrependUploadValidator() value not match'

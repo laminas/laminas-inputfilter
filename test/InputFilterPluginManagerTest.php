@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
@@ -15,11 +16,13 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\FileInput\TestAsset\InitializableInputFilterInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
+use Throwable;
 
 use function method_exists;
 
@@ -28,11 +31,8 @@ use function method_exists;
  */
 class InputFilterPluginManagerTest extends TestCase
 {
-    /** @var InputFilterPluginManager */
-    protected $manager;
-
-    /** @var ServiceManager */
-    protected $services;
+    private InputFilterPluginManager $manager;
+    private ServiceManager $services;
 
     protected function setUp(): void
     {
@@ -42,7 +42,7 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testIsASubclassOfAbstractPluginManager(): void
     {
-        $this->assertInstanceOf(AbstractPluginManager::class, $this->manager);
+        self::assertInstanceOf(AbstractPluginManager::class, $this->manager);
     }
 
     public function testIsNotSharedByDefault(): void
@@ -50,7 +50,7 @@ class InputFilterPluginManagerTest extends TestCase
         $r = new ReflectionObject($this->manager);
         $p = $r->getProperty('sharedByDefault');
         $p->setAccessible(true);
-        $this->assertFalse($p->getValue($this->manager));
+        self::assertFalse($p->getValue($this->manager));
     }
 
     public function testRegisteringInvalidElementRaisesException(): void
@@ -65,7 +65,7 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testLoadingInvalidElementRaisesException(): void
     {
-        $this->manager->setInvokableClass('test', static::class);
+        $this->manager->setInvokableClass('test', self::class);
         $this->expectException($this->getServiceNotFoundException());
         $this->manager->get('test');
     }
@@ -89,7 +89,7 @@ class InputFilterPluginManagerTest extends TestCase
         /** @var object $service */
         $service = $this->manager->get($alias);
 
-        $this->assertInstanceOf($expectedInstance, $service, 'get() return type not match');
+        self::assertInstanceOf($expectedInstance, $service, 'get() return type not match');
     }
 
     public function testInputFilterInvokableClassSMDependenciesArePopulatedWithoutServiceLocator(): void
@@ -98,7 +98,7 @@ class InputFilterPluginManagerTest extends TestCase
         $service = $this->manager->get('inputfilter');
 
         $factory = $service->getFactory();
-        $this->assertSame(
+        self::assertSame(
             $this->manager,
             $factory->getInputFilterManager(),
             'Factory::getInputFilterManager() is not populated with the expected plugin manager'
@@ -107,12 +107,8 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator(): void
     {
-        $filterManager    = $this->getMockBuilder(FilterPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $validatorManager = $this->getMockBuilder(ValidatorPluginManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $filterManager    = $this->createMock(FilterPluginManager::class);
+        $validatorManager = $this->createMock(ValidatorPluginManager::class);
 
         $this->services->setService(FilterPluginManager::class, $filterManager);
         $this->services->setService(ValidatorPluginManager::class, $validatorManager);
@@ -121,21 +117,23 @@ class InputFilterPluginManagerTest extends TestCase
         $service = $this->manager->get('inputfilter');
 
         $factory = $service->getFactory();
-        $this->assertSame(
+        self::assertSame(
             $this->manager,
             $factory->getInputFilterManager(),
             'Factory::getInputFilterManager() is not populated with the expected plugin manager'
         );
 
         $defaultFilterChain = $factory->getDefaultFilterChain();
-        $this->assertSame(
+        self::assertInstanceOf(FilterChain::class, $defaultFilterChain);
+        self::assertSame(
             $filterManager,
             $defaultFilterChain->getPluginManager(),
             'Factory::getDefaultFilterChain() is not populated with the expected plugin manager'
         );
 
         $defaultValidatorChain = $factory->getDefaultValidatorChain();
-        $this->assertSame(
+        self::assertInstanceOf(ValidatorChain::class, $defaultValidatorChain);
+        self::assertSame(
             $validatorManager,
             $defaultValidatorChain->getPluginManager(),
             'Factory::getDefaultValidatorChain() is not populated with the expected plugin manager'
@@ -171,7 +169,7 @@ class InputFilterPluginManagerTest extends TestCase
     {
         $this->manager->setService($serviceName, $service);
 
-        $this->assertSame($service, $this->manager->get($serviceName), 'get() value not match');
+        self::assertSame($service, $this->manager->get($serviceName), 'get() value not match');
     }
 
     public function testServicesAreInitiatedIfImplementsInitializableInterface(): void
@@ -180,7 +178,7 @@ class InputFilterPluginManagerTest extends TestCase
         // Init is called twice. Once during `setService` and once during `get`
         $mock->expects(self::exactly(2))->method('init');
         $this->manager->setService('PluginName', $mock);
-        $this->assertSame($mock, $this->manager->get('PluginName'), 'get() value not match');
+        self::assertSame($mock, $this->manager->get('PluginName'), 'get() value not match');
     }
 
     public function testPopulateFactoryCanAcceptInputFilterAsFirstArgumentAndWillUseFactoryWhenItDoes(): void
@@ -188,7 +186,7 @@ class InputFilterPluginManagerTest extends TestCase
         $inputFilter = new InputFilter();
         $this->manager->populateFactory($inputFilter);
 
-        $this->assertSame($this->manager, $inputFilter->getFactory()->getInputFilterManager());
+        self::assertSame($this->manager, $inputFilter->getFactory()->getInputFilterManager());
     }
 
     /**
@@ -224,6 +222,7 @@ class InputFilterPluginManagerTest extends TestCase
         return $serviceLocator;
     }
 
+    /** @return class-string<Throwable> */
     protected function getServiceNotFoundException(): string
     {
         if (method_exists($this->manager, 'configure')) {
