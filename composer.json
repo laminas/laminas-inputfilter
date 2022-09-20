@@ -33,17 +33,17 @@
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0",
         "laminas/laminas-filter": "^2.13",
-        "laminas/laminas-servicemanager": "^3.12.0",
+        "laminas/laminas-servicemanager": "^3.16.0",
         "laminas/laminas-stdlib": "^3.0",
         "laminas/laminas-validator": "^2.15"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.4.0",
-        "laminas/laminas-db": "^2.13.4",
-        "phpunit/phpunit": "^9.5.21",
+        "laminas/laminas-db": "^2.15.0",
+        "phpunit/phpunit": "^9.5.24",
         "psalm/plugin-phpunit": "^0.17.0",
         "psr/http-message": "^1.0",
-        "vimeo/psalm": "^4.24.0"
+        "vimeo/psalm": "^4.27.0"
     },
     "suggest": {
         "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"

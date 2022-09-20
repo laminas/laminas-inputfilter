@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Interop\Container\ContainerInterface; // phpcs:ignore
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorPluginManager;
+use Psr\Container\ContainerInterface;
 
 use function assert;
 use function is_array;

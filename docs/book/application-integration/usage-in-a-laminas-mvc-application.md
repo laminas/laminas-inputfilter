@@ -90,7 +90,7 @@ e.g. `src/Album/Handler/ListHandlerFactory.php`:
 namespace Album\Controller;
 
 use Album\InputFilter\QueryInputFilter;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
