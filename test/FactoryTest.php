@@ -363,6 +363,7 @@ class FactoryTest extends TestCase
         $chain = $input->getFilterChain();
         $index = 0;
         foreach ($chain as $filter) {
+            self::assertInstanceOf(Filter\FilterInterface::class, $filter);
             switch ($index) {
                 case 0:
                     self::assertInstanceOf(Filter\StringTrim::class, $filter);
@@ -372,7 +373,7 @@ class FactoryTest extends TestCase
                     break;
                 case 2:
                     self::assertInstanceOf(Filter\StringToLower::class, $filter);
-                    self::assertEquals('ISO-8859-1', $filter->getEncoding());
+                    self::assertEquals('iso-8859-1', $filter->getEncoding());
                     break;
                 default:
                     self::fail('Found more filters than expected');
