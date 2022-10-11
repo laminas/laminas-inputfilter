@@ -142,9 +142,9 @@ class InputFilterPluginManager extends AbstractPluginManager
     }
 
     /**
-     * {@inheritDoc} (v3)
-     *
+     * @inheritDoc
      * @psalm-assert InstanceType $instance
+     * @param mixed $instance
      */
     public function validate($instance)
     {
