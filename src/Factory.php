@@ -13,7 +13,6 @@ use Laminas\Validator\ValidatorInterface;
 use Traversable;
 
 use function class_exists;
-use function get_class;
 use function gettype;
 use function is_array;
 use function is_callable;
@@ -157,7 +156,7 @@ class Factory
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
-                is_object($inputSpecification) ? get_class($inputSpecification) : gettype($inputSpecification)
+                is_object($inputSpecification) ? $inputSpecification::class : gettype($inputSpecification)
             ));
         }
 
@@ -251,7 +250,7 @@ class Factory
                             '%s expects the value associated with "filters" to be an array/Traversable of filters'
                             . ' or filter specifications, or a FilterChain; received "%s"',
                             __METHOD__,
-                            is_object($value) ? get_class($value) : gettype($value)
+                            is_object($value) ? $value::class : gettype($value)
                         ));
                     }
                     $this->populateFilters($input->getFilterChain(), $value);
@@ -266,7 +265,7 @@ class Factory
                             '%s expects the value associated with "validators" to be an array/Traversable of validators'
                             . ' or validator specifications, or a ValidatorChain; received "%s"',
                             __METHOD__,
-                            is_object($value) ? get_class($value) : gettype($value)
+                            is_object($value) ? $value::class : gettype($value)
                         ));
                     }
 
@@ -306,7 +305,7 @@ class Factory
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
                 is_object($inputFilterSpecification)
-                    ? get_class($inputFilterSpecification)
+                    ? $inputFilterSpecification::class
                     : gettype($inputFilterSpecification)
             ));
         }

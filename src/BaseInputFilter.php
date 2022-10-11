@@ -18,7 +18,6 @@ use function array_merge;
 use function assert;
 use function count;
 use function func_get_args;
-use function get_class;
 use function gettype;
 use function is_array;
 use function is_int;
@@ -91,7 +90,7 @@ class BaseInputFilter implements
                 __METHOD__,
                 InputInterface::class,
                 InputFilterInterface::class,
-                is_object($input) ? get_class($input) : gettype($input)
+                is_object($input) ? $input::class : gettype($input)
             ));
         }
 
@@ -201,7 +200,7 @@ class BaseInputFilter implements
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable argument; received %s',
                 __METHOD__,
-                is_object($data) ? get_class($data) : gettype($data)
+                is_object($data) ? $data::class : gettype($data)
             ));
         }
 

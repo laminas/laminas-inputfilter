@@ -8,7 +8,6 @@ use Laminas\Validator\NotEmpty;
 use Traversable;
 
 use function count;
-use function get_class;
 use function gettype;
 use function is_array;
 use function is_iterable;
@@ -60,7 +59,7 @@ class CollectionInputFilter extends InputFilter
                 '%s expects an instance of %s; received "%s"',
                 __METHOD__,
                 BaseInputFilter::class,
-                is_object($inputFilter) ? get_class($inputFilter) : gettype($inputFilter)
+                is_object($inputFilter) ? $inputFilter::class : gettype($inputFilter)
             ));
         }
 
@@ -144,7 +143,7 @@ class CollectionInputFilter extends InputFilter
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable collection; invalid collection of type %s provided',
                 __METHOD__,
-                is_object($data) ? get_class($data) : gettype($data)
+                is_object($data) ? $data::class : gettype($data)
             ));
         }
 
@@ -161,7 +160,7 @@ class CollectionInputFilter extends InputFilter
                 '%s expects each item in a collection to be an array or Traversable; '
                 . 'invalid item in collection of type %s detected',
                 __METHOD__,
-                is_object($item) ? get_class($item) : gettype($item)
+                is_object($item) ? $item::class : gettype($item)
             ));
         }
 
