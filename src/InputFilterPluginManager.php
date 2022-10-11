@@ -15,7 +15,6 @@ use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
 
-use function get_class;
 use function gettype;
 use function is_object;
 use function sprintf;
@@ -161,7 +160,7 @@ class InputFilterPluginManager extends AbstractPluginManager
 
         throw new InvalidServiceException(sprintf(
             'Plugin of type %s is invalid; must implement %s or %s',
-            is_object($instance) ? get_class($instance) : gettype($instance),
+            is_object($instance) ? $instance::class : gettype($instance),
             InputFilterInterface::class,
             InputInterface::class
         ));
