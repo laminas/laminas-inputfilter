@@ -10,8 +10,6 @@ use Laminas\Validator\ValidatorChain;
 interface InputInterface
 {
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain and set this to `true`.
-     *
      * @param bool $allowEmpty
      * @return $this
      */
@@ -63,8 +61,6 @@ interface InputInterface
     public function merge(InputInterface $input);
 
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain.
-     *
      * @return bool
      */
     public function allowEmpty();
