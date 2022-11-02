@@ -37,8 +37,8 @@ class Input implements
     /** @var string|null */
     protected $errorMessage;
 
-    /** @var null|FilterChain */
-    protected $filterChain;
+    /** @var FilterChain */
+    protected FilterChain $filterChain;
 
     /** @var null|string */
     protected $name;
@@ -53,8 +53,8 @@ class Input implements
     /** @var bool */
     protected $required = true;
 
-    /** @var null|ValidatorChain */
-    protected $validatorChain;
+    /** @var ValidatorChain */
+    protected ValidatorChain $validatorChain;
 
     /** @var mixed */
     protected $value;
@@ -248,7 +248,7 @@ class Input implements
      */
     public function getFilterChain()
     {
-        if (! $this->filterChain) {
+        if (!isset($this->filterChain)) {
             $this->filterChain = new FilterChain();
         }
         return $this->filterChain;
@@ -283,7 +283,7 @@ class Input implements
      */
     public function getValidatorChain()
     {
-        if (! $this->validatorChain) {
+        if (!isset($this->validatorChain)) {
             $this->validatorChain = new ValidatorChain();
         }
         return $this->validatorChain;
