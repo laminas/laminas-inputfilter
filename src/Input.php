@@ -17,18 +17,10 @@ class Input implements
     InputInterface,
     EmptyContextInterface
 {
-    /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain.
-     *
-     * @var bool
-     */
+    /** @var bool */
     protected $allowEmpty = false;
 
-    /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain.
-     *
-     * @var bool
-     */
+    /** @var bool */
     protected $continueIfEmpty = false;
 
     /** @var bool */
@@ -43,11 +35,7 @@ class Input implements
     /** @var null|string */
     protected $name;
 
-    /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain.
-     *
-     * @var bool
-     */
+    /** @var bool */
     protected $notEmptyValidator = false;
 
     /** @var bool */
@@ -79,8 +67,6 @@ class Input implements
     }
 
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain and set this to `true`.
-     *
      * @param  bool $allowEmpty
      * @return $this
      */
@@ -101,8 +87,6 @@ class Input implements
     }
 
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain and set this to `true`.
-     *
      * @param bool $continueIfEmpty
      * @return $this
      */
@@ -208,8 +192,6 @@ class Input implements
     }
 
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain.
-     *
      * @return bool
      */
     public function allowEmpty()
@@ -226,8 +208,6 @@ class Input implements
     }
 
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain. Should always return `true`.
-     *
      * @return bool
      */
     public function continueIfEmpty()
@@ -440,8 +420,6 @@ class Input implements
     }
 
     /**
-     * @deprecated 2.4.8 Add Laminas\Validator\NotEmpty validator to the ValidatorChain.
-     *
      * @return void
      */
     protected function injectNotEmptyValidator()
