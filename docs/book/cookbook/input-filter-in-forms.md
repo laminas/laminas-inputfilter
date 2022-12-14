@@ -1,13 +1,13 @@
 # Using Input Filters in Forms of laminas-form
 
-The following examples shows _two_ potential use cases of laminas-inputfilter within forms of [laminas-form](https://docs.laminas.dev/laminas-form/).
+The following examples shows _two_ potential use cases of laminas-inputfilter within [laminas-form](https://docs.laminas.dev/laminas-form/).
 
 ## Define the Input Filter in a Form
 
 An input filter can be [defined directly in a form class](https://docs.laminas.dev/laminas-form/v3/quick-start/#hinting-to-the-input-filter) itself, using `Laminas\InputFilter\InputFilterProviderInterface`.
-This interface provides one method (`getInputFilterSpecification()`) that is used by a form of laminas-form to create an input filter.
+This interface provides one method (`getInputFilterSpecification()`) that is used by a form to create an input filter.
 
-[Create a form as separate class](https://docs.laminas.dev/laminas-form/v3/quick-start/#factory-backed-form-extension) using the [`init` method](https://docs.laminas.dev/laminas-form/v3/advanced/#initialization), implement the interface `Laminas\InputFilter\InputFilterProviderInterface` and define the inputs via configuration array, e.g. `module/Album/src/Form/AlbumForm.php`:
+[Create a form as a separate class](https://docs.laminas.dev/laminas-form/v3/quick-start/#factory-backed-form-extension), define the [`init` method](https://docs.laminas.dev/laminas-form/v3/advanced/#initialization), implement the interface `Laminas\InputFilter\InputFilterProviderInterface`, and define its inputs via a configuration array; as an example, consider the following definition in a file found at `module/Album/src/Form/AlbumForm.php`:
 
 <!-- markdownlint-disable MD033 -->
 <pre class="language-php" data-line="7,10,26-48"><code>
@@ -67,7 +67,7 @@ final class AlbumForm extends Form implements InputFilterProviderInterface
 
 ### Create Input Filter
 
-[Create an input filter as separate class](../intro.md), e.g. `module/Album/src/InputFilter/AlbumInputFilter.php`:
+[Create an input filter as a separate class](../intro.md), e.g. `module/Album/src/InputFilter/AlbumInputFilter.php`:
 
 ```php
 namespace Album\InputFilter;
@@ -110,7 +110,7 @@ final class AlbumInputFilter extends InputFilter
 
 An input filter can be added directly in a form class itself, using the class name of the input filter or whatever name the input filter is registered under.
 
-Create a form as separate class using the `init` method and set the input filter via the `setInputFilterByName()` method of `Laminas\Form\Form`, e.g. `module/Album/src/Form/AlbumForm.php`:
+Create a form as a separate class, define its `init` method, and set the input filter via the `setInputFilterByName()` method of `Laminas\Form\Form`, e.g. `module/Album/src/Form/AlbumForm.php`:
 
 <!-- markdownlint-disable MD033 -->
 <pre class="language-php" data-line="11-12"><code>
