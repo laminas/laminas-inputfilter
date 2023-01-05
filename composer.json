@@ -39,7 +39,7 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "laminas/laminas-coding-standard": "~2.4.0",
+        "laminas/laminas-coding-standard": "~2.5.0",
         "phpunit/phpunit": "^9.5.26",
         "psalm/plugin-phpunit": "^0.18.0",
         "psr/http-message": "^1.0.1",
