@@ -13,7 +13,6 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
-use Psr\Container\ContainerInterface as PsrContainerInterface;
 
 use function gettype;
 use function is_object;
@@ -90,7 +89,7 @@ class InputFilterPluginManager extends AbstractPluginManager
     protected $shareByDefault = false;
 
     /**
-     * @param null|ConfigInterface|ContainerInterface|PsrContainerInterface $configOrContainer
+     * @param null|ConfigInterface|ContainerInterface $configOrContainer
      * @param ServiceManagerConfiguration $v3config
      */
     public function __construct($configOrContainer = null, array $v3config = [])

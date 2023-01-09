@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 use Traversable;
 
-use function array_walk;
 use function count;
 use function json_encode;
 
@@ -28,6 +27,7 @@ use const JSON_THROW_ON_ERROR;
 
 /**
  * @covers \Laminas\InputFilter\CollectionInputFilter
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
  */
 class CollectionInputFilterTest extends TestCase
 {
@@ -52,9 +52,10 @@ class CollectionInputFilterTest extends TestCase
 
     /**
      * @dataProvider inputFilterProvider
-     * @param array|Traversable|InputFilterInterface $inputFilter
+     * @param InputFilterSpecification|Traversable|BaseInputFilter $inputFilter
+     * @param class-string $expectedType
      */
-    public function testSetInputFilter($inputFilter, string $expectedType): void
+    public function testSetInputFilter(mixed $inputFilter, string $expectedType): void
     {
         $this->inputFilter->setInputFilter($inputFilter);
 
@@ -142,10 +143,10 @@ class CollectionInputFilterTest extends TestCase
      *     0: bool,
      *     1: null|int,
      *     2: array,
-     *     3: InputFilterInterface,
+     *     3: BaseInputFilter&MockObject,
      *     4: array,
      *     5: array,
-     *     6: array,
+     *     6: bool,
      *     7: array
      * }>
      */
@@ -164,35 +165,27 @@ class CollectionInputFilterTest extends TestCase
         ];
         $colMessages  = [$errorMessage];
 
-        $invalidIF  = fn() => $this->createBaseInputFilterMock(false, $dataRaw, $dataFiltered, $errorMessage);
-        $validIF    = fn() => $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
-        $noValidIF  = fn() => $this->createBaseInputFilterMock(null, $dataRaw, $dataFiltered);
+        $invalidIF  = fn(): BaseInputFilter =>
+            $this->createBaseInputFilterMock(false, $dataRaw, $dataFiltered, $errorMessage);
+        $validIF    = fn(): BaseInputFilter =>
+            $this->createBaseInputFilterMock(true, $dataRaw, $dataFiltered);
+        $noValidIF  = fn(): BaseInputFilter =>
+            $this->createBaseInputFilterMock(null, $dataRaw, $dataFiltered);
         $isRequired = true;
 
         // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
-        $dataSets = [
+        return [
             // Description => [$required, $count, $data, $inputFilter, $expectedRaw, $expectedValues, $expectedValid, $expectedMessages]
-            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIF  , $colRaw, $colFiltered, true , []],
-            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIF  , $colRaw, $colFiltered, true , []],
-            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIF, $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIF, []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
-            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIF, []     , []          , true , []],
+            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
+            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
+            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIF(), []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
+            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIF(), []     , []          , true , []],
         ];
         // @phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
-
-        array_walk(
-            $dataSets,
-            static function (&$set) {
-                // Create unique mock input instances for each set
-                $inputFilter = $set[3]();
-                $set[3]      = $inputFilter;
-            }
-        );
-
-        return $dataSets;
     }
 
     public function testSetValidationGroupUsingFormStyle(): void
@@ -228,7 +221,7 @@ class CollectionInputFilterTest extends TestCase
         self::assertEquals([], $this->inputFilter->getMessages(), 'getMessages() value not match');
     }
 
-    /** @psalm-return array<string, array{0: null|int, 1: bool}> */
+    /** @psalm-return array<string, array{count: null|int, isValid: bool}> */
     public function dataNestingCollection(): array
     {
         return [
@@ -308,7 +301,7 @@ class CollectionInputFilterTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: InputFilterInterface|array|Traversable,
+     *     0: InputFilterSpecification|Traversable|BaseInputFilter,
      *     1: class-string<InputFilterInterface>
      * }>
      */
@@ -333,7 +326,7 @@ class CollectionInputFilterTest extends TestCase
     /**
      * @psalm-return array<string, array{
      *     0: null|int,
-     *     1: null|array<string, string>,
+     *     1: null|list<array<string, string>>,
      *     2: int
      * }>
      */
@@ -372,17 +365,16 @@ class CollectionInputFilterTest extends TestCase
     }
 
     /**
-     * @param null|bool $isValid
-     * @param mixed[] $getRawValues
-     * @param mixed[] $getValues
+     * @param array<string, mixed> $getRawValues
+     * @param array<string, mixed> $getValues
      * @param string[] $getMessages
      * @return MockObject&BaseInputFilter
      */
     protected function createBaseInputFilterMock(
-        $isValid = null,
-        $getRawValues = [],
-        $getValues = [],
-        $getMessages = []
+        ?bool $isValid = null,
+        array $getRawValues = [],
+        array $getValues = [],
+        array $getMessages = []
     ) {
         /** @var BaseInputFilter&MockObject $inputFilter */
         $inputFilter = $this->createMock(BaseInputFilter::class);
@@ -512,9 +504,8 @@ class CollectionInputFilterTest extends TestCase
 
     /**
      * @dataProvider invalidDataType
-     * @param mixed $data
      */
-    public function testSettingDataWithNonArrayNonTraversableRaisesException($data): void
+    public function testSettingDataWithNonArrayNonTraversableRaisesException(mixed $data): void
     {
         $collectionInputFilter = $this->inputFilter;
 
@@ -811,9 +802,9 @@ class CollectionInputFilterTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{0: array, 1: null|array, 2: null|array}>
+     * @return array<string, array{0: array, 1: null|array, 2: null|array}>
      */
-    public function contextProvider(): iterable
+    public static function contextProvider(): array
     {
         $data = ['fooInput' => 'fooValue'];
 

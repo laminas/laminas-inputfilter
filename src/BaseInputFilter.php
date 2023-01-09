@@ -6,7 +6,6 @@ namespace Laminas\InputFilter;
 
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\InitializableInterface;
-// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use ReturnTypeWillChange;
 use Traversable;
 
@@ -18,10 +17,9 @@ use function array_merge;
 use function assert;
 use function count;
 use function func_get_args;
-use function gettype;
+use function get_debug_type;
 use function is_array;
 use function is_int;
-use function is_object;
 use function sprintf;
 
 class BaseInputFilter implements
@@ -90,11 +88,11 @@ class BaseInputFilter implements
                 __METHOD__,
                 InputInterface::class,
                 InputFilterInterface::class,
-                is_object($input) ? $input::class : gettype($input)
+                get_debug_type($input),
             ));
         }
 
-        /** @psalm-suppress DocblockTypeContradiction */
+        /** @psalm-suppress TypeDoesNotContainType */
         if ($input instanceof InputInterface && (empty($name) || is_int($name))) {
             $name = $input->getName();
         }
@@ -200,7 +198,7 @@ class BaseInputFilter implements
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable argument; received %s',
                 __METHOD__,
-                is_object($data) ? $data::class : gettype($data)
+                get_debug_type($data),
             ));
         }
 
