@@ -79,7 +79,6 @@ class BaseInputFilterTest extends TestCase
             'expects an instance of Laminas\InputFilter\InputInterface or Laminas\InputFilter\InputFilterInterface '
             . 'as its first argument; received "stdClass"'
         );
-        /** @noinspection PhpParamsInspection */
         $inputFilter->replace(new stdClass(), 'replace_me');
     }
 
@@ -212,10 +211,9 @@ class BaseInputFilterTest extends TestCase
      * Verify the state of the input filter is the desired after change it using the method `add()`
      *
      * @dataProvider addMethodArgumentsProvider
-     * @param array|object $input
      */
     public function testAddHasGet(
-        $input,
+        InputInterface|InputFilterInterface|iterable $input,
         ?string $name,
         ?string $expectedInputName,
         object $expectedInput
@@ -242,10 +240,12 @@ class BaseInputFilterTest extends TestCase
      * Verify the state of the input filter is the desired after change it using the method `add()` and `remove()`
      *
      * @dataProvider addMethodArgumentsProvider
-     * @param array|object $input
      */
-    public function testAddRemove($input, ?string $name, ?string $expectedInputName): void
-    {
+    public function testAddRemove(
+        InputInterface|InputFilterInterface|iterable $input,
+        ?string $name,
+        ?string $expectedInputName
+    ): void {
         $inputFilter = $this->inputFilter;
 
         $inputFilter->add($input, $name);
@@ -272,10 +272,12 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @dataProvider inputProvider
-     * @param array|object $input
      */
-    public function testReplace($input, ?string $inputName, object $expectedInput): void
-    {
+    public function testReplace(
+        InputInterface|InputFilterInterface|iterable $input,
+        ?string $inputName,
+        object $expectedInput
+    ): void {
         $inputFilter    = $this->inputFilter;
         $nameToReplace  = 'replace_me';
         $inputToReplace = new Input($nameToReplace);
@@ -293,6 +295,13 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @dataProvider setDataArgumentsProvider
+     * @param array<string, InputInterface|InputFilterInterface|iterable> $inputs
+     * @param iterable<mixed> $data
+     * @param array<string, mixed> $expectedRawValues
+     * @param array<string, mixed> $expectedValues
+     * @param list<InputInterface> $expectedInvalidInputs
+     * @param list<InputInterface> $expectedValidInputs
+     * @param string[] $expectedMessages
      */
     public function testSetDataAndGetRawValueGetValue(
         array $inputs,
@@ -345,6 +354,13 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @dataProvider setDataArgumentsProvider
+     * @param array<string, InputInterface|InputFilterInterface|iterable> $inputs
+     * @param iterable<mixed> $data
+     * @param array<string, mixed> $expectedRawValues
+     * @param array<string, mixed> $expectedValues
+     * @param list<InputInterface> $expectedInvalidInputs
+     * @param list<InputInterface> $expectedValidInputs
+     * @param string[] $expectedMessages
      */
     public function testSetTraversableDataAndGetRawValueGetValue(
         array $inputs,
@@ -735,14 +751,14 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: list<InputInterface>,
-     *     1: array<string, string|array>,
-     *     2: array<string, string|array>,
-     *     3: array<string, string|array>,
+     *     0: array<string, InputInterface|InputFilterInterface|iterable>,
+     *     1: iterable<mixed>,
+     *     2: array<string, mixed>,
+     *     3: array<string, mixed>,
      *     4: bool,
      *     5: list<InputInterface>,
      *     6: list<InputInterface>,
-     *     7: array<string, string|list<string>>
+     *     7: string[]
      * }>
      */
     public function setDataArgumentsProvider(): array
@@ -767,7 +783,10 @@ class BaseInputFilterTest extends TestCase
         $valid    = true;
         $bOnFail  = true;
 
-        // phpcs:ignore Generic.Formatting.MultipleStatementAlignment.NotSame
+        /**
+         * @param array<string, string> $msg
+         * @return callable(): InputInterface&MockObject
+         */
         $input = function (
             string $iName,
             bool $required,
@@ -778,9 +797,7 @@ class BaseInputFilterTest extends TestCase
             $vRaw,
             $vFiltered
         ): callable {
-            // phpcs:disable Generic.Files.LineLength.TooLong
-            /** @param mixed $context */
-            return fn($context): InputInterface => $this->createInputInterfaceMock(
+            return fn(array|null|string $context): InputInterface => $this->createInputInterfaceMock(
                 $iName,
                 $required,
                 $isValid,
@@ -790,11 +807,10 @@ class BaseInputFilterTest extends TestCase
                 $msg,
                 $bOnFail
             );
-            // phpcs:enable Generic.Files.LineLength.TooLong
         };
 
         $inputFilter = fn(bool $isValid, array $msg = []): callable =>
-            function ($context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
+            function (array|null|string $context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
                 $vRaw      = ['fooInput' => $vRaw];
                 $vFiltered = ['fooInput' => $vFiltered];
                 return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
@@ -848,9 +864,11 @@ class BaseInputFilterTest extends TestCase
 
         array_walk(
             $dataSets,
-            static function (&$set) {
+            static function (array &$set): void {
                 // Create unique mock input instances for each set
                 foreach ($set[0] as $name => $createMock) {
+                    self::assertIsString($name);
+                    self::assertIsCallable($createMock);
                     $input = $createMock($set[2]);
 
                     $set[0][$name] = $input;
@@ -895,7 +913,13 @@ class BaseInputFilterTest extends TestCase
         // phpcs:enable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
     }
 
-    /** @psalm-return array<string, array{0: InputInterface, 1: null|string, 2: MockObject&InputInterface}> */
+    /**
+     * @psalm-return array<string, array{
+     *     0: MockObject&InputInterface|MockObject&InputFilterInterface,
+     *     1: null|string,
+     *     2: MockObject&InputInterface|MockObject&InputFilterInterface,
+     * }>
+     */
     public function inputProvider(): array
     {
         $input       = $this->createInputInterfaceMock('fooInput', null);
@@ -911,19 +935,17 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @param null|bool $isValid
-     * @param mixed $context
-     * @param mixed[] $getRawValues
-     * @param mixed[] $getValues
+     * @param array<string, mixed> $getRawValues
+     * @param array<string, mixed> $getValues
      * @param string[] $getMessages
      * @return MockObject&InputFilterInterface
      */
     protected function createInputFilterInterfaceMock(
-        $isValid = null,
-        $context = null,
-        $getRawValues = [],
-        $getValues = [],
-        $getMessages = []
+        bool|null $isValid = null,
+        mixed $context = null,
+        array $getRawValues = [],
+        array $getValues = [],
+        array $getMessages = []
     ) {
         /** @var InputFilterInterface&MockObject $inputFilter */
         $inputFilter = $this->createMock(InputFilterInterface::class);
@@ -946,25 +968,18 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @param string $name
-     * @param bool $isRequired
-     * @param null|bool $isValid
-     * @param mixed $context
-     * @param mixed $getRawValue
-     * @param mixed $getValue
      * @param string[] $getMessages
-     * @param bool $breakOnFailure
      * @return MockObject&InputInterface
      */
     protected function createInputInterfaceMock(
-        $name,
-        $isRequired,
-        $isValid = null,
-        $context = null,
-        $getRawValue = null,
-        $getValue = null,
-        $getMessages = [],
-        $breakOnFailure = false
+        string $name,
+        bool|null $isRequired,
+        bool|null $isValid = null,
+        array|string|null $context = null,
+        mixed $getRawValue = null,
+        mixed $getValue = null,
+        array $getMessages = [],
+        bool $breakOnFailure = false
     ) {
         /** @var InputInterface&MockObject $input */
         $input = $this->createMock(InputInterface::class);
@@ -997,12 +1012,12 @@ class BaseInputFilterTest extends TestCase
     /**
      * @return callable[]
      */
-    protected function dataTypes()
+    protected function dataTypes(): array
     {
         return [
             // Description => callable
-            'array'       => static fn($data) => $data,
-            'Traversable' => fn($data) => $this->getMockBuilder(FilterIterator::class)
+            'array'       => static fn(array $data): array => $data,
+            'Traversable' => fn(array $data) => $this->getMockBuilder(FilterIterator::class)
                 ->setConstructorArgs([new ArrayIterator($data)])
                 ->getMock(),
         ];
