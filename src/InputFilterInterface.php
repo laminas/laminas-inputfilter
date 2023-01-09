@@ -34,6 +34,7 @@ use Traversable;
  *     break_on_failure?: bool,
  *     filters?: FilterChain|iterable<array-key, FilterSpecification|callable|FilterInterface>,
  *     validators?: ValidatorChain|iterable<array-key, ValidatorSpecification|ValidatorInterface>,
+ *     ...
  * }
  * @psalm-type InputFilterSpecification = array{
  *     type?: class-string<InputFilterInterface>|string,
