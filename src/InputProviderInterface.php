@@ -13,7 +13,8 @@ interface InputProviderInterface
      * Should return an array specification compatible with
      * {@link Factory::createInput()}.
      *
-     * @return InputSpecification
+     * @psalm-return InputSpecification
+     * @return array
      */
     public function getInputSpecification();
 }
