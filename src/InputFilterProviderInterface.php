@@ -17,5 +17,5 @@ interface InputFilterProviderInterface
      * @psalm-return InputFilterSpecification|CollectionSpecification
      * @return array
      */
-    public function getInputFilterSpecification();
+    public function getInputFilterSpecification(): array;
 }
