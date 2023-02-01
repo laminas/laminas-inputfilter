@@ -17,7 +17,7 @@ class ConfigProvider
      *     input_filters: ServiceManagerConfigurationType,
      * }
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
             'dependencies'  => $this->getDependencyConfig(),
@@ -28,9 +28,10 @@ class ConfigProvider
     /**
      * Return dependency mappings for this component.
      *
-     * @return ServiceManagerConfigurationType
+     * @psalm-return ServiceManagerConfigurationType
+     * @return array
      */
-    public function getDependencyConfig()
+    public function getDependencyConfig(): array
     {
         return [
             'aliases'   => [
@@ -48,9 +49,10 @@ class ConfigProvider
     /**
      * Get input filter configuration
      *
-     * @return ServiceManagerConfigurationType
+     * @psalm-return ServiceManagerConfigurationType
+     * @return array
      */
-    public function getInputFilterConfig()
+    public function getInputFilterConfig(): array
     {
         return [
             'abstract_factories' => [

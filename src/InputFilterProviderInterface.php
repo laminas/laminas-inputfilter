@@ -14,7 +14,8 @@ interface InputFilterProviderInterface
      * Should return an array specification compatible with
      * {@link Factory::createInputFilter()}.
      *
-     * @return InputFilterSpecification|CollectionSpecification
+     * @psalm-return InputFilterSpecification|CollectionSpecification
+     * @return array
      */
     public function getInputFilterSpecification();
 }
