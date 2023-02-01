@@ -28,7 +28,8 @@ class ConfigProvider
     /**
      * Return dependency mappings for this component.
      *
-     * @return ServiceManagerConfigurationType
+     * @psalm-return ServiceManagerConfigurationType
+     * @return array
      */
     public function getDependencyConfig()
     {
