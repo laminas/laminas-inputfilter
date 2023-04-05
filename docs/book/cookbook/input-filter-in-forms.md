@@ -1,6 +1,6 @@
 # Using Input Filters in Forms of laminas-form
 
-The following examples shows _two_ potential use cases of laminas-inputfilter within [laminas-form](https://docs.laminas.dev/laminas-form/).
+The following examples show _two_ potential use cases of laminas-inputfilter within [laminas-form](https://docs.laminas.dev/laminas-form/).
 
 ## Define the Input Filter in a Form
 
