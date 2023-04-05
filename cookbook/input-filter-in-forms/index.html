@@ -13,10 +13,10 @@
     <meta name="docsearch:language" content="en">
     <meta name="docsearch:component" content="laminas-inputfilter">
 
-    <link rel="canonical" href="https://docs.laminas.dev/laminas-inputfilter/file-input/">
+    <link rel="canonical" href="https://docs.laminas.dev/laminas-inputfilter/cookbook/input-filter-in-forms/">
     <link rel="shortcut icon" href="https://docs.laminas.dev/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>File Upload Input - laminas-inputfilter - Laminas Docs</title>
+    <title>Using Input Filters in Forms of laminas-form - laminas-inputfilter - Laminas Docs</title>
 
     <link rel="stylesheet" href="https://docs.laminas.dev/css/styles.css">
     
@@ -122,7 +122,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">laminas-inputfilter</a>
+            <a href="../..">laminas-inputfilter</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -137,7 +137,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../../intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -151,7 +151,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../installation/" class="subnavigation__link">Installation</a>
+                                <a href="../../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -170,25 +170,25 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../specs/" class="subnavigation__link">Specifications</a>
-    </li>
-
-                                    
-                                        
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">File Upload Input</a>
+        <a href="../../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+        <a href="../../file-input/" class="subnavigation__link">File Upload Input</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
+        <a href="../../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
     </li>
 
                                     
@@ -211,13 +211,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
+        <a href="../../application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
+        <a href="../../application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
     </li>
 
                                     
@@ -239,8 +239,8 @@
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item ">
-        <a href="../cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
     </li>
 
                                     
@@ -320,11 +320,11 @@
             <ul class="toc__list">
                 
                     <li class="toc__entry">
-                        <a href="#basic-usage" class="toc__link nav-link">Basic Usage</a>
+                        <a href="#define-the-input-filter-in-a-form" class="toc__link nav-link">Define the Input Filter in a Form</a>
                     </li>
                 
                     <li class="toc__entry">
-                        <a href="#psr-7-support" class="toc__link nav-link">PSR-7 Support</a>
+                        <a href="#adding-an-input-filter-defined-as-a-separate-class-to-a-form" class="toc__link nav-link">Adding an Input Filter Defined as a Separate Class to a Form</a>
                     </li>
                 
             </ul>
@@ -341,18 +341,18 @@
             <li class="breadcrumb-item"><a href="https://docs.laminas.dev/components/">Components</a></li>
 
             
-                <li class="breadcrumb-item"><a href="..">laminas-inputfilter</a></li>
+                <li class="breadcrumb-item"><a href="../..">laminas-inputfilter</a></li>
 
                 
                     
                         
                         
-                            <li class="breadcrumb-item">Reference</li>
+                            <li class="breadcrumb-item">Cookbook</li>
                         
                     
                 
 
-                <li class="breadcrumb-item active" aria-current="page">File Upload Input</li>
+                <li class="breadcrumb-item active" aria-current="page">Using Input Filters in Forms of laminas-form</li>
             
         
     </ol>
@@ -365,142 +365,138 @@
 
     
     
-        <h2 class="chapter__headline">Reference</h2>
+        <h2 class="chapter__headline">Cookbook</h2>
     
 
-    <h1 id="file-upload-input">File Upload Input</h1>
-<p>The <code>Laminas\InputFilter\FileInput</code> class is a special <code>Input</code> type for uploaded
-files found in the <code>$_FILES</code> array.</p>
-<p>While <code>FileInput</code> uses the same interface as <code>Input</code>, it differs in a few ways:</p>
-<ol>
-<li>It expects the raw value to be in a normalized <code>$_FILES</code> array format. See
-   the <a href="http://www.php-fig.org/psr/psr-7/#uploaded-files">PSR-7 Uploaded files</a>
-   chapter for details on how to accomplish this.
-   <a href="https://docs.laminas.dev/laminas-diactoros/">Diactoros</a> and
-   <a href="https://docs.laminas.dev/laminas-http/">laminas-http</a> can do this for you.</li>
-</ol>
-<p>Alternately, you may provide an array of PSR-7 uploaded file instances.</p>
-<ol>
-<li>
-<p>The validators are run <strong>before</strong> the filters (which is the opposite behavior
-   of <code>Input</code>). This is so that any validation can be run
-   prior to any filters that may rename/move/modify the file; we should not do
-   those operations if the file upload was invalid!</p>
-</li>
-<li>
-<p>Instead of adding a <code>NotEmpty</code> validator, it will (by default) automatically
-   add a <code>Laminas\Validator\File\UploadFile</code> validator.</p>
-</li>
-</ol>
-<p>The biggest thing to be concerned about is that if you are using a <code>&lt;input
-type="file"&gt;</code> element in your form, you will need to use the <code>FileInput</code>
-<strong>instead of</strong> <code>Input</code> or else you will encounter issues.</p>
-<h2 id="basic-usage">Basic Usage</h2>
-<p>Usage of <code>FileInput</code> is essentially the same as <code>Input</code>:</p>
-<pre class="highlight"><code class="language-php">use Laminas\Http\PhpEnvironment\Request;
-use Laminas\Filter;
+    <h1 id="using-input-filters-in-forms-of-laminas-form">Using Input Filters in Forms of laminas-form</h1>
+<p>The following examples show <em>two</em> potential use cases of laminas-inputfilter within <a href="https://docs.laminas.dev/laminas-form/">laminas-form</a>.</p>
+<h2 id="define-the-input-filter-in-a-form">Define the Input Filter in a Form</h2>
+<p>An input filter can be <a href="https://docs.laminas.dev/laminas-form/v3/quick-start/#hinting-to-the-input-filter">defined directly in a form class</a> itself, using <code>Laminas\InputFilter\InputFilterProviderInterface</code>.
+This interface provides one method (<code>getInputFilterSpecification()</code>) that is used by a form to create an input filter.</p>
+<p><a href="https://docs.laminas.dev/laminas-form/v3/quick-start/#factory-backed-form-extension">Create a form as a separate class</a>, define the <a href="https://docs.laminas.dev/laminas-form/v3/advanced/#initialization"><code>init</code> method</a>, implement the interface <code>Laminas\InputFilter\InputFilterProviderInterface</code>, and define its inputs via a configuration array; as an example, consider the following definition in a file found at <code>module/Album/src/Form/AlbumForm.php</code>:</p>
+<!-- markdownlint-disable MD033 -->
+<pre class="language-php" data-line="7,10,26-48"><code>
+namespace Album\Form;
+
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\StringLength;
+
+final class AlbumForm extends Form implements InputFilterProviderInterface
+{
+    public function init(): void
+    {
+        // Add form elements
+        $this->add([
+            'name'    => 'title',
+            'type'    => Text::class,
+            'options' => [
+                'label' => 'Title',
+            ],
+        ]);
+
+        // …
+    }
+
+    public function getInputFilterSpecification(): array
+    {
+        return [
+            // Add inputs
+            [
+                'name'    => 'title',
+                'filters' => [
+                    ['name' => StripTags::class],
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    [
+                        'name'    => StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => 100,
+                        ],
+                    ],
+                ],
+            ],
+            // …
+        ];
+    }
+}
+</code></pre>
+<!-- markdownlint-enable MD033 -->
+
+<h2 id="adding-an-input-filter-defined-as-a-separate-class-to-a-form">Adding an Input Filter Defined as a Separate Class to a Form</h2>
+<h3 id="create-input-filter">Create Input Filter</h3>
+<p><a href="../../intro/">Create an input filter as a separate class</a>, e.g. <code>module/Album/src/InputFilter/AlbumInputFilter.php</code>:</p>
+<pre class="highlight"><code class="language-php">namespace Album\InputFilter;
+
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\Validator\StringLength;
 use Laminas\InputFilter\InputFilter;
-use Laminas\InputFilter\Input;
-use Laminas\InputFilter\FileInput;
-use Laminas\Validator;
 
-// Description text input
-$description = new Input('description'); // Standard Input type
+final class AlbumInputFilter extends InputFilter
+{
+    public function init(): void
+    {
+        // Add inputs
+        $this-&gt;add(
+            [
+                'name'    =&gt; 'title',
+                'filters' =&gt; [
+                    ['name' =&gt; StripTags::class],
+                    ['name' =&gt; StringTrim::class],
+                ],
+                'validators' =&gt; [
+                    [
+                        'name'    =&gt; StringLength::class,
+                        'options' =&gt; [
+                            'min' =&gt; 1,
+                            'max' =&gt; 100,
+                        ],
+                    ],
+                ],
+            ]
+        );
 
-// Filters are run first w/ Input
-$description
-    -&gt;getFilterChain()
-    -&gt;attach(new Filter\StringTrim());
-
-// Validators are run second w/ Input
-$description
-    -&gt;getValidatorChain()
-    -&gt;attach(new Validator\StringLength(['max' =&gt; 140]));
-
-// File upload input
-$file = new FileInput('file'); // Special File Input type
-
-// Validators are run first w/ FileInput
-$file
-    -&gt;getValidatorChain()
-    -&gt;attach(new Validator\File\UploadFile());
-
-// Filters are run second w/ FileInput
-$file
-    -&gt;getFilterChain()
-    -&gt;attach(new Filter\File\RenameUpload([
-         'target'    =&gt; './data/tmpuploads/file',
-         'randomize' =&gt; true,
-    ]));
-
-// Merge $_POST and $_FILES data together
-$request  = new Request();
-$postData = array_merge_recursive(
-    $request-&gt;getPost()-&gt;toArray(),
-    $request-&gt;getFiles()-&gt;toArray()
-);
-
-$inputFilter = new InputFilter();
-$inputFilter
-    -&gt;add($description)
-    -&gt;add($file)
-    -&gt;setData($postData);
-
-if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...
-    echo "The form is valid\n";
-    $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.
-} else {
-    echo "The form is not valid\n";
-    foreach ($inputFilter-&gt;getInvalidInput() as $error) {
-        print_r ($error-&gt;getMessages());
+        // …
     }
 }</code></pre>
-<h2 id="psr-7-support">PSR-7 Support</h2>
-<blockquote>
-<p>Available since version 2.9.0</p>
-</blockquote>
-<p>You may also pass an array of uploaded files from a <a href="http://www.php-fig.org/psr/psr-7/#serverrequestinterface">PSR-7 ServerRequestInterface</a>.</p>
-<pre class="highlight"><code class="language-php">use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Filter;
-use Laminas\InputFilter\InputFilter;
-use Laminas\InputFilter\FileInput;
-use Laminas\Validator;
+<h3 id="create-form-and-add-input-filter">Create Form and Add Input Filter</h3>
+<p>An input filter can be added directly in a form class itself, using the class name of the input filter or whatever name the input filter is registered under.</p>
+<p>Create a form as a separate class, define its <code>init</code> method, and set the input filter via the <code>setInputFilterByName()</code> method of <code>Laminas\Form\Form</code>, e.g. <code>module/Album/src/Form/AlbumForm.php</code>:</p>
+<!-- markdownlint-disable MD033 -->
+<pre class="language-php" data-line="11-12"><code>
+namespace Album\Form;
 
-// File upload input
-$file = new FileInput('file');
-$file
-    -&gt;getValidatorChain()
-    -&gt;attach(new Validator\File\UploadFile());
-$file
-    -&gt;getFilterChain()
-    -&gt;attach(new Filter\File\RenameUpload([
-         'target'    =&gt; './data/tmpuploads/file',
-         'randomize' =&gt; true,
-    ]));
+use Album\InputFilter\AlbumInputFilter;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Form;
 
-// Merge form and uploaded file data together
-// Unlike the previous example, we get the form data from `getParsedBody()`, and
-// the uploaded file data from `getUploadedFiles()`.
-// @var ServerRequestInterface $request
-$postData = array_merge_recursive(
-    $request-&gt;getParsedBody(),
-    $request-&gt;getUploadedFiles()
-);
+final class AlbumForm extends Form
+{
+    public function init(): void
+    {
+        // Set the input filter
+        $this->setInputFilterByName(AlbumInputFilter::class);
 
-$inputFilter = new InputFilter();
-$inputFilter
-    -&gt;add($file)
-    -&gt;setData($postData);
+        // Add form elements
+        $this->add([
+            'name'    => 'title',
+            'type'    => Text::class,
+            'options' => [
+                'label' => 'Title',
+            ],
+        ]);
 
-if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but not the filters...
-    echo "The form is valid\n";
-    $data = $inputFilter-&gt;getValues();   // This is when the FileInput filters are run.
-} else {
-    echo "The form is not valid\n";
-    foreach ($inputFilter-&gt;getInvalidInput() as $error) {
-        print_r ($error-&gt;getMessages());
+        // …
     }
-}</code></pre>
+}
+</code></pre>
+<!-- markdownlint-enable MD033 -->
 
 
 
@@ -511,22 +507,16 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
         
         <li class="page-nav__item">
             
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../specs/">
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../../application-integration/usage-in-a-mezzio-application/">
                     <small class="page-nav__label">Previous</small>
                     <i class="fa fa-chevron-left"></i>
-                    Specifications
+                    Usage in a mezzio application
                 </a>
             
         </li>
 
         
         <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../optional-input-filters/">
-                    <small class="page-nav__label">Next</small>
-                    Optional Input Filters
-                    <i class="fa fa-chevron-right"></i>
-                </a>
             
         </li>
     </ul>
@@ -557,7 +547,7 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">laminas-inputfilter</a>
+            <a href="../..">laminas-inputfilter</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -572,7 +562,7 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../../intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -586,7 +576,7 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../installation/" class="subnavigation__link">Installation</a>
+                                <a href="../../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -605,25 +595,25 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../specs/" class="subnavigation__link">Specifications</a>
-    </li>
-
-                                    
-                                        
-    <li class="subnavigation__list-item subnavigation__list-item--active">
-        <a href="./" class="subnavigation__link">File Upload Input</a>
+        <a href="../../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+        <a href="../../file-input/" class="subnavigation__link">File Upload Input</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
+        <a href="../../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
     </li>
 
                                     
@@ -646,13 +636,13 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
+        <a href="../../application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
+        <a href="../../application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
     </li>
 
                                     
@@ -674,8 +664,8 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item ">
-        <a href="../cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
     </li>
 
                                     
@@ -771,13 +761,13 @@ if ($inputFilter-&gt;isValid()) {           // FileInput validators are run, but
 </footer>
 
     <script>
-        let base_url = '..',
+        let base_url = '../..',
             project  = "components",
             siteName = 'laminas-inputfilter';
     </script>
     <script src="https://docs.laminas.dev/js/scripts.js"></script>
     
-        <script src="../search/main.js"></script>
+        <script src="../../search/main.js"></script>
     
 
     
