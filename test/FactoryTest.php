@@ -49,7 +49,6 @@ class FactoryTest extends TestCase
             ->with($type)
             ->willReturn(false);
 
-        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory = new Factory($pluginManager);
 
         $this->expectException(RuntimeException::class);
@@ -65,7 +64,6 @@ class FactoryTest extends TestCase
     {
         $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $factory       = new Factory();
-        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory->setInputFilterManager($pluginManager);
         self::assertSame($pluginManager, $factory->getInputFilterManager());
     }
@@ -73,8 +71,7 @@ class FactoryTest extends TestCase
     public function testGetInputFilterManagerWhenYouConstructFactoryWithIt(): void
     {
         $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        /** @psalm-suppress MixedArgumentTypeCoercion */
-        $factory = new Factory($pluginManager);
+        $factory       = new Factory($pluginManager);
         self::assertSame($pluginManager, $factory->getInputFilterManager());
     }
 
@@ -215,7 +212,6 @@ class FactoryTest extends TestCase
         $this->expectExceptionMessage(
             sprintf('"%s" can only set to inputs of type "Laminas\InputFilter\Input"', $specificationKey)
         );
-        /** @psalm-suppress ArgumentTypeCoercion */
         $factory->createInput([
             'type'            => $type,
             $specificationKey => true,

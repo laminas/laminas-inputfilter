@@ -210,17 +210,6 @@ class InputFilterPluginManagerTest extends TestCase
         return $input;
     }
 
-    /**
-     * @return MockObject&ServiceLocatorInterface
-     */
-    protected function createServiceLocatorInterfaceMock()
-    {
-        /** @var ServiceLocatorInterface&MockObject $serviceLocator */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        return $serviceLocator;
-    }
-
     /** @return class-string<Throwable> */
     protected function getServiceNotFoundException(): string
     {

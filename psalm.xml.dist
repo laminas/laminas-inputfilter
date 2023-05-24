@@ -5,7 +5,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-    errorBaseline="psalm-baseline.xml">
+    errorBaseline="psalm-baseline.xml"
+    findUnusedCode="true"
+    findUnusedBaselineEntry="true"
+    findUnusedPsalmSuppress="true"
+>
     <projectFiles>
         <directory name="src"/>
         <directory name="test"/>
@@ -13,31 +17,6 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
-
-    <issueHandlers>
-        <InternalMethod>
-            <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method"/>
-            </errorLevel>
-
-            <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn"/>
-            </errorLevel>
-
-            <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with"/>
-            </errorLevel>
-        </InternalMethod>
-
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <referencedClass name="Zend\InputFilter\CollectionInputFilter" />
-                <referencedClass name="Zend\InputFilter\InputFilter" />
-                <referencedClass name="Zend\InputFilter\InputFilterPluginManager" />
-                <referencedClass name="Zend\InputFilter\OptionalInputFilter" />
-            </errorLevel>
-        </UndefinedClass>
-    </issueHandlers>
 
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
