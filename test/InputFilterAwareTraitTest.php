@@ -21,7 +21,6 @@ class InputFilterAwareTraitTest extends TestCase
 
         $r = new ReflectionObject($object);
         $p = $r->getProperty('inputFilter');
-        $p->setAccessible(true);
         $this->assertNull($p->getValue($object));
 
         $inputFilter = new InputFilter();

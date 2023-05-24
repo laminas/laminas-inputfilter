@@ -140,7 +140,6 @@ class BaseInputFilterTest extends TestCase
 
         $r = new ReflectionObject($inputFilter);
         $p = $r->getProperty('validationGroup');
-        $p->setAccessible(true);
         self::assertEquals(['fooInput'], $p->getValue($inputFilter));
     }
 
@@ -164,7 +163,6 @@ class BaseInputFilterTest extends TestCase
 
         $r = new ReflectionObject($inputFilter);
         $p = $r->getProperty('validationGroup');
-        $p->setAccessible(true);
         self::assertEquals(['nested'], $p->getValue($inputFilter));
         self::assertEquals(['nested-input1', 'nested-input2'], $p->getValue($nestedInputFilter));
     }

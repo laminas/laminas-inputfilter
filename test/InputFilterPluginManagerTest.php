@@ -49,7 +49,6 @@ class InputFilterPluginManagerTest extends TestCase
     {
         $r = new ReflectionObject($this->manager);
         $p = $r->getProperty('sharedByDefault');
-        $p->setAccessible(true);
         self::assertFalse($p->getValue($this->manager));
     }
 

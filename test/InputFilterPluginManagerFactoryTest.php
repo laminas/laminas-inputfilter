@@ -25,7 +25,6 @@ class InputFilterPluginManagerFactoryTest extends TestCase
 
         $r = new ReflectionObject($filters);
         $p = $r->getProperty('creationContext');
-        $p->setAccessible(true);
         self::assertSame($container, $p->getValue($filters));
     }
 
