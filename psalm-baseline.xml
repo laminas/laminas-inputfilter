@@ -62,6 +62,11 @@
       <code>isValid</code>
       <code>isValid</code>
     </TooManyArguments>
+    <UnusedPsalmSuppress>
+      <code>DocblockTypeContradiction</code>
+      <code>RedundantConditionGivenDocblockType</code>
+      <code>RedundantConditionGivenDocblockType</code>
+    </UnusedPsalmSuppress>
   </file>
   <file src="src/CollectionInputFilter.php">
     <ImplementedParamTypeMismatch>
@@ -92,6 +97,23 @@
     <MixedAssignment>
       <code>$data</code>
     </MixedAssignment>
+    <PossiblyUnusedReturnValue>
+      <code>array[]</code>
+      <code>array[]</code>
+    </PossiblyUnusedReturnValue>
+    <UnusedPsalmSuppress>
+      <code>DocblockTypeContradiction</code>
+      <code>DocblockTypeContradiction</code>
+      <code>DocblockTypeContradiction</code>
+      <code>RedundantConditionGivenDocblockType</code>
+      <code>RedundantConditionGivenDocblockType</code>
+      <code>RedundantConditionGivenDocblockType</code>
+    </UnusedPsalmSuppress>
+  </file>
+  <file src="src/EmptyContextInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>self</code>
+    </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Factory.php">
     <InvalidReturnStatement>
@@ -139,6 +161,12 @@
       <code>add</code>
       <code>add</code>
     </PossiblyUndefinedMethod>
+    <UnusedPsalmSuppress>
+      <code>DeprecatedMethod</code>
+      <code>DocblockTypeContradiction</code>
+      <code>DocblockTypeContradiction</code>
+      <code>RedundantConditionGivenDocblockType</code>
+    </UnusedPsalmSuppress>
   </file>
   <file src="src/FileInput.php">
     <InvalidPropertyAssignmentValue>
@@ -251,6 +279,17 @@
       <code>$services</code>
     </ParamNameMismatch>
   </file>
+  <file src="src/InputFilterAwareInterface.php">
+    <PossiblyUnusedMethod>
+      <code>getInputFilter</code>
+      <code>setInputFilter</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/InputFilterInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>InputFilterInterface</code>
+    </PossiblyUnusedReturnValue>
+  </file>
   <file src="src/InputFilterPluginManager.php">
     <DeprecatedInterface>
       <code>null|ConfigInterface|ContainerInterface</code>
@@ -265,6 +304,12 @@
     <NonInvariantDocblockPropertyType>
       <code>$factories</code>
     </NonInvariantDocblockPropertyType>
+    <PossiblyUnusedMethod>
+      <code>validatePlugin</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code>$shareByDefault</code>
+    </PossiblyUnusedProperty>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->initializers]]></code>
       <code><![CDATA[$this->initializers]]></code>
@@ -280,8 +325,31 @@
     <ParamNameMismatch>
       <code>$container</code>
     </ParamNameMismatch>
+    <PossiblyUnusedMethod>
+      <code>setCreationOptions</code>
+    </PossiblyUnusedMethod>
+    <UnusedPsalmSuppress>
+      <code>MismatchingDocblockParamType</code>
+      <code>MismatchingDocblockParamType</code>
+      <code>MoreSpecificImplementedParamType</code>
+    </UnusedPsalmSuppress>
+  </file>
+  <file src="src/InputInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>$this</code>
+      <code>$this</code>
+      <code>$this</code>
+      <code>$this</code>
+      <code>$this</code>
+      <code>$this</code>
+      <code>$this</code>
+      <code>$this</code>
+    </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Module.php">
+    <PossiblyUnusedParam>
+      <code>$moduleManager</code>
+    </PossiblyUnusedParam>
     <UndefinedDocblockClass>
       <code>ModuleManager</code>
     </UndefinedDocblockClass>
@@ -450,6 +518,10 @@
       <code>getName</code>
       <code>isRequired</code>
     </PossiblyUndefinedMethod>
+    <PossiblyUnusedParam>
+      <code>$context</code>
+      <code>$inputName</code>
+    </PossiblyUnusedParam>
   </file>
   <file src="test/FactoryTest.php">
     <PossiblyNullReference>
@@ -680,5 +752,20 @@
     <RedundantCondition>
       <code>isArray</code>
     </RedundantCondition>
+  </file>
+  <file src="test/TestAsset/ModuleEventInterface.php">
+    <PossiblyUnusedMethod>
+      <code>getParam</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/TestAsset/ModuleManagerInterface.php">
+    <PossiblyUnusedMethod>
+      <code>getEvent</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/TestAsset/ServiceListenerInterface.php">
+    <PossiblyUnusedMethod>
+      <code>addServiceManager</code>
+    </PossiblyUnusedMethod>
   </file>
 </files>
