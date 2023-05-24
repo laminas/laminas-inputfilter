@@ -38,7 +38,7 @@ use Traversable;
  * }
  * @psalm-type InputFilterSpecification = array{
  *     type?: class-string<InputFilterInterface>|string,
- * }&array<array-key, InputSpecification>
+ * }&array<array-key, InputSpecification|InputFilterInterface|InputInterface>
  * @psalm-type CollectionSpecification = array{
  *     type?: class-string<InputFilterInterface>|string,
  *     input_filter?: InputFilterSpecification|InputFilterInterface,

@@ -19,15 +19,15 @@ use Laminas\InputFilter\InputProviderInterface;
 use Laminas\ServiceManager;
 use Laminas\Validator;
 use LaminasTest\InputFilter\TestAsset\CustomInput;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 use function sprintf;
 
-/**
- * @covers \Laminas\InputFilter\Factory
- */
+#[CoversClass(Factory::class)]
 class FactoryTest extends TestCase
 {
     public function testCreateInputWithInvalidDataTypeThrowsInvalidArgumentException(): void
@@ -49,7 +49,6 @@ class FactoryTest extends TestCase
             ->with($type)
             ->willReturn(false);
 
-        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory = new Factory($pluginManager);
 
         $this->expectException(RuntimeException::class);
@@ -65,7 +64,6 @@ class FactoryTest extends TestCase
     {
         $pluginManager = $this->createMock(InputFilterPluginManager::class);
         $factory       = new Factory();
-        /** @psalm-suppress MixedArgumentTypeCoercion */
         $factory->setInputFilterManager($pluginManager);
         self::assertSame($pluginManager, $factory->getInputFilterManager());
     }
@@ -73,8 +71,7 @@ class FactoryTest extends TestCase
     public function testGetInputFilterManagerWhenYouConstructFactoryWithIt(): void
     {
         $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        /** @psalm-suppress MixedArgumentTypeCoercion */
-        $factory = new Factory($pluginManager);
+        $factory       = new Factory($pluginManager);
         self::assertSame($pluginManager, $factory->getInputFilterManager());
     }
 
@@ -187,7 +184,7 @@ class FactoryTest extends TestCase
     }
 
     /** @psalm-return array<string, array{0: 'continue_if_empty'|'fallback_value'}> */
-    public function inputTypeSpecificationProvider(): array
+    public static function inputTypeSpecificationProvider(): array
     {
         return [
             // Description => [$specificationKey]
@@ -197,9 +194,9 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider inputTypeSpecificationProvider
      * @psalm-param 'continue_if_empty'|'fallback_value' $specificationKey
      */
+    #[DataProvider('inputTypeSpecificationProvider')]
     public function testCreateInputWithSpecificInputTypeSettingsThrowException(string $specificationKey): void
     {
         $factory = $this->createDefaultFactory();
@@ -215,7 +212,6 @@ class FactoryTest extends TestCase
         $this->expectExceptionMessage(
             sprintf('"%s" can only set to inputs of type "Laminas\InputFilter\Input"', $specificationKey)
         );
-        /** @psalm-suppress ArgumentTypeCoercion */
         $factory->createInput([
             'type'            => $type,
             $specificationKey => true,
@@ -855,9 +851,6 @@ class FactoryTest extends TestCase
         self::assertSame($inputFilterManager, $factory->getInputFilterManager());
     }
 
-    /**
-     * @covers \Laminas\InputFilter\Factory::createInput
-     */
     public function testSetsBreakChainOnFailure(): void
     {
         $factory = $this->createDefaultFactory();
@@ -871,6 +864,11 @@ class FactoryTest extends TestCase
     {
         $factory = $this->createDefaultFactory();
 
+        /**
+         * null is not acceptable as an input spec for the psalm type
+         *
+         * @psalm-suppress InvalidArgument
+         */
         $inputFilter = $factory->createInputFilter([
             'foo' => [
                 'name' => 'foo',

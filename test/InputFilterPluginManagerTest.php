@@ -14,21 +14,22 @@ use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\FileInput\TestAsset\InitializableInputFilterInterface;
-use PHPUnit\Framework\MockObject\MockObject;
+use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;
+use LaminasTest\InputFilter\TestAsset\InputInterfaceStub;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
+use stdClass;
 use Throwable;
 
 use function method_exists;
 
-/**
- * @covers \Laminas\InputFilter\InputFilterPluginManager
- */
+#[CoversClass(InputFilterPluginManager::class)]
 class InputFilterPluginManagerTest extends TestCase
 {
     private InputFilterPluginManager $manager;
@@ -49,7 +50,6 @@ class InputFilterPluginManagerTest extends TestCase
     {
         $r = new ReflectionObject($this->manager);
         $p = $r->getProperty('sharedByDefault');
-        $p->setAccessible(true);
         self::assertFalse($p->getValue($this->manager));
     }
 
@@ -65,13 +65,13 @@ class InputFilterPluginManagerTest extends TestCase
 
     public function testLoadingInvalidElementRaisesException(): void
     {
-        $this->manager->setInvokableClass('test', self::class);
+        $this->manager->setInvokableClass('test', stdClass::class);
         $this->expectException($this->getServiceNotFoundException());
         $this->manager->get('test');
     }
 
     /** @psalm-return array<string, array{0: string, 1: class-string<InputFilter>}> */
-    public function defaultInvokableClassesProvider(): array
+    public static function defaultInvokableClassesProvider(): array
     {
         return [
             // Description => [$alias, $expectedInstance]
@@ -81,9 +81,9 @@ class InputFilterPluginManagerTest extends TestCase
     }
 
     /**
-     * @dataProvider defaultInvokableClassesProvider
      * @psalm-param class-string $expectedInstance
      */
+    #[DataProvider('defaultInvokableClassesProvider')]
     public function testDefaultInvokableClasses(string $alias, string $expectedInstance): void
     {
         /** @var object $service */
@@ -147,10 +147,10 @@ class InputFilterPluginManagerTest extends TestCase
      *     2: class-string<InputInterface>
      * }>
      */
-    public function serviceProvider(): array
+    public static function serviceProvider(): array
     {
-        $inputFilterInterfaceMock = $this->createInputFilterInterfaceMock();
-        $inputInterfaceMock       = $this->createInputInterfaceMock();
+        $inputFilterInterfaceMock = new InputFilterInterfaceStub();
+        $inputInterfaceMock       = new InputInterfaceStub('foo', true);
 
         // phpcs:disable Generic.Files.LineLength.TooLong
         return [
@@ -161,11 +161,8 @@ class InputFilterPluginManagerTest extends TestCase
         // phpcs:enable
     }
 
-    /**
-     * @dataProvider serviceProvider
-     * @param InputInterface|InputFilterInterface $service
-     */
-    public function testGet(string $serviceName, object $service): void
+    #[DataProvider('serviceProvider')]
+    public function testGet(string $serviceName, InputInterface|InputFilterInterface $service): void
     {
         $this->manager->setService($serviceName, $service);
 
@@ -187,39 +184,6 @@ class InputFilterPluginManagerTest extends TestCase
         $this->manager->populateFactory($inputFilter);
 
         self::assertSame($this->manager, $inputFilter->getFactory()->getInputFilterManager());
-    }
-
-    /**
-     * @return MockObject&InputFilterInterface
-     */
-    protected function createInputFilterInterfaceMock()
-    {
-        /** @var InputFilterInterface&MockObject $inputFilter */
-        $inputFilter = $this->createMock(InputFilterInterface::class);
-
-        return $inputFilter;
-    }
-
-    /**
-     * @return MockObject&InputInterface
-     */
-    protected function createInputInterfaceMock()
-    {
-        /** @var InputInterface&MockObject $input */
-        $input = $this->createMock(InputInterface::class);
-
-        return $input;
-    }
-
-    /**
-     * @return MockObject&ServiceLocatorInterface
-     */
-    protected function createServiceLocatorInterfaceMock()
-    {
-        /** @var ServiceLocatorInterface&MockObject $serviceLocator */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        return $serviceLocator;
     }
 
     /** @return class-string<Throwable> */

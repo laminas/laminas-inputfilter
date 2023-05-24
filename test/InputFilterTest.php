@@ -8,14 +8,13 @@ use ArrayIterator;
 use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Traversable;
 
 use function array_merge;
 
-/**
- * @covers \Laminas\InputFilter\InputFilter
- */
+#[CoversClass(InputFilter::class)]
 class InputFilterTest extends BaseInputFilterTest
 {
     /** @var InputFilter */
@@ -46,7 +45,7 @@ class InputFilterTest extends BaseInputFilterTest
      *     2: Input
      * }>
      */
-    public function inputProvider(): array
+    public static function inputProvider(): array
     {
         $dataSets = parent::inputProvider();
 

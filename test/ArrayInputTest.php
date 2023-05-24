@@ -7,8 +7,9 @@ namespace LaminasTest\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
-use Laminas\Validator\NotEmpty;
+use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\ValidatorChain;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use Webmozart\Assert\Assert;
 
@@ -18,9 +19,7 @@ use function array_walk;
 use function current;
 use function is_array;
 
-/**
- * @covers \Laminas\InputFilter\ArrayInput
- */
+#[CoversClass(ArrayInput::class)]
 class ArrayInputTest extends InputTest
 {
     protected function setUp(): void
@@ -76,7 +75,7 @@ class ArrayInputTest extends InputTest
      *     4: string[]
      * }>
      */
-    public function fallbackValueVsIsValidProvider(): array
+    public static function fallbackValueVsIsValidProvider(): array
     {
         $dataSets = parent::fallbackValueVsIsValidProvider();
         Assert::isArray($dataSets);
@@ -95,7 +94,7 @@ class ArrayInputTest extends InputTest
      *     filtered: null|string|array
      * }>
      */
-    public function emptyValueProvider(): iterable
+    public static function emptyValueProvider(): iterable
     {
         $dataSets = parent::emptyValueProvider();
         Assert::isArray($dataSets);
@@ -112,7 +111,7 @@ class ArrayInputTest extends InputTest
      *     filtered:  bool|int|float|string|list<string>|object
      * }>
      */
-    public function mixedValueProvider(): array
+    public static function mixedValueProvider(): array
     {
         $dataSets = parent::mixedValueProvider();
         Assert::isArray($dataSets);
@@ -167,14 +166,11 @@ class ArrayInputTest extends InputTest
         return parent::createValidatorChainMock($valueMap, $messages);
     }
 
-    /**
-     * @param bool $isValid
-     * @param mixed $value
-     * @param mixed $context
-     * @return NotEmpty&MockObject
-     */
-    protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
-    {
+    protected function createNonEmptyValidatorMock(
+        bool $isValid,
+        mixed $value,
+        mixed $context = null,
+    ): NotEmptyValidator&MockObject {
         // ArrayInput validates per each array value
         if (is_array($value)) {
             $value = current($value);

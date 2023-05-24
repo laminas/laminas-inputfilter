@@ -12,6 +12,10 @@ use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\UnfilteredDataInterface;
+use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;
+use LaminasTest\InputFilter\TestAsset\InputInterfaceStub;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
@@ -28,9 +32,7 @@ use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
 
-/**
- * @covers \Laminas\InputFilter\BaseInputFilter
- */
+#[CoversClass(BaseInputFilter::class)]
 class BaseInputFilterTest extends TestCase
 {
     /** @var BaseInputFilter */
@@ -140,7 +142,6 @@ class BaseInputFilterTest extends TestCase
 
         $r = new ReflectionObject($inputFilter);
         $p = $r->getProperty('validationGroup');
-        $p->setAccessible(true);
         self::assertEquals(['fooInput'], $p->getValue($inputFilter));
     }
 
@@ -164,7 +165,6 @@ class BaseInputFilterTest extends TestCase
 
         $r = new ReflectionObject($inputFilter);
         $p = $r->getProperty('validationGroup');
-        $p->setAccessible(true);
         self::assertEquals(['nested'], $p->getValue($inputFilter));
         self::assertEquals(['nested-input1', 'nested-input2'], $p->getValue($nestedInputFilter));
     }
@@ -209,9 +209,8 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * Verify the state of the input filter is the desired after change it using the method `add()`
-     *
-     * @dataProvider addMethodArgumentsProvider
      */
+    #[DataProvider('addMethodArgumentsProvider')]
     public function testAddHasGet(
         InputInterface|InputFilterInterface|iterable $input,
         ?string $name,
@@ -238,9 +237,8 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * Verify the state of the input filter is the desired after change it using the method `add()` and `remove()`
-     *
-     * @dataProvider addMethodArgumentsProvider
      */
+    #[DataProvider('addMethodArgumentsProvider')]
     public function testAddRemove(
         InputInterface|InputFilterInterface|iterable $input,
         ?string $name,
@@ -270,9 +268,7 @@ class BaseInputFilterTest extends TestCase
         self::assertEquals('foo', $foo->getName(), 'Input name should not change');
     }
 
-    /**
-     * @dataProvider inputProvider
-     */
+    #[DataProvider('inputProvider')]
     public function testReplace(
         InputInterface|InputFilterInterface|iterable $input,
         ?string $inputName,
@@ -294,7 +290,6 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @dataProvider setDataArgumentsProvider
      * @param array<string, InputInterface|InputFilterInterface|iterable> $inputs
      * @param iterable<mixed> $data
      * @param array<string, mixed> $expectedRawValues
@@ -303,6 +298,7 @@ class BaseInputFilterTest extends TestCase
      * @param list<InputInterface> $expectedValidInputs
      * @param string[] $expectedMessages
      */
+    #[DataProvider('setDataArgumentsProvider')]
     public function testSetDataAndGetRawValueGetValue(
         array $inputs,
         iterable $data,
@@ -353,7 +349,6 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @dataProvider setDataArgumentsProvider
      * @param array<string, InputInterface|InputFilterInterface|iterable> $inputs
      * @param iterable<mixed> $data
      * @param array<string, mixed> $expectedRawValues
@@ -362,6 +357,7 @@ class BaseInputFilterTest extends TestCase
      * @param list<InputInterface> $expectedValidInputs
      * @param string[] $expectedMessages
      */
+    #[DataProvider('setDataArgumentsProvider')]
     public function testSetTraversableDataAndGetRawValueGetValue(
         array $inputs,
         iterable $data,
@@ -438,7 +434,7 @@ class BaseInputFilterTest extends TestCase
      *     2: array<string, string>|string
      * }>
      */
-    public function contextProvider(): array
+    public static function contextProvider(): array
     {
         $data             = ['fooInput' => 'fooValue'];
         $traversableData  = new ArrayObject(['fooInput' => 'fooValue']);
@@ -453,15 +449,15 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @dataProvider contextProvider
      * @param iterable<array-key, mixed> $data
      * @param string|array<string, string> $expectedContext
      */
+    #[DataProvider('contextProvider')]
     public function testValidationContext($data, ?string $customContext, $expectedContext): void
     {
         $filter = $this->inputFilter;
 
-        $input = $this->createInputInterfaceMock('fooInput', true, true, $expectedContext);
+        $input = self::createInputInterfaceMock('fooInput', true, true, $expectedContext);
         $filter->add($input, 'fooInput');
 
         $filter->setData($data);
@@ -478,7 +474,7 @@ class BaseInputFilterTest extends TestCase
         $expectedContext = ['fooInput' => 'fooRawValue'];
         $filter          = $this->inputFilter;
 
-        $input = $this->createInputInterfaceMock('fooInput', true, true, $expectedContext, 'fooRawValue');
+        $input = self::createInputInterfaceMock('fooInput', true, true, $expectedContext, 'fooRawValue');
         $filter->add($input, 'fooInput');
 
         $filter->setData($data);
@@ -498,8 +494,8 @@ class BaseInputFilterTest extends TestCase
             'inputRequired' => 'inputRequiredValue',
             'inputOptional' => null,
         ];
-        $inputRequired   = $this->createInputInterfaceMock('fooInput', true, true, $expectedContext);
-        $inputOptional   = $this->createInputInterfaceMock('fooInput', false);
+        $inputRequired   = self::createInputInterfaceMock('fooInput', true, true, $expectedContext);
+        $inputOptional   = self::createInputInterfaceMock('fooInput', false);
 
         $filter = $this->inputFilter;
         $filter->add($inputRequired, 'inputRequired');
@@ -546,9 +542,7 @@ class BaseInputFilterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider unknownScenariosProvider
-     */
+    #[DataProvider('unknownScenariosProvider')]
     public function testUnknown(array $inputs, array $data, bool $hasUnknown, array $getUnknown): void
     {
         $inputFilter = $this->inputFilter;
@@ -707,16 +701,16 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @psalm-return<string, array{
+     * @psalm-return array<string, array{
      *     0: InputInterface,
      *     1: null|string,
      *     2: null|string,
-     *     3: MockObject&InputInterface
+     *     3: InputInterface,
      * }>
      */
-    public function addMethodArgumentsProvider(): array
+    public static function addMethodArgumentsProvider(): array
     {
-        $inputTypes = $this->inputProvider();
+        $inputTypes = static::inputProvider();
 
         $inputName = static fn($inputTypeData) => $inputTypeData[1];
 
@@ -761,7 +755,7 @@ class BaseInputFilterTest extends TestCase
      *     7: string[]
      * }>
      */
-    public function setDataArgumentsProvider(): array
+    public static function setDataArgumentsProvider(): array
     {
         $iAName    = 'InputA';
         $iBName    = 'InputB';
@@ -785,7 +779,7 @@ class BaseInputFilterTest extends TestCase
 
         /**
          * @param array<string, string> $msg
-         * @return callable(): InputInterface&MockObject
+         * @return callable(): InputInterface
          */
         $input = function (
             string $iName,
@@ -797,7 +791,7 @@ class BaseInputFilterTest extends TestCase
             $vRaw,
             $vFiltered
         ): callable {
-            return fn(array|null|string $context): InputInterface => $this->createInputInterfaceMock(
+            return fn(array|null|string $context): InputInterface => self::createInputInterfaceMock(
                 $iName,
                 $required,
                 $isValid,
@@ -810,10 +804,10 @@ class BaseInputFilterTest extends TestCase
         };
 
         $inputFilter = fn(bool $isValid, array $msg = []): callable =>
-            function (array|null|string $context) use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
+            function () use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
                 $vRaw      = ['fooInput' => $vRaw];
                 $vFiltered = ['fooInput' => $vFiltered];
-                return $this->createInputFilterInterfaceMock($isValid, $context, $vRaw, $vFiltered, $msg);
+                return BaseInputFilterTest::createInputFilterInterfaceMock($isValid, $vRaw, $vFiltered, $msg);
             };
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame,Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma
@@ -893,9 +887,9 @@ class BaseInputFilterTest extends TestCase
      *     3: array<string, string>
      * }>
      */
-    public function unknownScenariosProvider(): array
+    public static function unknownScenariosProvider(): array
     {
-        $inputA          = $this->createInputInterfaceMock('inputA', true);
+        $inputA          = self::createInputInterfaceMock('inputA', true);
         $dataA           = ['inputA' => 'foo'];
         $dataUnknown     = ['inputUnknown' => 'unknownValue'];
         $dataAAndUnknown = array_merge($dataA, $dataUnknown);
@@ -915,15 +909,15 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: MockObject&InputInterface|MockObject&InputFilterInterface,
+     *     0: InputInterface|InputFilterInterface,
      *     1: null|string,
-     *     2: MockObject&InputInterface|MockObject&InputFilterInterface,
+     *     2: InputInterface|InputFilterInterface,
      * }>
      */
-    public function inputProvider(): array
+    public static function inputProvider(): array
     {
-        $input       = $this->createInputInterfaceMock('fooInput', null);
-        $inputFilter = $this->createInputFilterInterfaceMock();
+        $input       = self::createInputInterfaceMock('fooInput', null);
+        $inputFilter = self::createInputFilterInterfaceMock();
 
         // phpcs:disable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
         return [
@@ -937,41 +931,19 @@ class BaseInputFilterTest extends TestCase
     /**
      * @param array<string, mixed> $getRawValues
      * @param array<string, mixed> $getValues
-     * @param string[] $getMessages
-     * @return MockObject&InputFilterInterface
+     * @param array<array-key, array<string, string>> $getMessages
      */
-    protected function createInputFilterInterfaceMock(
+    private static function createInputFilterInterfaceMock(
         bool|null $isValid = null,
-        mixed $context = null,
         array $getRawValues = [],
         array $getValues = [],
         array $getMessages = []
-    ) {
-        /** @var InputFilterInterface&MockObject $inputFilter */
-        $inputFilter = $this->createMock(InputFilterInterface::class);
-        $inputFilter->method('getRawValues')
-            ->willReturn($getRawValues);
-        $inputFilter->method('getValues')
-            ->willReturn($getValues);
-        if (($isValid === false) || ($isValid === true)) {
-            $inputFilter->expects(self::once())
-                ->method('isValid')
-                ->willReturn($isValid);
-        } else {
-            $inputFilter->expects(self::never())
-                ->method('isValid');
-        }
-        $inputFilter->method('getMessages')
-            ->willReturn($getMessages);
-
-        return $inputFilter;
+    ): InputFilterInterfaceStub {
+        return new InputFilterInterfaceStub($isValid, $getRawValues, $getValues, $getMessages);
     }
 
-    /**
-     * @param string[] $getMessages
-     * @return MockObject&InputInterface
-     */
-    protected function createInputInterfaceMock(
+    /** @param array<string, string> $getMessages */
+    private static function createInputInterfaceMock(
         string $name,
         bool|null $isRequired,
         bool|null $isValid = null,
@@ -980,33 +952,17 @@ class BaseInputFilterTest extends TestCase
         mixed $getValue = null,
         array $getMessages = [],
         bool $breakOnFailure = false
-    ) {
-        /** @var InputInterface&MockObject $input */
-        $input = $this->createMock(InputInterface::class);
-        $input->method('getName')
-            ->willReturn($name);
-        $input->method('isRequired')
-            ->willReturn($isRequired);
-        $input->method('getRawValue')
-            ->willReturn($getRawValue);
-        $input->method('getValue')
-            ->willReturn($getValue);
-        $input->method('breakOnFailure')
-            ->willReturn($breakOnFailure);
-        if (($isValid === false) || ($isValid === true)) {
-            $input->expects(self::any())
-                ->method('isValid')
-                ->with($context)
-                ->willReturn($isValid);
-        } else {
-            $input->expects(self::never())
-                ->method('isValid')
-                ->with($context);
-        }
-        $input->method('getMessages')
-            ->willReturn($getMessages);
-
-        return $input;
+    ): InputInterfaceStub {
+        return new InputInterfaceStub(
+            $name,
+            $isRequired,
+            $isValid,
+            $context,
+            $getRawValue,
+            $getValue,
+            $getMessages,
+            $breakOnFailure,
+        );
     }
 
     /**
