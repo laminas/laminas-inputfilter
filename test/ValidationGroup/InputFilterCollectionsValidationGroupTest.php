@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter\ValidationGroup;
 
 use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use PHPUnit\Framework\TestCase;
 
-use const PHP_VERSION_ID;
+use function restore_error_handler;
+use function set_error_handler;
 
 final class InputFilterCollectionsValidationGroupTest extends TestCase
 {
@@ -174,15 +176,18 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
             ],
         ]);
 
-        if (PHP_VERSION_ID >= 80000) {
-            $this->expectWarning();
-            $this->expectWarningMessage('Undefined array key 1');
-        } else {
-            $this->expectNotice();
-            $this->expectNoticeMessage('Undefined offset: 1');
-        }
+        set_error_handler(function (int $num, string $msg): never {
+            throw new RuntimeException($msg, $num);
+        });
 
-        $this->inputFilter->isValid();
+        try {
+            $this->inputFilter->isValid();
+            self::fail('A warning was not issued');
+        } catch (RuntimeException $e) {
+            self::assertStringContainsString('Undefined array key 1', $e->getMessage());
+        } finally {
+            restore_error_handler();
+        }
     }
 
     /** @dataProvider collectionCountProvider */
