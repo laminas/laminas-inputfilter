@@ -871,6 +871,11 @@ class FactoryTest extends TestCase
     {
         $factory = $this->createDefaultFactory();
 
+        /**
+         * null is not acceptable as an input spec for the psalm type
+         *
+         * @psalm-suppress InvalidArgument
+         */
         $inputFilter = $factory->createInputFilter([
             'foo' => [
                 'name' => 'foo',
