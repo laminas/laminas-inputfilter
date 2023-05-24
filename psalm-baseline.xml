@@ -49,9 +49,6 @@
     <MixedPropertyTypeCoercion>
       <code>$inputs</code>
     </MixedPropertyTypeCoercion>
-    <PossiblyInvalidArgument>
-      <code>$input</code>
-    </PossiblyInvalidArgument>
     <PossiblyNullArrayOffset>
       <code><![CDATA[$this->inputs]]></code>
     </PossiblyNullArrayOffset>
@@ -63,7 +60,6 @@
       <code>isValid</code>
     </TooManyArguments>
     <UnusedPsalmSuppress>
-      <code>DocblockTypeContradiction</code>
       <code>RedundantConditionGivenDocblockType</code>
       <code>RedundantConditionGivenDocblockType</code>
     </UnusedPsalmSuppress>
@@ -87,10 +83,6 @@
       <code><![CDATA[$this->invalidInputs]]></code>
       <code><![CDATA[$this->validInputs]]></code>
     </InvalidPropertyAssignmentValue>
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array<array-key, array>]]></code>
-      <code><![CDATA[array<array-key, array>]]></code>
-    </LessSpecificImplementedReturnType>
     <MixedArgument>
       <code>$data</code>
     </MixedArgument>

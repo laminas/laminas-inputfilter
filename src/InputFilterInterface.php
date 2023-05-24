@@ -12,6 +12,7 @@ use Laminas\Validator\ValidatorInterface; // phpcs:ignore
 use Traversable;
 
 /**
+ * @template TFilteredValues of array<array-key, mixed>
  * @psalm-type FilterSpecification = array{
  *     name: string|class-string<FilterInterface>,
  *     priority?: int,
@@ -153,6 +154,7 @@ interface InputFilterInterface extends Countable
      * validation failed, this should raise an exception.
      *
      * @return array<string, mixed>
+     * @psalm-return TFilteredValues
      */
     public function getValues();
 

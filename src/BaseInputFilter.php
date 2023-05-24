@@ -22,6 +22,10 @@ use function is_array;
 use function is_int;
 use function sprintf;
 
+/**
+ * @template TFilteredValues of array<array-key, mixed>
+ * @implements InputFilterInterface<TFilteredValues>
+ */
 class BaseInputFilter implements
     InputFilterInterface,
     UnknownInputsCapableInterface,
@@ -403,6 +407,7 @@ class BaseInputFilter implements
      * validation failed, this should raise an exception.
      *
      * @return array<string, mixed>
+     * @psalm-return TFilteredValues
      */
     public function getValues()
     {

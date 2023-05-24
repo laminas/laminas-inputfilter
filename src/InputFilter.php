@@ -10,7 +10,9 @@ use function is_array;
 
 /**
  * @psalm-import-type InputSpecification from InputFilterInterface
- **/
+ * @template TFilteredValues of array<array-key, mixed>
+ * @extends BaseInputFilter<TFilteredValues>
+ */
 class InputFilter extends BaseInputFilter
 {
     /** @var Factory|null */
