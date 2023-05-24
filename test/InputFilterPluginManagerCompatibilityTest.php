@@ -19,7 +19,7 @@ class InputFilterPluginManagerCompatibilityTest extends TestCase
         $this->markTestSkipped("InputFilterPluginManager accepts multiple instances");
     }
 
-    protected function getPluginManager(): InputFilterPluginManager
+    protected static function getPluginManager(): InputFilterPluginManager
     {
         return new InputFilterPluginManager(new ServiceManager());
     }
