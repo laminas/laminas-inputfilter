@@ -285,6 +285,11 @@
       <code>setInputFilter</code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="src/InputFilterAwareTrait.php">
+    <InvalidNullableReturnType>
+      <code>InputFilterInterface</code>
+    </InvalidNullableReturnType>
+  </file>
   <file src="src/InputFilterInterface.php">
     <PossiblyUnusedReturnValue>
       <code>InputFilterInterface</code>
@@ -432,12 +437,16 @@
     </RedundantCondition>
   </file>
   <file src="test/BaseInputFilterTest.php">
+    <DeprecatedMethod>
+      <code>enableProxyingToOriginalMethods</code>
+      <code>enableProxyingToOriginalMethods</code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[['nested' => ['nested-input1', 'nested-input2']]]]></code>
     </InvalidArgument>
-    <InvalidDocblock>
-      <code>public function addMethodArgumentsProvider(): array</code>
-    </InvalidDocblock>
+    <LessSpecificReturnStatement>
+      <code>$dataSets</code>
+    </LessSpecificReturnStatement>
     <MissingClosureParamType>
       <code>$inputTypeData</code>
       <code>$inputTypeData</code>
@@ -453,6 +462,7 @@
       <code>$set[6]</code>
     </MixedArgument>
     <MixedArgumentTypeCoercion>
+      <code>$getMessages</code>
       <code>$msg</code>
       <code>$msg</code>
       <code>$name</code>
@@ -480,14 +490,6 @@
       <code>$tmpTemplate[2]</code>
       <code>$tmpTemplate[3]</code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[<string, array{
-     *     0: InputInterface,
-     *     1: null|string,
-     *     2: null|string,
-     *     3: MockObject&InputInterface
-     * }>]]></code>
-    </MixedInferredReturnType>
     <MixedReturnTypeCoercion>
       <code>$dataSets</code>
       <code><![CDATA[array<string, array{
@@ -501,6 +503,14 @@
      *     7: string[]
      * }>]]></code>
     </MixedReturnTypeCoercion>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array<string, array{
+     *     0: InputInterface,
+     *     1: null|string,
+     *     2: null|string,
+     *     3: InputInterface,
+     * }>]]></code>
+    </MoreSpecificReturnType>
     <PossiblyInvalidArgument>
       <code>$input</code>
       <code>$input</code>
@@ -518,10 +528,55 @@
       <code>getName</code>
       <code>isRequired</code>
     </PossiblyUndefinedMethod>
+    <PossiblyUnusedMethod>
+      <code>addMethodArgumentsProvider</code>
+      <code>contextProvider</code>
+      <code>setDataArgumentsProvider</code>
+      <code>unknownScenariosProvider</code>
+    </PossiblyUnusedMethod>
     <PossiblyUnusedParam>
-      <code>$context</code>
       <code>$inputName</code>
     </PossiblyUnusedParam>
+  </file>
+  <file src="test/CollectionInputFilterTest.php">
+    <InvalidArgument>
+      <code>$errorMessage</code>
+    </InvalidArgument>
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            // Description => [$required, $count, $data, $inputFilter, $expectedRaw, $expectedValues, $expectedValid, $expectedMessages]
+            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
+            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
+            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIF(), []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
+            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIF(), []     , []          , true , []],
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array<string, array{
+     *     0: bool,
+     *     1: null|int,
+     *     2: array,
+     *     3: BaseInputFilter&MockObject,
+     *     4: array,
+     *     5: array,
+     *     6: bool,
+     *     7: array
+     * }>]]></code>
+    </InvalidReturnType>
+    <PossiblyUnusedMethod>
+      <code>contextProvider</code>
+      <code>countVsDataProvider</code>
+      <code>dataNestingCollection</code>
+      <code>dataVsValidProvider</code>
+      <code>inputFilterProvider</code>
+      <code>invalidCollections</code>
+      <code>invalidDataType</code>
+      <code>isRequiredProvider</code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="test/FactoryTest.php">
     <PossiblyNullReference>
@@ -532,6 +587,9 @@
       <code>breakOnFailure</code>
       <code>breakOnFailure</code>
     </PossiblyUndefinedMethod>
+    <PossiblyUnusedMethod>
+      <code>inputTypeSpecificationProvider</code>
+    </PossiblyUnusedMethod>
     <UndefinedInterfaceMethod>
       <code>continueIfEmpty</code>
     </UndefinedInterfaceMethod>
@@ -595,22 +653,15 @@
       <code>$generator instanceof Generator</code>
     </TypeDoesNotContainType>
   </file>
-  <file src="test/InputFilterAwareTraitTest.php">
-    <InvalidArgument>
-      <code>InputFilterAwareTrait::class</code>
-      <code>InputFilterAwareTrait::class</code>
-    </InvalidArgument>
-    <MixedMethodCall>
-      <code>getInputFilter</code>
-      <code>getInputFilter</code>
-      <code>setInputFilter</code>
-      <code>setInputFilter</code>
-    </MixedMethodCall>
-  </file>
   <file src="test/InputFilterPluginManagerCompatibilityTest.php">
     <InvalidReturnType>
       <code>getInstanceOf</code>
     </InvalidReturnType>
+  </file>
+  <file src="test/InputFilterPluginManagerFactoryTest.php">
+    <PossiblyUnusedMethod>
+      <code>pluginProvider</code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="test/InputFilterPluginManagerTest.php">
     <LessSpecificReturnStatement>
@@ -627,6 +678,10 @@
      *     2: class-string<InputInterface>
      * }>]]></code>
     </MoreSpecificReturnType>
+    <PossiblyUnusedMethod>
+      <code>defaultInvokableClassesProvider</code>
+      <code>serviceProvider</code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="test/InputFilterTest.php">
     <ImplementedReturnTypeMismatch>
@@ -716,14 +771,6 @@
     <LessSpecificReturnStatement>
       <code>array_merge($emptyValues, $mixedValues)</code>
     </LessSpecificReturnStatement>
-    <MissingClosureParamType>
-      <code>$context</code>
-      <code>$context</code>
-      <code>$context</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-    </MissingClosureParamType>
     <MixedArrayAccess>
       <code><![CDATA[$value['filtered']]]></code>
       <code><![CDATA[$value['raw']]]></code>
@@ -766,6 +813,11 @@
   <file src="test/TestAsset/ServiceListenerInterface.php">
     <PossiblyUnusedMethod>
       <code>addServiceManager</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/ValidationGroup/InputFilterCollectionsValidationGroupTest.php">
+    <PossiblyUnusedMethod>
+      <code>collectionCountProvider</code>
     </PossiblyUnusedMethod>
   </file>
 </files>

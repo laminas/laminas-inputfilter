@@ -6,7 +6,7 @@ namespace Laminas\InputFilter;
 
 trait InputFilterAwareTrait
 {
-    /** @var InputFilterInterface */
+    /** @var InputFilterInterface|null */
     protected $inputFilter;
 
     /**

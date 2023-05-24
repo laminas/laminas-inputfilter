@@ -10,11 +10,10 @@ use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\OptionalInputFilter;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \Laminas\InputFilter\OptionalInputFilter
- */
+#[CoversClass(OptionalInputFilter::class)]
 class OptionalInputFilterTest extends TestCase
 {
     public function testValidatesSuccessfullyWhenSetDataIsNeverCalled(): void

@@ -9,6 +9,8 @@ use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputFilterPluginManagerFactory;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionObject;
@@ -29,7 +31,7 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     }
 
     /** @psalm-return array<string, array{0: class-string}> */
-    public function pluginProvider(): array
+    public static function pluginProvider(): array
     {
         return [
             'input'        => [InputInterface::class],
@@ -38,10 +40,10 @@ class InputFilterPluginManagerFactoryTest extends TestCase
     }
 
     /**
-     * @depends testFactoryReturnsPluginManager
-     * @dataProvider pluginProvider
      * @psalm-param class-string $pluginType
      */
+    #[DataProvider('pluginProvider')]
+    #[Depends('testFactoryReturnsPluginManager')]
     public function testFactoryConfiguresPluginManagerUnderContainerInterop(string $pluginType): void
     {
         $container = $this->createMock(ContainerInterface::class);

@@ -8,6 +8,7 @@ use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function restore_error_handler;
@@ -39,7 +40,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
     }
 
     /** @return array<string, array{0: int|null}> */
-    public function collectionCountProvider(): array
+    public static function collectionCountProvider(): array
     {
         return [
             'Collection Count: None'  => [null],
@@ -61,7 +62,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $collection->setCount($count);
     }
 
-    /** @dataProvider collectionCountProvider */
+    #[DataProvider('collectionCountProvider')]
     public function testIncompleteDataFailsValidation(?int $count): void
     {
         $this->setCollectionCount($count);
@@ -73,7 +74,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         self::assertFalse($this->inputFilter->isValid());
     }
 
-    /** @dataProvider collectionCountProvider */
+    #[DataProvider('collectionCountProvider')]
     public function testCompleteDataPassesValidation(?int $count): void
     {
         $this->setCollectionCount($count);
@@ -89,7 +90,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         self::assertTrue($this->inputFilter->isValid());
     }
 
-    /** @dataProvider collectionCountProvider */
+    #[DataProvider('collectionCountProvider')]
     public function testValidationFailsForCollectionItemValidity(?int $count): void
     {
         $this->setCollectionCount($count);
@@ -105,7 +106,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         self::assertFalse($this->inputFilter->isValid());
     }
 
-    /** @dataProvider collectionCountProvider */
+    #[DataProvider('collectionCountProvider')]
     public function testValidationGroupWithCollectionInputFilter(?int $count): void
     {
         $this->setCollectionCount($count);
@@ -125,7 +126,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         self::assertTrue($this->inputFilter->isValid());
     }
 
-    /** @dataProvider collectionCountProvider */
+    #[DataProvider('collectionCountProvider')]
     public function testValidationGroupViaCollection(?int $count): void
     {
         $this->setCollectionCount($count);
@@ -153,9 +154,8 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
 
     /**
      * This test documents existing behaviour - the validation group must be set for elements 0 through 3
-     *
-     * @dataProvider collectionCountProvider
      */
+    #[DataProvider('collectionCountProvider')]
     public function testValidationGroupViaCollectionMustSpecifyAllKeys(?int $count): void
     {
         $this->setCollectionCount($count);
@@ -190,7 +190,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         }
     }
 
-    /** @dataProvider collectionCountProvider */
+    #[DataProvider('collectionCountProvider')]
     public function testValidationGroupViaTopLevelInputFilter(?int $count): void
     {
         $this->setCollectionCount($count);

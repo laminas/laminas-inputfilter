@@ -8,6 +8,7 @@ use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\HttpServerFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Webmozart\Assert\Assert;
 
 use function json_encode;
@@ -16,10 +17,8 @@ use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
 
-/**
- * @covers \Laminas\InputFilter\FileInput\HttpServerFileInputDecorator
- * @covers \Laminas\InputFilter\FileInput
- */
+#[CoversClass(HttpServerFileInputDecorator::class)]
+#[CoversClass(FileInput::class)]
 class HttpServerFileInputDecoratorTest extends InputTest
 {
     /** @var HttpServerFileInputDecorator */
@@ -332,7 +331,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         );
     }
 
-    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
+    public static function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $dataSets = parent::isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider();
         Assert::isArrayAccessible($dataSets);
@@ -345,7 +344,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         return $dataSets;
     }
 
-    public function emptyValueProvider(): iterable
+    public static function emptyValueProvider(): iterable
     {
         return [
             'tmp_name' => [
@@ -383,7 +382,7 @@ class HttpServerFileInputDecoratorTest extends InputTest
         ];
     }
 
-    public function mixedValueProvider(): array
+    public static function mixedValueProvider(): array
     {
         $fooUploadErrOk = [
             'tmp_name' => 'foo',

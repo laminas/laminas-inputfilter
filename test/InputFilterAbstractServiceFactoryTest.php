@@ -19,13 +19,13 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\Foo;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 use function call_user_func_array;
 
-/**
- * @covers \Laminas\InputFilter\InputFilterAbstractServiceFactory
- */
+#[CoversClass(InputFilterAbstractServiceFactory::class)]
 class InputFilterAbstractServiceFactoryTest extends TestCase
 {
     private ServiceManager $services;
@@ -92,9 +92,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         self::assertInstanceOf(InputFilterInterface::class, $filter);
     }
 
-    /**
-     * @depends testCreatesInputFilterInstance
-     */
+    #[Depends('testCreatesInputFilterInstance')]
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
         $filters = new FilterPluginManager($this->services);
@@ -185,9 +183,7 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
     }
 
-    /**
-     * @depends testCreatesInputFilterInstance
-     */
+    #[Depends('testCreatesInputFilterInstance')]
     public function testInjectsInputFilterManagerFromServiceManager(): void
     {
         $this->services->setService('config', [

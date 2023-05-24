@@ -11,6 +11,9 @@ use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
+use LaminasTest\InputFilter\TestAsset\ValidatorStub;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -136,9 +139,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider setValueProvider
      * @param mixed $fallbackValue
      */
+    #[DataProvider('setValueProvider')]
     public function testSetFallbackValue($fallbackValue): void
     {
         $input = $this->input;
@@ -151,9 +154,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider setValueProvider
      * @param mixed $fallbackValue
      */
+    #[DataProvider('setValueProvider')]
     public function testClearFallbackValue($fallbackValue): void
     {
         $input = $this->input;
@@ -164,11 +167,11 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider fallbackValueVsIsValidProvider
      * @param string|string[] $fallbackValue
      * @param string|string[] $originalValue
      * @param string|string[] $expectedValue
      */
+    #[DataProvider('fallbackValueVsIsValidProvider')]
     public function testFallbackValueVsIsValidRules(
         bool $required,
         $fallbackValue,
@@ -195,9 +198,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider fallbackValueVsIsValidProvider
      * @param string|string[] $fallbackValue
      */
+    #[DataProvider('fallbackValueVsIsValidProvider')]
     public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, $fallbackValue): void
     {
         $expectedValue = $fallbackValue; // Should always return the fallback value
@@ -306,7 +309,7 @@ class InputTest extends TestCase
 
         // Validator should not to be called
         $input->getValidatorChain()
-            ->attach($this->createValidatorMock(null, null));
+            ->attach(self::createValidatorMock(null, null));
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
@@ -316,9 +319,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider emptyValueProvider
      * @param mixed $value
      */
+    #[DataProvider('emptyValueProvider')]
     public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue($value): void
     {
         $input = $this->input;
@@ -400,9 +403,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider emptyValueProvider
      * @param mixed $value
      */
+    #[DataProvider('emptyValueProvider')]
     public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value): void
     {
         self::assertTrue($this->input->isRequired());
@@ -421,9 +424,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider emptyValueProvider
      * @param mixed $value
      */
+    #[DataProvider('emptyValueProvider')]
     public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value): void
     {
         $this->input->setRequired(true);
@@ -441,10 +444,10 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider emptyValueProvider
      * @param mixed $valueRaw
      * @param mixed $valueFiltered
      */
+    #[DataProvider('emptyValueProvider')]
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain($valueRaw, $valueFiltered): void
     {
         $filterChain    = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
@@ -456,7 +459,7 @@ class InputTest extends TestCase
 
         $notEmptyMock = $this->createNonEmptyValidatorMock(false, $valueFiltered);
 
-        $validatorChain->attach($this->createValidatorMock(true));
+        $validatorChain->attach(self::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
 
         self::assertFalse($this->input->isValid());
@@ -466,17 +469,14 @@ class InputTest extends TestCase
         self::assertEquals($notEmptyMock, $validators[1]['instance']);
     }
 
-    /**
-     * @group 7448
-     * @dataProvider isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider
-     * @param mixed $value
-     */
+    #[DataProvider('isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider')]
+    #[Group('7448')]
     public function testIsRequiredVsAllowEmptyVsContinueIfEmptyVsIsValid(
         bool $required,
         bool $allowEmpty,
         bool $continueIfEmpty,
         ValidatorInterface $validator,
-        $value,
+        mixed $value,
         bool $expectedIsValid,
         array $expectedMessages
     ): void {
@@ -498,9 +498,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider setValueProvider
      * @param mixed $value
      */
+    #[DataProvider('setValueProvider')]
     public function testSetValuePutInputInTheDesiredState($value): void
     {
         $input = $this->input;
@@ -511,9 +511,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @dataProvider setValueProvider
      * @param mixed $value
      */
+    #[DataProvider('setValueProvider')]
     public function testResetValueReturnsInputValueToDefaultValue($value): void
     {
         $input         = $this->input;
@@ -660,7 +660,7 @@ class InputTest extends TestCase
      *     4: string
      * }>
      */
-    public function fallbackValueVsIsValidProvider(): array
+    public static function fallbackValueVsIsValidProvider(): array
     {
         $required = true;
         $isValid  = true;
@@ -685,10 +685,10 @@ class InputTest extends TestCase
      *     filtered:  bool|int|float|string|list<string>|object
      * }>
      */
-    public function setValueProvider(): array
+    public static function setValueProvider(): array
     {
-        $emptyValues = $this->emptyValueProvider();
-        $mixedValues = $this->mixedValueProvider();
+        $emptyValues = static::emptyValueProvider();
+        $mixedValues = static::mixedValueProvider();
 
         $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
         $mixedValues = $mixedValues instanceof Iterator ? iterator_to_array($mixedValues) : $mixedValues;
@@ -710,11 +710,11 @@ class InputTest extends TestCase
      *     6: string[]
      * }>
      */
-    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
+    public static function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
-        $allValues = $this->setValueProvider();
+        $allValues = static::setValueProvider();
 
-        $emptyValues = $this->emptyValueProvider();
+        $emptyValues = static::emptyValueProvider();
         $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
         Assert::isArray($emptyValues);
 
@@ -729,12 +729,12 @@ class InputTest extends TestCase
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame
-        $validatorNotCall = fn($value, $context = null): ValidatorInterface =>
-            $this->createValidatorMock(null, $value, $context);
-        $validatorInvalid = fn($value, $context = null): ValidatorInterface =>
-            $this->createValidatorMock(false, $value, $context, $validatorMsg);
-        $validatorValid = fn($value, $context = null): ValidatorInterface =>
-            $this->createValidatorMock(true, $value, $context);
+        $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+            self::createValidatorMock(null, $value, $context);
+        $validatorInvalid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+            self::createValidatorMock(false, $value, $context, $validatorMsg);
+        $validatorValid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+            self::createValidatorMock(true, $value, $context);
 
         // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
         $dataTemplates = [
@@ -791,7 +791,7 @@ class InputTest extends TestCase
      *     filtered: null|string|array
      * }>
      */
-    public function emptyValueProvider(): iterable
+    public static function emptyValueProvider(): iterable
     {
         return [
             // Description => [$value]
@@ -822,7 +822,7 @@ class InputTest extends TestCase
      *     filtered: mixed,
      * }>
      */
-    public function mixedValueProvider(): array
+    public static function mixedValueProvider(): array
     {
         return [
             // Description => [$value]
@@ -877,15 +877,9 @@ class InputTest extends TestCase
         ];
     }
 
-    /**
-     * @return InputInterface&MockObject
-     */
-    protected function createInputInterfaceMock()
+    protected function createInputInterfaceMock(): InputInterface&MockObject
     {
-        /** @var InputInterface&MockObject $source */
-        $source = $this->createMock(InputInterface::class);
-
-        return $source;
+        return $this->createMock(InputInterface::class);
     }
 
     /**
@@ -928,52 +922,30 @@ class InputTest extends TestCase
         return $validatorChain;
     }
 
-    /**
-     * @param null|bool $isValid
-     * @param mixed $value
-     * @param mixed $context
-     * @param string[] $messages
-     * @return ValidatorInterface&MockObject
-     */
-    protected function createValidatorMock($isValid, $value = 'not-set', $context = null, $messages = [])
-    {
-        /** @var ValidatorInterface&MockObject $validator */
-        $validator = $this->createMock(ValidatorInterface::class);
-
-        if (($isValid === false) || ($isValid === true)) {
-            $isValidMethod = $validator->expects(self::once())
-                ->method('isValid')
-                ->willReturn($isValid);
-        } else {
-            $isValidMethod = $validator->expects(self::never())
-                ->method('isValid');
-        }
-        if ($value !== 'not-set') {
-            $isValidMethod->with($value, $context);
-        }
-
-        $validator->method('getMessages')
-            ->willReturn($messages);
-
-        return $validator;
+    /** @param array<string, string> $messages */
+    protected static function createValidatorMock(
+        bool|null $isValid,
+        mixed $value = 'not-set',
+        array|null $context = null,
+        array $messages = []
+    ): ValidatorInterface {
+        return new ValidatorStub($isValid, $value, $context, $messages);
     }
 
-    /**
-     * @param bool $isValid
-     * @param mixed $value
-     * @param mixed $context
-     * @return NotEmptyValidator&MockObject
-     */
-    protected function createNonEmptyValidatorMock($isValid, $value, $context = null)
-    {
-        /** @var NotEmptyValidator&MockObject $notEmptyMock */
-        $notEmptyMock = $this->getMockBuilder(NotEmptyValidator::class)
-            ->setMethods(['isValid'])
-            ->getMock();
-        $notEmptyMock->expects($this->once())
+    protected function createNonEmptyValidatorMock(
+        bool $isValid,
+        mixed $value,
+        mixed $context = null
+    ): NotEmptyValidator&MockObject {
+        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
+        $notEmptyMock->expects(self::once())
             ->method('isValid')
             ->with($value, $context)
             ->willReturn($isValid);
+
+        if ($isValid === false) {
+            $notEmptyMock->method('getMessages')->willReturn([]);
+        }
 
         return $notEmptyMock;
     }

@@ -9,6 +9,8 @@ use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\FileInput\PsrFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
+use LaminasTest\InputFilter\TestAsset\UploadedFileInterfaceStub;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function in_array;
@@ -19,10 +21,8 @@ use const UPLOAD_ERR_CANT_WRITE;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
 
-/**
- * @covers \Laminas\InputFilter\FileInput\PsrFileInputDecorator
- * @covers \Laminas\InputFilter\FileInput
- */
+#[CoversClass(PsrFileInputDecorator::class)]
+#[CoversClass(FileInput::class)]
 class PsrFileInputDecoratorTest extends InputTest
 {
     /** @var PsrFileInputDecorator */
@@ -308,8 +308,7 @@ class PsrFileInputDecoratorTest extends InputTest
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
 
-        self::assertEquals(
-            true,
+        self::assertTrue(
             $target->getAutoPrependUploadValidator(),
             'getAutoPrependUploadValidator() value not match'
         );
@@ -326,7 +325,7 @@ class PsrFileInputDecoratorTest extends InputTest
      *     6: string[]
      * }>
      */
-    public function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
+    public static function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
     {
         $generator = parent::isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider();
         if ($generator instanceof Generator) {
@@ -354,14 +353,10 @@ class PsrFileInputDecoratorTest extends InputTest
      *     filtered: UploadedFileInterface
      * }>
      */
-    public function emptyValueProvider(): iterable
+    public static function emptyValueProvider(): iterable
     {
         foreach (['single', 'multi'] as $type) {
-            $raw = $this->createMock(UploadedFileInterface::class);
-            $raw->expects(self::atLeast(1))
-                ->method('getError')
-                ->willReturn(UPLOAD_ERR_NO_FILE);
-
+            $raw = new UploadedFileInterfaceStub(UPLOAD_ERR_NO_FILE);
             yield $type => [
                 'raw'      => $type === 'multi'
                     ? [$raw]
@@ -377,10 +372,9 @@ class PsrFileInputDecoratorTest extends InputTest
      *     filtered: UploadedFileInterface
      * }>
      */
-    public function mixedValueProvider(): array
+    public static function mixedValueProvider(): array
     {
-        $fooUploadErrOk = $this->createMock(UploadedFileInterface::class);
-        $fooUploadErrOk->method('getError')->willReturn(UPLOAD_ERR_OK);
+        $fooUploadErrOk = new UploadedFileInterfaceStub(UPLOAD_ERR_OK);
 
         return [
             'single' => [
