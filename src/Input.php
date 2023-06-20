@@ -441,7 +441,7 @@ class Input implements
         $this->notEmptyValidator = true;
 
         if (class_exists(AbstractPluginManager::class)) {
-            $chain->prependByName('NotEmpty', [], true);
+            $chain->prependByName(NotEmpty::class, [], true);
 
             return;
         }
