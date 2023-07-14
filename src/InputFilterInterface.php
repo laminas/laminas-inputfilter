@@ -26,7 +26,7 @@ use Traversable;
  * }
  * @psalm-type InputSpecification = array{
  *     type?: string|class-string<InputFilterInterface>,
- *     name?: string,
+ *     name?: array-key,
  *     required?: bool,
  *     allow_empty?: bool,
  *     continue_if_empty?: bool,
