@@ -25,6 +25,7 @@ use stdClass;
 use function array_keys;
 use function array_merge;
 use function array_walk;
+use function assert;
 use function count;
 use function in_array;
 use function is_callable;
@@ -82,6 +83,7 @@ class BaseInputFilterTest extends TestCase
             'expects an instance of Laminas\InputFilter\InputInterface or Laminas\InputFilter\InputFilterInterface '
             . 'as its first argument; received "stdClass"'
         );
+        /** @psalm-suppress InvalidArgument */
         $inputFilter->replace(new stdClass(), 'replace_me');
     }
 
@@ -291,7 +293,7 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @param array<string, InputInterface|InputFilterInterface|iterable> $inputs
+     * @param array<string, InputInterface|InputFilterInterface> $inputs
      * @param iterable<mixed> $data
      * @param array<string, mixed> $expectedRawValues
      * @param array<string, mixed> $expectedValues
@@ -350,7 +352,7 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @param array<string, InputInterface|InputFilterInterface|iterable> $inputs
+     * @param array<string, InputInterface|InputFilterInterface> $inputs
      * @param iterable<mixed> $data
      * @param array<string, mixed> $expectedRawValues
      * @param array<string, mixed> $expectedValues
@@ -586,7 +588,9 @@ class BaseInputFilterTest extends TestCase
         $foo2->setRequired(false);
         $filter->add($foo2);
 
-        self::assertFalse($filter->get('foo')->isRequired());
+        $input = $filter->get('foo');
+        assert($input instanceof Input);
+        self::assertFalse($input->isRequired());
     }
 
     public function testAddingAnInputFilterWithTheSameNameAsTheInputWillReplace(): void
@@ -627,6 +631,7 @@ class BaseInputFilterTest extends TestCase
 
     public function testNestedInputFilterShouldAllowNonArrayValueForData(): void
     {
+        /** @psalm-var BaseInputFilter<array{nested: array{nestedField1: mixed}}> $filter1 */
         $filter1      = new BaseInputFilter();
         $nestedFilter = new BaseInputFilter();
         $nestedFilter->add(new Input('nestedField1'));

@@ -122,6 +122,7 @@ class OptionalInputFilterTest extends TestCase
     protected function getNestedCarInputFilter(): InputFilter
     {
         if (! $this->nestedCarInputFilter) {
+            /** @var OptionalInputFilter<array{brand: mixed, model:mixed}> $optionalInputFilter */
             $optionalInputFilter = new OptionalInputFilter();
             $optionalInputFilter->add(new Input('brand'));
             $optionalInputFilter->add(new Input('model'));
