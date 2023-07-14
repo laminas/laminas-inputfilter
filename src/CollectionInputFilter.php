@@ -15,6 +15,8 @@ use function sprintf;
 
 /**
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
+ * @template TFilteredValues
+ * @extends InputFilter<TFilteredValues>
  */
 class CollectionInputFilter extends InputFilter
 {
@@ -266,6 +268,7 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * @return array<array-key, array>
+     * @psalm-return TFilteredValues
      */
     public function getValues()
     {

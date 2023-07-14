@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter\TestAsset;
 
 use Laminas\InputFilter\InputFilter;
-use Laminas\InputFilter\InputFilterInterface;
 
 use function PHPUnit\Framework\assertNotNull;
 
-final class InputFilterInterfaceStub extends InputFilter implements InputFilterInterface
+/**
+ * @extends InputFilter<array<array-key, mixed>>
+ */
+final class InputFilterInterfaceStub extends InputFilter
 {
     /**
      * @param array<string, mixed> $getRawValues

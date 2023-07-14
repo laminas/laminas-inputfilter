@@ -4,9 +4,12 @@ namespace LaminasTest\InputFilter;
 
 use Iterator;
 use Laminas\Filter\FilterChain;
+use Laminas\Filter\ToInt;
+use Laminas\Filter\ToNull;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputInterface;
 use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\Between;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
@@ -24,6 +27,7 @@ use function array_merge;
 use function count;
 use function iterator_to_array;
 use function json_encode;
+use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -526,6 +530,139 @@ class InputTest extends TestCase
         $return = $input->resetValue();
         self::assertSame($input, $return, 'resetValue() must return itself');
         self::assertEquals($originalInput, $input, 'Input was not reset to the default value state');
+    }
+
+    public function testMergingTwoInputsModifiesTheName(): void
+    {
+        $a = new Input('a');
+        $b = new Input('b');
+        $a->merge($b);
+
+        self::assertSame('b', $a->getName());
+    }
+
+    public function testMergingTwoInputsModifiesErrorMessage(): void
+    {
+        $a = new Input('a');
+        $b = new Input('b');
+        $b->setErrorMessage('Foo');
+        $a->merge($b);
+
+        self::assertSame('Foo', $a->getErrorMessage());
+    }
+
+    public function testMergingTwoInputsModifiesBreakOnFailureFlag(): void
+    {
+        $a = new Input('a');
+        $a->setBreakOnFailure(false);
+        $b = new Input('b');
+        $b->setBreakOnFailure(true);
+        $a->merge($b);
+
+        self::assertTrue($a->breakOnFailure());
+    }
+
+    public function testMergingTwoInputsModifiesRequiredFlag(): void
+    {
+        $a = new Input('a');
+        $a->setRequired(false);
+        $b = new Input('b');
+        $b->setRequired(true);
+        $a->merge($b);
+
+        self::assertTrue($a->isRequired());
+    }
+
+    public function testMergingTwoInputsModifiesAllowEmptyFlag(): void
+    {
+        $a = new Input('a');
+        $a->setAllowEmpty(false);
+        $b = new Input('b');
+        $b->setAllowEmpty(true);
+        $a->merge($b);
+
+        self::assertTrue($a->allowEmpty());
+    }
+
+    public function testMergingTwoInputsCopiesTheValueIfSet(): void
+    {
+        $a = new Input('a');
+        $a->setValue('a');
+        $b = new Input('b');
+        $b->setValue('b');
+        $a->merge($b);
+
+        self::assertSame('b', $a->getValue());
+    }
+
+    public function testThatMergingTwoInputsMergesTheFilterChain(): void
+    {
+        $filter1 = new ToInt();
+        $filter2 = new ToNull();
+
+        $a = new Input('a');
+        $b = new Input('b');
+
+        $a->getFilterChain()->attach($filter1);
+        $b->getFilterChain()->attach($filter2);
+
+        self::assertNotContains($filter2, $a->getFilterChain());
+        self::assertCount(1, $a->getFilterChain());
+
+        $a->merge($b);
+
+        self::assertContains($filter2, $a->getFilterChain());
+        self::assertCount(2, $a->getFilterChain());
+    }
+
+    public function testThatMergingTwoInputsMergesTheValidatorChain(): void
+    {
+        $validator1 = new NotEmptyValidator();
+        $validator2 = new Between(['min' => 1, 'max' => 5]);
+
+        $a = new Input('a');
+        $b = new Input('b');
+
+        $a->getValidatorChain()->attach($validator1);
+        $b->getValidatorChain()->attach($validator2);
+
+        self::assertCount(1, $a->getValidatorChain());
+        self::assertValidatorChainNotContains($validator2, $a->getValidatorChain());
+
+        $a->merge($b);
+
+        $chain = iterator_to_array($a->getValidatorChain()->getIterator());
+        self::assertCount(2, $chain);
+        self::assertValidatorChainContains($validator2, $a->getValidatorChain());
+    }
+
+    private static function validatorChainContains(ValidatorInterface $validator, ValidatorChain $chain): bool
+    {
+        $found = false;
+        foreach ($chain as $spec) {
+            if ($spec['instance'] === $validator) {
+                $found = true;
+                break;
+            }
+        }
+
+        return $found;
+    }
+
+    private static function assertValidatorChainContains(ValidatorInterface $validator, ValidatorChain $chain): void
+    {
+        self::assertTrue(self::validatorChainContains($validator, $chain), sprintf(
+            'The validator of type "%s" was not found in the chain',
+            $validator::class,
+        ));
+    }
+
+    private static function assertValidatorChainNotContains(ValidatorInterface $validator, ValidatorChain $chain): void
+    {
+        self::assertFalse(self::validatorChainContains($validator, $chain), sprintf(
+            'The validator of type "%s" was found in the chain and was not expected to be present',
+            $validator::class,
+        ));
     }
 
     public function testMerge(): void

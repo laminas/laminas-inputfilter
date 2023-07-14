@@ -8,7 +8,10 @@ use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\NotEmpty;
 
-/** @psalm-suppress UnusedClass */
+/**
+ * @extends InputFilter<array<string, mixed>>
+ * @psalm-suppress UnusedClass
+ */
 final class AddingInputsWithArraySpecs extends InputFilter
 {
     public function addsAnInputWithAnArraySpec(): void

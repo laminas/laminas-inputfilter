@@ -10,7 +10,9 @@ use function is_array;
 
 /**
  * @psalm-import-type InputSpecification from InputFilterInterface
- **/
+ * @template TFilteredValues
+ * @extends BaseInputFilter<TFilteredValues>
+ */
 class InputFilter extends BaseInputFilter
 {
     /** @var Factory|null */
@@ -46,7 +48,7 @@ class InputFilter extends BaseInputFilter
      * Add an input to the input filter
      *
      * @param  InputSpecification|Traversable|InputInterface|InputFilterInterface $input
-     * @param  null|string $name
+     * @param  array-key|null $name
      * @return $this
      */
     public function add($input, $name = null)
@@ -58,6 +60,8 @@ class InputFilter extends BaseInputFilter
             $factory = $this->getFactory();
             $input   = $factory->createInput($input);
         }
+
+        // At this point $input is potentially invalid. parent::add() will throw an exception in this case.
 
         parent::add($input, $name);
 

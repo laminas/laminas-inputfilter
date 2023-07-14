@@ -6,6 +6,7 @@ namespace LaminasTest\InputFilter\TestAsset;
 
 use Laminas\InputFilter\BaseInputFilter;
 
+/** @extends BaseInputFilter<array<array-key, mixed>> */
 class Foo extends BaseInputFilter
 {
 }

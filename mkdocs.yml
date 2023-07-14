@@ -14,6 +14,7 @@ nav:
         - "Usage in a mezzio application": application-integration/usage-in-a-mezzio-application.md
     - Cookbook:
         - "Using Input Filters in Forms of laminas-form": cookbook/input-filter-in-forms.md
+        - "Using Static Analysis tools with laminas-inputfilter": cookbook/enhanced-type-inference.md
 site_name: laminas-inputfilter
 site_description: 'Normalize and validate input sets from the web, APIs, the CLI, and more, including files.'
 repo_url: 'https://github.com/laminas/laminas-inputfilter'

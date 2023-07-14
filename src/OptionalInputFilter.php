@@ -8,6 +8,9 @@ namespace Laminas\InputFilter;
  * InputFilter which only checks the containing Inputs when non-empty data is set,
  * else it reports valid
  * This is analog to {@see Input} with the option ->setRequired(false)
+ *
+ * @template TFilteredValues
+ * @extends InputFilter<TFilteredValues>
  */
 class OptionalInputFilter extends InputFilter
 {
@@ -46,7 +49,7 @@ class OptionalInputFilter extends InputFilter
      *     which would likely cause failures later on in your program
      * Fallbacks for the inputs are not respected by design
      *
-     * @return array<string, mixed>|null
+     * @return TFilteredValues|null
      */
     public function getValues()
     {
