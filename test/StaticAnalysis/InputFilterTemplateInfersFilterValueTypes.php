@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter\StaticAnalysis;
 
 use function assert;
+use function count;
+use function reset;
 
+/** @psalm-suppress UnusedClass */
 final class InputFilterTemplateInfersFilterValueTypes
 {
     public function __construct(
         private readonly InputFilterWithTemplatedValues $inputFilter,
         private readonly NestedInputFilterWithTemplatedValues $nestedFilter,
+        private readonly CollectionWithTemplatedValues $collection,
     ) {
     }
 
@@ -45,5 +49,19 @@ final class InputFilterTemplateInfersFilterValueTypes
         assert($this->nestedFilter->isValid());
 
         return $this->nestedFilter->getValues()['nested']['someString'];
+    }
+
+    /** @param array<array-key, mixed> $input */
+    public function retrieveCollectionValue(array $input): int
+    {
+        $this->collection->setData($input);
+        assert($this->collection->isValid());
+
+        $values = $this->collection->getValues();
+        assert(count($values) >= 1);
+
+        $first = reset($values);
+
+        return $first['someInt'];
     }
 }
