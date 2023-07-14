@@ -108,4 +108,17 @@ class InputFilterTest extends BaseInputFilterTest
         $filter1->setData(['nested' => null]);
         self::assertEquals($expect, $filter1->getValues());
     }
+
+    public function testInputsWithoutANameYieldMergedInputsWithAnEmptyName(): void
+    {
+        $a = new Input();
+        $b = new Input();
+
+        $filter = new InputFilter();
+        $filter->add($a);
+        $filter->add($b);
+
+        self::assertCount(1, $filter->getInputs());
+        self::assertSame($a, $filter->get(''));
+    }
 }
