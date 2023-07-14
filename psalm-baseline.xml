@@ -26,18 +26,12 @@
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/BaseInputFilter.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[$input instanceof InputInterface && (empty($name) || is_int($name))]]></code>
-    </DocblockTypeContradiction>
     <InvalidReturnStatement>
-      <code>$messages</code>
+      <code>$values</code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code><![CDATA[array<string, array<array-key, string>>]]></code>
+      <code>TFilteredValues</code>
     </InvalidReturnType>
-    <MixedArgument>
-      <code>$input</code>
-    </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code>$inputs</code>
     </MixedArgumentTypeCoercion>
@@ -52,9 +46,6 @@
     <PossiblyNullArrayOffset>
       <code><![CDATA[$this->inputs]]></code>
     </PossiblyNullArrayOffset>
-    <RedundantCastGivenDocblockType>
-      <code>(string) $name</code>
-    </RedundantCastGivenDocblockType>
     <TooManyArguments>
       <code>isValid</code>
       <code>isValid</code>
@@ -69,10 +60,6 @@
       <code>$name</code>
       <code>$name</code>
     </ImplementedParamTypeMismatch>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[array<array-key, array<string, array<array-key, string>>>]]></code>
-      <code><![CDATA[array<array-key, array<string, array<array-key, string>>>]]></code>
-    </ImplementedReturnTypeMismatch>
     <InvalidArgument>
       <code>$data</code>
     </InvalidArgument>
@@ -83,12 +70,21 @@
       <code><![CDATA[$this->invalidInputs]]></code>
       <code><![CDATA[$this->validInputs]]></code>
     </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->collectionValues]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code>TFilteredValues</code>
+    </InvalidReturnType>
     <MixedArgument>
       <code>$data</code>
     </MixedArgument>
     <MixedAssignment>
       <code>$data</code>
     </MixedAssignment>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$this->collectionValues]]></code>
+    </MixedPropertyTypeCoercion>
     <PossiblyUnusedReturnValue>
       <code>array[]</code>
       <code>array[]</code>
@@ -128,7 +124,6 @@
     <MixedArgumentTypeCoercion>
       <code>$filter</code>
       <code>$inputSpecification</code>
-      <code>$key</code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code><![CDATA[$filter['name']]]></code>
@@ -351,12 +346,6 @@
       <code>ModuleManager</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/OptionalInputFilter.php">
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[array<string, mixed>|null]]></code>
-      <code><![CDATA[array<string, mixed>|null]]></code>
-    </ImplementedReturnTypeMismatch>
-  </file>
   <file src="test/ArrayInputTest.php">
     <ArgumentTypeCoercion>
       <code>$valueMap</code>
@@ -457,12 +446,8 @@
       <code>$getMessages</code>
       <code>$msg</code>
       <code>$msg</code>
-      <code>$name</code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
-      <code><![CDATA[$filter1->getValues()['nested']['nestedField1']]]></code>
-      <code><![CDATA[$filter1->getValues()['nested']['nestedField1']]]></code>
-      <code><![CDATA[$filter1->getValues()['nested']['nestedField1']]]></code>
       <code>$inputTypeData[1]</code>
       <code>$inputTypeData[2]</code>
     </MixedArrayAccess>
@@ -518,7 +503,6 @@
     <PossiblyUndefinedMethod>
       <code>getName</code>
       <code>getName</code>
-      <code>isRequired</code>
     </PossiblyUndefinedMethod>
     <PossiblyUnusedMethod>
       <code>addMethodArgumentsProvider</code>
