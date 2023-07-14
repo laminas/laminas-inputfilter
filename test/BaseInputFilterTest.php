@@ -9,6 +9,7 @@ use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\UnfilteredDataInterface;
@@ -586,6 +587,20 @@ class BaseInputFilterTest extends TestCase
         $filter->add($foo2);
 
         self::assertFalse($filter->get('foo')->isRequired());
+    }
+
+    public function testAddingAnInputFilterWithTheSameNameAsTheInputWillReplace(): void
+    {
+        $input  = new Input('a');
+        $filter = new InputFilter();
+
+        $this->inputFilter->add($input);
+
+        self::assertSame($input, $this->inputFilter->get('a'));
+
+        $this->inputFilter->add($filter, 'a');
+
+        self::assertSame($filter, $this->inputFilter->get('a'));
     }
 
     public function testMerge(): void

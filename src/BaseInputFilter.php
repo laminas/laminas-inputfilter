@@ -101,7 +101,11 @@ class BaseInputFilter implements
             $name = $input->getName();
         }
 
-        if (isset($this->inputs[$name]) && $this->inputs[$name] instanceof InputInterface) {
+        if (
+            isset($this->inputs[$name])
+            && $this->inputs[$name] instanceof InputInterface
+            && $input instanceof InputInterface
+        ) {
             // The element already exists, so merge the config. Please note
             // that this merges the new input into the original.
             $original = $this->inputs[$name];
