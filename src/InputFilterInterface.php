@@ -12,7 +12,7 @@ use Laminas\Validator\ValidatorInterface; // phpcs:ignore
 use Traversable;
 
 /**
- * @template TFilteredValues of array<array-key, mixed>
+ * @template TFilteredValues
  * @psalm-type FilterSpecification = array{
  *     name: string|class-string<FilterInterface>,
  *     priority?: int,
@@ -58,7 +58,7 @@ interface InputFilterInterface extends Countable
      * @param  InputInterface|InputFilterInterface|InputSpecification|Traversable $input
      *     Implementations MUST handle at least one of the specified types, and
      *     raise an exception for any they cannot process.
-     * @param  null|string $name Name used to retrieve this input
+     * @param  null|array-key $name Name used to retrieve this input
      * @return InputFilterInterface
      * @throws Exception\InvalidArgumentException If unable to handle the input type.
      */
@@ -67,7 +67,7 @@ interface InputFilterInterface extends Countable
     /**
      * Retrieve a named input
      *
-     * @param  string $name
+     * @param  array-key $name
      * @return InputInterface|InputFilterInterface
      */
     public function get($name);
@@ -75,7 +75,7 @@ interface InputFilterInterface extends Countable
     /**
      * Test if an input or input filter by the given name is attached
      *
-     * @param  string $name
+     * @param  array-key $name
      * @return bool
      */
     public function has($name);
@@ -83,7 +83,7 @@ interface InputFilterInterface extends Countable
     /**
      * Remove a named input
      *
-     * @param  string $name
+     * @param  array-key $name
      * @return InputFilterInterface
      */
     public function remove($name);
@@ -114,7 +114,7 @@ interface InputFilterInterface extends Countable
      * Implementations should allow passing a single array value, or multiple arguments,
      * each specifying a single input.
      *
-     * @param  string|list<string> $name
+     * @param  array-key|list<array-key> $name
      * @return InputFilterInterface
      */
     public function setValidationGroup($name);
@@ -125,7 +125,7 @@ interface InputFilterInterface extends Countable
      * Implementations should return an associative array of name/input pairs
      * that failed validation.
      *
-     * @return array<string, InputInterface|InputFilterInterface>
+     * @return array<array-key, InputInterface|InputFilterInterface>
      */
     public function getInvalidInput();
 
@@ -135,14 +135,14 @@ interface InputFilterInterface extends Countable
      * Implementations should return an associative array of name/input pairs
      * that passed validation.
      *
-     * @return array<string, InputInterface|InputFilterInterface>
+     * @return array<array-key, InputInterface|InputFilterInterface>
      */
     public function getValidInput();
 
     /**
      * Retrieve a value from a named input
      *
-     * @param  string $name
+     * @param  array-key $name
      * @return mixed
      */
     public function getValue($name);
@@ -153,7 +153,7 @@ interface InputFilterInterface extends Countable
      * List should be an associative array, with the values filtered. If
      * validation failed, this should raise an exception.
      *
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      * @psalm-return TFilteredValues
      */
     public function getValues();
@@ -161,7 +161,7 @@ interface InputFilterInterface extends Countable
     /**
      * Retrieve a raw (unfiltered) value from a named input
      *
-     * @param  string $name
+     * @param  array-key $name
      * @return mixed
      */
     public function getRawValue($name);
@@ -182,7 +182,7 @@ interface InputFilterInterface extends Countable
      * Should return an associative array of named input/message list pairs.
      * Pairs should only be returned for inputs that failed validation.
      *
-     * @return array<array-key, array<array-key, string>>
+     * @return array<array-key, array<array-key, string|array>>
      */
     public function getMessages();
 }

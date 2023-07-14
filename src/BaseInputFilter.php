@@ -23,7 +23,7 @@ use function is_int;
 use function sprintf;
 
 /**
- * @template TFilteredValues of array<array-key, mixed>
+ * @template TFilteredValues
  * @implements InputFilterInterface<TFilteredValues>
  */
 class BaseInputFilter implements
