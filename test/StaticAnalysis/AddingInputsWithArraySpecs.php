@@ -10,7 +10,6 @@ use Laminas\Validator\NotEmpty;
 
 /**
  * @extends InputFilter<array<string, mixed>>
- * @psalm-suppress UnusedClass
  */
 final class AddingInputsWithArraySpecs extends InputFilter
 {

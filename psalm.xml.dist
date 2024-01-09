@@ -22,6 +22,14 @@
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
 
+    <issueHandlers>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <directory name="test/StaticAnalysis" />
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
+
     <stubs>
         <file name=".psr-container.php.stub" preloadClasses="true" />
     </stubs>
