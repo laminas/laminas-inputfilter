@@ -278,6 +278,15 @@
       <code>InputFilterPluginManager</code>
       <code>InputFilterPluginManager</code>
     </MethodSignatureMismatch>
+    <MethodSignatureMustProvideReturnType>
+      <code>get</code>
+    </MethodSignatureMustProvideReturnType>
+    <MixedInferredReturnType>
+      <code><![CDATA[($name is class-string<T1> ? T1 : ($name is class-string<T2> ? T2 : T1|T2))]]></code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code>parent::get($name, $options)</code>
+    </MixedReturnStatement>
     <NonInvariantDocblockPropertyType>
       <code>$factories</code>
     </NonInvariantDocblockPropertyType>
