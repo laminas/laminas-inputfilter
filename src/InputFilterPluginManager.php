@@ -190,11 +190,9 @@ class InputFilterPluginManager extends AbstractPluginManager
 
     /**
      * @inheritDoc
-     * @template T1 of InputInterface
-     * @template T2 of InputFilterInterface
-     * @param class-string<T1>|class-string<T2>|string $name
-     * @return T1|T2
-     * @psalm-return ($name is class-string<T1> ? T1 : ($name is class-string<T2> ? T2 : T1|T2))
+     * @template T of InputInterface|InputFilterInterface
+     * @param class-string<T>|string $name
+     * @return ($name is class-string<T> ? T : InputInterface|InputFilterInterface)
      */
     public function get($name, ?array $options = null)
     {

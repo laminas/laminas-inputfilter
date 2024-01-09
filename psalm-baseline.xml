@@ -282,7 +282,7 @@
       <code>get</code>
     </MethodSignatureMustProvideReturnType>
     <MixedInferredReturnType>
-      <code><![CDATA[($name is class-string<T1> ? T1 : ($name is class-string<T2> ? T2 : T1|T2))]]></code>
+      <code><![CDATA[($name is class-string<T> ? T : InputInterface|InputFilterInterface)]]></code>
     </MixedInferredReturnType>
     <MixedReturnStatement>
       <code>parent::get($name, $options)</code>
