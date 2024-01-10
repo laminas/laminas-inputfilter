@@ -24,4 +24,9 @@ final class InputFilterPluginManagerType
     {
         return $this->manager->get(InputFilterWithTemplatedValues::class);
     }
+
+    public function getInvalidFQCNReturnsFallbackType(): InputInterface|InputFilterInterface
+    {
+        return $this->manager->get(self::class);
+    }
 }

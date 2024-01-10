@@ -28,6 +28,11 @@
                 <directory name="test/StaticAnalysis" />
             </errorLevel>
         </UnusedClass>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="test/StaticAnalysis" />
+            </errorLevel>
+        </PossiblyUnusedMethod>
     </issueHandlers>
 
     <stubs>
