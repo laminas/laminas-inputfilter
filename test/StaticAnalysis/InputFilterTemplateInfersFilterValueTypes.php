@@ -8,7 +8,6 @@ use function assert;
 use function count;
 use function reset;
 
-/** @psalm-suppress UnusedClass */
 final class InputFilterTemplateInfersFilterValueTypes
 {
     public function __construct(

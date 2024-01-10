@@ -26,7 +26,6 @@ use function sprintf;
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  * @template InstanceType of InputFilterInterface|InputInterface
  * @extends AbstractPluginManager<InstanceType>
- * @method InputFilterInterface|InputInterface get(string $name, ?array $options = null)
  */
 class InputFilterPluginManager extends AbstractPluginManager
 {
@@ -187,5 +186,19 @@ class InputFilterPluginManager extends AbstractPluginManager
         } catch (InvalidServiceException $e) {
             throw new Exception\RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @inheritDoc
+     * phpcs:disable Generic.Files.LineLength.TooLong
+     * // Template constraint required or we get mixed added to output. Two templates because union does not work
+     * @template T1 of InputInterface
+     * @template T2 of InputFilterInterface
+     * @param class-string<T1>|class-string<T2>|string $name
+     * @return ($name is class-string<InputInterface> ? T1 : ($name is class-string<InputFilterInterface> ? T2 : InputInterface|InputFilterInterface))
+     */
+    public function get($name, ?array $options = null)
+    {
+        return parent::get($name, $options);
     }
 }

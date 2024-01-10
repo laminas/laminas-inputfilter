@@ -12,6 +12,7 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Traversable;
 
+use function assert;
 use function class_exists;
 use function get_debug_type;
 use function gettype;
@@ -317,6 +318,7 @@ class Factory
         }
 
         $inputFilter = $this->getInputFilterManager()->get($type);
+        assert($inputFilter instanceof InputFilterInterface); // As opposed to InputInterface
 
         if ($inputFilter instanceof CollectionInputFilter) {
             $inputFilter->setFactory($this);

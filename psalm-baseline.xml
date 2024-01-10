@@ -104,12 +104,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Factory.php">
-    <InvalidReturnStatement>
-      <code>$inputFilter</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>InputFilterInterface</code>
-    </InvalidReturnType>
     <MixedArgument>
       <code><![CDATA[$inputFilterSpecification['count']]]></code>
       <code><![CDATA[$inputFilterSpecification['input_filter']]]></code>
@@ -142,10 +136,6 @@
       <code>$value</code>
       <code>$value</code>
     </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod>
-      <code>add</code>
-      <code>add</code>
-    </PossiblyUndefinedMethod>
     <UnusedPsalmSuppress>
       <code>DeprecatedMethod</code>
       <code>DocblockTypeContradiction</code>
@@ -289,8 +279,14 @@
       <code>InputFilterPluginManager</code>
     </MethodSignatureMismatch>
     <MethodSignatureMustProvideReturnType>
-      <code>Plu</code>
+      <code>get</code>
     </MethodSignatureMustProvideReturnType>
+    <MixedInferredReturnType>
+      <code><![CDATA[($name is class-string<InputInterface> ? T1 : ($name is class-string<InputFilterInterface> ? T2 : InputInterface|InputFilterInterface))]]></code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code>parent::get($name, $options)</code>
+    </MixedReturnStatement>
     <NonInvariantDocblockPropertyType>
       <code>$factories</code>
     </NonInvariantDocblockPropertyType>
