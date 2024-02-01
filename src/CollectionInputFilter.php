@@ -221,7 +221,7 @@ class CollectionInputFilter extends InputFilter
             $valid = false;
         }
 
-        if (! $this->data) {
+        if ($this->data === null) {
             $this->clearValues();
             $this->clearRawValues();
 
@@ -316,7 +316,7 @@ class CollectionInputFilter extends InputFilter
      */
     public function getUnknown()
     {
-        if (! $this->data) {
+        if ($this->data === null) {
             throw new Exception\RuntimeException(sprintf(
                 '%s: no data present!',
                 __METHOD__

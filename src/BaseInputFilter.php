@@ -96,7 +96,7 @@ class BaseInputFilter implements
             ));
         }
 
-        if ($input instanceof InputInterface && (empty($name) || is_int($name))) {
+        if ($input instanceof InputInterface && ($name === null || $name === '' || is_int($name))) {
             $name = $input->getName();
         }
 
@@ -233,7 +233,7 @@ class BaseInputFilter implements
             ));
         }
 
-        $inputs = $this->validationGroup ?: array_keys($this->inputs);
+        $inputs = $this->validationGroup ?? array_keys($this->inputs);
         return $this->validateInputs($inputs, $this->data, $context);
     }
 
@@ -247,7 +247,7 @@ class BaseInputFilter implements
      */
     protected function validateInputs(array $inputs, array $data = [], $context = null)
     {
-        $inputContext = $context ?: array_merge($this->getRawValues(), $data);
+        $inputContext = $context ?? array_merge($this->getRawValues(), $data);
 
         $this->validInputs   = [];
         $this->invalidInputs = [];
@@ -413,7 +413,7 @@ class BaseInputFilter implements
      */
     public function getValues()
     {
-        $inputs = $this->validationGroup ?: array_keys($this->inputs);
+        $inputs = $this->validationGroup ?? array_keys($this->inputs);
         $values = [];
         foreach ($inputs as $name) {
             $input = $this->inputs[$name];
