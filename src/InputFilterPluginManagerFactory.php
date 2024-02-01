@@ -38,7 +38,7 @@ class InputFilterPluginManagerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $name = null, ?array $options = null)
     {
-        $pluginManager = new InputFilterPluginManager($container, $options ?: []);
+        $pluginManager = new InputFilterPluginManager($container, $options ?? []);
 
         // If this is in a laminas-mvc application, the ServiceListener will inject
         // merged configuration during bootstrap.
@@ -75,7 +75,7 @@ class InputFilterPluginManagerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $container, $name = null, $requestedName = null)
     {
-        return $this($container, $requestedName ?: InputFilterPluginManager::class, $this->creationOptions);
+        return $this($container, $requestedName ?? InputFilterPluginManager::class, $this->creationOptions);
     }
 
     /**
