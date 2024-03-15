@@ -41,7 +41,7 @@
         "ext-json": "*",
         "laminas/laminas-coding-standard": "~2.5.0",
         "phpunit/phpunit": "^10.5.9",
-        "psalm/plugin-phpunit": "^0.18.4",
+        "psalm/plugin-phpunit": "^0.19.0",
         "psr/http-message": "^2.0",
         "vimeo/psalm": "^5.21.1",
         "webmozart/assert": "^1.11"
