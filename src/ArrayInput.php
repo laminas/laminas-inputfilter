@@ -4,60 +4,30 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use function gettype;
+use Laminas\Validator\IsArray;
+
+use function array_map;
+use function assert;
 use function is_array;
-use function sprintf;
 
 class ArrayInput extends Input
 {
-    /** @var array<array-key, mixed> */
-    protected $value = [];
-
-    /**
-     * @inheritDoc
-     * @param  array<array-key, mixed> $value
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setValue($value)
-    {
-        if (! is_array($value)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Value must be an array, %s given.',
-                gettype($value)
-            ));
-        }
-        parent::setValue($value);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function resetValue()
-    {
-        $this->value    = [];
-        $this->hasValue = false;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
+    /** @inheritDoc */
     public function getValue()
     {
-        $filter = $this->getFilterChain();
-        $result = [];
-        foreach ($this->value as $key => $value) {
-            $result[$key] = $filter->filter($value);
+        if (! is_array($this->value)) {
+            return $this->value;
         }
-        return $result;
+
+        $filter = $this->getFilterChain();
+
+        return array_map(
+            static fn (mixed $value): mixed => $filter->filter($value),
+            $this->value,
+        );
     }
 
-    /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
-     */
+    /** @inheritDoc */
     public function isValid($context = null)
     {
         $hasValue    = $this->hasValue();
@@ -76,11 +46,23 @@ class ArrayInput extends Input
             return false;
         }
 
+        if (! $hasValue && ! $required) {
+            return true;
+        }
+
         if (! $this->continueIfEmpty() && ! $this->allowEmpty()) {
             $this->injectNotEmptyValidator();
         }
+
+        $values = $this->getValue();
+
+        if (! is_array($values)) {
+            $this->errorMessage = $this->prepareNotArrayFailureMessage();
+
+            return false;
+        }
+
         $validator = $this->getValidatorChain();
-        $values    = $this->getValue();
         $result    = true;
 
         if ($required && empty($values)) {
@@ -111,5 +93,24 @@ class ArrayInput extends Input
         }
 
         return $result;
+    }
+
+    /** @return array<string, string> */
+    private function prepareNotArrayFailureMessage(): array
+    {
+        $chain   = $this->getValidatorChain();
+        $isArray = $chain->plugin(IsArray::class);
+
+        foreach ($chain->getValidators() as $validator) {
+            if ($validator['instance'] instanceof IsArray) {
+                $isArray = $validator['instance'];
+                break;
+            }
+        }
+
+        $result = $isArray->isValid($this->getValue());
+        assert($result === false);
+
+        return $isArray->getMessages();
     }
 }
