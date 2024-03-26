@@ -6,10 +6,12 @@ namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\InputFilter\ArrayInput;
-use Laminas\InputFilter\Exception\InvalidArgumentException;
+use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\IsArray;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\ValidatorChain;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Webmozart\Assert\Assert;
 
@@ -29,7 +31,7 @@ class ArrayInputTest extends InputTest
 
     public function testDefaultGetValue(): void
     {
-        self::assertCount(0, $this->input->getValue());
+        self::assertNull($this->input->getValue());
     }
 
     public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays(): void
@@ -57,13 +59,6 @@ class ArrayInputTest extends InputTest
         self::assertCount(1, $messages);
         $message = array_pop($messages);
         self::assertEquals($expected, $message);
-    }
-
-    public function testSetValueWithInvalidInputTypeThrowsInvalidArgumentException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Value must be an array, string given');
-        $this->input->setValue('bar');
     }
 
     /**
@@ -139,7 +134,7 @@ class ArrayInputTest extends InputTest
                 }
                 return $values;
             },
-            $valueMap
+            $valueMap,
         );
 
         return parent::createFilterChainMock($valueMap);
@@ -160,7 +155,7 @@ class ArrayInputTest extends InputTest
                 }
                 return $values;
             },
-            $valueMap
+            $valueMap,
         );
 
         return parent::createValidatorChainMock($valueMap, $messages);
@@ -183,5 +178,63 @@ class ArrayInputTest extends InputTest
     protected function getDummyValue(bool $raw = true)
     {
         return [parent::getDummyValue($raw)];
+    }
+
+    public function testAnArrayInputViaInputFilterIsAcceptable(): void
+    {
+        $inputFilter = new InputFilter();
+        $inputFilter->add([
+            'type'       => ArrayInput::class,
+            'validators' => [
+                ['name' => NotEmptyValidator::class],
+            ],
+        ], 'myInput');
+
+        $inputFilter->setData(['myInput' => ['foo', 'bar']]);
+        self::assertTrue($inputFilter->isValid());
+    }
+
+    /** @return array<string, array{0: mixed}> */
+    public static function nonArrayInput(): array
+    {
+        return [
+            'String'       => ['foo'],
+            'Empty String' => [''],
+            'Null'         => [null],
+            'Object'       => [(object) ['foo' => 'bar']],
+            'Float'        => [1.23],
+            'Integer'      => [123],
+            'Boolean'      => [true],
+        ];
+    }
+
+    #[DataProvider('nonArrayInput')]
+    public function testNonArrayValueIsValidationFailure(mixed $value): void
+    {
+        $this->input->setValue($value);
+        self::assertFalse($this->input->isValid());
+    }
+
+    #[DataProvider('nonArrayInput')]
+    public function testNonArrayInputViaInputFilterIsUnacceptable(mixed $value): void
+    {
+        $inputFilter = new InputFilter();
+        $inputFilter->add([
+            'type'       => ArrayInput::class,
+            'validators' => [
+                ['name' => NotEmptyValidator::class],
+            ],
+        ], 'myInput');
+
+        $inputFilter->setData(['myInput' => $value]);
+        self::assertFalse($inputFilter->isValid());
+        $messages = $inputFilter->getMessages()['myInput'] ?? null;
+        self::assertIsArray($messages);
+        self::assertArrayHasKey(IsArray::NOT_ARRAY, $messages);
+        self::assertIsString($messages[IsArray::NOT_ARRAY]);
+        self::assertStringStartsWith(
+            'Expected an array value but ',
+            $messages[IsArray::NOT_ARRAY],
+        );
     }
 }

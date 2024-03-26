@@ -1,70 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.21.1@8c473e2437be8b6a8fd8f630f0f11a16b114c494">
+<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
   <file src="src/ArrayInput.php">
-    <DocblockTypeContradiction>
-      <code>is_array($value)</code>
-    </DocblockTypeContradiction>
     <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->prepareNotArrayFailureMessage()]]></code>
       <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
       <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
     </InvalidPropertyAssignmentValue>
-    <MixedArgument>
-      <code><![CDATA[$this->getFallbackValue()]]></code>
-      <code><![CDATA[$this->getFallbackValue()]]></code>
-    </MixedArgument>
     <MixedAssignment>
-      <code>$result[$key]</code>
-      <code>$value</code>
-      <code>$value</code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MoreSpecificImplementedParamType>
-      <code>$value</code>
-      <code>$value</code>
-    </MoreSpecificImplementedParamType>
-    <NonInvariantDocblockPropertyType>
-      <code>$value</code>
-    </NonInvariantDocblockPropertyType>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[! $required]]></code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/BaseInputFilter.php">
     <InvalidReturnStatement>
-      <code>$values</code>
+      <code><![CDATA[$values]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code>TFilteredValues</code>
+      <code><![CDATA[TFilteredValues]]></code>
     </InvalidReturnType>
     <MixedArgumentTypeCoercion>
-      <code>$inputs</code>
+      <code><![CDATA[$inputs]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
-      <code>$inputContext</code>
-      <code>$unknownInputs[$key]</code>
-      <code>$value</code>
+      <code><![CDATA[$inputContext]]></code>
+      <code><![CDATA[$unknownInputs[$key]]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MixedPropertyTypeCoercion>
-      <code>$inputs</code>
+      <code><![CDATA[$inputs]]></code>
     </MixedPropertyTypeCoercion>
     <PossiblyNullArrayOffset>
       <code><![CDATA[$this->inputs]]></code>
     </PossiblyNullArrayOffset>
     <TooManyArguments>
-      <code>isValid</code>
-      <code>isValid</code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
     </TooManyArguments>
     <UnusedPsalmSuppress>
-      <code>RedundantConditionGivenDocblockType</code>
-      <code>RedundantConditionGivenDocblockType</code>
+      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
+      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
     </UnusedPsalmSuppress>
   </file>
   <file src="src/CollectionInputFilter.php">
     <ImplementedParamTypeMismatch>
-      <code>$name</code>
-      <code>$name</code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
     </ImplementedParamTypeMismatch>
     <InvalidArgument>
-      <code>$data</code>
+      <code><![CDATA[$data]]></code>
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
-      <code>$name</code>
+      <code><![CDATA[$name]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
       <code><![CDATA[$this->invalidInputs]]></code>
@@ -74,33 +62,33 @@
       <code><![CDATA[$this->collectionValues]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code>TFilteredValues</code>
+      <code><![CDATA[TFilteredValues]]></code>
     </InvalidReturnType>
     <MixedArgument>
-      <code>$data</code>
+      <code><![CDATA[$data]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$data</code>
+      <code><![CDATA[$data]]></code>
     </MixedAssignment>
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$this->collectionValues]]></code>
     </MixedPropertyTypeCoercion>
     <PossiblyUnusedReturnValue>
-      <code>array[]</code>
-      <code>array[]</code>
+      <code><![CDATA[array[]]]></code>
+      <code><![CDATA[array[]]]></code>
     </PossiblyUnusedReturnValue>
     <UnusedPsalmSuppress>
-      <code>DocblockTypeContradiction</code>
-      <code>DocblockTypeContradiction</code>
-      <code>DocblockTypeContradiction</code>
-      <code>RedundantConditionGivenDocblockType</code>
-      <code>RedundantConditionGivenDocblockType</code>
-      <code>RedundantConditionGivenDocblockType</code>
+      <code><![CDATA[DocblockTypeContradiction]]></code>
+      <code><![CDATA[DocblockTypeContradiction]]></code>
+      <code><![CDATA[DocblockTypeContradiction]]></code>
+      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
+      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
+      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
     </UnusedPsalmSuppress>
   </file>
   <file src="src/EmptyContextInterface.php">
     <PossiblyUnusedReturnValue>
-      <code>self</code>
+      <code><![CDATA[self]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Factory.php">
@@ -109,38 +97,38 @@
       <code><![CDATA[$inputFilterSpecification['input_filter']]]></code>
       <code><![CDATA[$inputFilterSpecification['required']]]></code>
       <code><![CDATA[$inputFilterSpecification['required_message']]]></code>
-      <code>$key</code>
-      <code>$name</code>
-      <code>$priority</code>
-      <code>$value</code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$priority]]></code>
+      <code><![CDATA[$value]]></code>
       <code><![CDATA[$value['type']]]></code>
     </MixedArgument>
     <MixedArgumentTypeCoercion>
-      <code>$filter</code>
-      <code>$inputSpecification</code>
+      <code><![CDATA[$filter]]></code>
+      <code><![CDATA[$inputSpecification]]></code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code><![CDATA[$filter['name']]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
-      <code>$key</code>
-      <code>$name</code>
-      <code>$options</code>
-      <code>$priority</code>
-      <code>$value</code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$options]]></code>
+      <code><![CDATA[$priority]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MixedMethodCall>
-      <code>new $class()</code>
+      <code><![CDATA[new $class()]]></code>
     </MixedMethodCall>
     <PossiblyInvalidArgument>
-      <code>$value</code>
-      <code>$value</code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </PossiblyInvalidArgument>
     <UnusedPsalmSuppress>
-      <code>DeprecatedMethod</code>
-      <code>DocblockTypeContradiction</code>
-      <code>DocblockTypeContradiction</code>
-      <code>RedundantConditionGivenDocblockType</code>
+      <code><![CDATA[DeprecatedMethod]]></code>
+      <code><![CDATA[DocblockTypeContradiction]]></code>
+      <code><![CDATA[DocblockTypeContradiction]]></code>
+      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
     </UnusedPsalmSuppress>
   </file>
   <file src="src/FileInput.php">
@@ -148,49 +136,49 @@
       <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
     </InvalidPropertyAssignmentValue>
     <MixedAssignment>
-      <code>$rawValue</code>
+      <code><![CDATA[$rawValue]]></code>
     </MixedAssignment>
     <MoreSpecificImplementedParamType>
-      <code>$value</code>
-      <code>$value</code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/FileInput/HttpServerFileInputDecorator.php">
     <MixedAssignment>
-      <code>$fileData</code>
-      <code>$newValue[]</code>
-      <code>$rawValue</code>
-      <code>$value</code>
-      <code>$value</code>
+      <code><![CDATA[$fileData]]></code>
+      <code><![CDATA[$newValue[]]]></code>
+      <code><![CDATA[$rawValue]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <RedundantCondition>
-      <code>is_array($rawValue)</code>
-      <code>is_array($rawValue)</code>
+      <code><![CDATA[is_array($rawValue)]]></code>
+      <code><![CDATA[is_array($rawValue)]]></code>
     </RedundantCondition>
   </file>
   <file src="src/FileInput/PsrFileInputDecorator.php">
     <MixedArgument>
-      <code>$rawValue[0]</code>
+      <code><![CDATA[$rawValue[0]]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$fileData</code>
-      <code>$newValue[]</code>
-      <code>$rawValue</code>
-      <code>$value</code>
-      <code>$value</code>
+      <code><![CDATA[$fileData]]></code>
+      <code><![CDATA[$newValue[]]]></code>
+      <code><![CDATA[$rawValue]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MixedInferredReturnType>
-      <code>UploadedFileInterface|UploadedFileInterface[]</code>
+      <code><![CDATA[UploadedFileInterface|UploadedFileInterface[]]]></code>
     </MixedInferredReturnType>
     <MixedReturnStatement>
       <code><![CDATA[$filter->filter($value)]]></code>
-      <code>$value</code>
+      <code><![CDATA[$value]]></code>
     </MixedReturnStatement>
     <MixedReturnTypeCoercion>
-      <code>$newValue</code>
+      <code><![CDATA[$newValue]]></code>
     </MixedReturnTypeCoercion>
     <MoreSpecificImplementedParamType>
-      <code>$rawValue</code>
+      <code><![CDATA[$rawValue]]></code>
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
@@ -198,7 +186,7 @@
       <code><![CDATA[is_array($this->errorMessage)]]></code>
     </DocblockTypeContradiction>
     <ImplementedReturnTypeMismatch>
-      <code>null|string</code>
+      <code><![CDATA[null|string]]></code>
     </ImplementedReturnTypeMismatch>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
@@ -207,94 +195,94 @@
       <code><![CDATA[$notEmpty->getTranslatorTextDomain()]]></code>
     </MixedArgument>
     <MixedAssignment>
-      <code>$translator</code>
-      <code>$value</code>
+      <code><![CDATA[$translator]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <PossiblyUndefinedMethod>
-      <code>getOption</code>
-      <code>getTranslator</code>
-      <code>getTranslatorTextDomain</code>
+      <code><![CDATA[getOption]]></code>
+      <code><![CDATA[getTranslator]]></code>
+      <code><![CDATA[getTranslatorTextDomain]]></code>
     </PossiblyUndefinedMethod>
     <RedundantCastGivenDocblockType>
-      <code>(bool) $allowEmpty</code>
-      <code>(bool) $breakOnFailure</code>
-      <code>(bool) $continueIfEmpty</code>
-      <code>(string) $errorMessage</code>
+      <code><![CDATA[(bool) $allowEmpty]]></code>
+      <code><![CDATA[(bool) $breakOnFailure]]></code>
+      <code><![CDATA[(bool) $continueIfEmpty]]></code>
+      <code><![CDATA[(string) $errorMessage]]></code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/InputFilter.php">
     <MixedArgumentTypeCoercion>
-      <code>$input</code>
+      <code><![CDATA[$input]]></code>
     </MixedArgumentTypeCoercion>
     <PossiblyInvalidArgument>
-      <code>$input</code>
+      <code><![CDATA[$input]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <DeprecatedInterface>
-      <code>InputFilterAbstractServiceFactory</code>
+      <code><![CDATA[InputFilterAbstractServiceFactory]]></code>
     </DeprecatedInterface>
     <MixedArgument>
-      <code>$config</code>
+      <code><![CDATA[$config]]></code>
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$allConfig['input_filter_specs']]]></code>
       <code><![CDATA[$allConfig['input_filter_specs'][$rName]]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
-      <code>$allConfig</code>
-      <code>$config</code>
+      <code><![CDATA[$allConfig]]></code>
+      <code><![CDATA[$config]]></code>
     </MixedAssignment>
     <ParamNameMismatch>
-      <code>$cName</code>
-      <code>$container</code>
-      <code>$container</code>
-      <code>$rName</code>
-      <code>$rName</code>
-      <code>$services</code>
+      <code><![CDATA[$cName]]></code>
+      <code><![CDATA[$container]]></code>
+      <code><![CDATA[$container]]></code>
+      <code><![CDATA[$rName]]></code>
+      <code><![CDATA[$rName]]></code>
+      <code><![CDATA[$services]]></code>
     </ParamNameMismatch>
   </file>
   <file src="src/InputFilterAwareInterface.php">
     <PossiblyUnusedMethod>
-      <code>getInputFilter</code>
-      <code>setInputFilter</code>
+      <code><![CDATA[getInputFilter]]></code>
+      <code><![CDATA[setInputFilter]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="src/InputFilterAwareTrait.php">
     <InvalidNullableReturnType>
-      <code>InputFilterInterface</code>
+      <code><![CDATA[InputFilterInterface]]></code>
     </InvalidNullableReturnType>
   </file>
   <file src="src/InputFilterInterface.php">
     <PossiblyUnusedReturnValue>
-      <code>InputFilterInterface</code>
+      <code><![CDATA[InputFilterInterface]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/InputFilterPluginManager.php">
     <DeprecatedInterface>
-      <code>null|ConfigInterface|ContainerInterface</code>
+      <code><![CDATA[null|ConfigInterface|ContainerInterface]]></code>
     </DeprecatedInterface>
     <MethodSignatureMismatch>
-      <code>InputFilterPluginManager</code>
-      <code>InputFilterPluginManager</code>
+      <code><![CDATA[InputFilterPluginManager]]></code>
+      <code><![CDATA[InputFilterPluginManager]]></code>
     </MethodSignatureMismatch>
     <MethodSignatureMustProvideReturnType>
-      <code>get</code>
+      <code><![CDATA[get]]></code>
     </MethodSignatureMustProvideReturnType>
     <MixedInferredReturnType>
       <code><![CDATA[($name is class-string<InputInterface> ? T1 : ($name is class-string<InputFilterInterface> ? T2 : InputInterface|InputFilterInterface))]]></code>
     </MixedInferredReturnType>
     <MixedReturnStatement>
-      <code>parent::get($name, $options)</code>
+      <code><![CDATA[parent::get($name, $options)]]></code>
     </MixedReturnStatement>
     <NonInvariantDocblockPropertyType>
-      <code>$factories</code>
+      <code><![CDATA[$factories]]></code>
     </NonInvariantDocblockPropertyType>
     <PossiblyUnusedMethod>
-      <code>validatePlugin</code>
+      <code><![CDATA[validatePlugin]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
-      <code>$shareByDefault</code>
+      <code><![CDATA[$shareByDefault]]></code>
     </PossiblyUnusedProperty>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->initializers]]></code>
@@ -306,43 +294,43 @@
       <code><![CDATA[new Config($config['input_filters'])]]></code>
     </DeprecatedClass>
     <DeprecatedInterface>
-      <code>InputFilterPluginManagerFactory</code>
+      <code><![CDATA[InputFilterPluginManagerFactory]]></code>
     </DeprecatedInterface>
     <ParamNameMismatch>
-      <code>$container</code>
+      <code><![CDATA[$container]]></code>
     </ParamNameMismatch>
     <PossiblyUnusedMethod>
-      <code>setCreationOptions</code>
+      <code><![CDATA[setCreationOptions]]></code>
     </PossiblyUnusedMethod>
     <UnusedPsalmSuppress>
-      <code>MismatchingDocblockParamType</code>
-      <code>MismatchingDocblockParamType</code>
-      <code>MoreSpecificImplementedParamType</code>
+      <code><![CDATA[MismatchingDocblockParamType]]></code>
+      <code><![CDATA[MismatchingDocblockParamType]]></code>
+      <code><![CDATA[MoreSpecificImplementedParamType]]></code>
     </UnusedPsalmSuppress>
   </file>
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
-      <code>$this</code>
-      <code>$this</code>
-      <code>$this</code>
-      <code>$this</code>
-      <code>$this</code>
-      <code>$this</code>
-      <code>$this</code>
-      <code>$this</code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Module.php">
     <PossiblyUnusedParam>
-      <code>$moduleManager</code>
+      <code><![CDATA[$moduleManager]]></code>
     </PossiblyUnusedParam>
     <UndefinedDocblockClass>
-      <code>ModuleManager</code>
+      <code><![CDATA[ModuleManager]]></code>
     </UndefinedDocblockClass>
   </file>
   <file src="test/ArrayInputTest.php">
     <ArgumentTypeCoercion>
-      <code>$valueMap</code>
+      <code><![CDATA[$valueMap]]></code>
     </ArgumentTypeCoercion>
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[array<string, array{
@@ -352,10 +340,10 @@
      *     3: bool,
      *     4: string[]
      * }>]]></code>
-      <code>string[]</code>
+      <code><![CDATA[string[]]]></code>
     </ImplementedReturnTypeMismatch>
     <InvalidReturnStatement>
-      <code>$dataSets</code>
+      <code><![CDATA[$dataSets]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[iterable<string, array{
@@ -364,36 +352,33 @@
      * }>]]></code>
     </InvalidReturnType>
     <MissingClosureParamType>
-      <code>$set</code>
-      <code>$set</code>
-      <code>$set</code>
+      <code><![CDATA[$set]]></code>
+      <code><![CDATA[$set]]></code>
+      <code><![CDATA[$set]]></code>
     </MissingClosureParamType>
-    <MixedArgument>
-      <code><![CDATA[$this->input->getValue()]]></code>
-    </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$set['raw']]]></code>
       <code><![CDATA[$set['raw']]]></code>
-      <code>$set[1]</code>
-      <code>$set[2]</code>
-      <code>$set[4]</code>
+      <code><![CDATA[$set[1]]]></code>
+      <code><![CDATA[$set[2]]]></code>
+      <code><![CDATA[$set[4]]]></code>
     </MixedArrayAccess>
     <MixedArrayAssignment>
       <code><![CDATA[$set['raw']]]></code>
       <code><![CDATA[$set['raw']]]></code>
-      <code>$set[1]</code>
-      <code>$set[2]</code>
-      <code>$set[4]</code>
+      <code><![CDATA[$set[1]]]></code>
+      <code><![CDATA[$set[2]]]></code>
+      <code><![CDATA[$set[4]]]></code>
     </MixedArrayAssignment>
     <MixedAssignment>
-      <code>$value</code>
-      <code>$values[0]</code>
-      <code>$values[0]</code>
-      <code>$values[1]</code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$values[0]]]></code>
+      <code><![CDATA[$values[0]]]></code>
+      <code><![CDATA[$values[1]]]></code>
     </MixedAssignment>
     <MixedReturnTypeCoercion>
-      <code>$dataSets</code>
-      <code>$dataSets</code>
+      <code><![CDATA[$dataSets]]></code>
+      <code><![CDATA[$dataSets]]></code>
       <code><![CDATA[array<string, array{
      *     0: bool,
      *     1: string[],
@@ -406,25 +391,28 @@
      *     filtered:  bool|int|float|string|list<string>|object
      * }>]]></code>
     </MixedReturnTypeCoercion>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[nonArrayInput]]></code>
+    </PossiblyUnusedMethod>
     <RedundantCondition>
-      <code>isArray</code>
-      <code>isArray</code>
+      <code><![CDATA[isArray]]></code>
+      <code><![CDATA[isArray]]></code>
     </RedundantCondition>
   </file>
   <file src="test/BaseInputFilterTest.php">
     <DeprecatedMethod>
-      <code>enableProxyingToOriginalMethods</code>
-      <code>enableProxyingToOriginalMethods</code>
+      <code><![CDATA[enableProxyingToOriginalMethods]]></code>
+      <code><![CDATA[enableProxyingToOriginalMethods]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[['nested' => ['nested-input1', 'nested-input2']]]]></code>
     </InvalidArgument>
     <LessSpecificReturnStatement>
-      <code>$dataSets</code>
+      <code><![CDATA[$dataSets]]></code>
     </LessSpecificReturnStatement>
     <MissingClosureParamType>
-      <code>$inputTypeData</code>
-      <code>$inputTypeData</code>
+      <code><![CDATA[$inputTypeData]]></code>
+      <code><![CDATA[$inputTypeData]]></code>
     </MissingClosureParamType>
     <MissingClosureReturnType>
       <code><![CDATA[static fn($inputTypeData) => $inputTypeData[1]]]></code>
@@ -432,37 +420,37 @@
     </MissingClosureReturnType>
     <MixedArgument>
       <code><![CDATA[$dataTypes['Traversable']($data)]]></code>
-      <code>$input</code>
-      <code>$set[5]</code>
-      <code>$set[6]</code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$set[5]]]></code>
+      <code><![CDATA[$set[6]]]></code>
     </MixedArgument>
     <MixedArgumentTypeCoercion>
-      <code>$getMessages</code>
-      <code>$msg</code>
-      <code>$msg</code>
+      <code><![CDATA[$getMessages]]></code>
+      <code><![CDATA[$msg]]></code>
+      <code><![CDATA[$msg]]></code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
-      <code>$inputTypeData[1]</code>
-      <code>$inputTypeData[2]</code>
+      <code><![CDATA[$inputTypeData[1]]]></code>
+      <code><![CDATA[$inputTypeData[2]]]></code>
     </MixedArrayAccess>
     <MixedArrayAssignment>
-      <code>$set[0][$name]</code>
-      <code>$set[5][$name]</code>
-      <code>$set[6][$name]</code>
+      <code><![CDATA[$set[0][$name]]]></code>
+      <code><![CDATA[$set[5][$name]]]></code>
+      <code><![CDATA[$set[6][$name]]]></code>
     </MixedArrayAssignment>
     <MixedAssignment>
-      <code>$expectedRawValue</code>
-      <code>$expectedValue</code>
-      <code>$input</code>
-      <code>$input</code>
-      <code>$set[0][$name]</code>
-      <code>$set[5][$name]</code>
-      <code>$set[6][$name]</code>
-      <code>$tmpTemplate[2]</code>
-      <code>$tmpTemplate[3]</code>
+      <code><![CDATA[$expectedRawValue]]></code>
+      <code><![CDATA[$expectedValue]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$set[0][$name]]]></code>
+      <code><![CDATA[$set[5][$name]]]></code>
+      <code><![CDATA[$set[6][$name]]]></code>
+      <code><![CDATA[$tmpTemplate[2]]]></code>
+      <code><![CDATA[$tmpTemplate[3]]]></code>
     </MixedAssignment>
     <MixedReturnTypeCoercion>
-      <code>$dataSets</code>
+      <code><![CDATA[$dataSets]]></code>
       <code><![CDATA[array<string, array{
      *     0: array<string, InputInterface|InputFilterInterface|iterable>,
      *     1: iterable<mixed>,
@@ -483,34 +471,34 @@
      * }>]]></code>
     </MoreSpecificReturnType>
     <PossiblyInvalidArgument>
-      <code>$input</code>
-      <code>$input</code>
-      <code>$input</code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$input]]></code>
+      <code><![CDATA[$input]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
-      <code>$expectedInputName</code>
-      <code>$expectedInputName</code>
-      <code>$expectedInputName</code>
-      <code>$expectedInputName</code>
-      <code>$expectedInputName</code>
+      <code><![CDATA[$expectedInputName]]></code>
+      <code><![CDATA[$expectedInputName]]></code>
+      <code><![CDATA[$expectedInputName]]></code>
+      <code><![CDATA[$expectedInputName]]></code>
+      <code><![CDATA[$expectedInputName]]></code>
     </PossiblyNullArgument>
     <PossiblyUndefinedMethod>
-      <code>getName</code>
-      <code>getName</code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
     </PossiblyUndefinedMethod>
     <PossiblyUnusedMethod>
-      <code>addMethodArgumentsProvider</code>
-      <code>contextProvider</code>
-      <code>setDataArgumentsProvider</code>
-      <code>unknownScenariosProvider</code>
+      <code><![CDATA[addMethodArgumentsProvider]]></code>
+      <code><![CDATA[contextProvider]]></code>
+      <code><![CDATA[setDataArgumentsProvider]]></code>
+      <code><![CDATA[unknownScenariosProvider]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedParam>
-      <code>$inputName</code>
+      <code><![CDATA[$inputName]]></code>
     </PossiblyUnusedParam>
   </file>
   <file src="test/CollectionInputFilterTest.php">
     <InvalidArgument>
-      <code>$errorMessage</code>
+      <code><![CDATA[$errorMessage]]></code>
     </InvalidArgument>
     <InvalidReturnStatement>
       <code><![CDATA[[
@@ -538,30 +526,30 @@
      * }>]]></code>
     </InvalidReturnType>
     <PossiblyUnusedMethod>
-      <code>contextProvider</code>
-      <code>countVsDataProvider</code>
-      <code>dataNestingCollection</code>
-      <code>dataVsValidProvider</code>
-      <code>inputFilterProvider</code>
-      <code>invalidCollections</code>
-      <code>invalidDataType</code>
-      <code>isRequiredProvider</code>
+      <code><![CDATA[contextProvider]]></code>
+      <code><![CDATA[countVsDataProvider]]></code>
+      <code><![CDATA[dataNestingCollection]]></code>
+      <code><![CDATA[dataVsValidProvider]]></code>
+      <code><![CDATA[inputFilterProvider]]></code>
+      <code><![CDATA[invalidCollections]]></code>
+      <code><![CDATA[invalidDataType]]></code>
+      <code><![CDATA[isRequiredProvider]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/FactoryTest.php">
     <PossiblyNullReference>
-      <code>getPluginManager</code>
-      <code>getPluginManager</code>
+      <code><![CDATA[getPluginManager]]></code>
+      <code><![CDATA[getPluginManager]]></code>
     </PossiblyNullReference>
     <PossiblyUndefinedMethod>
-      <code>breakOnFailure</code>
-      <code>breakOnFailure</code>
+      <code><![CDATA[breakOnFailure]]></code>
+      <code><![CDATA[breakOnFailure]]></code>
     </PossiblyUndefinedMethod>
     <PossiblyUnusedMethod>
-      <code>inputTypeSpecificationProvider</code>
+      <code><![CDATA[inputTypeSpecificationProvider]]></code>
     </PossiblyUnusedMethod>
     <UndefinedInterfaceMethod>
-      <code>continueIfEmpty</code>
+      <code><![CDATA[continueIfEmpty]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="test/FileInput/HttpServerFileInputDecoratorTest.php">
@@ -573,13 +561,13 @@
       <code><![CDATA['']]></code>
     </InvalidArgument>
     <InvalidReturnStatement>
-      <code>$dataSets</code>
+      <code><![CDATA[$dataSets]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code>iterable</code>
+      <code><![CDATA[iterable]]></code>
     </InvalidReturnType>
     <NonInvariantDocblockPropertyType>
-      <code>$input</code>
+      <code><![CDATA[$input]]></code>
     </NonInvariantDocblockPropertyType>
     <PropertyTypeCoercion>
       <code><![CDATA[new FileInput('foo')]]></code>
@@ -587,7 +575,7 @@
   </file>
   <file src="test/FileInput/PsrFileInputDecoratorTest.php">
     <ImplementedReturnTypeMismatch>
-      <code>UploadedFileInterface</code>
+      <code><![CDATA[UploadedFileInterface]]></code>
       <code><![CDATA[iterable<string, array{
      *     0: bool,
      *     1: bool,
@@ -614,23 +602,23 @@
      * }>]]></code>
     </InvalidReturnType>
     <NonInvariantDocblockPropertyType>
-      <code>$input</code>
+      <code><![CDATA[$input]]></code>
     </NonInvariantDocblockPropertyType>
     <PropertyTypeCoercion>
       <code><![CDATA[new FileInput('foo')]]></code>
     </PropertyTypeCoercion>
     <TypeDoesNotContainType>
-      <code>$generator instanceof Generator</code>
+      <code><![CDATA[$generator instanceof Generator]]></code>
     </TypeDoesNotContainType>
   </file>
   <file src="test/InputFilterPluginManagerCompatibilityTest.php">
     <InvalidReturnType>
-      <code>getInstanceOf</code>
+      <code><![CDATA[getInstanceOf]]></code>
     </InvalidReturnType>
   </file>
   <file src="test/InputFilterPluginManagerFactoryTest.php">
     <PossiblyUnusedMethod>
-      <code>pluginProvider</code>
+      <code><![CDATA[pluginProvider]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/InputFilterPluginManagerTest.php">
@@ -649,8 +637,8 @@
      * }>]]></code>
     </MoreSpecificReturnType>
     <PossiblyUnusedMethod>
-      <code>defaultInvokableClassesProvider</code>
-      <code>serviceProvider</code>
+      <code><![CDATA[defaultInvokableClassesProvider]]></code>
+      <code><![CDATA[serviceProvider]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/InputFilterTest.php">
@@ -662,7 +650,7 @@
      * }>]]></code>
     </ImplementedReturnTypeMismatch>
     <LessSpecificReturnStatement>
-      <code>$dataSets</code>
+      <code><![CDATA[$dataSets]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[array<string, array{
@@ -672,10 +660,10 @@
      * }>]]></code>
     </MoreSpecificReturnType>
     <NonInvariantDocblockPropertyType>
-      <code>$inputFilter</code>
+      <code><![CDATA[$inputFilter]]></code>
     </NonInvariantDocblockPropertyType>
     <PossiblyInvalidArgument>
-      <code>$factory</code>
+      <code><![CDATA[$factory]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="test/InputTest.php">
@@ -739,20 +727,20 @@
      * }>]]></code>
     </InvalidReturnType>
     <LessSpecificReturnStatement>
-      <code>array_merge($emptyValues, $mixedValues)</code>
+      <code><![CDATA[array_merge($emptyValues, $mixedValues)]]></code>
     </LessSpecificReturnStatement>
     <MixedArrayAccess>
       <code><![CDATA[$value['filtered']]]></code>
       <code><![CDATA[$value['raw']]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
-      <code>$tmpTemplate[4]</code>
-      <code>$value</code>
+      <code><![CDATA[$tmpTemplate[4]]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MixedMethodCall>
-      <code>method</code>
-      <code>willReturn</code>
-      <code>with</code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[with]]></code>
     </MixedMethodCall>
     <MoreSpecificReturnType>
       <code><![CDATA[array<string, array{
@@ -761,33 +749,33 @@
      * }>]]></code>
     </MoreSpecificReturnType>
     <PossiblyInvalidArgument>
-      <code>$translator</code>
+      <code><![CDATA[$translator]]></code>
     </PossiblyInvalidArgument>
     <PossiblyUndefinedMethod>
-      <code>expects</code>
+      <code><![CDATA[expects]]></code>
     </PossiblyUndefinedMethod>
     <RedundantCondition>
-      <code>isArray</code>
+      <code><![CDATA[isArray]]></code>
     </RedundantCondition>
   </file>
   <file src="test/TestAsset/ModuleEventInterface.php">
     <PossiblyUnusedMethod>
-      <code>getParam</code>
+      <code><![CDATA[getParam]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/ModuleManagerInterface.php">
     <PossiblyUnusedMethod>
-      <code>getEvent</code>
+      <code><![CDATA[getEvent]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/TestAsset/ServiceListenerInterface.php">
     <PossiblyUnusedMethod>
-      <code>addServiceManager</code>
+      <code><![CDATA[addServiceManager]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/ValidationGroup/InputFilterCollectionsValidationGroupTest.php">
     <PossiblyUnusedMethod>
-      <code>collectionCountProvider</code>
+      <code><![CDATA[collectionCountProvider]]></code>
     </PossiblyUnusedMethod>
   </file>
 </files>
