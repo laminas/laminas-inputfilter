@@ -29,9 +29,13 @@ class ArrayInputTest extends InputTest
         $this->input = new ArrayInput('foo');
     }
 
+    /**
+     * @deprecated Since 2.30.1 The default value should be null in the next major,
+     *             therefore this test can be dropped in favour of parent::testDefaultGetValue()
+     */
     public function testDefaultGetValue(): void
     {
-        self::assertNull($this->input->getValue());
+        self::assertSame([], $this->input->getValue());
     }
 
     public function testArrayInputMarkedRequiredWithoutAFallbackFailsValidationForEmptyArrays(): void
