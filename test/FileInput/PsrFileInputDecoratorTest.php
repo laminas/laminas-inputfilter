@@ -11,6 +11,7 @@ use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
 use LaminasTest\InputFilter\TestAsset\UploadedFileInterfaceStub;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function in_array;
@@ -215,14 +216,14 @@ class PsrFileInputDecoratorTest extends InputTest
         self::assertEquals($validator, $validators[0]['instance']);
     }
 
-    /** @param mixed $value */
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null): void
+    #[DataProvider('emptyValueProvider')]
+    public function testNotEmptyValidatorAddedWhenIsValidIsCalled(mixed $raw, mixed $filtered): void
     {
         self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
-    /** @param mixed $value */
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null): void
+    #[DataProvider('emptyValueProvider')]
+    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists(mixed $raw, mixed $filtered): void
     {
         self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }

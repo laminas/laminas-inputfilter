@@ -142,29 +142,23 @@ class InputTest extends TestCase
         self::assertTrue($input->continueIfEmpty());
     }
 
-    /**
-     * @param mixed $fallbackValue
-     */
     #[DataProvider('setValueProvider')]
-    public function testSetFallbackValue($fallbackValue): void
+    public function testSetFallbackValue(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
 
-        $return = $input->setFallbackValue($fallbackValue);
+        $return = $input->setFallbackValue($raw);
         self::assertSame($input, $return, 'setFallbackValue() must return it self');
 
-        self::assertEquals($fallbackValue, $input->getFallbackValue(), 'getFallbackValue() value not match');
+        self::assertEquals($raw, $input->getFallbackValue(), 'getFallbackValue() value not match');
         self::assertTrue($input->hasFallback(), 'hasFallback() value not match');
     }
 
-    /**
-     * @param mixed $fallbackValue
-     */
     #[DataProvider('setValueProvider')]
-    public function testClearFallbackValue($fallbackValue): void
+    public function testClearFallbackValue(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
-        $input->setFallbackValue($fallbackValue);
+        $input->setFallbackValue($raw);
         $input->clearFallbackValue();
         self::assertNull($input->getFallbackValue(), 'getFallbackValue() value not match');
         self::assertFalse($input->hasFallback(), 'hasFallback() value not match');
@@ -322,15 +316,12 @@ class InputTest extends TestCase
         self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
     }
 
-    /**
-     * @param mixed $value
-     */
     #[DataProvider('emptyValueProvider')]
-    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue($value): void
+    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
-        $input->setValue($value);
+        $input->setValue($raw);
         $input->isValid();
         $validators = $input->getValidatorChain()
                                 ->getValidators();
@@ -406,14 +397,11 @@ class InputTest extends TestCase
         self::assertTrue($this->input->breakOnFailure());
     }
 
-    /**
-     * @param mixed $value
-     */
     #[DataProvider('emptyValueProvider')]
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value): void
+    public function testNotEmptyValidatorAddedWhenIsValidIsCalled(mixed $raw, mixed $filtered): void
     {
         self::assertTrue($this->input->isRequired());
-        $this->input->setValue($value);
+        $this->input->setValue($raw);
         $validatorChain = $this->input->getValidatorChain();
         self::assertEquals(0, count($validatorChain->getValidators()));
 
@@ -427,16 +415,13 @@ class InputTest extends TestCase
         self::assertEquals(1, count($validatorChain->getValidators()));
     }
 
-    /**
-     * @param mixed $value
-     */
     #[DataProvider('emptyValueProvider')]
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value): void
+    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists(mixed $raw, mixed $filtered): void
     {
         $this->input->setRequired(true);
-        $this->input->setValue($value);
+        $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $value);
+        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $raw);
 
         $validatorChain = $this->input->getValidatorChain();
         $validatorChain->prependValidator($notEmptyMock);
@@ -447,21 +432,17 @@ class InputTest extends TestCase
         self::assertEquals($notEmptyMock, $validators[0]['instance']);
     }
 
-    /**
-     * @param mixed $valueRaw
-     * @param mixed $valueFiltered
-     */
     #[DataProvider('emptyValueProvider')]
-    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain($valueRaw, $valueFiltered): void
+    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
-        $filterChain    = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
+        $filterChain    = $this->createFilterChainMock([[$raw, $filtered]]);
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
         $this->input->setFilterChain($filterChain);
-        $this->input->setValue($valueRaw);
+        $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $valueFiltered);
+        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $filtered);
 
         $validatorChain->attach(self::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
@@ -501,30 +482,24 @@ class InputTest extends TestCase
         self::assertEquals($value, $this->input->getValue(), 'getValue() must return the filtered value always');
     }
 
-    /**
-     * @param mixed $value
-     */
     #[DataProvider('setValueProvider')]
-    public function testSetValuePutInputInTheDesiredState($value): void
+    public function testSetValuePutInputInTheDesiredState(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
         self::assertFalse($input->hasValue(), 'Input should not have value by default');
 
-        $input->setValue($value);
+        $input->setValue($raw);
         self::assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
     }
 
-    /**
-     * @param mixed $value
-     */
     #[DataProvider('setValueProvider')]
-    public function testResetValueReturnsInputValueToDefaultValue($value): void
+    public function testResetValueReturnsInputValueToDefaultValue(mixed $raw, mixed $filtered): void
     {
         $input         = $this->input;
         $originalInput = clone $input;
         self::assertFalse($input->hasValue(), 'Input should not have value by default');
 
-        $input->setValue($value);
+        $input->setValue($raw);
         self::assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
 
         $return = $input->resetValue();
