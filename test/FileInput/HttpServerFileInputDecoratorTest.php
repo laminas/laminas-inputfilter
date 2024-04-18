@@ -9,6 +9,7 @@ use Laminas\InputFilter\FileInput\HttpServerFileInputDecorator;
 use Laminas\Validator;
 use LaminasTest\InputFilter\InputTest;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Webmozart\Assert\Assert;
 
 use function json_encode;
@@ -214,14 +215,14 @@ class HttpServerFileInputDecoratorTest extends InputTest
         self::assertFalse($this->input->isValid());
     }
 
-    /** @param mixed $value */
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled($value = null): void
+    #[DataProvider('emptyValueProvider')]
+    public function testNotEmptyValidatorAddedWhenIsValidIsCalled(mixed $raw, mixed $filtered): void
     {
         self::markTestSkipped('Test is not enabled in FileInputTest');
     }
 
-    /** @param mixed $value */
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists($value = null): void
+    #[DataProvider('emptyValueProvider')]
+    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists(mixed $raw, mixed $filtered): void
     {
         self::markTestSkipped('Test is not enabled in FileInputTest');
     }

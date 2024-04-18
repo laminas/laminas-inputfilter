@@ -246,7 +246,7 @@ class CollectionInputFilterTest extends TestCase
     }
 
     #[DataProvider('dataNestingCollection')]
-    public function testNestingCollectionCountCached(?int $count, bool $expectedIsValid): void
+    public function testNestingCollectionCountCached(?int $count, bool $isValid): void
     {
         $firstInputFilter = new InputFilter();
 
@@ -291,7 +291,7 @@ class CollectionInputFilterTest extends TestCase
         ];
 
         $mainInputFilter->setData($data);
-        self::assertSame($expectedIsValid, $mainInputFilter->isValid());
+        self::assertSame($isValid, $mainInputFilter->isValid());
     }
 
     /**

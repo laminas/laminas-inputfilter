@@ -33,6 +33,11 @@
                 <directory name="test/StaticAnalysis" />
             </errorLevel>
         </PossiblyUnusedMethod>
+        <PossiblyUnusedParam>
+            <errorLevel type="suppress">
+                <directory name="test" />
+            </errorLevel>
+        </PossiblyUnusedParam>
     </issueHandlers>
 
     <stubs>

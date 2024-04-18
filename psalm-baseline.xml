@@ -498,9 +498,6 @@
       <code><![CDATA[setDataArgumentsProvider]]></code>
       <code><![CDATA[unknownScenariosProvider]]></code>
     </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$inputName]]></code>
-    </PossiblyUnusedParam>
   </file>
   <file src="test/CollectionInputFilterTest.php">
     <InvalidArgument>
