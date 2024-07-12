@@ -12,9 +12,9 @@ use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
-use Laminas\Validator\Between;
 use Laminas\Validator\Digits;
 use Laminas\Validator\NotEmpty;
+use Laminas\Validator\NumberComparison;
 use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -620,7 +620,7 @@ class CollectionInputFilterTest extends TestCase
                                         'required'   => false,
                                         'validators' => [
                                             [
-                                                'name'    => Between::class,
+                                                'name'    => NumberComparison::class,
                                                 'options' => [
                                                     'min'     => 50,
                                                     'max'     => 100,
@@ -633,7 +633,7 @@ class CollectionInputFilterTest extends TestCase
                                         'required'   => false,
                                         'validators' => [
                                             [
-                                                'name'    => Between::class,
+                                                'name'    => NumberComparison::class,
                                                 'options' => [
                                                     'min'     => 50,
                                                     'max'     => 100,
@@ -690,26 +690,26 @@ class CollectionInputFilterTest extends TestCase
                         'test_field' => [
                             [
                                 'test_field1' => [
-                                    'notBetween' => '-20 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '-20 is incorrect',
                                 ],
                                 'price'       => [
-                                    'notBetween' => '20 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '20 is incorrect',
                                 ],
                             ],
                             [
                                 'test_field1' => [
-                                    'notBetween' => '-15 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '-15 is incorrect',
                                 ],
                                 'price'       => [
-                                    'notBetween' => '15 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '15 is incorrect',
                                 ],
                             ],
                             [
                                 'test_field1' => [
-                                    'notBetween' => '-10 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '-10 is incorrect',
                                 ],
                                 'price'       => [
-                                    'notBetween' => '10 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '10 is incorrect',
                                 ],
                             ],
                         ],
@@ -718,10 +718,10 @@ class CollectionInputFilterTest extends TestCase
                         'test_field' => [
                             [
                                 'test_field1' => [
-                                    'notBetween' => '-5 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '-5 is incorrect',
                                 ],
                                 'price'       => [
-                                    'notBetween' => '5 is incorrect',
+                                    NumberComparison::ERROR_NOT_GREATER_INCLUSIVE => '5 is incorrect',
                                 ],
                             ],
                         ],
