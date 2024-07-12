@@ -9,8 +9,8 @@ use Laminas\Filter\ToNull;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputInterface;
 use Laminas\Validator\AbstractValidator;
-use Laminas\Validator\Between;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
+use Laminas\Validator\NumberComparison;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
@@ -593,7 +593,7 @@ class InputTest extends TestCase
     public function testThatMergingTwoInputsMergesTheValidatorChain(): void
     {
         $validator1 = new NotEmptyValidator();
-        $validator2 = new Between(['min' => 1, 'max' => 5]);
+        $validator2 = new NumberComparison(['min' => 1, 'max' => 5]);
 
         $a = new Input('a');
         $b = new Input('b');

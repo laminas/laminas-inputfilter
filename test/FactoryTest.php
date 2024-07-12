@@ -413,8 +413,10 @@ class FactoryTest extends TestCase
                     break;
                 case 2:
                     self::assertInstanceOf(Validator\StringLength::class, $validator);
-                    self::assertEquals(3, $validator->getMin());
-                    self::assertEquals(5, $validator->getMax());
+                    self::assertFalse($validator->isValid('aa'));
+                    self::assertFalse($validator->isValid('aaaaaa'));
+                    self::assertTrue($validator->isValid('aaa'));
+                    self::assertTrue($validator->isValid('aaaaa'));
                     break;
                 default:
                     self::fail('Found more validators than expected');

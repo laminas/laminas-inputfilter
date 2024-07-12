@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.24.0@462c80e31c34e58cc4f750c656be3927e80e550e">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="src/ArrayInput.php">
     <DeprecatedProperty>
       <code><![CDATA[$this->value]]></code>
@@ -50,6 +50,13 @@
     </UnusedPsalmSuppress>
   </file>
   <file src="src/CollectionInputFilter.php">
+    <DeprecatedInterface>
+      <code><![CDATA[$notEmptyValidator->getTranslator()]]></code>
+    </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[getOption]]></code>
+      <code><![CDATA[getTranslatorTextDomain]]></code>
+    </DeprecatedMethod>
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
@@ -188,6 +195,10 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getOption]]></code>
+      <code><![CDATA[getTranslatorTextDomain]]></code>
+    </DeprecatedMethod>
     <DocblockTypeContradiction>
       <code><![CDATA[is_array($this->errorMessage)]]></code>
     </DocblockTypeContradiction>
@@ -543,6 +554,9 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="test/FactoryTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getMessageTemplates]]></code>
+    </DeprecatedMethod>
     <PossiblyNullReference>
       <code><![CDATA[getPluginManager]]></code>
       <code><![CDATA[getPluginManager]]></code>
@@ -673,6 +687,9 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/InputTest.php">
+    <DeprecatedInterface>
+      <code><![CDATA[$translator]]></code>
+    </DeprecatedInterface>
     <InvalidReturnStatement>
       <code><![CDATA[[
             // Description => [$value]
