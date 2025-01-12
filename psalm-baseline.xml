@@ -105,6 +105,13 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Factory.php">
+    <DeprecatedConstant>
+      <code><![CDATA[FilterChain::DEFAULT_PRIORITY]]></code>
+    </DeprecatedConstant>
+    <DeprecatedMethod>
+      <code><![CDATA[getPluginManager]]></code>
+      <code><![CDATA[setPluginManager]]></code>
+    </DeprecatedMethod>
     <MixedArgument>
       <code><![CDATA[$inputFilterSpecification['count']]]></code>
       <code><![CDATA[$inputFilterSpecification['input_filter']]]></code>
@@ -239,6 +246,9 @@
     <DeprecatedInterface>
       <code><![CDATA[InputFilterAbstractServiceFactory]]></code>
     </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[setPluginManager]]></code>
+    </DeprecatedMethod>
     <MixedArgument>
       <code><![CDATA[$config]]></code>
     </MixedArgument>
@@ -279,6 +289,9 @@
     <DeprecatedInterface>
       <code><![CDATA[null|ConfigInterface|ContainerInterface]]></code>
     </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[setPluginManager]]></code>
+    </DeprecatedMethod>
     <MethodSignatureMismatch>
       <code><![CDATA[InputFilterPluginManager]]></code>
       <code><![CDATA[InputFilterPluginManager]]></code>
@@ -553,8 +566,18 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="test/FactoryTest.php">
+    <DeprecatedConstant>
+      <code><![CDATA[Filter\FilterChain::DEFAULT_PRIORITY]]></code>
+      <code><![CDATA[Filter\FilterChain::DEFAULT_PRIORITY]]></code>
+    </DeprecatedConstant>
     <DeprecatedMethod>
+      <code><![CDATA[getFilters]]></code>
       <code><![CDATA[getMessageTemplates]]></code>
+      <code><![CDATA[getPluginManager]]></code>
+      <code><![CDATA[getPluginManager]]></code>
+      <code><![CDATA[getPluginManager]]></code>
+      <code><![CDATA[setPluginManager]]></code>
+      <code><![CDATA[setPluginManager]]></code>
     </DeprecatedMethod>
     <PossiblyNullReference>
       <code><![CDATA[getPluginManager]]></code>
@@ -630,6 +653,13 @@
       <code><![CDATA[$generator instanceof Generator]]></code>
     </TypeDoesNotContainType>
   </file>
+  <file src="test/InputFilterAbstractServiceFactoryTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getFilters]]></code>
+      <code><![CDATA[getPluginManager]]></code>
+      <code><![CDATA[plugin]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="test/InputFilterPluginManagerCompatibilityTest.php">
     <InvalidReturnType>
       <code><![CDATA[getInstanceOf]]></code>
@@ -641,6 +671,9 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="test/InputFilterPluginManagerTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getPluginManager]]></code>
+    </DeprecatedMethod>
     <LessSpecificReturnStatement>
       <code><![CDATA[[
             // Description         => [$serviceName,                  $service,                  $instanceOf]
