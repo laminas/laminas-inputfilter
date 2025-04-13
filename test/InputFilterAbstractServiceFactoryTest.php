@@ -27,7 +27,7 @@ use function is_string;
 use function strrev;
 
 #[CoversClass(InputFilterAbstractServiceFactory::class)]
-class InputFilterAbstractServiceFactoryTest extends TestCase
+final class InputFilterAbstractServiceFactoryTest extends TestCase
 {
     private ServiceManager $services;
     private InputFilterPluginManager $filters;

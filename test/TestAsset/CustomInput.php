@@ -6,6 +6,6 @@ namespace LaminasTest\InputFilter\TestAsset;
 
 use Laminas\InputFilter\Input;
 
-class CustomInput extends Input
+final class CustomInput extends Input
 {
 }

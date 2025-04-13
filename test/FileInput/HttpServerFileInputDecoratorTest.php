@@ -20,7 +20,7 @@ use const UPLOAD_ERR_OK;
 
 #[CoversClass(HttpServerFileInputDecorator::class)]
 #[CoversClass(FileInput::class)]
-class HttpServerFileInputDecoratorTest extends InputTest
+final class HttpServerFileInputDecoratorTest extends InputTest
 {
     /** @var HttpServerFileInputDecorator */
     protected $input;

@@ -4,6 +4,7 @@ namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
 use ArrayObject;
+use Closure;
 use FilterIterator;
 use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
@@ -294,7 +295,7 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @param array<string, InputInterface|InputFilterInterface> $inputs
-     * @param iterable<mixed> $data
+     * @param iterable<array-key, mixed> $data
      * @param array<string, mixed> $expectedRawValues
      * @param array<string, mixed> $expectedValues
      * @param list<InputInterface> $expectedInvalidInputs
@@ -353,7 +354,7 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @param array<string, InputInterface|InputFilterInterface> $inputs
-     * @param iterable<mixed> $data
+     * @param iterable<array-key, mixed> $data
      * @param array<string, mixed> $expectedRawValues
      * @param array<string, mixed> $expectedValues
      * @param list<InputInterface> $expectedInvalidInputs
@@ -976,7 +977,10 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @return callable[]
+     * @return array{
+     *     array: Closure(array): array<array-key, mixed>,
+     *     Traversable: Closure(array): iterable<array-key, mixed>,
+     * }
      */
     protected function dataTypes(): array
     {

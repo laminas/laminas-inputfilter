@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+<files psalm-version="6.10.0@9c0add4eb88d4b169ac04acb7c679918cbb9c252">
   <file src="src/ArrayInput.php">
     <DeprecatedProperty>
       <code><![CDATA[$this->value]]></code>
@@ -187,9 +187,6 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType>
-      <code><![CDATA[UploadedFileInterface|UploadedFileInterface[]]]></code>
-    </MixedInferredReturnType>
     <MixedReturnStatement>
       <code><![CDATA[$filter->filter($value)]]></code>
       <code><![CDATA[$value]]></code>
@@ -299,10 +296,8 @@
     <MethodSignatureMustProvideReturnType>
       <code><![CDATA[get]]></code>
     </MethodSignatureMustProvideReturnType>
-    <MixedInferredReturnType>
-      <code><![CDATA[($name is class-string<InputInterface> ? T1 : ($name is class-string<InputFilterInterface> ? T2 : InputInterface|InputFilterInterface))]]></code>
-    </MixedInferredReturnType>
     <MixedReturnStatement>
+      <code><![CDATA[parent::get($name, $options)]]></code>
       <code><![CDATA[parent::get($name, $options)]]></code>
     </MixedReturnStatement>
     <NonInvariantDocblockPropertyType>
@@ -353,12 +348,17 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Module.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$moduleManager]]></code>
-    </PossiblyUnusedParam>
     <UndefinedDocblockClass>
       <code><![CDATA[ModuleManager]]></code>
     </UndefinedDocblockClass>
+    <UnusedParam>
+      <code><![CDATA[$moduleManager]]></code>
+    </UnusedParam>
+  </file>
+  <file src="src/OptionalInputFilter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OptionalInputFilter]]></code>
+    </ClassMustBeFinal>
   </file>
   <file src="test/ArrayInputTest.php">
     <ArgumentTypeCoercion>
@@ -423,9 +423,6 @@
      *     filtered:  bool|int|float|string|list<string>|object
      * }>]]></code>
     </MixedReturnTypeCoercion>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[nonArrayInput]]></code>
-    </PossiblyUnusedMethod>
     <RedundantCondition>
       <code><![CDATA[isArray]]></code>
       <code><![CDATA[isArray]]></code>
@@ -437,7 +434,10 @@
       <code><![CDATA[enableProxyingToOriginalMethods]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
+      <code><![CDATA[$data]]></code>
       <code><![CDATA[['nested' => ['nested-input1', 'nested-input2']]]]></code>
+      <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
+      <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </InvalidArgument>
     <LessSpecificReturnStatement>
       <code><![CDATA[$dataSets]]></code>
@@ -451,7 +451,6 @@
       <code><![CDATA[static fn($inputTypeData) => $inputTypeData[2]]]></code>
     </MissingClosureReturnType>
     <MixedArgument>
-      <code><![CDATA[$dataTypes['Traversable']($data)]]></code>
       <code><![CDATA[$input]]></code>
       <code><![CDATA[$set[5]]]></code>
       <code><![CDATA[$set[6]]]></code>
@@ -506,6 +505,8 @@
       <code><![CDATA[$input]]></code>
       <code><![CDATA[$input]]></code>
       <code><![CDATA[$input]]></code>
+      <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
+      <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
       <code><![CDATA[$expectedInputName]]></code>
@@ -518,12 +519,6 @@
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getName]]></code>
     </PossiblyUndefinedMethod>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addMethodArgumentsProvider]]></code>
-      <code><![CDATA[contextProvider]]></code>
-      <code><![CDATA[setDataArgumentsProvider]]></code>
-      <code><![CDATA[unknownScenariosProvider]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/CollectionInputFilterTest.php">
     <InvalidArgument>
@@ -554,16 +549,6 @@
      *     7: array
      * }>]]></code>
     </InvalidReturnType>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[contextProvider]]></code>
-      <code><![CDATA[countVsDataProvider]]></code>
-      <code><![CDATA[dataNestingCollection]]></code>
-      <code><![CDATA[dataVsValidProvider]]></code>
-      <code><![CDATA[inputFilterProvider]]></code>
-      <code><![CDATA[invalidCollections]]></code>
-      <code><![CDATA[invalidDataType]]></code>
-      <code><![CDATA[isRequiredProvider]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/FactoryTest.php">
     <DeprecatedConstant>
@@ -587,9 +572,6 @@
       <code><![CDATA[breakOnFailure]]></code>
       <code><![CDATA[breakOnFailure]]></code>
     </PossiblyUndefinedMethod>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[inputTypeSpecificationProvider]]></code>
-    </PossiblyUnusedMethod>
     <UndefinedInterfaceMethod>
       <code><![CDATA[continueIfEmpty]]></code>
     </UndefinedInterfaceMethod>
@@ -665,11 +647,6 @@
       <code><![CDATA[getInstanceOf]]></code>
     </InvalidReturnType>
   </file>
-  <file src="test/InputFilterPluginManagerFactoryTest.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[pluginProvider]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="test/InputFilterPluginManagerTest.php">
     <DeprecatedMethod>
       <code><![CDATA[getPluginManager]]></code>
@@ -688,10 +665,6 @@
      *     2: class-string<InputInterface>
      * }>]]></code>
     </MoreSpecificReturnType>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[defaultInvokableClassesProvider]]></code>
-      <code><![CDATA[serviceProvider]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/InputFilterTest.php">
     <ImplementedReturnTypeMismatch>
@@ -720,6 +693,7 @@
   </file>
   <file src="test/InputTest.php">
     <DeprecatedInterface>
+      <code><![CDATA[$this->createMock(TranslatorInterface::class)]]></code>
       <code><![CDATA[$translator]]></code>
     </DeprecatedInterface>
     <InvalidReturnStatement>
@@ -826,11 +800,6 @@
   <file src="test/TestAsset/ServiceListenerInterface.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[addServiceManager]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="test/ValidationGroup/InputFilterCollectionsValidationGroupTest.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[collectionCountProvider]]></code>
     </PossiblyUnusedMethod>
   </file>
 </files>

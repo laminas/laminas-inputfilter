@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(OptionalInputFilter::class)]
-class OptionalInputFilterTest extends TestCase
+final class OptionalInputFilterTest extends TestCase
 {
     public function testValidatesSuccessfullyWhenSetDataIsNeverCalled(): void
     {

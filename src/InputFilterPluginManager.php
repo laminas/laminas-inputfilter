@@ -25,6 +25,8 @@ use function sprintf;
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  * @template InstanceType of InputFilterInterface|InputInterface
  * @extends AbstractPluginManager<InstanceType>
+ *
+ * @final
  */
 class InputFilterPluginManager extends AbstractPluginManager
 {
