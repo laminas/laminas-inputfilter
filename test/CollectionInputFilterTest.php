@@ -32,7 +32,7 @@ use const JSON_THROW_ON_ERROR;
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  */
 #[CoversClass(CollectionInputFilter::class)]
-class CollectionInputFilterTest extends TestCase
+final class CollectionInputFilterTest extends TestCase
 {
     private CollectionInputFilter $inputFilter;
 

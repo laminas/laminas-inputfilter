@@ -24,7 +24,7 @@ use const UPLOAD_ERR_OK;
 
 #[CoversClass(PsrFileInputDecorator::class)]
 #[CoversClass(FileInput::class)]
-class PsrFileInputDecoratorTest extends InputTest
+final class PsrFileInputDecoratorTest extends InputTest
 {
     /** @var PsrFileInputDecorator */
     protected $input;

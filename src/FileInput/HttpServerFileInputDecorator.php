@@ -26,6 +26,8 @@ use const UPLOAD_ERR_NO_FILE;
  *
  * 3. Instead of adding a NotEmpty validator, it will (by default) automatically add
  *    a Laminas\Validator\File\Upload validator.
+ *
+ * @final
  */
 class HttpServerFileInputDecorator extends FileInput implements FileInputDecoratorInterface
 {

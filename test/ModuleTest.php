@@ -10,7 +10,7 @@ use Laminas\InputFilter\Module;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class ModuleTest extends TestCase
+final class ModuleTest extends TestCase
 {
     private Module $module;
 

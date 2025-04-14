@@ -10,6 +10,7 @@ use function array_map;
 use function assert;
 use function is_array;
 
+/** @final */
 class ArrayInput extends Input
 {
     /**

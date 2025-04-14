@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 
 #[CoversClass(InputFilterAwareTrait::class)]
-class InputFilterAwareTraitTest extends TestCase
+final class InputFilterAwareTraitTest extends TestCase
 {
     public function testSetInputFilter(): void
     {

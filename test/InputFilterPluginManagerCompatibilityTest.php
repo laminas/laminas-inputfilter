@@ -10,7 +10,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\ServiceManager\Test\CommonPluginManagerTrait;
 use PHPUnit\Framework\TestCase;
 
-class InputFilterPluginManagerCompatibilityTest extends TestCase
+final class InputFilterPluginManagerCompatibilityTest extends TestCase
 {
     use CommonPluginManagerTrait;
 

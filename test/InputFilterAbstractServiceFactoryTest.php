@@ -7,14 +7,12 @@ namespace LaminasTest\InputFilter;
 use Laminas\Filter;
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
-use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAbstractServiceFactory;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Validator;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
@@ -23,10 +21,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
+use function assert;
 use function call_user_func_array;
+use function is_string;
+use function strrev;
 
 #[CoversClass(InputFilterAbstractServiceFactory::class)]
-class InputFilterAbstractServiceFactoryTest extends TestCase
+final class InputFilterAbstractServiceFactoryTest extends TestCase
 {
     private ServiceManager $services;
     private InputFilterPluginManager $filters;
@@ -220,7 +221,20 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
      */
     public function testWillUseCustomFiltersWhenProvided(): void
     {
-        $filter = $this->createMock(Filter\FilterInterface::class);
+        $filter = new class implements Filter\FilterInterface
+        {
+            public function filter(mixed $value): string
+            {
+                assert(is_string($value));
+
+                return strrev($value);
+            }
+
+            public function __invoke(mixed $value): string
+            {
+                return $this->filter($value);
+            }
+        };
 
         $filters = new FilterPluginManager($this->services);
         $filters->setService('CustomFilter', $filter);
@@ -234,31 +248,9 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
             'input_filter_specs' => [
                 'test' => [
                     [
-                        'name'       => 'a-file-element',
-                        'type'       => FileInput::class,
+                        'name'       => 'value',
                         'required'   => true,
-                        'validators' => [
-                            [
-                                'name'    => Validator\File\UploadFile::class,
-                                'options' => [
-                                    'breakchainonfailure' => true,
-                                ],
-                            ],
-                            [
-                                'name'    => Validator\File\Size::class,
-                                'options' => [
-                                    'breakchainonfailure' => true,
-                                    'max'                 => '6GB',
-                                ],
-                            ],
-                            [
-                                'name'    => Validator\File\Extension::class,
-                                'options' => [
-                                    'breakchainonfailure' => true,
-                                    'extension'           => 'csv,zip',
-                                ],
-                            ],
-                        ],
+                        'validators' => [],
                         'filters'    => [
                             ['name' => 'CustomFilter'],
                         ],
@@ -273,14 +265,14 @@ class InputFilterAbstractServiceFactoryTest extends TestCase
         $inputFilter = $this->services->get(InputFilterPluginManager::class)->get('test');
         self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
 
-        $input = $inputFilter->get('a-file-element');
-        self::assertInstanceOf(FileInput::class, $input);
+        $input = $inputFilter->get('value');
+        self::assertInstanceOf(InputInterface::class, $input);
 
         $filters = $input->getFilterChain();
         self::assertCount(1, $filters);
 
         $callback = $filters->getFilters()->top();
-        self::assertIsArray($callback);
-        self::assertSame($filter, $callback[0]);
+        self::assertIsCallable($callback);
+        self::assertSame('oof', $callback('foo'));
     }
 }
