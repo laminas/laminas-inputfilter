@@ -6,6 +6,6 @@ namespace LaminasTest\InputFilter\TestAsset;
 
 use Laminas\InputFilter\Factory;
 
-class CustomFactory extends Factory
+final class CustomFactory extends Factory
 {
 }

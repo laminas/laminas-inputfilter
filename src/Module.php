@@ -7,7 +7,10 @@ namespace Laminas\InputFilter;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\ServiceManager\ConfigInterface;
 
-/** @psalm-import-type ServiceManagerConfigurationType from ConfigInterface */
+/**
+ * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
+ * @final
+ */
 class Module
 {
     /**

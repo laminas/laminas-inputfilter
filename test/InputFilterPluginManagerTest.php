@@ -30,7 +30,7 @@ use Throwable;
 use function method_exists;
 
 #[CoversClass(InputFilterPluginManager::class)]
-class InputFilterPluginManagerTest extends TestCase
+final class InputFilterPluginManagerTest extends TestCase
 {
     private InputFilterPluginManager $manager;
     private ServiceManager $services;

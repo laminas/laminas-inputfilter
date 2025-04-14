@@ -22,7 +22,7 @@ use function current;
 use function is_array;
 
 #[CoversClass(ArrayInput::class)]
-class ArrayInputTest extends InputTest
+final class ArrayInputTest extends InputTest
 {
     protected function setUp(): void
     {

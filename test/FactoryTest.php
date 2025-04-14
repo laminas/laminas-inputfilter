@@ -28,7 +28,7 @@ use Psr\Container\ContainerInterface;
 use function sprintf;
 
 #[CoversClass(Factory::class)]
-class FactoryTest extends TestCase
+final class FactoryTest extends TestCase
 {
     public function testCreateInputWithInvalidDataTypeThrowsInvalidArgumentException(): void
     {

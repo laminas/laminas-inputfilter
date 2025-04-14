@@ -19,6 +19,8 @@ use function is_array;
  * @link ServiceManager
  *
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
+ *
+ * @final
  */
 class InputFilterPluginManagerFactory implements FactoryInterface
 {
@@ -71,7 +73,7 @@ class InputFilterPluginManagerFactory implements FactoryInterface
      * @param string|null $name
      * @param string|null $requestedName
      * @return InputFilterPluginManager
-     * @psalm-suppress MoreSpecificImplementedParamType,MismatchingDocblockParamType
+     * @psalm-suppress MismatchingDocblockParamType
      */
     public function createService(ServiceLocatorInterface $container, $name = null, $requestedName = null)
     {

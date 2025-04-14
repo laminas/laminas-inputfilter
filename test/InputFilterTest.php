@@ -15,7 +15,7 @@ use Traversable;
 use function array_merge;
 
 #[CoversClass(InputFilter::class)]
-class InputFilterTest extends BaseInputFilterTest
+final class InputFilterTest extends BaseInputFilterTest
 {
     /** @var InputFilter */
     protected $inputFilter;

@@ -7,7 +7,7 @@ namespace LaminasTest\InputFilter\TestAsset;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Psr\Container\ContainerInterface;
 
-class FooAbstractFactory implements AbstractFactoryInterface
+final class FooAbstractFactory implements AbstractFactoryInterface
 {
     /** @param string $requestedName */
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): Foo
