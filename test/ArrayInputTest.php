@@ -165,19 +165,6 @@ final class ArrayInputTest extends InputTest
         return parent::createValidatorChainMock($valueMap, $messages);
     }
 
-    protected function createNonEmptyValidatorMock(
-        bool $isValid,
-        mixed $value,
-        mixed $context = null,
-    ): NotEmptyValidator&MockObject {
-        // ArrayInput validates per each array value
-        if (is_array($value)) {
-            $value = current($value);
-        }
-
-        return parent::createNonEmptyValidatorMock($isValid, $value, $context);
-    }
-
     /** @return string[] */
     protected function getDummyValue(bool $raw = true)
     {

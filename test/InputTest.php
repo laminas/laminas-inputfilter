@@ -267,14 +267,8 @@ class InputTest extends TestCase
             NotEmptyValidator::IS_EMPTY => "Custom message",
         ];
 
-        $notEmpty = $this->createMock(NotEmptyValidator::class);
-        $notEmpty->expects(self::once())
-            ->method('getOption')
-            ->with('messageTemplates')
-            ->willReturn($customMessage);
-
         $input->getValidatorChain()
-            ->attach($notEmpty);
+            ->attach(new NotEmptyValidator(['messages' => $customMessage]));
 
         self::assertFalse(
             $input->isValid(),
@@ -421,15 +415,15 @@ class InputTest extends TestCase
         $this->input->setRequired(true);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $raw);
+        $notEmptyValidator = new NotEmptyValidator();
 
         $validatorChain = $this->input->getValidatorChain();
-        $validatorChain->prependValidator($notEmptyMock);
+        $validatorChain->prependValidator($notEmptyValidator);
         self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
         self::assertEquals(1, count($validators));
-        self::assertEquals($notEmptyMock, $validators[0]['instance']);
+        self::assertEquals($notEmptyValidator, $validators[0]['instance']);
     }
 
     #[DataProvider('emptyValueProvider')]
@@ -442,16 +436,16 @@ class InputTest extends TestCase
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $filtered);
+        $notEmptyValidator = new NotEmptyValidator();
 
         $validatorChain->attach(self::createValidatorMock(true));
-        $validatorChain->attach($notEmptyMock);
+        $validatorChain->attach($notEmptyValidator);
 
         self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
         self::assertEquals(2, count($validators));
-        self::assertEquals($notEmptyMock, $validators[1]['instance']);
+        self::assertEquals($notEmptyValidator, $validators[1]['instance']);
     }
 
     #[DataProvider('isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider')]
@@ -1042,24 +1036,6 @@ class InputTest extends TestCase
         array $messages = []
     ): ValidatorInterface {
         return new ValidatorStub($isValid, $value, $context, $messages);
-    }
-
-    protected function createNonEmptyValidatorMock(
-        bool $isValid,
-        mixed $value,
-        mixed $context = null
-    ): NotEmptyValidator&MockObject {
-        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
-        $notEmptyMock->expects(self::once())
-            ->method('isValid')
-            ->with($value, $context)
-            ->willReturn($isValid);
-
-        if ($isValid === false) {
-            $notEmptyMock->method('getMessages')->willReturn([]);
-        }
-
-        return $notEmptyMock;
     }
 
     /** @return string */
