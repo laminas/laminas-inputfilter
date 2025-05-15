@@ -34,7 +34,7 @@ use const JSON_THROW_ON_ERROR;
 /**
  * @psalm-suppress DeprecatedMethod
  */
-class InputTest extends TestCase
+final class InputTest extends TestCase
 {
     /** @var Input */
     protected $input;
@@ -998,7 +998,7 @@ class InputTest extends TestCase
      * @param list<list<mixed>> $valueMap
      * @return FilterChain&MockObject
      */
-    protected function createFilterChainMock(array $valueMap = [])
+    public function createFilterChainMock(array $valueMap = [])
     {
         /** @var FilterChain&MockObject $filterChain */
         $filterChain = $this->createMock(FilterChain::class);
