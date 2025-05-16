@@ -36,8 +36,7 @@ use const JSON_THROW_ON_ERROR;
  */
 final class InputTest extends TestCase
 {
-    /** @var Input */
-    protected $input;
+    protected Input $input;
 
     protected function setUp(): void
     {
@@ -421,7 +420,7 @@ final class InputTest extends TestCase
         $this->input->setRequired(true);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $raw);
+        $notEmptyMock = $this->createNonEmptyValidatorMock($raw);
 
         $validatorChain = $this->input->getValidatorChain();
         $validatorChain->prependValidator($notEmptyMock);
@@ -442,7 +441,7 @@ final class InputTest extends TestCase
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $filtered);
+        $notEmptyMock = $this->createNonEmptyValidatorMock($filtered);
 
         $validatorChain->attach(self::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
@@ -644,7 +643,7 @@ final class InputTest extends TestCase
     {
         $sourceRawValue = $this->getDummyValue();
 
-        $source = $this->createInputInterfaceMock();
+        $source = $this->createMock(InputInterface::class);
         $source->method('getName')->willReturn('bazInput');
         $source->method('getErrorMessage')->willReturn('bazErrorMessage');
         $source->method('breakOnFailure')->willReturn(true);
@@ -989,11 +988,6 @@ final class InputTest extends TestCase
         ];
     }
 
-    protected function createInputInterfaceMock(): InputInterface&MockObject
-    {
-        return $this->createMock(InputInterface::class);
-    }
-
     /**
      * @param list<list<mixed>> $valueMap
      * @return FilterChain&MockObject
@@ -1045,19 +1039,15 @@ final class InputTest extends TestCase
     }
 
     protected function createNonEmptyValidatorMock(
-        bool $isValid,
-        mixed $value,
-        mixed $context = null
+        mixed $value
     ): NotEmptyValidator&MockObject {
         $notEmptyMock = $this->createMock(NotEmptyValidator::class);
         $notEmptyMock->expects(self::once())
             ->method('isValid')
-            ->with($value, $context)
-            ->willReturn($isValid);
+            ->with($value, null)
+            ->willReturn(false);
 
-        if ($isValid === false) {
-            $notEmptyMock->method('getMessages')->willReturn([]);
-        }
+        $notEmptyMock->method('getMessages')->willReturn([]);
 
         return $notEmptyMock;
     }

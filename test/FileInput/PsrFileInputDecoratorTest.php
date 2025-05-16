@@ -49,11 +49,6 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setAutoPrependUploadValidator(false);
     }
 
-    public function testRetrievingValueFiltersTheValue(): void
-    {
-        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
-    }
-
     public function testRetrievingValueFiltersTheValueOnlyAfterValidating(): void
     {
         $upload = $this->createMock(UploadedFileInterface::class);
@@ -125,11 +120,6 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setFilterChain($this->createFilterChainMock([[$value, $filteredValue]]));
 
         self::assertEquals($value, $this->input->getRawValue());
-    }
-
-    public function testValidationOperatesOnFilteredValue(): void
-    {
-        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
     }
 
     public function testValidationOperatesBeforeFiltering(): void
@@ -227,41 +217,6 @@ final class PsrFileInputDecoratorTest extends TestCase
         $validators = $validatorChain->getValidators();
         self::assertCount(1, $validators);
         self::assertEquals($validator, $validators[0]['instance']);
-    }
-
-    #[DataProvider('emptyValueProvider')]
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled(mixed $raw, mixed $filtered): void
-    {
-        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
-    }
-
-    #[DataProvider('emptyValueProvider')]
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists(mixed $raw, mixed $filtered): void
-    {
-        self::markTestSkipped('Test is not enabled in PsrFileInputTest');
-    }
-
-    /**
-     * @param null|string|string[] $fallbackValue
-     * @param null|string|string[] $originalValue
-     * @param null|string|string[] $expectedValue
-     */
-    public function testFallbackValueVsIsValidRules(
-        ?bool $required = null,
-        $fallbackValue = null,
-        $originalValue = null,
-        ?bool $isValid = null,
-        $expectedValue = null
-    ): void {
-        self::markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
-    }
-
-    /** @param null|string|string[] $fallbackValue */
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet(
-        ?bool $required = null,
-        $fallbackValue = null
-    ): void {
-        self::markTestSkipped('Input::setFallbackValue is not implemented on PsrFileInput');
     }
 
     public function testIsEmptyFileUploadNoFile(): void
@@ -725,7 +680,13 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $filtered);
+        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
+        $notEmptyMock->expects(self::once())
+            ->method('isValid')
+            ->with($filtered, null)
+            ->willReturn(false);
+
+        $notEmptyMock->method('getMessages')->willReturn([]);
 
         $validatorChain->attach(self::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
@@ -927,7 +888,7 @@ final class PsrFileInputDecoratorTest extends TestCase
     {
         $sourceRawValue = $this->getDummyValue();
 
-        $source = $this->createInputInterfaceMock();
+        $source = $this->createMock(InputInterface::class);
         $source->method('getName')->willReturn('bazInput');
         $source->method('getErrorMessage')->willReturn('bazErrorMessage');
         $source->method('breakOnFailure')->willReturn(true);
@@ -1094,11 +1055,6 @@ final class PsrFileInputDecoratorTest extends TestCase
         return array_merge($emptyValues, $mixedValues);
     }
 
-    protected function createInputInterfaceMock(): InputInterface&MockObject
-    {
-        return $this->createMock(InputInterface::class);
-    }
-
     /**
      * @param list<list<mixed>> $valueMap
      * @return FilterChain&MockObject
@@ -1147,23 +1103,5 @@ final class PsrFileInputDecoratorTest extends TestCase
         array $messages = []
     ): ValidatorInterface {
         return new ValidatorStub($isValid, $value, $context, $messages);
-    }
-
-    protected function createNonEmptyValidatorMock(
-        bool $isValid,
-        mixed $value,
-        mixed $context = null
-    ): NotEmptyValidator&MockObject {
-        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
-        $notEmptyMock->expects(self::once())
-            ->method('isValid')
-            ->with($value, $context)
-            ->willReturn($isValid);
-
-        if ($isValid === false) {
-            $notEmptyMock->method('getMessages')->willReturn([]);
-        }
-
-        return $notEmptyMock;
     }
 }

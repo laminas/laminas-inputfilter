@@ -19,7 +19,6 @@ use Laminas\Validator\NumberComparison;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
-use LaminasTest\InputFilter\InputTest;
 use LaminasTest\InputFilter\TestAsset\ValidatorStub;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -38,8 +37,7 @@ use const UPLOAD_ERR_OK;
 #[CoversClass(FileInput::class)]
 final class HttpServerFileInputDecoratorTest extends TestCase
 {
-    /** @var HttpServerFileInputDecorator */
-    protected $input;
+    protected HttpServerFileInputDecorator|FileInput $input;
 
     protected function setUp(): void
     {
@@ -50,12 +48,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     protected function tearDown(): void
     {
-        AbstractValidator::setDefaultTranslator(null);
-    }
-
-    public function testRetrievingValueFiltersTheValue(): void
-    {
-        self::markTestSkipped('Test are not enabled in FileInputTest');
+        AbstractValidator::setDefaultTranslator();
     }
 
     public function testRetrievingValueFiltersTheValueOnlyAfterValidating(): void
@@ -111,11 +104,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $this->input->setFilterChain($this->createFilterChainMock([[$value, $newValue]]));
 
         self::assertEquals($value, $this->input->getRawValue());
-    }
-
-    public function testValidationOperatesOnFilteredValue(): void
-    {
-        self::markTestSkipped('Test is not enabled in FileInputTest');
     }
 
     public function testValidationOperatesBeforeFiltering(): void
@@ -236,41 +224,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         self::assertFalse($this->input->isValid());
     }
 
-    #[DataProvider('emptyValueProvider')]
-    public function testNotEmptyValidatorAddedWhenIsValidIsCalled(mixed $raw, mixed $filtered): void
-    {
-        self::markTestSkipped('Test is not enabled in FileInputTest');
-    }
-
-    #[DataProvider('emptyValueProvider')]
-    public function testRequiredNotEmptyValidatorNotAddedWhenOneExists(mixed $raw, mixed $filtered): void
-    {
-        self::markTestSkipped('Test is not enabled in FileInputTest');
-    }
-
-    /**
-     * @param null|string|string[] $fallbackValue
-     * @param null|string|string[] $originalValue
-     * @param null|string|string[] $expectedValue
-     */
-    public function testFallbackValueVsIsValidRules(
-        ?bool $required = null,
-        $fallbackValue = null,
-        $originalValue = null,
-        ?bool $isValid = null,
-        $expectedValue = null
-    ): void {
-        self::markTestSkipped('Input::setFallbackValue is not implemented on FileInput');
-    }
-
-    /** @param null|string|string[] $fallbackValue */
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet(
-        ?bool $required = null,
-        $fallbackValue = null
-    ): void {
-        self::markTestSkipped('Input::setFallbackValue is not implemented on FileInput');
-    }
-
     public function testIsEmptyFileNotArray(): void
     {
         $rawValue = 'file';
@@ -346,8 +299,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
 
-        self::assertEquals(
-            true,
+        self::assertTrue(
             $target->getAutoPrependUploadValidator(),
             'getAutoPrependUploadValidator() value not match'
         );
@@ -369,7 +321,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $isValid    = true;
 
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
-        $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame
         $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
@@ -484,12 +435,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
                 'filtered' => $fooUploadErrOk,
             ],
         ];
-    }
-
-    /** @return array<string, string> */
-    protected function getDummyValue(bool $raw = true)
-    {
-        return ['tmp_name' => 'bar'];
     }
 
     public function assertRequiredValidationErrorMessage(Input $input, string $message = ''): void
@@ -722,7 +667,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     public function testValueMayBeInjected(): void
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw = ['tmp_name' => 'bar'];
 
         $this->input->setValue($valueRaw);
         self::assertEquals($valueRaw, $this->input->getValue());
@@ -749,7 +694,13 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock(false, $filtered);
+        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
+        $notEmptyMock->expects(self::once())
+            ->method('isValid')
+            ->with($filtered, null)
+            ->willReturn(false);
+
+        $notEmptyMock->method('getMessages')->willReturn([]);
 
         $validatorChain->attach(self::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
@@ -949,9 +900,9 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     public function testMerge(): void
     {
-        $sourceRawValue = $this->getDummyValue();
+        $sourceRawValue = ['tmp_name' => 'bar'];
 
-        $source = $this->createInputInterfaceMock();
+        $source = $this->createMock(InputInterface::class);
         $source->method('getName')->willReturn('bazInput');
         $source->method('getErrorMessage')->willReturn('bazErrorMessage');
         $source->method('breakOnFailure')->willReturn(true);
@@ -1072,34 +1023,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: bool,
-     *     1: string,
-     *     2: string,
-     *     3: bool,
-     *     4: string
-     * }>
-     */
-    public static function fallbackValueVsIsValidProvider(): array
-    {
-        $required = true;
-        $isValid  = true;
-
-        $originalValue = 'fooValue';
-        $fallbackValue = 'fooFallbackValue';
-
-        // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore
-        return [
-            // Description                                    => [$inputIsRequired, $fallbackValue, $originalValue, $isValid, $expectedValue]
-            'Required: T, Input: Invalid. getValue: fallback' => [  $required, $fallbackValue, $originalValue, ! $isValid, $fallbackValue],
-            'Required: T, Input: Valid. getValue: original'   => [  $required, $fallbackValue, $originalValue,   $isValid, $originalValue],
-            'Required: F, Input: Invalid. getValue: fallback' => [! $required, $fallbackValue, $originalValue, ! $isValid, $fallbackValue],
-            'Required: F, Input: Valid. getValue: original'   => [! $required, $fallbackValue, $originalValue,   $isValid, $originalValue],
-        ];
-        // phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore
-    }
-
-    /**
-     * @psalm-return array<string, array{
      *     raw: bool|int|float|string|list<string>|object,
      *     filtered:  bool|int|float|string|list<string>|object
      * }>
@@ -1116,11 +1039,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         Assert::isArray($mixedValues);
 
         return array_merge($emptyValues, $mixedValues);
-    }
-
-    protected function createInputInterfaceMock(): InputInterface&MockObject
-    {
-        return $this->createMock(InputInterface::class);
     }
 
     /**
@@ -1141,9 +1059,8 @@ final class HttpServerFileInputDecoratorTest extends TestCase
     /**
      * @param list<list<mixed>> $valueMap
      * @param string[] $messages
-     * @return ValidatorChain&MockObject
      */
-    protected function createValidatorChainMock(array $valueMap = [], $messages = [])
+    protected function createValidatorChainMock(array $valueMap = [], $messages = []): ValidatorChain&MockObject
     {
         /** @var ValidatorChain&MockObject $validatorChain */
         $validatorChain = $this->createMock(ValidatorChain::class);
@@ -1171,23 +1088,5 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         array $messages = []
     ): ValidatorInterface {
         return new ValidatorStub($isValid, $value, $context, $messages);
-    }
-
-    protected function createNonEmptyValidatorMock(
-        bool $isValid,
-        mixed $value,
-        mixed $context = null
-    ): NotEmptyValidator&MockObject {
-        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
-        $notEmptyMock->expects(self::once())
-            ->method('isValid')
-            ->with($value, $context)
-            ->willReturn($isValid);
-
-        if ($isValid === false) {
-            $notEmptyMock->method('getMessages')->willReturn([]);
-        }
-
-        return $notEmptyMock;
     }
 }
