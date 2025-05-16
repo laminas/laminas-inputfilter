@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter\FileInput;
 
-use Iterator;
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\ToInt;
 use Laminas\Filter\ToNull;
@@ -25,14 +24,22 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Webmozart\Assert\Assert;
 
+use function array_diff_key;
+use function array_merge;
+use function count;
+use function iterator_to_array;
 use function json_encode;
+use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_NO_FILE;
 use const UPLOAD_ERR_OK;
 
+/**
+ * @psalm-suppress DeprecatedMethod
+ * @psalm-suppress MixedArgument
+ */
 #[CoversClass(HttpServerFileInputDecorator::class)]
 #[CoversClass(FileInput::class)]
 final class HttpServerFileInputDecoratorTest extends TestCase
@@ -194,7 +201,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $this->input->setAutoPrependUploadValidator(true);
         self::assertTrue($this->input->getAutoPrependUploadValidator());
         self::assertTrue($this->input->isRequired());
-        $this->input->setValue('');
+        $this->input->setValue([]);
 
         $expectedNormalizedValue = [
             'tmp_name' => '',
@@ -280,7 +287,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $validatorChain = $input->getValidatorChain();
         $pluginManager  = $validatorChain->getPluginManager();
         $pluginManager->setInvokableClass('fileuploadfile', TestAsset\FileUploadMock::class);
-        $input->setValue('');
+        $input->setValue([]);
 
         self::assertTrue($input->isValid());
     }
@@ -305,20 +312,23 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         );
     }
 
-    public static function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): iterable
+    /**
+     * @psalm-return array<string, array{
+     *     0: bool,
+     *     1: bool,
+     *     2: bool,
+     *     3: ValidatorInterface,
+     *     4: mixed,
+     *     5: bool,
+     *     6: string[]
+     * }>
+     */
+    public static function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): array
     {
-        $allValues = static::setValueProvider();
-
+        $allValues   = static::setValueProvider();
         $emptyValues = static::emptyValueProvider();
-        $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
-        Assert::isArray($emptyValues);
 
         $nonEmptyValues = array_diff_key($allValues, $emptyValues);
-
-        $isRequired = true;
-        $aEmpty     = true;
-        $cIEmpty    = true;
-        $isValid    = true;
 
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
 
@@ -330,37 +340,46 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $validatorValid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
         self::createValidatorMock(true, $value, $context);
 
-        // phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
         $dataTemplates = [
-            // Description => [$isRequired, $allowEmpty, $continueIfEmpty, $validator, [$values], $expectedIsValid, $expectedMessages]
-            'Required: T; AEmpty: T; CIEmpty: T; Validator: T'                   => [  $isRequired,   $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
-            'Required: T; AEmpty: T; CIEmpty: T; Validator: F'                   => [  $isRequired,   $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
-
-            'Required: T; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'     => [  $isRequired,   $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   ,   $isValid, []],
-            'Required: T; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty' => [  $isRequired,   $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
-            'Required: T; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty' => [  $isRequired,   $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
-
-            'Required: T; AEmpty: F; CIEmpty: T; Validator: T'                   => [  $isRequired, ! $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
-            'Required: T; AEmpty: F; CIEmpty: T; Validator: F'                   => [  $isRequired, ! $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
-
-            'Required: T; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty' => [  $isRequired, ! $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
-            'Required: T; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty' => [  $isRequired, ! $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
-
-            'Required: F; AEmpty: T; CIEmpty: T; Validator: T'                   => [! $isRequired,   $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
-            'Required: F; AEmpty: T; CIEmpty: T; Validator: F'                   => [! $isRequired,   $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
-
-            'Required: F; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'     => [! $isRequired,   $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   ,   $isValid, []],
-            'Required: F; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty' => [! $isRequired,   $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
-            'Required: F; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty' => [! $isRequired,   $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
-
-            'Required: F; AEmpty: F; CIEmpty: T; Validator: T'                   => [! $isRequired, ! $aEmpty,   $cIEmpty, $validatorValid  , $allValues     ,   $isValid, []],
-            'Required: F; AEmpty: F; CIEmpty: T; Validator: F'                   => [! $isRequired, ! $aEmpty,   $cIEmpty, $validatorInvalid, $allValues     , ! $isValid, $validatorMsg],
-
-            'Required: F; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty'     => [! $isRequired, ! $aEmpty, ! $cIEmpty, $validatorNotCall, $emptyValues   ,   $isValid, []],
-            'Required: F; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty' => [! $isRequired, ! $aEmpty, ! $cIEmpty, $validatorValid  , $nonEmptyValues,   $isValid, []],
-            'Required: F; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty' => [! $isRequired, ! $aEmpty, ! $cIEmpty, $validatorInvalid, $nonEmptyValues, ! $isValid, $validatorMsg],
+            'Required: T; AEmpty: T; CIEmpty: T; Validator: T'
+            => [true, true, true, $validatorValid, $allValues, true, []],
+            'Required: T; AEmpty: T; CIEmpty: T; Validator: F'
+            => [true, true, true, $validatorInvalid, $allValues, false, $validatorMsg],
+            'Required: T; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'
+            => [true, true, false, $validatorNotCall, $emptyValues, true, []],
+            'Required: T; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty'
+            => [true, true, false, $validatorValid, $nonEmptyValues, true, []],
+            'Required: T; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty'
+            => [true, true, false, $validatorInvalid, $nonEmptyValues, false, $validatorMsg],
+            'Required: T; AEmpty: F; CIEmpty: T; Validator: T'
+            => [true, false, true, $validatorValid, $allValues, true, []],
+            'Required: T; AEmpty: F; CIEmpty: T; Validator: F'
+            => [true, false, true, $validatorInvalid, $allValues, false, $validatorMsg],
+            'Required: T; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty'
+            => [true, false, false, $validatorValid, $nonEmptyValues, true, []],
+            'Required: T; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty'
+            => [true, false, false, $validatorInvalid, $nonEmptyValues, false, $validatorMsg],
+            'Required: F; AEmpty: T; CIEmpty: T; Validator: T'
+            => [false, true, true, $validatorValid, $allValues, true, []],
+            'Required: F; AEmpty: T; CIEmpty: T; Validator: F'
+            => [false, true, true, $validatorInvalid, $allValues, false, $validatorMsg],
+            'Required: F; AEmpty: T; CIEmpty: F; Validator: X, Value: Empty'
+            => [false, true, false, $validatorNotCall, $emptyValues, true, []],
+            'Required: F; AEmpty: T; CIEmpty: F; Validator: T, Value: Not Empty'
+            => [false, true, false, $validatorValid, $nonEmptyValues, true, []],
+            'Required: F; AEmpty: T; CIEmpty: F; Validator: F, Value: Not Empty'
+            => [false, true, false, $validatorInvalid, $nonEmptyValues, false, $validatorMsg],
+            'Required: F; AEmpty: F; CIEmpty: T; Validator: T'
+            => [false, false, true, $validatorValid, $allValues, true, []],
+            'Required: F; AEmpty: F; CIEmpty: T; Validator: F'
+            => [false, false, true, $validatorInvalid, $allValues, false, $validatorMsg],
+            'Required: F; AEmpty: F; CIEmpty: F; Validator: X, Value: Empty'
+            => [false, false, false, $validatorNotCall, $emptyValues, true, []],
+            'Required: F; AEmpty: F; CIEmpty: F; Validator: T, Value: Not Empty'
+            => [false, false, false, $validatorValid, $nonEmptyValues, true, []],
+            'Required: F; AEmpty: F; CIEmpty: F; Validator: F, Value: Not Empty'
+            => [false, false, false, $validatorInvalid, $nonEmptyValues, false, $validatorMsg],
         ];
-        // phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.DoubleArrow.SpacesBefore,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpacingAfterComma,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma,WebimpressCodingStandard.Arrays.Format.BlankLine,Generic.Formatting.MultipleStatementAlignment.NotSame
 
         // Expand data template matrix for each possible input value.
         // Description => [$isRequired, $allowEmpty, $continueIfEmpty, $validator, $value, $expectedIsValid]
@@ -369,6 +388,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
             foreach ($dataTemplate[4] as $valueDescription => $value) {
                 $tmpTemplate    = $dataTemplate;
                 $tmpTemplate[3] = $dataTemplate[3]($value['filtered']); // Get validator mock for each data set
+                /** @psalm-suppress MixedAssignment */
                 $tmpTemplate[4] = $value['raw']; // expand value
 
                 $dataSets[$dataTemplateDescription . ' / ' . $valueDescription] = $tmpTemplate;
@@ -378,7 +398,10 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         return $dataSets;
     }
 
-    public static function emptyValueProvider(): iterable
+    /**
+     * @psalm-return array<string, array{raw: string|array, filtered:  mixed}>
+     */
+    public static function emptyValueProvider(): array
     {
         return [
             'tmp_name' => [
@@ -412,27 +435,6 @@ final class HttpServerFileInputDecoratorTest extends TestCase
                     'tmp_name' => 'foo',
                     'error'    => UPLOAD_ERR_NO_FILE,
                 ],
-            ],
-        ];
-    }
-
-    public static function mixedValueProvider(): array
-    {
-        $fooUploadErrOk = [
-            'tmp_name' => 'foo',
-            'error'    => UPLOAD_ERR_OK,
-        ];
-
-        return [
-            'single' => [
-                'raw'      => $fooUploadErrOk,
-                'filtered' => $fooUploadErrOk,
-            ],
-            'multi'  => [
-                'raw'      => [
-                    $fooUploadErrOk,
-                ],
-                'filtered' => $fooUploadErrOk,
             ],
         ];
     }
@@ -531,7 +533,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
     }
 
     #[DataProvider('setValueProvider')]
-    public function testSetFallbackValue(mixed $raw, mixed $filtered): void
+    public function testSetFallbackValue(mixed $raw): void
     {
         $input = $this->input;
 
@@ -543,7 +545,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
     }
 
     #[DataProvider('setValueProvider')]
-    public function testClearFallbackValue(mixed $raw, mixed $filtered): void
+    public function testClearFallbackValue(mixed $raw): void
     {
         $input = $this->input;
         $input->setFallbackValue($raw);
@@ -649,7 +651,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
     }
 
     #[DataProvider('emptyValueProvider')]
-    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue(mixed $raw, mixed $filtered): void
+    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue(mixed $raw): void
     {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -741,7 +743,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
     }
 
     #[DataProvider('setValueProvider')]
-    public function testSetValuePutInputInTheDesiredState(mixed $raw, mixed $filtered): void
+    public function testSetValuePutInputInTheDesiredState(mixed $raw): void
     {
         $input = $this->input;
         self::assertFalse($input->hasValue(), 'Input should not have value by default');
@@ -751,7 +753,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
     }
 
     #[DataProvider('setValueProvider')]
-    public function testResetValueReturnsInputValueToDefaultValue(mixed $raw, mixed $filtered): void
+    public function testResetValueReturnsInputValueToDefaultValue(mixed $raw): void
     {
         $input         = $this->input;
         $originalInput = clone $input;
@@ -1004,7 +1006,10 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     public function testNotEmptyMessageIsTranslated(): void
     {
-        /** @var TranslatorInterface|MockObject $translator */
+        /**
+         * @psalm-suppress DeprecatedInterface
+         * @var TranslatorInterface&MockObject $translator
+         */
         $translator = $this->createMock(TranslatorInterface::class);
         AbstractValidator::setDefaultTranslator($translator);
         $notEmpty = new NotEmptyValidator();
@@ -1023,22 +1028,32 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     raw: bool|int|float|string|list<string>|object,
-     *     filtered:  bool|int|float|string|list<string>|object
+     *     raw: mixed,
+     *     filtered:  mixed
      * }>
      */
     public static function setValueProvider(): array
     {
-        $emptyValues = static::emptyValueProvider();
-        $mixedValues = static::mixedValueProvider();
+        $fooUploadErrOk = [
+            'tmp_name' => 'foo',
+            'error'    => UPLOAD_ERR_OK,
+        ];
 
-        $emptyValues = $emptyValues instanceof Iterator ? iterator_to_array($emptyValues) : $emptyValues;
-        $mixedValues = $mixedValues instanceof Iterator ? iterator_to_array($mixedValues) : $mixedValues;
-
-        Assert::isArray($emptyValues);
-        Assert::isArray($mixedValues);
-
-        return array_merge($emptyValues, $mixedValues);
+        return array_merge(
+            static::emptyValueProvider(),
+            [
+                'single' => [
+                    'raw'      => $fooUploadErrOk,
+                    'filtered' => $fooUploadErrOk,
+                ],
+                'multi'  => [
+                    'raw'      => [
+                        $fooUploadErrOk,
+                    ],
+                    'filtered' => $fooUploadErrOk,
+                ],
+            ]
+        );
     }
 
     /**
