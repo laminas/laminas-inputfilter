@@ -41,6 +41,7 @@ final class ConfigProvider
             ],
             'factories' => [
                 InputFilterPluginManager::class => InputFilterPluginManagerFactory::class,
+                Factory::class                  => ReflectionBasedAbstractFactory::class,
             ],
         ];
     }

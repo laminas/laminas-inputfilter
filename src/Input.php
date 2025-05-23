@@ -171,7 +171,10 @@ class Input implements
     public function getValue(): mixed
     {
         $filter = $this->getFilterChain();
-        return $filter->filter($this->value);
+        if ($filter) {
+            return $filter->filter($this->value);
+        }
+        return $this->value;
     }
 
     /**
@@ -220,10 +223,14 @@ class Input implements
         }
 
         $filterChain = $input->getFilterChain();
-        $this->getFilterChain()->merge($filterChain);
+        if ($filterChain) {
+            $this->getFilterChain()->merge($filterChain);
+        }
 
         $validatorChain = $input->getValidatorChain();
-        $this->getValidatorChain()->merge($validatorChain);
+        if ($validatorChain) {
+            $this->getValidatorChain()->merge($validatorChain);
+        }
         return $this;
     }
 
@@ -272,7 +279,10 @@ class Input implements
         }
 
         $validator = $this->getValidatorChain();
-        $result    = $validator->isValid($value, $context);
+        if ($validator) {
+            return true;
+        }
+        $result = $validator->isValid($value, $context);
         if (! $result && $this->hasFallback()) {
             $this->setValue($this->getFallbackValue());
             $result = true;
@@ -304,6 +314,9 @@ class Input implements
             return;
         }
         $chain = $this->getValidatorChain();
+        if (! $chain) {
+            return;
+        }
 
         // Check if NotEmpty validator is already in chain
         $validators = $chain->getValidators();
@@ -330,7 +343,10 @@ class Input implements
      */
     protected function prepareRequiredValidationFailureMessage(): ?string
     {
-        $chain    = $this->getValidatorChain();
+        $chain = $this->getValidatorChain();
+        if (! $chain) {
+            return null;
+        }
         $notEmpty = $chain->plugin(NotEmpty::class);
 
         foreach ($chain->getValidators() as $validator) {

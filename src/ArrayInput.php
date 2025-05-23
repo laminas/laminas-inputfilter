@@ -22,7 +22,7 @@ class ArrayInput extends Input
         $filter = $this->getFilterChain();
 
         return array_map(
-            static fn (mixed $value): mixed => $filter->filter($value),
+            static fn(mixed $value): mixed => $filter?->filter($value) ?? $value,
             $this->value,
         );
     }
@@ -71,6 +71,10 @@ class ArrayInput extends Input
             return false;
         }
 
+        if (! $validator) {
+            return true;
+        }
+
         foreach ($values as $value) {
             $empty = $value === null || $value === '' || $value === [];
             if ($empty && ! $this->isRequired() && ! $this->continueIfEmpty()) {
@@ -96,7 +100,10 @@ class ArrayInput extends Input
 
     private function prepareNotArrayFailureMessage(): ?string
     {
-        $chain   = $this->getValidatorChain();
+        $chain = $this->getValidatorChain();
+        if (! $chain) {
+            return null;
+        }
         $isArray = $chain->plugin(IsArray::class);
 
         foreach ($chain->getValidators() as $validator) {

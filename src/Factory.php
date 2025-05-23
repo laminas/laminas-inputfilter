@@ -6,10 +6,12 @@ namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterInterface;
+use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorPluginManager;
 use Traversable;
 
 use function assert;
@@ -37,13 +39,20 @@ class Factory
 
     protected ?InputFilterPluginManager $inputFilterManager = null;
 
-    public function __construct(?InputFilterPluginManager $inputFilterManager = null)
-    {
-        $this->defaultFilterChain    = new FilterChain();
-        $this->defaultValidatorChain = new ValidatorChain();
-
+    public function __construct(
+        ?FilterPluginManager $filterPluginManager = null,
+        ?ValidatorPluginManager $validatorPluginManager = null,
+        ?InputFilterPluginManager $inputFilterManager = null,
+    ) {
         if ($inputFilterManager) {
             $this->setInputFilterManager($inputFilterManager);
+        }
+        if ($filterPluginManager) {
+            $this->defaultFilterChain = new FilterChain($filterPluginManager);
+        }
+
+        if ($validatorPluginManager) {
+            $this->defaultValidatorChain = new ValidatorChain($validatorPluginManager);
         }
     }
 
@@ -107,13 +116,12 @@ class Factory
     public function setInputFilterManager(InputFilterPluginManager $inputFilterManager): static
     {
         $this->inputFilterManager = $inputFilterManager;
-        $inputFilterManager->populateFactoryPluginManagers($this);
         return $this;
     }
 
     public function getInputFilterManager(): InputFilterPluginManager
     {
-        if (null === $this->inputFilterManager) {
+        if (! isset($this->inputFilterManager)) {
             $this->inputFilterManager = new InputFilterPluginManager(new ServiceManager());
         }
 
@@ -177,9 +185,7 @@ class Factory
             ));
         }
 
-        $managerInstance
-            ? $this->injectFilterAndValidatorChainsWithPluginManagers($input)
-            : $this->injectDefaultFilterAndValidatorChains($input);
+        $this->injectDefaultFilterAndValidatorChains($input);
 
         /**
          * Even though the specification is typed, psalm cannot tell the individual item types inside the switch
@@ -239,7 +245,9 @@ class Factory
                             get_debug_type($value)
                         ));
                     }
-                    $this->populateFilters($input->getFilterChain(), $value);
+                    if ($input->getFilterChain()) {
+                        $this->populateFilters($input->getFilterChain(), $value);
+                    }
                     break;
                 case 'validators':
                     if ($value instanceof ValidatorChain) {
@@ -256,7 +264,9 @@ class Factory
                         ));
                     }
 
-                    $this->populateValidators($input->getValidatorChain(), $value);
+                    if ($input->getValidatorChain()) {
+                        $this->populateValidators($input->getValidatorChain(), $value);
+                    }
                     break;
                 default:
                     // ignore unknown keys
@@ -305,7 +315,6 @@ class Factory
         assert($inputFilter instanceof InputFilterInterface); // As opposed to InputInterface
 
         if ($inputFilter instanceof CollectionInputFilter) {
-            $inputFilter->setFactory($this);
             if (isset($inputFilterSpecification['input_filter'])) {
                 $inputFilter->setInputFilter($inputFilterSpecification['input_filter']);
             }
@@ -359,7 +368,7 @@ class Factory
     }
 
     /**
-     * @param  iterable<array-key, FilterInterface|callable|FilterSpecification> $filters
+     * @param iterable<array-key, FilterInterface|callable|FilterSpecification> $filters
      * @throws Exception\RuntimeException
      */
     protected function populateFilters(FilterChain $chain, iterable $filters): void
@@ -395,7 +404,7 @@ class Factory
     }
 
     /**
-     * @param  iterable<array-key, ValidatorInterface|ValidatorSpecification> $validators
+     * @param iterable<array-key, ValidatorInterface|ValidatorSpecification> $validators
      * @throws Exception\RuntimeException
      */
     protected function populateValidators(ValidatorChain $chain, iterable $validators): void
@@ -446,33 +455,6 @@ class Factory
 
         if ($this->defaultValidatorChain) {
             $input->setValidatorChain(clone $this->defaultValidatorChain);
-        }
-    }
-
-    /**
-     * Inject filter and validator chains with the plugin managers from
-     * the default chains, if present.
-     *
-     * This ensures custom plugins are made available to the input instance.
-     *
-     * @return void
-     */
-    protected function injectFilterAndValidatorChainsWithPluginManagers(InputInterface $input)
-    {
-        if ($this->defaultFilterChain) {
-            $filterChain = $input->getFilterChain();
-            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
-            $filterChain instanceof FilterChain
-                ? $filterChain->setPluginManager($this->defaultFilterChain->getPluginManager())
-                : $input->setFilterChain(clone $this->defaultFilterChain);
-        }
-
-        if ($this->defaultValidatorChain) {
-            $validatorChain = $input->getValidatorChain();
-            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
-            $validatorChain instanceof ValidatorChain
-                ? $validatorChain->setPluginManager($this->defaultValidatorChain->getPluginManager())
-                : $input->setValidatorChain(clone $this->defaultValidatorChain);
         }
     }
 }
