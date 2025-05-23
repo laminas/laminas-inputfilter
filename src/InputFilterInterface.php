@@ -96,12 +96,6 @@ interface InputFilterInterface extends Countable
      */
     public function setData($data);
 
-    /**
-     * Is the data set valid?
-     *
-     * @return bool
-     */
-    public function isValid();
 
     /**
      * Provide a list of one or more elements indicating the complete set to validate
@@ -176,13 +170,4 @@ interface InputFilterInterface extends Countable
      */
     public function getRawValues();
 
-    /**
-     * Return a list of validation failure messages
-     *
-     * Should return an associative array of named input/message list pairs.
-     * Pairs should only be returned for inputs that failed validation.
-     *
-     * @return array<array-key, array<array-key, string|array>>
-     */
-    public function getMessages();
 }

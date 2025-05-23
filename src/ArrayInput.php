@@ -13,25 +13,6 @@ use function is_array;
 /** @final */
 class ArrayInput extends Input
 {
-    /**
-     * @deprecated since 2.30.1 The default value should be null as in parent `Input`
-     *
-     * @var mixed
-     */
-    protected $value = [];
-
-    /**
-     * @deprecated since 2.30.1 Once the default value is null, this method is no longer required
-     *
-     * @inheritDoc
-     */
-    public function resetValue()
-    {
-        $this->value    = [];
-        $this->hasValue = false;
-        return $this;
-    }
-
     /** @inheritDoc */
     public function getValue()
     {
