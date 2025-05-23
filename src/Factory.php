@@ -248,7 +248,8 @@ class Factory
                     }
                     if (! is_array($value) && ! $value instanceof Traversable) {
                         throw new Exception\RuntimeException(sprintf(
-                            '%s expects the value associated with "validators" to be an array/Traversable of validators'
+                            '%s expects the value associated with "validators" to be '
+                            . 'an array/Traversable of validators'
                             . ' or validator specifications, or a ValidatorChain; received "%s"',
                             __METHOD__,
                             get_debug_type($value)
