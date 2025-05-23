@@ -47,7 +47,7 @@ use Laminas\Validator\ValidatorInterface; // phpcs:ignore
  *     required_message?: string,
  * }&array<array-key, InputSpecification>
  */
-interface InputFilterInterface extends Countable
+interface InputFilterInterface extends InputFilterInputInterface, Countable
 {
     public const VALIDATE_ALL = 'INPUT_FILTER_ALL';
 

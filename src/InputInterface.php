@@ -7,7 +7,7 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\Validator\ValidatorChain;
 
-interface InputInterface
+interface InputInterface extends InputFilterInputInterface
 {
     public function setAllowEmpty(bool $allowEmpty): static;
 
