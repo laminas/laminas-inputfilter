@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
- * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
- * @final
+ * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  */
 class ConfigProvider
 {
@@ -16,11 +16,11 @@ class ConfigProvider
      * Return configuration for this component.
      *
      * @return array{
-     *     dependencies: ServiceManagerConfigurationType,
-     *     input_filters: ServiceManagerConfigurationType,
+     *     dependencies: ServiceManagerConfiguration,
+     *     input_filters: ServiceManagerConfiguration,
      * }
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
             'dependencies'  => $this->getDependencyConfig(),
@@ -31,10 +31,9 @@ class ConfigProvider
     /**
      * Return dependency mappings for this component.
      *
-     * @psalm-return ServiceManagerConfigurationType
-     * @return array
+     * @return ServiceManagerConfiguration
      */
-    public function getDependencyConfig()
+    public function getDependencyConfig(): array
     {
         return [
             'aliases'   => [
@@ -52,9 +51,9 @@ class ConfigProvider
     /**
      * Get input filter configuration
      *
-     * @return ServiceManagerConfigurationType
+     * @return ServiceManagerConfiguration
      */
-    public function getInputFilterConfig()
+    public function getInputFilterConfig(): array
     {
         return [
             'abstract_factories' => [

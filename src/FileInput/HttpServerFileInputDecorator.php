@@ -33,11 +33,8 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
 {
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded
-     *
-     * @param mixed $rawValue
-     * @return bool
      */
-    public static function isEmptyFileDecorator($rawValue)
+    public static function isEmptyFileDecorator(mixed $rawValue): bool
     {
         if (! is_array($rawValue)) {
             return true;
@@ -58,10 +55,7 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         $value = $this->subject->value;
 
@@ -90,10 +84,9 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
     }
 
     /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
+     * @param mixed|null $context Extra "context" to provide the validator
      */
-    public function isValid($context = null)
+    public function isValid(mixed $context = null): bool
     {
         $rawValue  = $this->subject->getRawValue();
         $validator = $this->injectUploadValidator($this->subject->getValidatorChain());
@@ -141,10 +134,7 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
         return $this->subject->isValid;
     }
 
-    /**
-     * @return ValidatorChain
-     */
-    protected function injectUploadValidator(ValidatorChain $chain)
+    protected function injectUploadValidator(ValidatorChain $chain): ValidatorChain
     {
         if (! $this->subject->autoPrependUploadValidator) {
             return $chain;

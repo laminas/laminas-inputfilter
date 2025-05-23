@@ -15,15 +15,14 @@ use function is_array;
  */
 class InputFilter extends BaseInputFilter
 {
-    /** @var Factory|null */
-    protected $factory;
+    protected ?Factory $factory;
 
     /**
      * Set factory to use when adding inputs and filters by spec
      *
-     * @return InputFilter
+     * @return $this
      */
-    public function setFactory(Factory $factory)
+    public function setFactory(Factory $factory): static
     {
         $this->factory = $factory;
         return $this;
@@ -33,25 +32,20 @@ class InputFilter extends BaseInputFilter
      * Get factory to use when adding inputs and filters by spec
      *
      * Lazy-loads a Factory instance if none attached.
-     *
-     * @return Factory
      */
-    public function getFactory()
+    public function getFactory(): ?Factory
     {
-        if (null === $this->factory) {
-            $this->factory = new Factory();
-        }
         return $this->factory;
     }
 
     /**
      * Add an input to the input filter
      *
-     * @param  InputSpecification|Traversable|InputInterface|InputFilterInterface $input
-     * @param  array-key|null $name
+     * @param InputFilterInputInterface|iterable|InputSpecification $input
+     * @param array-key|null $name
      * @return $this
      */
-    public function add($input, $name = null)
+    public function add(InputFilterInputInterface|iterable $input, int|string|null $name = null): static
     {
         if (
             is_array($input)

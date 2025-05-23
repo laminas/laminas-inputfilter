@@ -6,15 +6,14 @@ namespace Laminas\InputFilter;
 
 trait InputFilterAwareTrait
 {
-    /** @var InputFilterInterface|null */
-    protected $inputFilter;
+    protected ?InputFilterInterface $inputFilter;
 
     /**
      * Set input filter
      *
-     * @return mixed
+     * @return $this
      */
-    public function setInputFilter(InputFilterInterface $inputFilter)
+    public function setInputFilter(InputFilterInterface $inputFilter): static
     {
         $this->inputFilter = $inputFilter;
 
@@ -23,10 +22,8 @@ trait InputFilterAwareTrait
 
     /**
      * Retrieve input filter
-     *
-     * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         return $this->inputFilter;
     }

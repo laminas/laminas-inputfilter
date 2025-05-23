@@ -27,54 +27,41 @@ use function is_array;
  */
 class FileInput extends Input
 {
-    /** @var bool */
-    protected $isValid = false;
+    protected bool $isValid = false;
 
-    /** @var bool */
-    protected $autoPrependUploadValidator = true;
+    protected bool $autoPrependUploadValidator = true;
 
     private ?FileInputDecoratorInterface $implementation = null;
 
-    /**
-     * @inheritDoc
-     * @param array|UploadedFileInterface $value
-     */
-    public function setValue($value)
+    public function setValue(mixed $value): static
     {
         $this->implementation = $this->createDecoratorImplementation($value);
         parent::setValue($value);
         return $this;
     }
 
-    /** @return $this */
-    public function resetValue()
+    public function resetValue(): static
     {
         $this->implementation = null;
         return parent::resetValue();
     }
 
     /**
-     * @param  bool $value Enable/Disable automatically prepending an Upload validator
+     * @param bool $value Enable/Disable automatically prepending an Upload validator
      * @return $this
      */
-    public function setAutoPrependUploadValidator($value)
+    public function setAutoPrependUploadValidator(bool $value): static
     {
         $this->autoPrependUploadValidator = $value;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getAutoPrependUploadValidator()
+    public function getAutoPrependUploadValidator(): bool
     {
         return $this->autoPrependUploadValidator;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         if ($this->implementation === null) {
             return $this->value;
@@ -84,11 +71,8 @@ class FileInput extends Input
 
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded
-     *
-     * @param mixed $rawValue
-     * @return bool
      */
-    public function isEmptyFile($rawValue)
+    public function isEmptyFile(mixed $rawValue): bool
     {
         if ($rawValue instanceof UploadedFileInterface) {
             return FileInput\PsrFileInputDecorator::isEmptyFileDecorator($rawValue);
@@ -106,10 +90,9 @@ class FileInput extends Input
     }
 
     /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
+     * @param mixed|null $context Extra "context" to provide the validator
      */
-    public function isValid($context = null)
+    public function isValid(mixed $context = null): bool
     {
         $rawValue        = $this->getRawValue();
         $hasValue        = $this->hasValue();
@@ -144,7 +127,7 @@ class FileInput extends Input
     /**
      * @return $this
      */
-    public function merge(InputInterface $input)
+    public function merge(InputInterface $input): static
     {
         parent::merge($input);
         if ($input instanceof FileInput) {
@@ -156,19 +139,13 @@ class FileInput extends Input
     /**
      * No-op, NotEmpty validator does not apply for FileInputs.
      * See also: BaseInputFilter::isValid()
-     *
-     * @return void
      */
-    protected function injectNotEmptyValidator()
+    protected function injectNotEmptyValidator(): void
     {
         $this->notEmptyValidator = true;
     }
 
-    /**
-     * @param mixed $value
-     * @return FileInputDecoratorInterface
-     */
-    private function createDecoratorImplementation($value)
+    private function createDecoratorImplementation(mixed $value): FileInputDecoratorInterface
     {
         // Single PSR-7 instance
         if ($value instanceof UploadedFileInterface) {

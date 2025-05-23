@@ -31,14 +31,11 @@ use function sprintf;
  */
 class Factory
 {
-    /** @var FilterChain|null */
-    protected $defaultFilterChain;
+    protected ?FilterChain $defaultFilterChain = null;
 
-    /** @var ValidatorChain|null */
-    protected $defaultValidatorChain;
+    protected ?ValidatorChain $defaultValidatorChain = null;
 
-    /** @var InputFilterPluginManager|null */
-    protected $inputFilterManager;
+    protected ?InputFilterPluginManager $inputFilterManager = null;
 
     public function __construct(?InputFilterPluginManager $inputFilterManager = null)
     {
@@ -55,7 +52,7 @@ class Factory
      *
      * @return $this
      */
-    public function setDefaultFilterChain(FilterChain $filterChain)
+    public function setDefaultFilterChain(FilterChain $filterChain): static
     {
         $this->defaultFilterChain = $filterChain;
         return $this;
@@ -63,20 +60,16 @@ class Factory
 
     /**
      * Get default filter chain, if any
-     *
-     * @return null|FilterChain
      */
-    public function getDefaultFilterChain()
+    public function getDefaultFilterChain(): ?FilterChain
     {
         return $this->defaultFilterChain;
     }
 
     /**
      * Clear the default filter chain (i.e., don't inject one into new inputs)
-     *
-     * @return void
      */
-    public function clearDefaultFilterChain()
+    public function clearDefaultFilterChain(): void
     {
         $this->defaultFilterChain = null;
     }
@@ -86,7 +79,7 @@ class Factory
      *
      * @return $this
      */
-    public function setDefaultValidatorChain(ValidatorChain $validatorChain)
+    public function setDefaultValidatorChain(ValidatorChain $validatorChain): static
     {
         $this->defaultValidatorChain = $validatorChain;
         return $this;
@@ -94,20 +87,16 @@ class Factory
 
     /**
      * Get default validator chain, if any
-     *
-     * @return null|ValidatorChain
      */
-    public function getDefaultValidatorChain()
+    public function getDefaultValidatorChain(): ?ValidatorChain
     {
         return $this->defaultValidatorChain;
     }
 
     /**
      * Clear the default validator chain (i.e., don't inject one into new inputs)
-     *
-     * @return void
      */
-    public function clearDefaultValidatorChain()
+    public function clearDefaultValidatorChain(): void
     {
         $this->defaultValidatorChain = null;
     }
@@ -115,17 +104,14 @@ class Factory
     /**
      * @return $this
      */
-    public function setInputFilterManager(InputFilterPluginManager $inputFilterManager)
+    public function setInputFilterManager(InputFilterPluginManager $inputFilterManager): static
     {
         $this->inputFilterManager = $inputFilterManager;
         $inputFilterManager->populateFactoryPluginManagers($this);
         return $this;
     }
 
-    /**
-     * @return InputFilterPluginManager
-     */
-    public function getInputFilterManager()
+    public function getInputFilterManager(): InputFilterPluginManager
     {
         if (null === $this->inputFilterManager) {
             $this->inputFilterManager = new InputFilterPluginManager(new ServiceManager());
@@ -137,12 +123,11 @@ class Factory
     /**
      * Factory for input objects
      *
-     * @param  InputSpecification|Traversable|InputProviderInterface $inputSpecification
-     * @throws Exception\InvalidArgumentException
+     * @param InputSpecification|Traversable|InputProviderInterface $inputSpecification
      * @throws Exception\RuntimeException
-     * @return InputInterface|InputFilterInterface
+     * @throws Exception\InvalidArgumentException
      */
-    public function createInput($inputSpecification)
+    public function createInput($inputSpecification): InputFilterInputInterface
     {
         if ($inputSpecification instanceof InputProviderInterface) {
             $inputSpecification = $inputSpecification->getInputSpecification();
@@ -286,11 +271,10 @@ class Factory
      *
      * phpcs:ignore Generic.Files.LineLength.TooLong, SlevomatCodingStandard.Commenting.DocCommentSpacing
      * @param InputFilterSpecification|CollectionSpecification|Traversable|InputFilterProviderInterface $inputFilterSpecification
-     * @return InputFilterInterface
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException
      */
-    public function createInputFilter($inputFilterSpecification)
+    public function createInputFilter($inputFilterSpecification): InputFilterInterface
     {
         if ($inputFilterSpecification instanceof InputFilterProviderInterface) {
             $inputFilterSpecification = $inputFilterSpecification->getInputFilterSpecification();
@@ -376,9 +360,8 @@ class Factory
     /**
      * @param  iterable<array-key, FilterInterface|callable|FilterSpecification> $filters
      * @throws Exception\RuntimeException
-     * @return void
      */
-    protected function populateFilters(FilterChain $chain, $filters)
+    protected function populateFilters(FilterChain $chain, iterable $filters): void
     {
         foreach ($filters as $filter) {
             /** @psalm-suppress RedundantConditionGivenDocblockType */
@@ -413,9 +396,8 @@ class Factory
     /**
      * @param  iterable<array-key, ValidatorInterface|ValidatorSpecification> $validators
      * @throws Exception\RuntimeException
-     * @return void
      */
-    protected function populateValidators(ValidatorChain $chain, $validators)
+    protected function populateValidators(ValidatorChain $chain, iterable $validators): void
     {
         foreach ($validators as $validator) {
             if ($validator instanceof ValidatorInterface) {
@@ -454,10 +436,8 @@ class Factory
      * Inject the default filter and validator chains into the input, if present.
      *
      * This ensures custom plugins are made available to the input instance.
-     *
-     * @return void
      */
-    protected function injectDefaultFilterAndValidatorChains(InputInterface $input)
+    protected function injectDefaultFilterAndValidatorChains(InputInterface $input): void
     {
         if ($this->defaultFilterChain) {
             $input->setFilterChain(clone $this->defaultFilterChain);

@@ -26,7 +26,7 @@ class OptionalInputFilter extends InputFilter
      * @return $this
      * @throws Exception\InvalidArgumentException
      */
-    public function setData($data)
+    public function setData(?iterable $data): InputFilterInterface
     {
         parent::setData($this->isEmpty($data) ? [] : $data);
 
@@ -38,7 +38,7 @@ class OptionalInputFilter extends InputFilter
      *
      * {@inheritDoc}
      */
-    public function isValid($context = null)
+    public function isValid(mixed $context = null): bool
     {
         if (! $this->isEmpty($this->data)) {
             return parent::isValid($context);
@@ -53,13 +53,13 @@ class OptionalInputFilter extends InputFilter
      *     which would likely cause failures later on in your program
      * Fallbacks for the inputs are not respected by design
      *
-     * @return TFilteredValues|null
+     * @return TFilteredValues
      */
-    public function getValues()
+    public function getValues(): array
     {
         return ! $this->isEmpty($this->data)
             ? parent::getValues()
-            : null;
+            : [];
     }
 
     private function isEmpty(iterable|null $data): bool

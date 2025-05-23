@@ -14,15 +14,13 @@ interface UnknownInputsCapableInterface
      * Is the data set has unknown input ?
      *
      * @throws Exception\RuntimeException
-     * @return bool
      */
-    public function hasUnknown();
+    public function hasUnknown(): bool;
 
     /**
      * Return the unknown input
      *
      * @throws Exception\RuntimeException
-     * @return array
      */
-    public function getUnknown();
+    public function getUnknown(): array;
 }

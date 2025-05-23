@@ -13,8 +13,7 @@ use function is_array;
 /** @final */
 class ArrayInput extends Input
 {
-    /** @inheritDoc */
-    public function getValue()
+    public function getValue(): mixed
     {
         if (! is_array($this->value)) {
             return $this->value;
@@ -28,8 +27,7 @@ class ArrayInput extends Input
         );
     }
 
-    /** @inheritDoc */
-    public function isValid($context = null)
+    public function isValid(mixed $context = null): bool
     {
         $hasValue    = $this->hasValue();
         $required    = $this->isRequired();
@@ -96,8 +94,7 @@ class ArrayInput extends Input
         return $result;
     }
 
-    /** @return array<string, string> */
-    private function prepareNotArrayFailureMessage(): array
+    private function prepareNotArrayFailureMessage(): ?string
     {
         $chain   = $this->getValidatorChain();
         $isArray = $chain->plugin(IsArray::class);

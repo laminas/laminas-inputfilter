@@ -15,20 +15,13 @@ interface FileInputDecoratorInterface
 {
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded
-     *
-     * @param mixed $rawValue
-     * @return bool
      */
-    public static function isEmptyFileDecorator($rawValue);
+    public static function isEmptyFileDecorator(mixed $rawValue): bool;
+
+    public function getValue(): mixed;
 
     /**
-     * @return mixed
+     * @param mixed|null $context Extra "context" to provide the validator
      */
-    public function getValue();
-
-    /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
-     */
-    public function isValid($context = null);
+    public function isValid(mixed $context = null): bool;
 }

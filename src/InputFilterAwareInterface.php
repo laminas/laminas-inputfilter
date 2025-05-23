@@ -9,14 +9,12 @@ interface InputFilterAwareInterface
     /**
      * Set input filter
      *
-     * @return InputFilterAwareInterface
+     * @return $this
      */
-    public function setInputFilter(InputFilterInterface $inputFilter);
+    public function setInputFilter(InputFilterInterface $inputFilter): static;
 
     /**
      * Retrieve input filter
-     *
-     * @return InputFilterInterface
      */
-    public function getInputFilter();
+    public function getInputFilter(): InputFilterInterface;
 }

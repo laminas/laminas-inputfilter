@@ -33,11 +33,8 @@ class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInter
 {
     /**
      * Checks if the raw input value is an empty file input eg: no file was uploaded
-     *
-     * @param UploadedFileInterface|array $rawValue
-     * @return bool
      */
-    public static function isEmptyFileDecorator($rawValue)
+    public static function isEmptyFileDecorator(mixed $rawValue): bool
     {
         if (is_array($rawValue)) {
             return self::isEmptyFileDecorator($rawValue[0]);
@@ -53,7 +50,7 @@ class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInter
     /**
      * @return UploadedFileInterface|UploadedFileInterface[]
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         $value = $this->subject->value;
 
@@ -79,10 +76,9 @@ class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInter
     }
 
     /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
+     * @param mixed|null $context Extra "context" to provide the validator
      */
-    public function isValid($context = null)
+    public function isValid(mixed $context = null): bool
     {
         $rawValue  = $this->subject->getRawValue();
         $validator = $this->injectUploadValidator($this->subject->getValidatorChain());
@@ -104,10 +100,7 @@ class PsrFileInputDecorator extends FileInput implements FileInputDecoratorInter
         return $this->subject->isValid;
     }
 
-    /**
-     * @return ValidatorChain
-     */
-    protected function injectUploadValidator(ValidatorChain $chain)
+    protected function injectUploadValidator(ValidatorChain $chain): ValidatorChain
     {
         if (! $this->subject->autoPrependUploadValidator) {
             return $chain;

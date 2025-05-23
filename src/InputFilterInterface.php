@@ -9,7 +9,6 @@ use Laminas\Filter\FilterChain; // phpcs:ignore
 use Laminas\Filter\FilterInterface; // phpcs:ignore
 use Laminas\Validator\ValidatorChain; // phpcs:ignore
 use Laminas\Validator\ValidatorInterface; // phpcs:ignore
-use Traversable;
 
 /**
  * @template TFilteredValues
@@ -55,47 +54,41 @@ interface InputFilterInterface extends Countable
     /**
      * Add an input to the input filter
      *
-     * @param  InputInterface|InputFilterInterface|InputSpecification|Traversable $input
+     * @param iterable|InputFilterInputInterface|InputSpecification $input
      *     Implementations MUST handle at least one of the specified types, and
      *     raise an exception for any they cannot process.
-     * @param  null|array-key $name Name used to retrieve this input
-     * @return InputFilterInterface
+     * @param array-key|null $name Name used to retrieve this input
      * @throws Exception\InvalidArgumentException If unable to handle the input type.
      */
-    public function add($input, $name = null);
+    public function add(InputFilterInputInterface|iterable $input, int|string|null $name = null): InputFilterInterface;
 
     /**
      * Retrieve a named input
      *
-     * @param  array-key $name
-     * @return InputInterface|InputFilterInterface
+     * @param array-key $name
      */
-    public function get($name);
+    public function get(int|string $name): InputFilterInputInterface;
 
     /**
      * Test if an input or input filter by the given name is attached
      *
-     * @param  array-key $name
-     * @return bool
+     * @param array-key $name
      */
-    public function has($name);
+    public function has(int|string $name): bool;
 
     /**
      * Remove a named input
      *
-     * @param  array-key $name
-     * @return InputFilterInterface
+     * @param array-key $name
      */
-    public function remove($name);
+    public function remove(int|string $name): InputFilterInterface;
 
     /**
      * Set data to use when validating and filtering
      *
-     * @param  iterable|null $data
-     * @return InputFilterInterface
+     * @param iterable|null $data
      */
-    public function setData($data);
-
+    public function setData(?iterable $data): InputFilterInterface;
 
     /**
      * Provide a list of one or more elements indicating the complete set to validate
@@ -108,10 +101,9 @@ interface InputFilterInterface extends Countable
      * Implementations should allow passing a single array value, or multiple arguments,
      * each specifying a single input.
      *
-     * @param  array-key|list<array-key> $name
-     * @return InputFilterInterface
+     * @param array-key|list<array-key> $name
      */
-    public function setValidationGroup($name);
+    public function setValidationGroup(array|int|string $name): InputFilterInterface;
 
     /**
      * Return a list of inputs that were invalid.
@@ -121,7 +113,7 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getInvalidInput();
+    public function getInvalidInput(): array;
 
     /**
      * Return a list of inputs that were valid.
@@ -131,15 +123,14 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getValidInput();
+    public function getValidInput(): array;
 
     /**
      * Retrieve a value from a named input
      *
-     * @param  array-key $name
-     * @return mixed
+     * @param array-key $name
      */
-    public function getValue($name);
+    public function getValue(int|string $name): mixed;
 
     /**
      * Return a list of filtered values
@@ -150,15 +141,14 @@ interface InputFilterInterface extends Countable
      * @return array<array-key, mixed>
      * @psalm-return TFilteredValues
      */
-    public function getValues();
+    public function getValues(): array;
 
     /**
      * Retrieve a raw (unfiltered) value from a named input
      *
-     * @param  array-key $name
-     * @return mixed
+     * @param array-key $name
      */
-    public function getRawValue($name);
+    public function getRawValue(int|string $name): mixed;
 
     /**
      * Return a list of unfiltered values
@@ -168,6 +158,5 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, mixed>
      */
-    public function getRawValues();
-
+    public function getRawValues(): array;
 }

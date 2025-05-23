@@ -10,9 +10,8 @@ namespace Laminas\InputFilter;
 interface ReplaceableInputInterface
 {
     /**
-     * @param InputInterface $input
-     * @param string $name
+     * @param array-key $name
      * @return self
      */
-    public function replace($input, $name);
+    public function replace(InputFilterInputInterface $input, string|int $name): ReplaceableInputInterface;
 }

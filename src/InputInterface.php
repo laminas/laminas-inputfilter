@@ -9,109 +9,37 @@ use Laminas\Validator\ValidatorChain;
 
 interface InputInterface
 {
-    /**
-     * @param bool $allowEmpty
-     * @return $this
-     */
-    public function setAllowEmpty($allowEmpty);
+    public function setAllowEmpty(bool $allowEmpty): static;
 
-    /**
-     * @param bool $breakOnFailure
-     * @return $this
-     */
-    public function setBreakOnFailure($breakOnFailure);
+    public function setBreakOnFailure(bool $breakOnFailure): static;
 
-    /**
-     * @param string|null $errorMessage
-     * @return $this
-     */
-    public function setErrorMessage($errorMessage);
+    public function setErrorMessage(?string $errorMessage): static;
 
-    /**
-     * @return $this
-     */
-    public function setFilterChain(FilterChain $filterChain);
+    public function setFilterChain(FilterChain $filterChain): static;
 
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name);
+    public function setName(string $name): static;
 
-    /**
-     * @param bool $required
-     * @return $this
-     */
-    public function setRequired($required);
+    public function setRequired(bool $required): static;
 
-    /**
-     * @return $this
-     */
-    public function setValidatorChain(ValidatorChain $validatorChain);
+    public function setValidatorChain(ValidatorChain $validatorChain): static;
 
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    public function setValue($value);
+    public function setValue(mixed $value): static;
 
-    /**
-     * @return $this
-     */
-    public function merge(InputInterface $input);
+    public function merge(InputInterface $input): InputInterface;
 
-    /**
-     * @return bool
-     */
-    public function allowEmpty();
+    public function allowEmpty(): bool;
 
-    /**
-     * @return bool
-     */
-    public function breakOnFailure();
+    public function breakOnFailure(): bool;
 
-    /**
-     * @return string|null
-     */
-    public function getErrorMessage();
+    public function getErrorMessage(): ?string;
 
-    /**
-     * @return FilterChain
-     */
-    public function getFilterChain();
+    public function getFilterChain(): ?FilterChain;
 
-    /**
-     * @return string
-     */
-    public function getName();
+    public function getName(): ?string;
 
-    /**
-     * @return mixed
-     */
-    public function getRawValue();
+    public function isRequired(): bool;
 
-    /**
-     * @return bool
-     */
-    public function isRequired();
+    public function getValidatorChain(): ?ValidatorChain;
 
-    /**
-     * @return ValidatorChain
-     */
-    public function getValidatorChain();
-
-    /**
-     * @return mixed
-     */
-    public function getValue();
-
-    /**
-     * @return bool
-     */
-    public function isValid();
-
-    /**
-     * @return array<array-key, string>
-     */
-    public function getMessages();
+    public function getValue(): mixed;
 }

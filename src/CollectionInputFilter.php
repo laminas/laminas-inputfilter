@@ -20,35 +20,31 @@ use function sprintf;
  */
 class CollectionInputFilter extends InputFilter
 {
-    /** @var bool */
-    protected $isRequired = false;
+    protected bool $isRequired = false;
 
-    /** @var null|int */
-    protected $count;
+    protected ?int $count;
 
     /** @var array<array-key, array> */
-    protected $collectionValues = [];
+    protected array $collectionValues = [];
 
     /** @var array<array-key, array> */
-    protected $collectionRawValues = [];
+    protected array $collectionRawValues = [];
 
     /** @var array<array-key, array<string, array<array-key, string>>> */
-    protected $collectionMessages = [];
+    protected array $collectionMessages = [];
 
-    /** @var BaseInputFilter|null */
-    protected $inputFilter;
+    protected ?BaseInputFilter $inputFilter;
 
-    /** @var NotEmpty|null */
-    protected $notEmptyValidator;
+    protected ?NotEmpty $notEmptyValidator;
 
     /**
      * Set the input filter to use when looping the data
      *
      * @param BaseInputFilter|InputFilterSpecification|Traversable $inputFilter
-     * @throws Exception\RuntimeException
      * @return CollectionInputFilter
+     * @throws Exception\RuntimeException
      */
-    public function setInputFilter($inputFilter)
+    public function setInputFilter(BaseInputFilter|iterable $inputFilter): static
     {
         if (is_iterable($inputFilter)) {
             $inputFilter = $this->getFactory()->createInputFilter($inputFilter);
@@ -71,10 +67,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Get the input filter used when looping the data
-     *
-     * @return BaseInputFilter
      */
-    public function getInputFilter()
+    public function getInputFilter(): BaseInputFilter
     {
         if (null === $this->inputFilter) {
             $this->inputFilter = new InputFilter();
@@ -86,10 +80,9 @@ class CollectionInputFilter extends InputFilter
     /**
      * Set if the collection can be empty
      *
-     * @param bool $isRequired
      * @return $this
      */
-    public function setIsRequired($isRequired)
+    public function setIsRequired(bool $isRequired): static
     {
         $this->isRequired = $isRequired;
 
@@ -98,10 +91,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Get if collection can be empty
-     *
-     * @return bool
      */
-    public function getIsRequired()
+    public function getIsRequired(): bool
     {
         return $this->isRequired;
     }
@@ -109,10 +100,9 @@ class CollectionInputFilter extends InputFilter
     /**
      * Set the count of data to validate
      *
-     * @param int $count
      * @return CollectionInputFilter
      */
-    public function setCount($count)
+    public function setCount(int $count): static
     {
         $this->count = $count > 0 ? $count : 0;
 
@@ -121,10 +111,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Get the count of data to validate, use the count of data by default
-     *
-     * @return int
      */
-    public function getCount()
+    public function getCount(): ?int
     {
         if (null === $this->count) {
             return $this->data !== null ? count($this->data) : 0;
@@ -137,7 +125,7 @@ class CollectionInputFilter extends InputFilter
      * @param iterable|null $data
      * @return $this
      */
-    public function setData($data)
+    public function setData(?iterable $data): InputFilterInterface
     {
         /** @psalm-suppress DocblockTypeContradiction, RedundantConditionGivenDocblockType */
         if (! is_array($data) && ! $data instanceof Traversable) {
@@ -175,10 +163,8 @@ class CollectionInputFilter extends InputFilter
      *
      * This validator will be used to produce a validation failure message in
      * cases where the collection is empty but required.
-     *
-     * @return NotEmpty
      */
-    public function getNotEmptyValidator()
+    public function getNotEmptyValidator(): NotEmpty
     {
         if ($this->notEmptyValidator === null) {
             $this->notEmptyValidator = new NotEmpty();
@@ -195,7 +181,7 @@ class CollectionInputFilter extends InputFilter
      *
      * @return $this
      */
-    public function setNotEmptyValidator(NotEmpty $notEmptyValidator)
+    public function setNotEmptyValidator(NotEmpty $notEmptyValidator): static
     {
         $this->notEmptyValidator = $notEmptyValidator;
 
@@ -205,7 +191,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * @inheritDoc
      */
-    public function isValid($context = null)
+    public function isValid(mixed $context = null): bool
     {
         $this->collectionMessages = [];
         $inputFilter              = $this->getInputFilter();
@@ -253,10 +239,9 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @param string|array<array-key, list<string>> $name
      * @return $this
      */
-    public function setValidationGroup($name)
+    public function setValidationGroup(array|int|string $name): static
     {
         if ($name === self::VALIDATE_ALL) {
             $name = null;
@@ -270,7 +255,7 @@ class CollectionInputFilter extends InputFilter
      * @return array<array-key, array>
      * @psalm-return TFilteredValues
      */
-    public function getValues()
+    public function getValues(): array
     {
         return $this->collectionValues;
     }
@@ -278,7 +263,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * @return array<array-key, array>
      */
-    public function getRawValues()
+    public function getRawValues(): array
     {
         return $this->collectionRawValues;
     }
@@ -288,7 +273,7 @@ class CollectionInputFilter extends InputFilter
      *
      * @return array[]
      */
-    public function clearValues()
+    public function clearValues(): array
     {
         return $this->collectionValues = [];
     }
@@ -298,7 +283,7 @@ class CollectionInputFilter extends InputFilter
      *
      * @return array[]
      */
-    public function clearRawValues()
+    public function clearRawValues(): array
     {
         return $this->collectionRawValues = [];
     }
@@ -306,7 +291,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * @return array<array-key, array<string, array<array-key, string>>>
      */
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->collectionMessages;
     }
@@ -314,7 +299,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * {@inheritdoc}
      */
-    public function getUnknown()
+    public function getUnknown(): array
     {
         if ($this->data === null) {
             throw new Exception\RuntimeException(sprintf(
@@ -337,10 +322,7 @@ class CollectionInputFilter extends InputFilter
         return $unknownInputs;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    protected function prepareRequiredValidationFailureMessage()
+    protected function prepareRequiredValidationFailureMessage(): ?string
     {
         $notEmptyValidator = $this->getNotEmptyValidator();
         /** @var array<string, string> $templates */
