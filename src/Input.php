@@ -7,11 +7,9 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 
 use function class_exists;
-use function is_array;
 
 class Input implements
     InputInterface,
@@ -234,10 +232,6 @@ class Input implements
      */
     public function isValid(mixed $context = null): bool
     {
-        if (is_array($this->errorMessage)) {
-            $this->errorMessage = null;
-        }
-
         $value           = $this->getValue();
         $hasValue        = $this->hasValue();
         $empty           = $value === null || $value === '' || $value === [];
@@ -346,17 +340,6 @@ class Input implements
             }
         }
 
-        /** @psalm-var array<string, string> $templates */
-        $templates  = $notEmpty->getOption('messageTemplates');
-        $message    = $templates[NotEmpty::IS_EMPTY];
-        $translator = $notEmpty->getTranslator();
-
-        if ($translator instanceof TranslatorInterface) {
-            $message = $translator->translate($message, $notEmpty->getTranslatorTextDomain());
-        }
-
-        return [
-            NotEmpty::IS_EMPTY => $message,
-        ];
+        return $notEmpty->getMessages()[NotEmpty::IS_EMPTY] ?? null;
     }
 }

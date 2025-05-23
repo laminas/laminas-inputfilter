@@ -325,15 +325,7 @@ class CollectionInputFilter extends InputFilter
     protected function prepareRequiredValidationFailureMessage(): ?string
     {
         $notEmptyValidator = $this->getNotEmptyValidator();
-        /** @var array<string, string> $templates */
-        $templates  = $notEmptyValidator->getOption('messageTemplates');
-        $message    = $templates[NotEmpty::IS_EMPTY];
-        $translator = $notEmptyValidator->getTranslator();
 
-        return [
-            NotEmpty::IS_EMPTY => $translator
-                ? $translator->translate($message, $notEmptyValidator->getTranslatorTextDomain())
-                : $message,
-        ];
+        return $notEmptyValidator->getMessages()[NotEmpty::IS_EMPTY] ?? null;
     }
 }

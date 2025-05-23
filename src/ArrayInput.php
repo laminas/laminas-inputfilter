@@ -109,6 +109,6 @@ class ArrayInput extends Input
         $result = $isArray->isValid($this->getValue());
         assert($result === false);
 
-        return $isArray->getMessages();
+        return $isArray->getMessages()[IsArray::NOT_ARRAY] ?? null;
     }
 }
