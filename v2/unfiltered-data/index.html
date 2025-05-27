@@ -15,10 +15,10 @@
     <meta name="docsearch:language" content="en">
     <meta name="docsearch:component" content="laminas-inputfilter">
 
-    
+    <link rel="canonical" href="https://docs.laminas.dev/laminas-inputfilter/v2/unfiltered-data/">
     <link rel="shortcut icon" href="https://docs.laminas.dev/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>laminas-inputfilter - Laminas Docs</title>
+    <title>Unfiltered Data - laminas-inputfilter - Laminas Docs</title>
 
     <link rel="stylesheet" href="https://docs.laminas.dev/css/styles.css">
     
@@ -113,7 +113,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="../.">
+            <a href="../..">
                 
                 
     laminas-inputfilter
@@ -133,7 +133,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -147,7 +147,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/installation/" class="subnavigation__link">Installation</a>
+                                <a href="../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -166,25 +166,25 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/specs/" class="subnavigation__link">Specifications</a>
+        <a href="../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/file-input/" class="subnavigation__link">File Upload Input</a>
+        <a href="../file-input/" class="subnavigation__link">File Upload Input</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+        <a href="../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
     </li>
 
                                     
                                         
-    <li class="subnavigation__list-item ">
-        <a href="../v2/unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Unfiltered Data</a>
     </li>
 
                                     
@@ -207,13 +207,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
+        <a href="../application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
+        <a href="../application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
     </li>
 
                                     
@@ -236,13 +236,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
+        <a href="../cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
+        <a href="../cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
     </li>
 
                                     
@@ -318,21 +318,132 @@
                 
                 
                     
-                
+    
+
+    
+    
 
                 
 
-<h1 class="content__title">404</h1>
+                
+                    <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        
+            <li class="breadcrumb-item"><a href="https://docs.laminas.dev/">Overview</a></li>
+            <li class="breadcrumb-item"><a href="https://docs.laminas.dev/components/">Components</a></li>
+
+            
+                <li class="breadcrumb-item">
+                    <a href="../..">
+                        
+    laminas-inputfilter
+
+                    </a>
+                </li>
+
+                
+                    
+                        
+                        
+                            <li class="breadcrumb-item">Reference</li>
+                        
+                    
+                
+
+                <li class="breadcrumb-item active" aria-current="page">Unfiltered Data</li>
+            
+        
+    </ol>
+</nav>
+
+
+
+
+
+
+    
+    
+        <h2 class="chapter__headline">Reference</h2>
+    
+
+    <h1 id="unfiltered-data">Unfiltered Data</h1>
 <blockquote>
-    <h3>Something went wrong!</h3>
-    <p>
-        We're sorry, but the page you are looking for does not exist.
-    </p>
+<p>Available since version 2.10.0</p>
 </blockquote>
+<p>On input filters, there are several methods for retrieving the data:</p>
+<ul>
+<li><code>getValues()</code> will return all known values after filtering them.</li>
+<li><code>getRawValues()</code> will return all known values with no filtering applied.</li>
+<li><code>getUnknown()</code> returns the set of all unknown values (values with no
+  corresponding input or input filter).</li>
+</ul>
+<p>At times, particularly when working with collections, you may want access to the
+complete set of original data provided to the input filter. This can be
+accomplished by merging the sets returned by <code>getRawValues()</code> and
+<code>getUnknown()</code> when working with normal input filters, but this approach breaks
+down when working with collections.</p>
+<p>Version 2.10.0 introduces a new interface, <code>Laminas\InputFilter\UnfilteredDataInterface</code>,
+for dealing with this situation. <code>Laminas\InputFilter\BaseInputFilter</code>, which
+forms the parent class for all shipped input filter implementations, implements
+the interface, which consists of the following methods:</p>
+<pre class="highlight"><code class="language-php">interface UnfilteredDataInterface
+{
+    /**
+     * @return array|object
+     */
+    public function getUnfilteredData()
+    {
+        return $this-&gt;unfilteredData;
+    }
 
-<a href="../." class="btn btn-default" role="button">Go to homepage</a>
+    /**
+     * @param array|object $data
+     * @return $this
+     */
+    public function setUnfilteredData($data)
+    {
+        $this-&gt;unfilteredData = $data;
+        return $this;
+    }
+}</code></pre>
+<p>The <code>setUnfilteredData()</code> method is called by <code>setData()</code> with the full <code>$data</code>
+provided to that method, ensuring that <code>getUnfilteredData()</code> will always provide
+the original data with which the input filter was initialized, with no filtering
+applied.</p>
 
 
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../optional-input-filters/">
+                    <small class="page-nav__label">Previous</small>
+                    <i class="fa fa-chevron-left"></i>
+                    Optional Input Filters
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../application-integration/usage-in-a-laminas-mvc-application/">
+                    <small class="page-nav__label">Next</small>
+                    Usage in a laminas-mvc application
+                    <i class="fa fa-chevron-right"></i>
+                </a>
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+                
             </div>
             <div class="col-md-3 col-sm-12 sidebar">
                 <div class="donation-banner">
@@ -355,7 +466,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="../.">
+            <a href="../..">
                 
                 
     laminas-inputfilter
@@ -375,7 +486,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -389,7 +500,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/installation/" class="subnavigation__link">Installation</a>
+                                <a href="../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -408,25 +519,25 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/specs/" class="subnavigation__link">Specifications</a>
+        <a href="../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/file-input/" class="subnavigation__link">File Upload Input</a>
+        <a href="../file-input/" class="subnavigation__link">File Upload Input</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+        <a href="../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
     </li>
 
                                     
                                         
-    <li class="subnavigation__list-item ">
-        <a href="../v2/unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Unfiltered Data</a>
     </li>
 
                                     
@@ -449,13 +560,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
+        <a href="../application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
+        <a href="../application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
     </li>
 
                                     
@@ -478,13 +589,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
+        <a href="../cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
+        <a href="../cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
     </li>
 
                                     
@@ -580,13 +691,13 @@
 </footer>
 
     <script>
-        let base_url = '..',
+        let base_url = '../..',
             project  = "components",
             siteName = 'laminas-inputfilter';
     </script>
     <script src="https://docs.laminas.dev/js/scripts.js"></script>
     
-        <script src="../search/main.js"></script>
+        <script src="../../search/main.js"></script>
     
 
     

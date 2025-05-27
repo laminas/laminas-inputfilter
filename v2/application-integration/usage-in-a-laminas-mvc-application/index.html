@@ -15,10 +15,10 @@
     <meta name="docsearch:language" content="en">
     <meta name="docsearch:component" content="laminas-inputfilter">
 
-    
+    <link rel="canonical" href="https://docs.laminas.dev/laminas-inputfilter/v2/application-integration/usage-in-a-laminas-mvc-application/">
     <link rel="shortcut icon" href="https://docs.laminas.dev/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>laminas-inputfilter - Laminas Docs</title>
+    <title>Usage in a laminas-mvc application - laminas-inputfilter - Laminas Docs</title>
 
     <link rel="stylesheet" href="https://docs.laminas.dev/css/styles.css">
     
@@ -113,7 +113,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="../.">
+            <a href="../../..">
                 
                 
     laminas-inputfilter
@@ -133,7 +133,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../../intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -147,7 +147,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/installation/" class="subnavigation__link">Installation</a>
+                                <a href="../../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -166,25 +166,25 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/specs/" class="subnavigation__link">Specifications</a>
+        <a href="../../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/file-input/" class="subnavigation__link">File Upload Input</a>
+        <a href="../../file-input/" class="subnavigation__link">File Upload Input</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+        <a href="../../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
+        <a href="../../unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
     </li>
 
                                     
@@ -206,14 +206,14 @@
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Usage in a laminas-mvc application</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
+        <a href="../usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
     </li>
 
                                     
@@ -236,13 +236,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
+        <a href="../../cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
+        <a href="../../cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
     </li>
 
                                     
@@ -318,21 +318,203 @@
                 
                 
                     
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+                
+                    <li class="toc__entry">
+                        <a href="#create-input-filter" class="toc__link nav-link">Create Input Filter</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#create-controller" class="toc__link nav-link">Create Controller</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#register-input-filter-and-controller" class="toc__link nav-link">Register Input Filter and Controller</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
                 
 
                 
+                    <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        
+            <li class="breadcrumb-item"><a href="https://docs.laminas.dev/">Overview</a></li>
+            <li class="breadcrumb-item"><a href="https://docs.laminas.dev/components/">Components</a></li>
 
-<h1 class="content__title">404</h1>
-<blockquote>
-    <h3>Something went wrong!</h3>
-    <p>
-        We're sorry, but the page you are looking for does not exist.
-    </p>
-</blockquote>
+            
+                <li class="breadcrumb-item">
+                    <a href="../../..">
+                        
+    laminas-inputfilter
 
-<a href="../." class="btn btn-default" role="button">Go to homepage</a>
+                    </a>
+                </li>
+
+                
+                    
+                        
+                        
+                            <li class="breadcrumb-item">Application Integration</li>
+                        
+                    
+                
+
+                <li class="breadcrumb-item active" aria-current="page">Usage in a laminas-mvc application</li>
+            
+        
+    </ol>
+</nav>
 
 
+
+
+
+
+    
+    
+        <h2 class="chapter__headline">Application Integration</h2>
+    
+
+    <h1 id="usage-in-a-laminas-mvc-application">Usage in a laminas-mvc Application</h1>
+<p>The following example shows <em>one</em> potential use case of laminas-inputfilter within a laminas-mvc based application.
+The example uses a module, a controller and the input filter plugin manager.</p>
+<p>The example is based on the <a href="https://docs.laminas.dev/tutorials/getting-started/overview/">tutorial application</a> which builds an album inventory system.</p>
+<p>Before starting, make sure laminas-inputfilter is <a href="../../installation/">installed and configured</a>.</p>
+<h2 id="create-input-filter">Create Input Filter</h2>
+<p><a href="../../intro/">Create an input filter as separate class</a> using the <code>init</code> method, e.g. <code>module/Album/src/InputFilter/QueryInputFilter.php</code>:</p>
+<pre class="highlight"><code class="language-php">namespace Album\InputFilter;
+
+use Laminas\Filter\ToInt;
+use Laminas\I18n\Validator\IsInt;
+use Laminas\InputFilter\InputFilter;
+
+final class QueryInputFilter extends InputFilter
+{
+    public function init(): void
+    {
+        // Page
+        $this-&gt;add(
+            [
+                'name'              =&gt; 'page',
+                'allow_empty'       =&gt; true,
+                'validators'        =&gt; [
+                    [
+                        'name' =&gt; IsInt::class,                        
+                    ],                    
+                ],
+                'filters'           =&gt; [
+                    [
+                        'name' =&gt; ToInt::class,
+                    ],
+                ],
+                'fallback_value'    =&gt; 1,
+            ]
+        );
+
+        // …
+    }
+}</code></pre>
+<h2 id="create-controller">Create Controller</h2>
+<p><a href="https://docs.laminas.dev/laminas-mvc/quick-start/#create-a-controller">Create a controller class</a> and inject the input filter plugin manager via the constructor, e.g. <code>module/Album/Controller/AlbumController.php</code>:</p>
+<pre class="highlight"><code class="language-php">namespace Album\Controller;
+
+use Album\InputFilter\QueryInputFilter;
+use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\Mvc\Controller\AbstractActionController;
+
+use function assert;
+
+final class AlbumController extends AbstractActionController
+{
+    public function __construct(
+        public readonly InputFilterPluginManager $inputFilterPluginManager
+    ) {}
+
+    public function indexAction()
+    {
+        $inputFilter = $this-&gt;inputFilterPluginManager-&gt;get(QueryInputFilter::class);
+        assert($inputFilter instanceof QueryInputFilter);
+
+        $inputFilter-&gt;setData($this-&gt;getRequest()-&gt;getQuery());
+        $inputFilter-&gt;isValid();
+        $filteredParams = $inputFilter-&gt;getValues();
+
+        // …
+    }
+}</code></pre>
+<div class="admonition info">
+<p class="admonition-title">Instantiating the Input Filter</p>
+<p>The input filter plugin manager (<code>Laminas\InputFilter\InputFilterPluginManager</code>) is used instead of directly instantiating the input filter to ensure to get the filter and validator plugin managers injected.
+This allows usage of any filters and validators registered with their respective plugin managers.</p>
+<p>Additionally, the input filter plugin manager calls the <code>init</code> method <em>after</em> instantiating the input filter, ensuring all dependencies are fully injected first.</p>
+</div>
+<h2 id="register-input-filter-and-controller">Register Input Filter and Controller</h2>
+<p>If no separate factory is required for the input filter, then the input filter plugin manager will be instantiating the input filter class without prior registration. Otherwise, the input filter must be registered.</p>
+<p>To <a href="https://docs.laminas.dev/laminas-mvc/quick-start/#create-a-route">register the controller</a> for the application, extend the configuration of the module.
+Add the following lines to the module configuration file, e.g. <code>module/Album/config/module.config.php</code>:</p>
+<!-- markdownlint-disable MD033 -->
+<pre class="language-php" data-line="8-9"><code>
+namespace Album;
+
+use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
+
+return [
+    'controllers' => [
+        'factories' => [
+            // Add this line
+            Controller\AlbumController::class => ReflectionBasedAbstractFactory::class,
+        ],
+    ],
+    // …
+];
+</code></pre>
+<!-- markdownlint-enable MD033 -->
+
+<p>The example uses the <a href="https://docs.laminas.dev/laminas-servicemanager/reflection-abstract-factory/">reflection factory from laminas-servicemanager</a> to resolve the constructor dependencies for the controller class.</p>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../../unfiltered-data/">
+                    <small class="page-nav__label">Previous</small>
+                    <i class="fa fa-chevron-left"></i>
+                    Unfiltered Data
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../usage-in-a-mezzio-application/">
+                    <small class="page-nav__label">Next</small>
+                    Usage in a mezzio application
+                    <i class="fa fa-chevron-right"></i>
+                </a>
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+                
             </div>
             <div class="col-md-3 col-sm-12 sidebar">
                 <div class="donation-banner">
@@ -355,7 +537,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="../.">
+            <a href="../../..">
                 
                 
     laminas-inputfilter
@@ -375,7 +557,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/intro/" class="subnavigation__link">Introduction</a>
+                                <a href="../../intro/" class="subnavigation__link">Introduction</a>
                             </li>
                         
                     
@@ -389,7 +571,7 @@
                     
                         
                             <li class="subnavigation__list-item ">
-                                <a href="../v2/installation/" class="subnavigation__link">Installation</a>
+                                <a href="../../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -408,25 +590,25 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/specs/" class="subnavigation__link">Specifications</a>
+        <a href="../../specs/" class="subnavigation__link">Specifications</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/file-input/" class="subnavigation__link">File Upload Input</a>
+        <a href="../../file-input/" class="subnavigation__link">File Upload Input</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
+        <a href="../../optional-input-filters/" class="subnavigation__link">Optional Input Filters</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
+        <a href="../../unfiltered-data/" class="subnavigation__link">Unfiltered Data</a>
     </li>
 
                                     
@@ -448,14 +630,14 @@
                                 <ul class="subnavigation__list">
                                     
                                         
-    <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-laminas-mvc-application/" class="subnavigation__link">Usage in a laminas-mvc application</a>
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Usage in a laminas-mvc application</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/application-integration/usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
+        <a href="../usage-in-a-mezzio-application/" class="subnavigation__link">Usage in a mezzio application</a>
     </li>
 
                                     
@@ -478,13 +660,13 @@
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
+        <a href="../../cookbook/input-filter-in-forms/" class="subnavigation__link">Using Input Filters in Forms of laminas-form</a>
     </li>
 
                                     
                                         
     <li class="subnavigation__list-item ">
-        <a href="../v2/cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
+        <a href="../../cookbook/enhanced-type-inference/" class="subnavigation__link">Using Static Analysis tools with laminas-inputfilter</a>
     </li>
 
                                     
@@ -580,13 +762,13 @@
 </footer>
 
     <script>
-        let base_url = '..',
+        let base_url = '../../..',
             project  = "components",
             siteName = 'laminas-inputfilter';
     </script>
     <script src="https://docs.laminas.dev/js/scripts.js"></script>
     
-        <script src="../search/main.js"></script>
+        <script src="../../../search/main.js"></script>
     
 
     
