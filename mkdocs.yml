@@ -30,6 +30,8 @@ nav:
       - Cookbook:
           - "Using Input Filters in Forms of laminas-form": v3/cookbook/input-filter-in-forms.md
           - "Using Static Analysis tools with laminas-inputfilter": v3/cookbook/enhanced-type-inference.md
+      - Migration:
+          - "Migration from Version 2 to 3": v3/migration/v2-to-v3.md
 site_name: laminas-inputfilter
 site_description: 'Normalize and validate input sets from the web, APIs, the CLI, and more, including files.'
 repo_url: 'https://github.com/laminas/laminas-inputfilter'
