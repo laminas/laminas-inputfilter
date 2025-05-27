@@ -2,19 +2,34 @@ docs_dir: docs/book
 site_dir: docs/html
 nav:
     - Home: index.md
-    - Introduction: v2/intro.md
-    - Installation: v2/installation.md
-    - Reference:
-      - Specifications: v2/specs.md
-      - "File Upload Input": v2/file-input.md
-      - "Optional Input Filters": v2/optional-input-filters.md
-      - "Unfiltered Data": v2/unfiltered-data.md
-    - "Application Integration":
-        - "Usage in a laminas-mvc application": v2/application-integration/usage-in-a-laminas-mvc-application.md
-        - "Usage in a mezzio application": v2/application-integration/usage-in-a-mezzio-application.md
-    - Cookbook:
-        - "Using Input Filters in Forms of laminas-form": v2/cookbook/input-filter-in-forms.md
-        - "Using Static Analysis tools with laminas-inputfilter": v2/cookbook/enhanced-type-inference.md
+    - v2:
+      - Introduction: v2/intro.md
+      - Installation: v2/installation.md
+      - Reference:
+        - Specifications: v2/specs.md
+        - "File Upload Input": v2/file-input.md
+        - "Optional Input Filters": v2/optional-input-filters.md
+        - "Unfiltered Data": v2/unfiltered-data.md
+      - "Application Integration":
+          - "Usage in a laminas-mvc application": v2/application-integration/usage-in-a-laminas-mvc-application.md
+          - "Usage in a mezzio application": v2/application-integration/usage-in-a-mezzio-application.md
+      - Cookbook:
+          - "Using Input Filters in Forms of laminas-form": v2/cookbook/input-filter-in-forms.md
+          - "Using Static Analysis tools with laminas-inputfilter": v2/cookbook/enhanced-type-inference.md
+    - v3:
+      - Introduction: v3/intro.md
+      - Installation: v3/installation.md
+      - Reference:
+        - Specifications: v3/specs.md
+        - "File Upload Input": v3/file-input.md
+        - "Optional Input Filters": v3/optional-input-filters.md
+        - "Unfiltered Data": v3/unfiltered-data.md
+      - "Application Integration":
+          - "Usage in a laminas-mvc application": v3/application-integration/usage-in-a-laminas-mvc-application.md
+          - "Usage in a mezzio application": v3/application-integration/usage-in-a-mezzio-application.md
+      - Cookbook:
+          - "Using Input Filters in Forms of laminas-form": v3/cookbook/input-filter-in-forms.md
+          - "Using Static Analysis tools with laminas-inputfilter": v3/cookbook/enhanced-type-inference.md
 site_name: laminas-inputfilter
 site_description: 'Normalize and validate input sets from the web, APIs, the CLI, and more, including files.'
 repo_url: 'https://github.com/laminas/laminas-inputfilter'
@@ -23,19 +38,20 @@ extra:
     installation:
       config_provider_class: 'Laminas\InputFilter\ConfigProvider'
       module_class: 'Laminas\InputFilter\Module'
-    current_version: v2
+    current_version: v3
     versions:
       - v2
+      - v3
 plugins:
   - redirects:
       redirect_maps:
-        intro.md: v2/intro.md
-        installation.md: v2/installation.md
-        specs.md: v2/specs.md
-        file-input.md: v2/file-input.md
-        optional-input-filters.md: v2/optional-input-filters.md
-        unfiltered-data.md: v2/unfiltered-data.md
-        application-integration/usage-in-a-laminas-mvc-application.md: v2/application-integration/usage-in-a-laminas-mvc-application.md
-        application-integration/usage-in-a-mezzio-application.md: v2/application-integration/usage-in-a-mezzio-application.md
-        cookbook/input-filter-in-forms.md: v2/cookbook/input-filter-in-forms.md
-        cookbook/enhanced-type-inference.md: v2/cookbook/enhanced-type-inference.md
+        intro.md: v3/intro.md
+        installation.md: v3/installation.md
+        specs.md: v3/specs.md
+        file-input.md: v3/file-input.md
+        optional-input-filters.md: v3/optional-input-filters.md
+        unfiltered-data.md: v3/unfiltered-data.md
+        application-integration/usage-in-a-laminas-mvc-application.md: v3/application-integration/usage-in-a-laminas-mvc-application.md
+        application-integration/usage-in-a-mezzio-application.md: v3/application-integration/usage-in-a-mezzio-application.md
+        cookbook/input-filter-in-forms.md: v3/cookbook/input-filter-in-forms.md
+        cookbook/enhanced-type-inference.md: v3/cookbook/enhanced-type-inference.md
