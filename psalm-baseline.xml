@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.10.0@9c0add4eb88d4b169ac04acb7c679918cbb9c252">
+<files psalm-version="6.11.0@4ed53b7ccebc09ef60ec4c9e464bf8a01bfd35b0">
   <file src="src/ArrayInput.php">
     <DeprecatedProperty>
       <code><![CDATA[$this->value]]></code>
@@ -360,74 +360,6 @@
       <code><![CDATA[OptionalInputFilter]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="test/ArrayInputTest.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$valueMap]]></code>
-    </ArgumentTypeCoercion>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[array<string, array{
-     *     0: bool,
-     *     1: string[],
-     *     2: string[],
-     *     3: bool,
-     *     4: string[]
-     * }>]]></code>
-      <code><![CDATA[string[]]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement>
-      <code><![CDATA[$dataSets]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[iterable<string, array{
-     *     raw: list<null|string|array>,
-     *     filtered: null|string|array
-     * }>]]></code>
-    </InvalidReturnType>
-    <MissingClosureParamType>
-      <code><![CDATA[$set]]></code>
-      <code><![CDATA[$set]]></code>
-      <code><![CDATA[$set]]></code>
-    </MissingClosureParamType>
-    <MixedArrayAccess>
-      <code><![CDATA[$set['raw']]]></code>
-      <code><![CDATA[$set['raw']]]></code>
-      <code><![CDATA[$set[1]]]></code>
-      <code><![CDATA[$set[2]]]></code>
-      <code><![CDATA[$set[4]]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$set['raw']]]></code>
-      <code><![CDATA[$set['raw']]]></code>
-      <code><![CDATA[$set[1]]]></code>
-      <code><![CDATA[$set[2]]]></code>
-      <code><![CDATA[$set[4]]]></code>
-    </MixedArrayAssignment>
-    <MixedAssignment>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$values[0]]]></code>
-      <code><![CDATA[$values[0]]]></code>
-      <code><![CDATA[$values[1]]]></code>
-    </MixedAssignment>
-    <MixedReturnTypeCoercion>
-      <code><![CDATA[$dataSets]]></code>
-      <code><![CDATA[$dataSets]]></code>
-      <code><![CDATA[array<string, array{
-     *     0: bool,
-     *     1: string[],
-     *     2: string[],
-     *     3: bool,
-     *     4: string[]
-     * }>]]></code>
-      <code><![CDATA[array<string, array{
-     *     raw: list<bool|int|float|string|list<string>|object>,
-     *     filtered:  bool|int|float|string|list<string>|object
-     * }>]]></code>
-    </MixedReturnTypeCoercion>
-    <RedundantCondition>
-      <code><![CDATA[isArray]]></code>
-      <code><![CDATA[isArray]]></code>
-    </RedundantCondition>
-  </file>
   <file src="test/BaseInputFilterTest.php">
     <DeprecatedMethod>
       <code><![CDATA[enableProxyingToOriginalMethods]]></code>
@@ -576,65 +508,6 @@
       <code><![CDATA[continueIfEmpty]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="test/FileInput/HttpServerFileInputDecoratorTest.php">
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[array<string, string>]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidArgument>
-      <code><![CDATA['']]></code>
-      <code><![CDATA['']]></code>
-    </InvalidArgument>
-    <InvalidReturnStatement>
-      <code><![CDATA[$dataSets]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[iterable]]></code>
-    </InvalidReturnType>
-    <NonInvariantDocblockPropertyType>
-      <code><![CDATA[$input]]></code>
-    </NonInvariantDocblockPropertyType>
-    <PropertyTypeCoercion>
-      <code><![CDATA[new FileInput('foo')]]></code>
-    </PropertyTypeCoercion>
-  </file>
-  <file src="test/FileInput/PsrFileInputDecoratorTest.php">
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[UploadedFileInterface]]></code>
-      <code><![CDATA[iterable<string, array{
-     *     0: bool,
-     *     1: bool,
-     *     2: bool,
-     *     3: callable,
-     *     4: mixed,
-     *     5: bool,
-     *     6: string[]
-     * }>]]></code>
-      <code><![CDATA[iterable<string, array{
-     *     raw: UploadedFileInterface|list<UploadedFileInterface>,
-     *     filtered: UploadedFileInterface
-     * }>]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnType>
-      <code><![CDATA[iterable<string, array{
-     *     0: bool,
-     *     1: bool,
-     *     2: bool,
-     *     3: callable,
-     *     4: mixed,
-     *     5: bool,
-     *     6: string[]
-     * }>]]></code>
-    </InvalidReturnType>
-    <NonInvariantDocblockPropertyType>
-      <code><![CDATA[$input]]></code>
-    </NonInvariantDocblockPropertyType>
-    <PropertyTypeCoercion>
-      <code><![CDATA[new FileInput('foo')]]></code>
-    </PropertyTypeCoercion>
-    <TypeDoesNotContainType>
-      <code><![CDATA[$generator instanceof Generator]]></code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="test/InputFilterAbstractServiceFactoryTest.php">
     <DeprecatedMethod>
       <code><![CDATA[getFilters]]></code>
@@ -690,102 +563,6 @@
     <PossiblyInvalidArgument>
       <code><![CDATA[$factory]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="test/InputTest.php">
-    <DeprecatedInterface>
-      <code><![CDATA[$this->createMock(TranslatorInterface::class)]]></code>
-      <code><![CDATA[$translator]]></code>
-    </DeprecatedInterface>
-    <InvalidReturnStatement>
-      <code><![CDATA[[
-            // Description => [$value]
-            '"0"' => [
-                'raw'      => '0',
-                'filtered' => '0',
-            ],
-            '0'   => [
-                'raw'      => 0,
-                'filtered' => 0,
-            ],
-            '0.0' => [
-                'raw'      => 0.0,
-                'filtered' => 0.0,
-            ],
-            /* @todo enable me
-            'false' => [
-                'raw' => false,
-                'filtered' => false,
-            ],
-             */
-            'php' => [
-                'raw'      => 'php',
-                'filtered' => 'php',
-            ],
-            /* @todo enable me
-            'whitespace' => [
-                'raw' => ' ',
-                'filtered' => ' ',
-            ],
-             */
-            '1'       => [
-                'raw'      => 1,
-                'filtered' => 1,
-            ],
-            '1.0'     => [
-                'raw'      => 1.0,
-                'filtered' => 1.0,
-            ],
-            'true'    => [
-                'raw'      => true,
-                'filtered' => true,
-            ],
-            '["php"]' => [
-                'raw'      => ['php'],
-                'filtered' => ['php'],
-            ],
-            'object'  => [
-                'raw'      => new stdClass(),
-                'filtered' => new stdClass(),
-            ],
-        ]]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array<string, array{
-     *     raw: mixed,
-     *     filtered: mixed,
-     * }>]]></code>
-    </InvalidReturnType>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_merge($emptyValues, $mixedValues)]]></code>
-    </LessSpecificReturnStatement>
-    <MixedArrayAccess>
-      <code><![CDATA[$value['filtered']]]></code>
-      <code><![CDATA[$value['raw']]]></code>
-    </MixedArrayAccess>
-    <MixedAssignment>
-      <code><![CDATA[$tmpTemplate[4]]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[method]]></code>
-      <code><![CDATA[willReturn]]></code>
-      <code><![CDATA[with]]></code>
-    </MixedMethodCall>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array<string, array{
-     *     raw: bool|int|float|string|list<string>|object,
-     *     filtered:  bool|int|float|string|list<string>|object
-     * }>]]></code>
-    </MoreSpecificReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$translator]]></code>
-    </PossiblyInvalidArgument>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-    </PossiblyUndefinedMethod>
-    <RedundantCondition>
-      <code><![CDATA[isArray]]></code>
-    </RedundantCondition>
   </file>
   <file src="test/TestAsset/ModuleEventInterface.php">
     <PossiblyUnusedMethod>
