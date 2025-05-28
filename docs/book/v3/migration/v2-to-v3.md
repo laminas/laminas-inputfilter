@@ -25,7 +25,7 @@ You will need to address these on a case by case basis by inspecting the inherit
 
 ### Final by Default
 
-A number of classes are now have the [`final` keyword](https://www.php.net/manual/language.oop5.final.php).
+A number of classes now have the [`final` keyword](https://www.php.net/manual/language.oop5.final.php).
 
 As a general rule, we are endeavouring to finalise all classes that have not been explicitly designed for inheritance.
 This helps reduce our maintenance burden by using encapsulation to allow internal changes or improvements without breaking BC.
