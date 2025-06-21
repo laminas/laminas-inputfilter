@@ -8,6 +8,7 @@ use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
@@ -34,11 +35,19 @@ final class InputFilterPluginManagerTest extends TestCase
 {
     private InputFilterPluginManager $manager;
     private ServiceManager $services;
+    private Factory $factory;
 
     protected function setUp(): void
     {
         $this->services = new ServiceManager();
         $this->manager  = new InputFilterPluginManager($this->services);
+        $this->factory  = new Factory(
+            new FilterPluginManager($this->services),
+            new ValidatorPluginManager($this->services),
+            $this->manager
+        );
+
+        $this->services->setService(Factory::class, $this->factory);
     }
 
     public function testIsASubclassOfAbstractPluginManager(): void
@@ -92,36 +101,25 @@ final class InputFilterPluginManagerTest extends TestCase
         self::assertInstanceOf($expectedInstance, $service, 'get() return type not match');
     }
 
-    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithoutServiceLocator(): void
-    {
-        /** @var InputFilter $service */
-        $service = $this->manager->get('inputfilter');
-
-        $factory = $service->getFactory();
-        self::assertSame(
-            $this->manager,
-            $factory->getInputFilterManager(),
-            'Factory::getInputFilterManager() is not populated with the expected plugin manager'
-        );
-    }
-
     public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator(): void
     {
-        $filterManager    = $this->createMock(FilterPluginManager::class);
-        $validatorManager = $this->createMock(ValidatorPluginManager::class);
+        $serviceManager = new ServiceManager();
 
-        $this->services->setService(FilterPluginManager::class, $filterManager);
-        $this->services->setService(ValidatorPluginManager::class, $validatorManager);
+        $filterManager    = new FilterPluginManager($serviceManager);
+        $validatorManager = new ValidatorPluginManager($serviceManager);
+        $serviceManager->setService(FilterPluginManager::class, $filterManager);
+        $serviceManager->setService(ValidatorPluginManager::class, $validatorManager);
+
+        $manager = new InputFilterPluginManager($serviceManager);
+        $factory = new Factory($filterManager, $validatorManager, $manager);
+
+        $serviceManager->setService(Factory::class, $factory);
 
         /** @var InputFilter $service */
-        $service = $this->manager->get('inputfilter');
+        $service = $manager->get('inputfilter');
 
-        $factory = $service->getFactory();
-        self::assertSame(
-            $this->manager,
-            $factory->getInputFilterManager(),
-            'Factory::getInputFilterManager() is not populated with the expected plugin manager'
-        );
+        /** @var Factory $factory */
+        $factory = (new ReflectionObject($service))->getProperty('factory')->getValue($service);
 
         $defaultFilterChain = $factory->getDefaultFilterChain();
         self::assertInstanceOf(FilterChain::class, $defaultFilterChain);
@@ -149,7 +147,7 @@ final class InputFilterPluginManagerTest extends TestCase
      */
     public static function serviceProvider(): array
     {
-        $inputFilterInterfaceMock = new InputFilterInterfaceStub();
+        $inputFilterInterfaceMock = new InputFilterInterfaceStub(FactoryTestHelper::createInputFilterFactory());
         $inputInterfaceMock       = new InputInterfaceStub('foo', true);
 
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -176,14 +174,6 @@ final class InputFilterPluginManagerTest extends TestCase
         $mock->expects(self::exactly(2))->method('init');
         $this->manager->setService('PluginName', $mock);
         self::assertSame($mock, $this->manager->get('PluginName'), 'get() value not match');
-    }
-
-    public function testPopulateFactoryCanAcceptInputFilterAsFirstArgumentAndWillUseFactoryWhenItDoes(): void
-    {
-        $inputFilter = new InputFilter();
-        $this->manager->populateFactory($inputFilter);
-
-        self::assertSame($this->manager, $inputFilter->getFactory()->getInputFilterManager());
     }
 
     /** @return class-string<Throwable> */

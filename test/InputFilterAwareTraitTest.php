@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareTrait;
 use LaminasTest\InputFilter\TestAsset\InputFilterAware;
@@ -14,6 +15,13 @@ use ReflectionObject;
 #[CoversClass(InputFilterAwareTrait::class)]
 final class InputFilterAwareTraitTest extends TestCase
 {
+    private Factory $factory;
+
+    protected function setUp(): void
+    {
+        $this->factory = FactoryTestHelper::createInputFilterFactory();
+    }
+
     public function testSetInputFilter(): void
     {
         $object = new InputFilterAware();
@@ -22,7 +30,7 @@ final class InputFilterAwareTraitTest extends TestCase
         $p = $r->getProperty('inputFilter');
         $this->assertNull($p->getValue($object));
 
-        $inputFilter = new InputFilter();
+        $inputFilter = new InputFilter($this->factory);
 
         $object->setInputFilter($inputFilter);
 
@@ -35,7 +43,7 @@ final class InputFilterAwareTraitTest extends TestCase
 
         $this->assertNull($object->getInputFilter());
 
-        $inputFilter = new InputFilter();
+        $inputFilter = new InputFilter($this->factory);
 
         $object->setInputFilter($inputFilter);
 

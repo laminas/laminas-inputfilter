@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter;
+use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
@@ -18,6 +19,7 @@ use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputProviderInterface;
 use Laminas\ServiceManager;
 use Laminas\Validator;
+use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\CustomInput;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -49,7 +51,13 @@ final class FactoryTest extends TestCase
             ->with($type)
             ->willReturn(false);
 
-        $factory = new Factory($pluginManager);
+        $container = $this->createMock(ContainerInterface::class);
+
+        $factory = new Factory(
+            new FilterPluginManager($container),
+            new ValidatorPluginManager($container),
+            $pluginManager
+        );
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -60,26 +68,17 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testGetInputFilterManagerSettedByItsSetter(): void
-    {
-        $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        $factory       = new Factory();
-        $factory->setInputFilterManager($pluginManager);
-        self::assertSame($pluginManager, $factory->getInputFilterManager());
-    }
-
-    public function testGetInputFilterManagerWhenYouConstructFactoryWithIt(): void
-    {
-        $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        $factory       = new Factory($pluginManager);
-        self::assertSame($pluginManager, $factory->getInputFilterManager());
-    }
-
     public function testCreateInputWithTypeAsAnInvalidPluginInstanceThrowException(): void
     {
+        $container = $this->createMock(ContainerInterface::class);
+
         $type          = 'fooPlugin';
         $pluginManager = $this->createInputFilterPluginManagerMockForPlugin($type, 'invalid_value');
-        $factory       = new Factory($pluginManager);
+        $factory       = new Factory(
+            new FilterPluginManager($container),
+            new ValidatorPluginManager($container),
+            $pluginManager
+        );
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -199,14 +198,16 @@ final class FactoryTest extends TestCase
     #[DataProvider('inputTypeSpecificationProvider')]
     public function testCreateInputWithSpecificInputTypeSettingsThrowException(string $specificationKey): void
     {
-        $factory = $this->createDefaultFactory();
-        $type    = 'pluginInputInterface';
+        $type = 'pluginInputInterface';
 
         $pluginManager = $this->createInputFilterPluginManagerMockForPlugin(
             $type,
             $this->createMock(InputInterface::class)
         );
-        $factory->setInputFilterManager($pluginManager);
+
+        $factory = $this->createDefaultFactory($pluginManager);
+
+//        $factory->setInputFilterManager($pluginManager);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -490,7 +491,7 @@ final class FactoryTest extends TestCase
     public function testFactoryAcceptsInputFilterInterface(): void
     {
         $factory = $this->createDefaultFactory();
-        $input   = new InputFilter();
+        $input   = new InputFilter($factory);
 
         $inputFilter = $factory->createInputFilter([
             'foo' => $input,
@@ -662,7 +663,9 @@ final class FactoryTest extends TestCase
         $inputFilter = $factory->createInputFilter([
             'type'        => CollectionInputFilter::class,
             'required'    => true,
-            'inputfilter' => new InputFilter(),
+            'inputfilter' => new InputFilter(
+                $factory
+            ),
             'count'       => 3,
         ]);
 
@@ -800,17 +803,6 @@ final class FactoryTest extends TestCase
         self::assertTrue($inputFilter->has('type'));
     }
 
-    public function testCustomFactoryInCollection(): void
-    {
-        $factory = new TestAsset\CustomFactory();
-        /** @var CollectionInputFilter $inputFilter */
-        $inputFilter = $factory->createInputFilter([
-            'type'         => 'collection',
-            'input_filter' => new InputFilter(),
-        ]);
-        self::assertInstanceOf(TestAsset\CustomFactory::class, $inputFilter->getFactory());
-    }
-
     public function testCanSetInputErrorMessage(): void
     {
         $factory = $this->createDefaultFactory();
@@ -831,26 +823,14 @@ final class FactoryTest extends TestCase
         $filterPluginManager    = new Filter\FilterPluginManager($serviceManager);
         $serviceManager->setService(Validator\ValidatorPluginManager::class, $validatorPluginManager);
         $serviceManager->setService(Filter\FilterPluginManager::class, $filterPluginManager);
-        $factory = new Factory($inputFilterManager);
+        $factory = new Factory(
+            $filterPluginManager,
+            $validatorPluginManager,
+            $inputFilterManager
+        );
 
         self::assertSame($validatorPluginManager, $factory->getDefaultValidatorChain()->getPluginManager());
         self::assertSame($filterPluginManager, $factory->getDefaultFilterChain()->getPluginManager());
-    }
-
-    public function testSetInputFilterManagerWithoutServiceManager(): void
-    {
-        $smMock             = $this->createMock(ContainerInterface::class);
-        $inputFilterManager = new InputFilterPluginManager($smMock);
-        $factory            = new Factory($inputFilterManager);
-        self::assertSame($inputFilterManager, $factory->getInputFilterManager());
-    }
-
-    public function testSetInputFilterManagerOnConstruct(): void
-    {
-        $smMock             = $this->createMock(ContainerInterface::class);
-        $inputFilterManager = new InputFilterPluginManager($smMock);
-        $factory            = new Factory($inputFilterManager);
-        self::assertSame($inputFilterManager, $factory->getInputFilterManager());
     }
 
     public function testSetsBreakChainOnFailure(): void
@@ -933,7 +913,11 @@ final class FactoryTest extends TestCase
         $serviceManager = new ServiceManager\ServiceManager();
         $pluginManager  = new InputFilterPluginManager($serviceManager);
         $pluginManager->setService('bar', new Input('bar'));
-        $factory = new Factory($pluginManager);
+        $factory = new Factory(
+            new FilterPluginManager($serviceManager),
+            new ValidatorPluginManager($serviceManager),
+            $pluginManager
+        );
 
         $input = $factory->createInput([
             'type' => 'bar',
@@ -945,11 +929,15 @@ final class FactoryTest extends TestCase
 
     public function testInputFromPluginManagerMayBeFurtherConfiguredWithSpec(): void
     {
-        $pluginManager = new InputFilterPluginManager(new ServiceManager\ServiceManager());
+        $serviceManager = new ServiceManager\ServiceManager();
+        $pluginManager  = new InputFilterPluginManager($serviceManager);
         $pluginManager->setService('bar', $barInput = new Input('bar'));
-        $factory = new Factory($pluginManager);
+        $factory = new Factory(
+            new FilterPluginManager($serviceManager),
+            new ValidatorPluginManager($serviceManager),
+            $pluginManager
+        );
         self::assertTrue($barInput->isRequired());
-        $factory->setInputFilterManager($pluginManager);
 
         $input = $factory->createInput([
             'type'     => 'bar',
@@ -1052,10 +1040,15 @@ final class FactoryTest extends TestCase
         $input->setFilterChain($filterChain);
         $input->setValidatorChain($validatorChain);
 
-        $pluginManager = new InputFilterPluginManager(new ServiceManager\ServiceManager());
+        $serviceManager = new ServiceManager\ServiceManager();
+        $pluginManager  = new InputFilterPluginManager($serviceManager);
         $pluginManager->setService('Some\Test\Input', $input);
 
-        $factory               = new Factory($pluginManager);
+        $factory               = new Factory(
+            new FilterPluginManager($serviceManager),
+            new ValidatorPluginManager($serviceManager),
+            $pluginManager
+        );
         $defaultFilterChain    = new Filter\FilterChain();
         $defaultValidatorChain = new Validator\ValidatorChain();
         $factory->setDefaultFilterChain($defaultFilterChain);
@@ -1081,7 +1074,7 @@ final class FactoryTest extends TestCase
             'type'             => CollectionInputFilter::class,
             'required'         => true,
             'required_message' => $message,
-            'inputfilter'      => new InputFilter(),
+            'inputfilter'      => new InputFilter($factory),
             'count'            => 3,
         ]);
 
@@ -1093,9 +1086,18 @@ final class FactoryTest extends TestCase
         self::assertSame($message, $messageTemplates[Validator\NotEmpty::IS_EMPTY]);
     }
 
-    protected function createDefaultFactory(): Factory
+    protected function createDefaultFactory(?InputFilterPluginManager $inputFilterPluginManager = null): Factory
     {
-        return new Factory();
+        $serviceManager = new ServiceManager\ServiceManager();
+
+        $factory = new Factory(
+            new FilterPluginManager($serviceManager),
+            new ValidatorPluginManager($serviceManager),
+            $inputFilterPluginManager ?? new InputFilterPluginManager($serviceManager)
+        );
+        $serviceManager->setService(Factory::class, $factory);
+
+        return $factory;
     }
 
     /**

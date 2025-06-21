@@ -6,10 +6,11 @@ namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterInterface;
-use Laminas\ServiceManager\ServiceManager;
+use Laminas\Filter\FilterPluginManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorPluginManager;
 use Traversable;
 
 use function assert;
@@ -29,7 +30,7 @@ use function sprintf;
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @psalm-import-type CollectionSpecification from InputFilterInterface
  */
-class Factory
+final class Factory
 {
     /** @var FilterChain|null */
     protected $defaultFilterChain;
@@ -37,17 +38,18 @@ class Factory
     /** @var ValidatorChain|null */
     protected $defaultValidatorChain;
 
-    /** @var InputFilterPluginManager|null */
-    protected $inputFilterManager;
+    public function __construct(
+        FilterPluginManager $filterPluginManager,
+        ValidatorPluginManager $validatorPluginManager,
+        private readonly InputFilterPluginManager $inputFilterPluginManager
+    ) {
+        $this->defaultFilterChain = new FilterChain();
+        $this->defaultFilterChain->setPluginManager($filterPluginManager);
 
-    public function __construct(?InputFilterPluginManager $inputFilterManager = null)
-    {
-        $this->defaultFilterChain    = new FilterChain();
         $this->defaultValidatorChain = new ValidatorChain();
+        $this->defaultValidatorChain->setPluginManager($validatorPluginManager);
 
-        if ($inputFilterManager) {
-            $this->setInputFilterManager($inputFilterManager);
-        }
+        $inputFilterPluginManager->populateFactoryPluginManagers($this);
     }
 
     /**
@@ -113,28 +115,6 @@ class Factory
     }
 
     /**
-     * @return $this
-     */
-    public function setInputFilterManager(InputFilterPluginManager $inputFilterManager)
-    {
-        $this->inputFilterManager = $inputFilterManager;
-        $inputFilterManager->populateFactoryPluginManagers($this);
-        return $this;
-    }
-
-    /**
-     * @return InputFilterPluginManager
-     */
-    public function getInputFilterManager()
-    {
-        if (null === $this->inputFilterManager) {
-            $this->inputFilterManager = new InputFilterPluginManager(new ServiceManager());
-        }
-
-        return $this->inputFilterManager;
-    }
-
-    /**
      * Factory for input objects
      *
      * @param  InputSpecification|Traversable|InputProviderInterface $inputSpecification
@@ -168,9 +148,10 @@ class Factory
         }
 
         $managerInstance = null;
-        if ($this->getInputFilterManager()->has($class)) {
-            $managerInstance = $this->getInputFilterManager()->get($class);
+        if ($this->inputFilterPluginManager->has($class)) {
+            $managerInstance = $this->inputFilterPluginManager->get($class);
         }
+
         if (! $managerInstance && ! class_exists($class)) {
             throw new Exception\RuntimeException(sprintf(
                 'Input factory expects the "type" to be a valid class or a plugin name; received "%s"',
@@ -316,11 +297,10 @@ class Factory
             unset($inputFilterSpecification['type']);
         }
 
-        $inputFilter = $this->getInputFilterManager()->get($type);
+        $inputFilter = $this->inputFilterPluginManager->get($type);
         assert($inputFilter instanceof InputFilterInterface); // As opposed to InputInterface
 
         if ($inputFilter instanceof CollectionInputFilter) {
-            $inputFilter->setFactory($this);
             if (isset($inputFilterSpecification['input_filter'])) {
                 $inputFilter->setInputFilter($inputFilterSpecification['input_filter']);
             }
@@ -355,7 +335,7 @@ class Factory
             if (
                 (isset($value['type']) && is_string($value['type']))
                 && (isset($value['name']) && is_string($value['name']))
-                && $this->getInputFilterManager()->get($value['type']) instanceof InputFilter
+                && $this->inputFilterPluginManager->get($value['type']) instanceof InputFilter
             ) {
                 // If $key is an integer, reset it to the specified name.
                 if (is_int($key)) {
@@ -480,7 +460,7 @@ class Factory
     {
         if ($this->defaultFilterChain) {
             $filterChain = $input->getFilterChain();
-            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
+            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction, DeprecatedMethod */
             $filterChain instanceof FilterChain
                 ? $filterChain->setPluginManager($this->defaultFilterChain->getPluginManager())
                 : $input->setFilterChain(clone $this->defaultFilterChain);

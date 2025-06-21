@@ -51,7 +51,7 @@ class CollectionInputFilter extends InputFilter
     public function setInputFilter($inputFilter)
     {
         if (is_iterable($inputFilter)) {
-            $inputFilter = $this->getFactory()->createInputFilter($inputFilter);
+            $inputFilter = $this->factory->createInputFilter($inputFilter);
         }
 
         /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
@@ -77,7 +77,7 @@ class CollectionInputFilter extends InputFilter
     public function getInputFilter()
     {
         if (null === $this->inputFilter) {
-            $this->inputFilter = new InputFilter();
+            $this->inputFilter = new InputFilter($this->factory);
         }
 
         return $this->inputFilter;

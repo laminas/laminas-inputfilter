@@ -35,10 +35,13 @@ use const JSON_THROW_ON_ERROR;
 final class CollectionInputFilterTest extends TestCase
 {
     private CollectionInputFilter $inputFilter;
+    private Factory $factory;
 
     protected function setUp(): void
     {
-        $this->inputFilter = new CollectionInputFilter();
+        $this->factory = FactoryTestHelper::createInputFilterFactory();
+
+        $this->inputFilter = new CollectionInputFilter($this->factory);
     }
 
     public function testSetInputFilterWithInvalidTypeThrowsInvalidArgumentException(): void
@@ -163,11 +166,17 @@ final class CollectionInputFilterTest extends TestCase
         $colMessages  = [$errorMessage];
 
         $invalidIF  = fn(): BaseInputFilter =>
-            new InputFilterInterfaceStub(false, $dataRaw, $dataFiltered, $errorMessage);
+            new InputFilterInterfaceStub(
+                FactoryTestHelper::createInputFilterFactory(),
+                false,
+                $dataRaw,
+                $dataFiltered,
+                $errorMessage
+            );
         $validIF    = fn(): BaseInputFilter =>
-            new InputFilterInterfaceStub(true, $dataRaw, $dataFiltered);
+            new InputFilterInterfaceStub(FactoryTestHelper::createInputFilterFactory(), true, $dataRaw, $dataFiltered);
         $noValidIF  = fn(): BaseInputFilter =>
-            new InputFilterInterfaceStub(null, $dataRaw, $dataFiltered);
+            new InputFilterInterfaceStub(FactoryTestHelper::createInputFilterFactory(), null, $dataRaw, $dataFiltered);
         $isRequired = true;
 
         // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
@@ -248,16 +257,18 @@ final class CollectionInputFilterTest extends TestCase
     #[DataProvider('dataNestingCollection')]
     public function testNestingCollectionCountCached(?int $count, bool $isValid): void
     {
-        $firstInputFilter = new InputFilter();
+        $factory = FactoryTestHelper::createInputFilterFactory();
 
-        $firstCollection = new CollectionInputFilter();
+        $firstInputFilter = new InputFilter($factory);
+
+        $firstCollection = new CollectionInputFilter($factory);
         $firstCollection->setInputFilter($firstInputFilter);
 
         $someInput         = new Input('input');
-        $secondInputFilter = new InputFilter();
+        $secondInputFilter = new InputFilter($factory);
         $secondInputFilter->add($someInput, 'input');
 
-        $secondCollection = new CollectionInputFilter();
+        $secondCollection = new CollectionInputFilter($factory);
         $secondCollection->setInputFilter($secondInputFilter);
         if (null !== $count) {
             $secondCollection->setCount($count);
@@ -265,7 +276,7 @@ final class CollectionInputFilterTest extends TestCase
 
         $firstInputFilter->add($secondCollection, 'second_collection');
 
-        $mainInputFilter = new InputFilter();
+        $mainInputFilter = new InputFilter($factory);
         $mainInputFilter->add($firstCollection, 'first_collection');
 
         $data = [
@@ -302,13 +313,12 @@ final class CollectionInputFilterTest extends TestCase
      */
     public static function inputFilterProvider(): array
     {
-        $baseInputFilter = new BaseInputFilter();
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
+        $baseInputFilter = new BaseInputFilter($factory);
 
         $inputFilterSpecificationAsArray = [];
         $inputSpecificationAsTraversable = new ArrayIterator($inputFilterSpecificationAsArray);
-
-        $inputFilterSpecificationResult = new InputFilter();
-        $inputFilterSpecificationResult->getFactory()->getInputFilterManager();
 
         return [
             // Description => [inputFilter, $expectedType]
@@ -400,7 +410,9 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testGetUnknownWhenAllFieldsAreKnownReturnsAnEmptyArray(): void
     {
-        $inputFilter = new InputFilter();
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
+        $inputFilter = new InputFilter($factory);
         $inputFilter->add([
             'name' => 'foo',
         ]);
@@ -421,7 +433,7 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testGetUnknownFieldIsUnknown(): void
     {
-        $inputFilter = new InputFilter();
+        $inputFilter = new InputFilter($this->factory);
         $inputFilter->add([
             'name' => 'foo',
         ]);
@@ -506,7 +518,7 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testCollectionValidationDoesNotReuseMessagesBetweenInputs(): void
     {
-        $inputFilter = new InputFilter();
+        $inputFilter = new InputFilter($this->factory);
         $inputFilter->add([
             'name'       => 'phone',
             'required'   => true,
@@ -556,7 +568,7 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testCollectionValidationUsesCustomInputErrorMessages(): void
     {
-        $inputFilter = new InputFilter();
+        $inputFilter = new InputFilter($this->factory);
         $inputFilter->add([
             'name'          => 'phone',
             'required'      => true,
@@ -605,7 +617,8 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testDuplicatedErrorMessages(): void
     {
-        $factory     = new Factory();
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
         $inputFilter = $factory->createInputFilter(
             [
                 'element' => [
@@ -779,10 +792,12 @@ final class CollectionInputFilterTest extends TestCase
             ],
         ];
 
-        $baseInputFilter = (new BaseInputFilter())
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
+        $baseInputFilter = (new BaseInputFilter($factory))
             ->add(new Input(), 'bar');
 
-        $collectionInputFilter = (new CollectionInputFilter())->setInputFilter($baseInputFilter);
+        $collectionInputFilter = (new CollectionInputFilter($this->factory))->setInputFilter($baseInputFilter);
         $collectionInputFilter->setData($unfilteredArray);
 
         $collectionInputFilter->isValid();
@@ -815,7 +830,7 @@ final class CollectionInputFilterTest extends TestCase
             ->with($expectedContext)
             ->willReturn(true);
 
-        $collectionInputFilter = (new CollectionInputFilter())->setInputFilter($baseInputFilter);
+        $collectionInputFilter = (new CollectionInputFilter($this->factory))->setInputFilter($baseInputFilter);
         $collectionInputFilter->setData($data);
 
         self::assertTrue(

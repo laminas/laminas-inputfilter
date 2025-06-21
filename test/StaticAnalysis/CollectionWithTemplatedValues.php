@@ -15,6 +15,6 @@ final class CollectionWithTemplatedValues extends CollectionInputFilter
 {
     public function init(): void
     {
-        $this->setInputFilter(new InputFilterWithTemplatedValues());
+        $this->setInputFilter(new InputFilterWithTemplatedValues($this->factory));
     }
 }

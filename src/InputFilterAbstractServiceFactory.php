@@ -21,33 +21,30 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     /** @var Factory|null */
     protected $factory;
 
-    /**
-     * @param string                  $rName
-     * @return InputFilterInterface
-     */
-    public function __invoke(ContainerInterface $services, $rName, ?array $options = null)
-    {
-        $allConfig = $services->get('config');
-        $config    = $allConfig['input_filter_specs'][$rName];
-        $factory   = $this->getInputFilterFactory($services);
+    /** @param string $requestedName */
+    public function __invoke(
+        ContainerInterface $container,
+        $requestedName,
+        ?array $options = null
+    ): InputFilterInterface {
+        $allConfig = $container->get('config');
+        $config    = $allConfig['input_filter_specs'][$requestedName];
+        $factory   = $this->getInputFilterFactory($container);
 
         return $factory->createInputFilter($config);
     }
 
-    /**
-     * @param string $rName
-     * @return bool
-     */
-    public function canCreate(ContainerInterface $services, $rName)
+    /** @param string $requestedName */
+    public function canCreate(ContainerInterface $container, $requestedName): bool
     {
-        if (! $services->has('config')) {
+        if (! $container->has('config')) {
             return false;
         }
 
-        $config = $services->get('config');
+        $config = $container->get('config');
         if (
-            ! isset($config['input_filter_specs'][$rName])
-            || ! is_array($config['input_filter_specs'][$rName])
+            ! isset($config['input_filter_specs'][$requestedName])
+            || ! is_array($config['input_filter_specs'][$requestedName])
         ) {
             return false;
         }
@@ -65,9 +62,9 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
      * @param string $requestedName
      * @return bool
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $container, $name, $requestedName)
+    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return $this->canCreate($container, $requestedName);
+        return $this->canCreate($serviceLocator, $requestedName);
     }
 
     /**
@@ -76,59 +73,32 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
      * @deprecated This library is no longer compatible with Service manager V2 and this method will be dropped in the
      *             next major release.
      *
-     * @param string                  $cName
-     * @param string                  $rName
-     * @return InputFilterInterface
+     * @param string $name
+     * @param string $requestedName
      */
-    public function createServiceWithName(ServiceLocatorInterface $container, $cName, $rName)
-    {
-        return $this($container, $rName);
+    public function createServiceWithName(
+        ServiceLocatorInterface $serviceLocator,
+        $name,
+        $requestedName
+    ): InputFilterInterface {
+        return $this($serviceLocator, $requestedName);
     }
 
-    /**
-     * @return Factory
-     */
-    protected function getInputFilterFactory(ContainerInterface $container)
+    protected function getInputFilterFactory(ContainerInterface $container): Factory
     {
         if ($this->factory instanceof Factory) {
             return $this->factory;
         }
 
-        $this->factory  = new Factory();
+        $this->factory  = $container->get(Factory::class);
         $filterChain    = $this->factory->getDefaultFilterChain();
         $validatorChain = $this->factory->getDefaultValidatorChain();
         assert($filterChain instanceof FilterChain);
         assert($validatorChain instanceof ValidatorChain);
 
-        $filterChain->setPluginManager($this->getFilterPluginManager($container));
-        $validatorChain->setPluginManager($this->getValidatorPluginManager($container));
-
-        $this->factory->setInputFilterManager($container->get(InputFilterPluginManager::class));
+        $filterChain->setPluginManager($container->get(FilterPluginManager::class));
+        $validatorChain->setPluginManager($container->get(ValidatorPluginManager::class));
 
         return $this->factory;
-    }
-
-    /**
-     * @return FilterPluginManager
-     */
-    protected function getFilterPluginManager(ContainerInterface $container)
-    {
-        if ($container->has(FilterPluginManager::class)) {
-            return $container->get(FilterPluginManager::class);
-        }
-
-        return new FilterPluginManager($container);
-    }
-
-    /**
-     * @return ValidatorPluginManager
-     */
-    protected function getValidatorPluginManager(ContainerInterface $container)
-    {
-        if ($container->has(ValidatorPluginManager::class)) {
-            return $container->get(ValidatorPluginManager::class);
-        }
-
-        return new ValidatorPluginManager($container);
     }
 }
