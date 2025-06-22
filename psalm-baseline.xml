@@ -242,9 +242,6 @@
     <DeprecatedInterface>
       <code><![CDATA[InputFilterAbstractServiceFactory]]></code>
     </DeprecatedInterface>
-    <DeprecatedMethod>
-      <code><![CDATA[setPluginManager]]></code>
-    </DeprecatedMethod>
     <MixedArgument>
       <code><![CDATA[$config]]></code>
     </MixedArgument>
@@ -274,9 +271,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/InputFilterPluginManager.php">
-    <DeprecatedMethod>
-      <code><![CDATA[setPluginManager]]></code>
-    </DeprecatedMethod>
     <MethodSignatureMismatch>
       <code><![CDATA[InputFilterPluginManager]]></code>
       <code><![CDATA[InputFilterPluginManager]]></code>

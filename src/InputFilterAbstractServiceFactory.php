@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\Filter\FilterChain;
-use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\Validator\ValidatorChain;
-use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 
-use function assert;
 use function is_array;
 
 /** @final */
 class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
 {
-    /** @var Factory|null */
-    protected $factory;
-
     /** @param string $requestedName */
     public function __invoke(
         ContainerInterface $container,
@@ -29,7 +21,7 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
     ): InputFilterInterface {
         $allConfig = $container->get('config');
         $config    = $allConfig['input_filter_specs'][$requestedName];
-        $factory   = $this->getInputFilterFactory($container);
+        $factory   = $container->get(Factory::class);
 
         return $factory->createInputFilter($config);
     }
@@ -82,23 +74,5 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
         $requestedName
     ): InputFilterInterface {
         return $this($serviceLocator, $requestedName);
-    }
-
-    protected function getInputFilterFactory(ContainerInterface $container): Factory
-    {
-        if ($this->factory instanceof Factory) {
-            return $this->factory;
-        }
-
-        $this->factory  = $container->get(Factory::class);
-        $filterChain    = $this->factory->getDefaultFilterChain();
-        $validatorChain = $this->factory->getDefaultValidatorChain();
-        assert($filterChain instanceof FilterChain);
-        assert($validatorChain instanceof ValidatorChain);
-
-        $filterChain->setPluginManager($container->get(FilterPluginManager::class));
-        $validatorChain->setPluginManager($container->get(ValidatorPluginManager::class));
-
-        return $this->factory;
     }
 }

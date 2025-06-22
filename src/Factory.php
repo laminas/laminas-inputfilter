@@ -32,11 +32,8 @@ use function sprintf;
  */
 final class Factory
 {
-    /** @var FilterChain|null */
-    protected $defaultFilterChain;
-
-    /** @var ValidatorChain|null */
-    protected $defaultValidatorChain;
+    protected ?FilterChain $defaultFilterChain;
+    protected ?ValidatorChain $defaultValidatorChain;
 
     public function __construct(
         FilterPluginManager $filterPluginManager,
@@ -48,8 +45,6 @@ final class Factory
 
         $this->defaultValidatorChain = new ValidatorChain();
         $this->defaultValidatorChain->setPluginManager($validatorPluginManager);
-
-        $inputFilterPluginManager->populateFactoryPluginManagers($this);
     }
 
     /**

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
-use Laminas\Validator\ValidatorPluginManager;
 
 use function get_debug_type;
 use function sprintf;
@@ -85,29 +83,6 @@ class InputFilterPluginManager extends AbstractPluginManager
      * @var bool
      */
     protected $shareByDefault = false;
-
-    /**
-     * Populate the filter and validator managers for the default filter/validator chains.
-     *
-     * @return void
-     */
-    public function populateFactoryPluginManagers(Factory $factory)
-    {
-        /** @psalm-suppress DocblockTypeContradiction */
-        if (! $this->creationContext) {
-            return;
-        }
-
-        $filterChain = $factory->getDefaultFilterChain();
-        if ($filterChain !== null && $this->creationContext->has(FilterPluginManager::class)) {
-            $filterChain->setPluginManager($this->creationContext->get(FilterPluginManager::class));
-        }
-
-        $validatorChain = $factory->getDefaultValidatorChain();
-        if ($validatorChain !== null && $this->creationContext->has(ValidatorPluginManager::class)) {
-            $validatorChain->setPluginManager($this->creationContext->get(ValidatorPluginManager::class));
-        }
-    }
 
     /**
      * @inheritDoc
