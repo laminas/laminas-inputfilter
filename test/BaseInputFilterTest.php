@@ -9,6 +9,7 @@ use FilterIterator;
 use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
@@ -38,12 +39,15 @@ use const JSON_THROW_ON_ERROR;
 #[CoversClass(BaseInputFilter::class)]
 class BaseInputFilterTest extends TestCase
 {
-    /** @var BaseInputFilter */
+    protected Factory $factory;
+    /** @var BaseInputFilter $inputFilter */
     protected $inputFilter;
 
     protected function setUp(): void
     {
-        $this->inputFilter = new BaseInputFilter();
+        $this->factory = FactoryTestHelper::createInputFilterFactory();
+
+        $this->inputFilter = new BaseInputFilter($this->factory);
     }
 
     public function testInputFilterIsEmptyByDefault(): void
@@ -153,7 +157,7 @@ class BaseInputFilterTest extends TestCase
     {
         $inputFilter = $this->inputFilter;
 
-        $nestedInputFilter = new BaseInputFilter();
+        $nestedInputFilter = new BaseInputFilter($this->factory);
 
         /** @var InputInterface&MockObject $nestedInput1 */
         $nestedInput1 = $this->createMock(InputInterface::class);
@@ -415,7 +419,7 @@ class BaseInputFilterTest extends TestCase
         $filter = $this->inputFilter;
         $filter->add($flatInput);
         $filter->add($resetInput);
-        $deepInputFilter = new BaseInputFilter();
+        $deepInputFilter = new BaseInputFilter($this->factory);
         $deepInputFilter->add(new Input(), 'deep-input1');
         $deepInputFilter->add(new Input(), 'deep-input2');
         $filter->add($deepInputFilter, 'deep');
@@ -597,7 +601,7 @@ class BaseInputFilterTest extends TestCase
     public function testAddingAnInputFilterWithTheSameNameAsTheInputWillReplace(): void
     {
         $input  = new Input('a');
-        $filter = new InputFilter();
+        $filter = new InputFilter($this->factory);
 
         $this->inputFilter->add($input);
 
@@ -611,7 +615,7 @@ class BaseInputFilterTest extends TestCase
     public function testMerge(): void
     {
         $inputFilter       = $this->inputFilter;
-        $originInputFilter = new BaseInputFilter();
+        $originInputFilter = new BaseInputFilter($this->factory);
 
         $inputFilter->add(new Input(), 'foo');
         $inputFilter->add(new Input(), 'bar');
@@ -633,8 +637,8 @@ class BaseInputFilterTest extends TestCase
     public function testNestedInputFilterShouldAllowNonArrayValueForData(): void
     {
         /** @psalm-var BaseInputFilter<array{nested: array{nestedField1: mixed}}> $filter1 */
-        $filter1      = new BaseInputFilter();
-        $nestedFilter = new BaseInputFilter();
+        $filter1      = new BaseInputFilter($this->factory);
+        $nestedFilter = new BaseInputFilter($this->factory);
         $nestedFilter->add(new Input('nestedField1'));
         $filter1->add($nestedFilter, 'nested');
 
@@ -651,7 +655,7 @@ class BaseInputFilterTest extends TestCase
 
     public function testInstanceOfUnfilteredDataInterface(): void
     {
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
 
         self::assertInstanceOf(
             UnfilteredDataInterface::class,
@@ -662,14 +666,14 @@ class BaseInputFilterTest extends TestCase
 
     public function testGetUnfilteredDataReturnsArray(): void
     {
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
 
         self::assertIsArray($baseInputFilter->getUnfilteredData());
     }
 
     public function testSetUnfilteredDataReturnsBaseInputFilter(): void
     {
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
 
         self::assertInstanceOf(BaseInputFilter::class, $baseInputFilter->setUnfilteredData([]));
     }
@@ -680,7 +684,7 @@ class BaseInputFilterTest extends TestCase
             'foo' => 'bar',
         ];
 
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
         $baseInputFilter->setUnfilteredData($testArray);
 
         self::assertSame($testArray, $baseInputFilter->getUnfilteredData());
@@ -692,7 +696,7 @@ class BaseInputFilterTest extends TestCase
             'foo' => 'bar',
         ];
 
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
         $baseInputFilter->setData($testArray);
 
         self::assertSame($testArray, $baseInputFilter->getUnfilteredData());
@@ -712,7 +716,7 @@ class BaseInputFilterTest extends TestCase
         );
 
         /** @var BaseInputFilter $baseInputFilter */
-        $baseInputFilter = (new BaseInputFilter())
+        $baseInputFilter = (new BaseInputFilter($this->factory))
             ->add(new Input(), 'bar')
             ->setData($unfilteredArray);
 
@@ -950,7 +954,13 @@ class BaseInputFilterTest extends TestCase
         array $getValues = [],
         array $getMessages = []
     ): InputFilterInterfaceStub {
-        return new InputFilterInterfaceStub($isValid, $getRawValues, $getValues, $getMessages);
+        return new InputFilterInterfaceStub(
+            FactoryTestHelper::createInputFilterFactory(),
+            $isValid,
+            $getRawValues,
+            $getValues,
+            $getMessages
+        );
     }
 
     /** @param array<string, string> $getMessages */

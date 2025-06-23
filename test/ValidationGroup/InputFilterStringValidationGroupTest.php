@@ -8,6 +8,7 @@ use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\StringLength;
+use LaminasTest\InputFilter\FactoryTestHelper;
 use PHPUnit\Framework\TestCase;
 
 final class InputFilterStringValidationGroupTest extends TestCase
@@ -27,7 +28,7 @@ final class InputFilterStringValidationGroupTest extends TestCase
         $third->setRequired(true);
         $third->getValidatorChain()->attach(new StringLength(['min' => 5]));
 
-        $this->inputFilter = new InputFilter();
+        $this->inputFilter = new InputFilter(FactoryTestHelper::createInputFilterFactory());
         $this->inputFilter->add($first);
         $this->inputFilter->add($second);
         $this->inputFilter->add($third);

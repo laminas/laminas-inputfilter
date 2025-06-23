@@ -93,7 +93,8 @@ final class OptionalInputFilterTest extends TestCase
      */
     public function testIteratorBehavesTheSameAsArray(): void
     {
-        $optionalInputFilter = new OptionalInputFilter();
+        $optionalInputFilter = new OptionalInputFilter(FactoryTestHelper::createInputFilterFactory());
+
         $optionalInputFilter->add(new Input('brand'));
 
         $optionalInputFilter->setData(['model' => 'Golf']);
@@ -121,13 +122,15 @@ final class OptionalInputFilterTest extends TestCase
 
     protected function getNestedCarInputFilter(): InputFilter
     {
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
         if (! $this->nestedCarInputFilter) {
             /** @var OptionalInputFilter<array{brand: mixed, model:mixed}> $optionalInputFilter */
-            $optionalInputFilter = new OptionalInputFilter();
+            $optionalInputFilter = new OptionalInputFilter($factory);
             $optionalInputFilter->add(new Input('brand'));
             $optionalInputFilter->add(new Input('model'));
 
-            $this->nestedCarInputFilter = new InputFilter();
+            $this->nestedCarInputFilter = new InputFilter($factory);
             $this->nestedCarInputFilter->add($optionalInputFilter, 'car');
         }
 

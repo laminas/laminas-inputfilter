@@ -284,7 +284,9 @@ final class ArrayInputTest extends TestCase
 
     public function testAnArrayInputViaInputFilterIsAcceptable(): void
     {
-        $inputFilter = new InputFilter();
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
+        $inputFilter = new InputFilter($factory);
         $inputFilter->add([
             'type'       => ArrayInput::class,
             'validators' => [
@@ -320,7 +322,9 @@ final class ArrayInputTest extends TestCase
     #[DataProvider('nonArrayInput')]
     public function testNonArrayInputViaInputFilterIsUnacceptable(mixed $value): void
     {
-        $inputFilter = new InputFilter();
+        $factory = FactoryTestHelper::createInputFilterFactory();
+
+        $inputFilter = new InputFilter($factory);
         $inputFilter->add([
             'type'       => ArrayInput::class,
             'validators' => [

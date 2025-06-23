@@ -109,7 +109,6 @@
       <code><![CDATA[FilterChain::DEFAULT_PRIORITY]]></code>
     </DeprecatedConstant>
     <DeprecatedMethod>
-      <code><![CDATA[getPluginManager]]></code>
       <code><![CDATA[setPluginManager]]></code>
     </DeprecatedMethod>
     <MixedArgument>
@@ -243,28 +242,17 @@
     <DeprecatedInterface>
       <code><![CDATA[InputFilterAbstractServiceFactory]]></code>
     </DeprecatedInterface>
-    <DeprecatedMethod>
-      <code><![CDATA[setPluginManager]]></code>
-    </DeprecatedMethod>
     <MixedArgument>
       <code><![CDATA[$config]]></code>
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$allConfig['input_filter_specs']]]></code>
-      <code><![CDATA[$allConfig['input_filter_specs'][$rName]]]></code>
+      <code><![CDATA[$allConfig['input_filter_specs'][$requestedName]]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
       <code><![CDATA[$allConfig]]></code>
       <code><![CDATA[$config]]></code>
     </MixedAssignment>
-    <ParamNameMismatch>
-      <code><![CDATA[$cName]]></code>
-      <code><![CDATA[$container]]></code>
-      <code><![CDATA[$container]]></code>
-      <code><![CDATA[$rName]]></code>
-      <code><![CDATA[$rName]]></code>
-      <code><![CDATA[$services]]></code>
-    </ParamNameMismatch>
   </file>
   <file src="src/InputFilterAwareInterface.php">
     <PossiblyUnusedMethod>
@@ -283,12 +271,6 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/InputFilterPluginManager.php">
-    <DeprecatedInterface>
-      <code><![CDATA[null|ConfigInterface|ContainerInterface]]></code>
-    </DeprecatedInterface>
-    <DeprecatedMethod>
-      <code><![CDATA[setPluginManager]]></code>
-    </DeprecatedMethod>
     <MethodSignatureMismatch>
       <code><![CDATA[InputFilterPluginManager]]></code>
       <code><![CDATA[InputFilterPluginManager]]></code>
@@ -312,9 +294,6 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$shareByDefault]]></code>
     </PossiblyUnusedProperty>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$this->initializers]]></code>
-    </PropertyTypeCoercion>
   </file>
   <file src="src/InputFilterPluginManagerFactory.php">
     <DeprecatedClass>
@@ -323,9 +302,6 @@
     <DeprecatedInterface>
       <code><![CDATA[InputFilterPluginManagerFactory]]></code>
     </DeprecatedInterface>
-    <ParamNameMismatch>
-      <code><![CDATA[$container]]></code>
-    </ParamNameMismatch>
     <PossiblyUnusedMethod>
       <code><![CDATA[setCreationOptions]]></code>
     </PossiblyUnusedMethod>
@@ -560,9 +536,6 @@
     <NonInvariantDocblockPropertyType>
       <code><![CDATA[$inputFilter]]></code>
     </NonInvariantDocblockPropertyType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$factory]]></code>
-    </PossiblyInvalidArgument>
   </file>
   <file src="test/TestAsset/ModuleEventInterface.php">
     <PossiblyUnusedMethod>

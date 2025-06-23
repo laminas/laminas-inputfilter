@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use ArrayIterator;
-use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\MockObject\MockObject;
 use Traversable;
 
 use function array_merge;
@@ -17,25 +15,14 @@ use function array_merge;
 #[CoversClass(InputFilter::class)]
 final class InputFilterTest extends BaseInputFilterTest
 {
-    /** @var InputFilter */
+    /** @var InputFilter $inputFilter */
     protected $inputFilter;
 
     protected function setUp(): void
     {
-        $this->inputFilter = new InputFilter();
-    }
+        $this->factory = FactoryTestHelper::createInputFilterFactory();
 
-    public function testLazilyComposesAFactoryByDefault(): void
-    {
-        $factory = $this->inputFilter->getFactory();
-        self::assertInstanceOf(Factory::class, $factory);
-    }
-
-    public function testCanComposeAFactory(): void
-    {
-        $factory = $this->createFactoryMock();
-        $this->inputFilter->setFactory($factory);
-        self::assertSame($factory, $this->inputFilter->getFactory());
+        $this->inputFilter = new InputFilter($this->factory);
     }
 
     /**
@@ -54,9 +41,9 @@ final class InputFilterTest extends BaseInputFilterTest
         ];
         $inputSpecificationAsTraversable = new ArrayIterator($inputSpecificationAsArray);
 
-        $inputSpecificationResult = new Input('inputFoo');
-        $inputSpecificationResult->getFilterChain(); // Fill input with a default chain just for make the test pass
-        $inputSpecificationResult->getValidatorChain(); // Fill input with a default chain just for make the test pass
+        $inputSpecificationResult = FactoryTestHelper::createInputFilterFactory()->createInput([
+            'name' => 'inputFoo',
+        ]);
 
         // phpcs:disable
         $inputFilterDataSets = [
@@ -71,17 +58,6 @@ final class InputFilterTest extends BaseInputFilterTest
     }
 
     /**
-     * @return Factory|MockObject
-     */
-    protected function createFactoryMock()
-    {
-        /** @var Factory|MockObject $factory */
-        $factory = $this->createMock(Factory::class);
-
-        return $factory;
-    }
-
-    /**
      * Particularly in APIs, a null value may be passed for a set of data
      * rather than an object or array. This ensures that doing so will
      * work consistently with passing an empty array.
@@ -90,7 +66,7 @@ final class InputFilterTest extends BaseInputFilterTest
      */
     public function testNestedInputFilterShouldAllowNullValueForData(): void
     {
-        $filter1 = new InputFilter();
+        $filter1 = new InputFilter($this->factory);
         $filter1->add([
             'type'         => InputFilter::class,
             'nestedField1' => [
@@ -114,7 +90,9 @@ final class InputFilterTest extends BaseInputFilterTest
         $a = new Input();
         $b = new Input();
 
-        $filter = new InputFilter();
+        $filter = new InputFilter(
+            $this->factory
+        );
         $filter->add($a);
         $filter->add($b);
 

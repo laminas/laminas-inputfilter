@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter\TestAsset;
 
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilter;
 
 use function PHPUnit\Framework\assertNotNull;
@@ -19,11 +20,13 @@ final class InputFilterInterfaceStub extends InputFilter
      * @param array<string, array<array-key, string>> $getMessages
      */
     public function __construct(
+        Factory $factory,
         private readonly bool|null $isValid = null,
         private readonly array $getRawValues = [],
         private readonly array $getValues = [],
         private readonly array $getMessages = []
     ) {
+        parent::__construct($factory);
     }
 
     /** @inheritDoc */
