@@ -125,7 +125,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
         $filteredValue = ['tmp_name' => 'new'];
         $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
-        $this->input->setValidatorChain($this->createValidatorChainMock([[$badValue, null, false]]));
+        $this->input->setValidatorChain($this->createValidatorChain($badValue, false));
 
         self::assertFalse($this->input->isValid());
         self::assertEquals($badValue, $this->input->getValue());
@@ -210,7 +210,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
             'type'     => '',
             'error'    => UPLOAD_ERR_NO_FILE,
         ];
-        $this->input->setValidatorChain($this->createValidatorChainMock([[$expectedNormalizedValue, null, false]]));
+        $this->input->setValidatorChain($this->createValidatorChain($expectedNormalizedValue, false));
         self::assertFalse($this->input->isValid());
     }
 
@@ -227,7 +227,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
             'type'     => '',
             'error'    => UPLOAD_ERR_NO_FILE,
         ];
-        $this->input->setValidatorChain($this->createValidatorChainMock([[$expectedNormalizedValue, null, false]]));
+        $this->input->setValidatorChain($this->createValidatorChain($expectedNormalizedValue, false));
         self::assertFalse($this->input->isValid());
     }
 
@@ -492,7 +492,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
 
     public function testCanInjectValidatorChain(): void
     {
-        $chain = $this->createValidatorChainMock();
+        $chain = new ValidatorChain();
         $this->input->setValidatorChain($chain);
         self::assertSame($chain, $this->input->getValidatorChain());
     }
@@ -911,17 +911,12 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $source->method('isRequired')->willReturn(true);
         $source->method('getRawValue')->willReturn($sourceRawValue);
         $source->method('getFilterChain')->willReturn($this->createFilterChainMock());
-        $source->method('getValidatorChain')->willReturn($this->createValidatorChainMock());
+        $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
         $targetFilterChain = $this->createFilterChainMock();
         $targetFilterChain->expects(TestCase::once())
             ->method('merge')
             ->with($source->getFilterChain());
-
-        $targetValidatorChain = $this->createValidatorChainMock();
-        $targetValidatorChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getValidatorChain());
 
         $target = $this->input;
         $target->setName('fooInput');
@@ -929,7 +924,7 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
         $target->setFilterChain($targetFilterChain);
-        $target->setValidatorChain($targetValidatorChain);
+        $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
@@ -1071,28 +1066,9 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         return $filterChain;
     }
 
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @param string[] $messages
-     */
-    protected function createValidatorChainMock(array $valueMap = [], $messages = []): ValidatorChain&MockObject
+    protected function createValidatorChain(mixed $value, bool $isValid): ValidatorChain
     {
-        /** @var ValidatorChain&MockObject $validatorChain */
-        $validatorChain = $this->createMock(ValidatorChain::class);
-
-        if (empty($valueMap)) {
-            $validatorChain->expects(self::never())
-                ->method('isValid');
-        } else {
-            $validatorChain->expects(self::atLeastOnce())
-                ->method('isValid')
-                ->willReturnMap($valueMap);
-        }
-
-        $validatorChain->method('getMessages')
-            ->willReturn($messages);
-
-        return $validatorChain;
+        return (new ValidatorChain())->attach(self::createValidatorMock($isValid, $value));
     }
 
     /** @param array<string, string> $messages */

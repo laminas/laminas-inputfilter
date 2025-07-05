@@ -239,47 +239,9 @@ final class ArrayInputTest extends TestCase
         return $filterChain;
     }
 
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @param string[] $messages
-     * @return ValidatorChain&MockObject
-     */
-    protected function createValidatorChainMock(array $valueMap = [], array $messages = [])
+    protected function createValidatorChain(mixed $value, bool $isValid): ValidatorChain
     {
-        // ArrayInput validates per each array value
-        $valueMap = array_map(
-            static function ($values) {
-                if (is_array($values[0])) {
-                    /** @psalm-suppress MixedAssignment */
-                    $values[0] = current($values[0]);
-                }
-                return $values;
-            },
-            $valueMap,
-        );
-
-        /** @var ValidatorChain&MockObject $validatorChain */
-        $validatorChain = $this->createMock(ValidatorChain::class);
-
-        if (empty($valueMap)) {
-            $validatorChain->expects(self::never())
-                ->method('isValid');
-        } else {
-            $validatorChain->expects(self::atLeastOnce())
-                ->method('isValid')
-                ->willReturnMap($valueMap);
-        }
-
-        $validatorChain->method('getMessages')
-            ->willReturn($messages);
-
-        return $validatorChain;
-    }
-
-    /** @return string[] */
-    protected function getDummyValue(bool $raw = true)
-    {
-        return $raw ? ['foo'] : ['filtered'];
+        return (new ValidatorChain())->attach(self::createValidatorMock($isValid, $value));
     }
 
     public function testAnArrayInputViaInputFilterIsAcceptable(): void
@@ -398,7 +360,7 @@ final class ArrayInputTest extends TestCase
 
     public function testCanInjectValidatorChain(): void
     {
-        $validatorChain = $this->createMock(ValidatorChain::class);
+        $validatorChain = new ValidatorChain();
 
         $this->input->setValidatorChain($validatorChain);
         self::assertSame($validatorChain, $this->input->getValidatorChain());
@@ -478,7 +440,7 @@ final class ArrayInputTest extends TestCase
         $input->setContinueIfEmpty(true);
 
         $input->setRequired($required);
-        $input->setValidatorChain($this->createValidatorChainMock([[$originalValue, null, $isValid]]));
+        $input->setValidatorChain($this->createValidatorChain($originalValue[0], $isValid));
         $input->setFallbackValue($fallbackValue);
         $input->setValue($originalValue);
 
@@ -504,7 +466,7 @@ final class ArrayInputTest extends TestCase
         $input->setContinueIfEmpty(true);
 
         $input->setRequired($required);
-        $input->setValidatorChain($this->createValidatorChainMock());
+        $input->setValidatorChain(new ValidatorChain());
         $input->setFallbackValue($fallbackValue);
 
         self::assertTrue(
@@ -627,7 +589,7 @@ final class ArrayInputTest extends TestCase
 
     public function testValueMayBeInjected(): void
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw = 'foo';
 
         $this->input->setValue($valueRaw);
         self::assertEquals($valueRaw, $this->input->getValue());
@@ -635,8 +597,8 @@ final class ArrayInputTest extends TestCase
 
     public function testRetrievingValueFiltersTheValue(): void
     {
-        $valueRaw      = $this->getDummyValue();
-        $valueFiltered = $this->getDummyValue(false);
+        $valueRaw      = ['foo'];
+        $valueFiltered = ['filtered'];
 
         $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
 
@@ -648,7 +610,7 @@ final class ArrayInputTest extends TestCase
 
     public function testCanRetrieveRawValue(): void
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw = 'foo';
 
         $filterChain = $this->createMock(FilterChain::class);
 
@@ -660,16 +622,14 @@ final class ArrayInputTest extends TestCase
 
     public function testValidationOperatesOnFilteredValue(): void
     {
-        $valueRaw      = $this->getDummyValue();
-        $valueFiltered = $this->getDummyValue(false);
+        $valueRaw      = ['foo'];
+        $valueFiltered = ['filtered'];
 
         $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
 
-        $validatorChain = $this->createValidatorChainMock([[$valueFiltered, null, true]]);
-
         $this->input->setAllowEmpty(true);
         $this->input->setFilterChain($filterChain);
-        $this->input->setValidatorChain($validatorChain);
+        $this->input->setValidatorChain($this->createValidatorChain($valueFiltered[0], true));
         $this->input->setValue($valueRaw);
 
         self::assertTrue(
@@ -949,26 +909,19 @@ final class ArrayInputTest extends TestCase
 
     public function testMerge(): void
     {
-        $sourceRawValue = $this->getDummyValue();
-
         $source = $this->createMock(InputInterface::class);
         $source->method('getName')->willReturn('bazInput');
         $source->method('getErrorMessage')->willReturn('bazErrorMessage');
         $source->method('breakOnFailure')->willReturn(true);
         $source->method('isRequired')->willReturn(true);
-        $source->method('getRawValue')->willReturn($sourceRawValue);
+        $source->method('getRawValue')->willReturn('foo');
         $source->method('getFilterChain')->willReturn($this->createMock(FilterChain::class));
-        $source->method('getValidatorChain')->willReturn($this->createMock(ValidatorChain::class));
+        $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
         $targetFilterChain = $this->createMock(FilterChain::class);
         $targetFilterChain->expects(TestCase::once())
             ->method('merge')
             ->with($source->getFilterChain());
-
-        $targetValidatorChain = $this->createMock(ValidatorChain::class);
-        $targetValidatorChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getValidatorChain());
 
         $target = $this->input;
         $target->setName('fooInput');
@@ -976,7 +929,7 @@ final class ArrayInputTest extends TestCase
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
         $target->setFilterChain($targetFilterChain);
-        $target->setValidatorChain($targetValidatorChain);
+        $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
@@ -985,7 +938,7 @@ final class ArrayInputTest extends TestCase
         self::assertEquals('bazErrorMessage', $target->getErrorMessage(), 'getErrorMessage() value not match');
         self::assertTrue($target->breakOnFailure(), 'breakOnFailure() value not match');
         self::assertTrue($target->isRequired(), 'isRequired() value not match');
-        self::assertEquals($sourceRawValue, $target->getRawValue(), 'getRawValue() value not match');
+        self::assertEquals('foo', $target->getRawValue(), 'getRawValue() value not match');
         self::assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 

@@ -144,7 +144,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setValue($badValue);
 
         $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
-        $this->input->setValidatorChain($this->createValidatorChainMock([[$badValue, null, false]]));
+        $this->input->setValidatorChain($this->createValidatorChain($badValue, false));
 
         self::assertFalse($this->input->isValid());
         self::assertEquals($badValue, $this->input->getValue());
@@ -401,13 +401,6 @@ final class PsrFileInputDecoratorTest extends TestCase
         ];
     }
 
-    protected function getDummyValue(): UploadedFileInterface&MockObject
-    {
-        $upload = $this->createMock(UploadedFileInterface::class);
-        $upload->method('getError')->willReturn(UPLOAD_ERR_OK);
-        return $upload;
-    }
-
     public function assertRequiredValidationErrorMessage(Input $input, string $message = ''): void
     {
         $message  = $message ?: 'Expected failure message for required input';
@@ -461,7 +454,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testCanInjectValidatorChain(): void
     {
-        $chain = $this->createValidatorChainMock();
+        $chain = new ValidatorChain();
         $this->input->setValidatorChain($chain);
         self::assertSame($chain, $this->input->getValidatorChain());
     }
@@ -639,7 +632,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testValueMayBeInjected(): void
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw = ['foo'];
 
         $this->input->setValue($valueRaw);
         self::assertEquals($valueRaw, $this->input->getValue());
@@ -876,26 +869,19 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testMerge(): void
     {
-        $sourceRawValue = $this->getDummyValue();
-
         $source = $this->createMock(InputInterface::class);
         $source->method('getName')->willReturn('bazInput');
         $source->method('getErrorMessage')->willReturn('bazErrorMessage');
         $source->method('breakOnFailure')->willReturn(true);
         $source->method('isRequired')->willReturn(true);
-        $source->method('getRawValue')->willReturn($sourceRawValue);
+        $source->method('getRawValue')->willReturn('foo');
         $source->method('getFilterChain')->willReturn($this->createFilterChainMock());
-        $source->method('getValidatorChain')->willReturn($this->createValidatorChainMock());
+        $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
         $targetFilterChain = $this->createFilterChainMock();
         $targetFilterChain->expects(TestCase::once())
             ->method('merge')
             ->with($source->getFilterChain());
-
-        $targetValidatorChain = $this->createValidatorChainMock();
-        $targetValidatorChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getValidatorChain());
 
         $target = $this->input;
         $target->setName('fooInput');
@@ -903,7 +889,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
         $target->setFilterChain($targetFilterChain);
-        $target->setValidatorChain($targetValidatorChain);
+        $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
@@ -912,7 +898,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertEquals('bazErrorMessage', $target->getErrorMessage(), 'getErrorMessage() value not match');
         self::assertTrue($target->breakOnFailure(), 'breakOnFailure() value not match');
         self::assertTrue($target->isRequired(), 'isRequired() value not match');
-        self::assertEquals($sourceRawValue, $target->getRawValue(), 'getRawValue() value not match');
+        self::assertEquals('foo', $target->getRawValue(), 'getRawValue() value not match');
         self::assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 
@@ -1042,29 +1028,9 @@ final class PsrFileInputDecoratorTest extends TestCase
         return $filterChain;
     }
 
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @param string[] $messages
-     * @return ValidatorChain&MockObject
-     */
-    protected function createValidatorChainMock(array $valueMap = [], $messages = [])
+    protected function createValidatorChain(mixed $value, bool $isValid): ValidatorChain
     {
-        /** @var ValidatorChain&MockObject $validatorChain */
-        $validatorChain = $this->createMock(ValidatorChain::class);
-
-        if (empty($valueMap)) {
-            $validatorChain->expects(self::never())
-                ->method('isValid');
-        } else {
-            $validatorChain->expects(self::atLeastOnce())
-                ->method('isValid')
-                ->willReturnMap($valueMap);
-        }
-
-        $validatorChain->method('getMessages')
-            ->willReturn($messages);
-
-        return $validatorChain;
+        return (new ValidatorChain())->attach(self::createValidatorMock($isValid, $value));
     }
 
     /** @param array<string, string> $messages */
