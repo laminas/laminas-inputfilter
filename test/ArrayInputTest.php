@@ -18,7 +18,6 @@ use Laminas\Validator\NumberComparison;
 use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
-use LaminasTest\InputFilter\TestAsset\ValidatorStub;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -239,14 +238,9 @@ final class ArrayInputTest extends TestCase
         return $filterChain;
     }
 
-    protected function createValidatorChain(mixed $value, bool $isValid): ValidatorChain
-    {
-        return (new ValidatorChain())->attach(self::createValidatorMock($isValid, $value));
-    }
-
     public function testAnArrayInputViaInputFilterIsAcceptable(): void
     {
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $inputFilter = new InputFilter($factory);
         $inputFilter->add([
@@ -284,7 +278,7 @@ final class ArrayInputTest extends TestCase
     #[DataProvider('nonArrayInput')]
     public function testNonArrayInputViaInputFilterIsUnacceptable(mixed $value): void
     {
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $inputFilter = new InputFilter($factory);
         $inputFilter->add([
@@ -440,7 +434,7 @@ final class ArrayInputTest extends TestCase
         $input->setContinueIfEmpty(true);
 
         $input->setRequired($required);
-        $input->setValidatorChain($this->createValidatorChain($originalValue[0], $isValid));
+        $input->setValidatorChain(TestHelper::createValidatorChain($originalValue[0], $isValid));
         $input->setFallbackValue($fallbackValue);
         $input->setValue($originalValue);
 
@@ -566,7 +560,7 @@ final class ArrayInputTest extends TestCase
 
         // Validator should not to be called
         $input->getValidatorChain()
-            ->attach(self::createValidatorMock(null, null));
+            ->attach(TestHelper::createValidatorMock(null, null));
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
@@ -629,7 +623,7 @@ final class ArrayInputTest extends TestCase
 
         $this->input->setAllowEmpty(true);
         $this->input->setFilterChain($filterChain);
-        $this->input->setValidatorChain($this->createValidatorChain($valueFiltered[0], true));
+        $this->input->setValidatorChain(TestHelper::createValidatorChain($valueFiltered[0], true));
         $this->input->setValue($valueRaw);
 
         self::assertTrue(
@@ -711,7 +705,7 @@ final class ArrayInputTest extends TestCase
 
         $notEmptyMock->method('getMessages')->willReturn([]);
 
-        $validatorChain->attach(self::createValidatorMock(true));
+        $validatorChain->attach(TestHelper::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
 
         self::assertFalse($this->input->isValid());
@@ -1059,11 +1053,11 @@ final class ArrayInputTest extends TestCase
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
         $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(null, $value, $context);
+        TestHelper::createValidatorMock(null, $value, $context);
         $validatorInvalid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(false, $value, $context, $validatorMsg);
+        TestHelper::createValidatorMock(false, $value, $context, $validatorMsg);
         $validatorValid   = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(true, $value, $context);
+        TestHelper::createValidatorMock(true, $value, $context);
 
         $dataTemplates = [
             'Required: T; AEmpty: T; CIEmpty: T; Validator: T'
@@ -1122,15 +1116,5 @@ final class ArrayInputTest extends TestCase
         }
 
         return $dataSets;
-    }
-
-    /** @param array<string, string> $messages */
-    protected static function createValidatorMock(
-        bool|null $isValid,
-        mixed $value = 'not-set',
-        array|null $context = null,
-        array $messages = []
-    ): ValidatorInterface {
-        return new ValidatorStub($isValid, $value, $context, $messages);
     }
 }

@@ -45,7 +45,7 @@ class BaseInputFilterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->factory = FactoryTestHelper::createInputFilterFactory();
+        $this->factory = TestHelper::createInputFilterFactory();
 
         $this->inputFilter = new BaseInputFilter($this->factory);
     }
@@ -955,7 +955,7 @@ class BaseInputFilterTest extends TestCase
         array $getMessages = []
     ): InputFilterInterfaceStub {
         return new InputFilterInterfaceStub(
-            FactoryTestHelper::createInputFilterFactory(),
+            TestHelper::createInputFilterFactory(),
             $isValid,
             $getRawValues,
             $getValues,

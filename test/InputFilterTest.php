@@ -20,7 +20,7 @@ final class InputFilterTest extends BaseInputFilterTest
 
     protected function setUp(): void
     {
-        $this->factory = FactoryTestHelper::createInputFilterFactory();
+        $this->factory = TestHelper::createInputFilterFactory();
 
         $this->inputFilter = new InputFilter($this->factory);
     }
@@ -41,7 +41,7 @@ final class InputFilterTest extends BaseInputFilterTest
         ];
         $inputSpecificationAsTraversable = new ArrayIterator($inputSpecificationAsArray);
 
-        $inputSpecificationResult = FactoryTestHelper::createInputFilterFactory()->createInput([
+        $inputSpecificationResult = TestHelper::createInputFilterFactory()->createInput([
             'name' => 'inputFoo',
         ]);
 

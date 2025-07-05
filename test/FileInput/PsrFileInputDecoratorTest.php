@@ -19,7 +19,7 @@ use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use LaminasTest\InputFilter\TestAsset\UploadedFileInterfaceStub;
-use LaminasTest\InputFilter\TestAsset\ValidatorStub;
+use LaminasTest\InputFilter\TestHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -144,7 +144,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setValue($badValue);
 
         $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
-        $this->input->setValidatorChain($this->createValidatorChain($badValue, false));
+        $this->input->setValidatorChain(TestHelper::createValidatorChain($badValue, false));
 
         self::assertFalse($this->input->isValid());
         self::assertEquals($badValue, $this->input->getValue());
@@ -315,11 +315,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
 
         $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(null, $value, $context);
+        TestHelper::createValidatorMock(null, $value, $context);
         $validatorInvalid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(false, $value, $context, $validatorMsg);
+        TestHelper::createValidatorMock(false, $value, $context, $validatorMsg);
         $validatorValid   = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(true, $value, $context);
+        TestHelper::createValidatorMock(true, $value, $context);
 
         $dataTemplates = [
             'Required: T; AEmpty: T; CIEmpty: T; Validator: T'
@@ -603,7 +603,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         // Validator should not to be called
         $input->getValidatorChain()
-            ->attach(self::createValidatorMock(null, null));
+            ->attach(TestHelper::createValidatorMock(null, null));
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
@@ -668,7 +668,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         $notEmptyMock->method('getMessages')->willReturn([]);
 
-        $validatorChain->attach(self::createValidatorMock(true));
+        $validatorChain->attach(TestHelper::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
 
         self::assertFalse($this->input->isValid());
@@ -1026,20 +1026,5 @@ final class PsrFileInputDecoratorTest extends TestCase
             ->willReturnMap($valueMap);
 
         return $filterChain;
-    }
-
-    protected function createValidatorChain(mixed $value, bool $isValid): ValidatorChain
-    {
-        return (new ValidatorChain())->attach(self::createValidatorMock($isValid, $value));
-    }
-
-    /** @param array<string, string> $messages */
-    protected static function createValidatorMock(
-        bool|null $isValid,
-        mixed $value = 'not-set',
-        array|null $context = null,
-        array $messages = []
-    ): ValidatorInterface {
-        return new ValidatorStub($isValid, $value, $context, $messages);
     }
 }

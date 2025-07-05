@@ -39,7 +39,7 @@ final class CollectionInputFilterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->factory = FactoryTestHelper::createInputFilterFactory();
+        $this->factory = TestHelper::createInputFilterFactory();
 
         $this->inputFilter = new CollectionInputFilter($this->factory);
     }
@@ -167,16 +167,16 @@ final class CollectionInputFilterTest extends TestCase
 
         $invalidIF  = fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(
-                FactoryTestHelper::createInputFilterFactory(),
+                TestHelper::createInputFilterFactory(),
                 false,
                 $dataRaw,
                 $dataFiltered,
                 $errorMessage
             );
         $validIF    = fn(): BaseInputFilter =>
-            new InputFilterInterfaceStub(FactoryTestHelper::createInputFilterFactory(), true, $dataRaw, $dataFiltered);
+            new InputFilterInterfaceStub(TestHelper::createInputFilterFactory(), true, $dataRaw, $dataFiltered);
         $noValidIF  = fn(): BaseInputFilter =>
-            new InputFilterInterfaceStub(FactoryTestHelper::createInputFilterFactory(), null, $dataRaw, $dataFiltered);
+            new InputFilterInterfaceStub(TestHelper::createInputFilterFactory(), null, $dataRaw, $dataFiltered);
         $isRequired = true;
 
         // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
@@ -257,7 +257,7 @@ final class CollectionInputFilterTest extends TestCase
     #[DataProvider('dataNestingCollection')]
     public function testNestingCollectionCountCached(?int $count, bool $isValid): void
     {
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $firstInputFilter = new InputFilter($factory);
 
@@ -313,7 +313,7 @@ final class CollectionInputFilterTest extends TestCase
      */
     public static function inputFilterProvider(): array
     {
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $baseInputFilter = new BaseInputFilter($factory);
 
@@ -410,7 +410,7 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testGetUnknownWhenAllFieldsAreKnownReturnsAnEmptyArray(): void
     {
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $inputFilter = new InputFilter($factory);
         $inputFilter->add([
@@ -617,7 +617,7 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testDuplicatedErrorMessages(): void
     {
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $inputFilter = $factory->createInputFilter(
             [
@@ -792,7 +792,7 @@ final class CollectionInputFilterTest extends TestCase
             ],
         ];
 
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $baseInputFilter = (new BaseInputFilter($factory))
             ->add(new Input(), 'bar');
