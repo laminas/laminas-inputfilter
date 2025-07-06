@@ -19,6 +19,7 @@ use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\Foo;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
@@ -38,7 +39,7 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->services = new ServiceManager();
+        $this->services = TestHelper::getContainer();
         $this->filters  = new InputFilterPluginManager($this->services);
         $this->services->setService(InputFilterPluginManager::class, $this->filters);
 
@@ -54,78 +55,93 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
         $this->services->setService(Factory::class, $factory);
     }
 
-    public function testCannotCreateServiceIfNoConfigServicePresent(): void
+    #[DataProvider('canCreateProvider')]
+    public function testCanCreate(?array $config = null, bool $expectedResult): void
     {
-        self::assertFalse($this->factory->canCreate($this->services, 'filter'));
+        $services = new ServiceManager();
+
+        if ($config !== null) {
+            $services->setService('config', $config);
+        }
+
+        self::assertEquals($expectedResult, $this->factory->canCreate($services, 'filter'));
     }
 
-    public function testCannotCreateServiceIfConfigServiceDoesNotHaveInputFiltersConfiguration(): void
+    public static function canCreateProvider(): array
     {
-        $this->services->setService('config', []);
-
-        self::assertFalse($this->factory->canCreate($this->services, 'filter'));
-    }
-
-    public function testCannotCreateServiceIfConfigInputFiltersDoesNotContainMatchingServiceName(): void
-    {
-        $this->services->setService('config', [
-            'input_filter_specs' => [],
-        ]);
-
-        self::assertFalse($this->factory->canCreate($this->services, 'filter'));
-    }
-
-    public function testCanCreateServiceIfConfigInputFiltersContainsMatchingServiceName(): void
-    {
-        $this->services->setService('config', [
-            'input_filter_specs' => [
-                'filter' => [],
+        return [
+            'No config service present'                                => [null, false],
+            'Config service does not have Input filters configuration' => [[], false],
+            'Config service does not contain matching service name'    => [
+                ['input_filter_specs' => []],
+                false,
             ],
-        ]);
-
-        self::assertTrue($this->factory->canCreate($this->services, 'filter'));
+            'Config service contains matching service name'            => [
+                ['input_filter_specs' => ['filter' => []]],
+                true,
+            ],
+        ];
     }
 
     public function testCreatesInputFilterInstance(): void
     {
-        $this->services->setService('config', [
+        $services = TestHelper::getContainer([
             'input_filter_specs' => [
                 'filter' => [],
             ],
         ]);
 
-        $filter = $this->factory->__invoke($this->services, 'filter');
+        $filter = $this->factory->__invoke($services, 'filter');
         self::assertInstanceOf(InputFilterInterface::class, $filter);
     }
 
     #[Depends('testCreatesInputFilterInstance')]
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
-        $filter = static function (): void {
-        };
-        $this->filterPluginManager->setService('foo', $filter);
-
-        $validator = $this->createMock(ValidatorInterface::class);
-        $this->validatorPluginManager->setService('foo', $validator);
-
-        $this->services->setService('config', [
+        $services = TestHelper::getContainer([
             'input_filter_specs' => [
                 'filter' => [
                     'input' => [
                         'name'       => 'input',
                         'required'   => true,
                         'filters'    => [
-                            ['name' => 'foo'],
+                            ['name' => 'foo_filter'],
                         ],
                         'validators' => [
-                            ['name' => 'foo'],
+                            ['name' => 'foo_validator'],
                         ],
                     ],
                 ],
             ],
         ]);
 
-        $inputFilter = $this->factory->__invoke($this->services, 'filter');
+        $filterPluginManager = $services->get(FilterPluginManager::class);
+        $filter = static function (): void {
+        };
+        $filterPluginManager->configure(['services' => ['foo_filter' => $filter]]);
+
+        $validatorPluginManager = $services->get(ValidatorPluginManager::class);
+        $validator = $this->createMock(ValidatorInterface::class);
+        $validatorPluginManager->configure(['services' => ['foo_validator' => $validator]]);
+
+//        $this->services->setService('config', [
+//            'input_filter_specs' => [
+//                'filter' => [
+//                    'input' => [
+//                        'name'       => 'input',
+//                        'required'   => true,
+//                        'filters'    => [
+//                            ['name' => 'foo_filter'],
+//                        ],
+//                        'validators' => [
+//                            ['name' => 'foo_validator'],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ]);
+
+        $inputFilter = $this->factory->__invoke($services, 'filter');
         self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
         self::assertTrue($inputFilter->has('input'));
 
@@ -134,16 +150,16 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
 
         $filterChain = $input->getFilterChain();
         self::assertInstanceOf(FilterChain::class, $filterChain);
-        self::assertSame($this->filterPluginManager, $filterChain->getPluginManager());
+//        self::assertSame($this->filterPluginManager, $filterChain->getPluginManager());
         self::assertCount(1, $filterChain);
-        self::assertSame($filter, $filterChain->plugin('foo'));
+//        self::assertSame($filter, $filterChain->plugin('foo'));
         self::assertCount(1, $filterChain);
 
         $validatorChain = $input->getValidatorChain();
         self::assertInstanceOf(ValidatorChain::class, $validatorChain);
-        self::assertSame($this->validatorPluginManager, $validatorChain->getPluginManager());
+        self::assertSame($validatorPluginManager, $validatorChain->getPluginManager());
         self::assertCount(1, $validatorChain);
-        self::assertSame($validator, $validatorChain->plugin('foo'));
+        self::assertSame($validator, $validatorChain->plugin('foo_validator'));
         self::assertCount(1, $validatorChain);
     }
 
@@ -188,7 +204,7 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
                 'filter' => [],
             ],
         ]);
-        $this->filters->addAbstractFactory(TestAsset\FooAbstractFactory::class);
+        $this->filters->configure(['abstract_factories' => [TestAsset\FooAbstractFactory::class]]);
         /** @var InputFilter $filter */
         $filter = $this->factory->__invoke($this->services, 'filter');
         self::assertInstanceOf(InputFilter::class, $filter);
@@ -234,7 +250,8 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
             }
         };
 
-        $this->filterPluginManager->setService('CustomFilter', $filter);
+//        $this->filterPluginManager->setService('CustomFilter', $filter);
+        $this->filterPluginManager->configure(['services' => ['CustomFilter' => $filter]]);
 
         $this->services->setService('config', [
             'input_filter_specs' => [

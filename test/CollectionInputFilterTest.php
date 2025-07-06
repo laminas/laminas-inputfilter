@@ -14,11 +14,11 @@ use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Translator\TranslatorInterface;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Digits;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\NumberComparison;
-use Laminas\Validator\Translator\TranslatorInterface;
 use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -659,9 +659,12 @@ final class CollectionInputFilterTest extends TestCase
                                             [
                                                 'name'    => NumberComparison::class,
                                                 'options' => [
-                                                    'min'     => 50,
-                                                    'max'     => 100,
-                                                    'message' => '%value% is incorrect',
+                                                    'min'      => 50,
+                                                    'max'      => 100,
+                                                    'messages' => [
+                                                        NumberComparison::ERROR_NOT_GREATER_INCLUSIVE
+                                                        => '%value% is incorrect',
+                                                    ],
                                                 ],
                                             ],
                                         ],
@@ -672,9 +675,12 @@ final class CollectionInputFilterTest extends TestCase
                                             [
                                                 'name'    => NumberComparison::class,
                                                 'options' => [
-                                                    'min'     => 50,
-                                                    'max'     => 100,
-                                                    'message' => '%value% is incorrect',
+                                                    'min'      => 50,
+                                                    'max'      => 100,
+                                                    'messages' => [
+                                                        NumberComparison::ERROR_NOT_GREATER_INCLUSIVE
+                                                        => '%value% is incorrect',
+                                                    ],
                                                 ],
                                             ],
                                         ],
@@ -770,7 +776,6 @@ final class CollectionInputFilterTest extends TestCase
 
     public function testNotEmptyMessageIsTranslated(): void
     {
-        /** @psalm-suppress DeprecatedInterface */
         $translator = $this->createMock(TranslatorInterface::class);
         AbstractValidator::setDefaultTranslator($translator);
 

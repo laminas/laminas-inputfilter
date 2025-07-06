@@ -26,6 +26,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionObject;
 use TypeError;
 
 #[CoversClass(Factory::class)]
@@ -249,7 +250,10 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
         $inputFilterChain    = $input->getFilterChain();
         $inputValidatorChain = $input->getValidatorChain();
-        self::assertSame($filterPlugins, $inputFilterChain->getPluginManager());
+        self::assertSame(
+            $filterPlugins,
+            (new ReflectionObject($inputFilterChain))->getProperty('plugins')->getValue($inputFilterChain)
+        );
         self::assertSame($validatorPlugins, $inputValidatorChain->getPluginManager());
     }
 
@@ -287,7 +291,10 @@ final class FactoryTest extends TestCase
                     break;
                 case 2:
                     self::assertInstanceOf(Filter\StringToLower::class, $filter);
-                    self::assertEquals('iso-8859-1', $filter->getEncoding());
+                    self::assertEquals(
+                        'iso-8859-1',
+                        (new ReflectionObject($filter))->getProperty('encoding')->getValue($filter)
+                    );
                     break;
                 default:
                     self::fail('Found more filters than expected');
@@ -421,7 +428,7 @@ final class FactoryTest extends TestCase
 
     public function testFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfiguration(): void
     {
-        $serviceManager           = new ServiceManager();
+        $serviceManager           = TestHelper::getContainer();
         $inputFilterPluginManager = new InputFilterPluginManager($serviceManager);
         $inputFilterPluginManager->setFactory(
             CustomInput::class,
@@ -572,10 +579,8 @@ final class FactoryTest extends TestCase
     public function testFactoryAllowsPassingFilterChainsInInputSpec(): void
     {
         $factory = $this->createDefaultFactory();
-        $chain   = new Filter\FilterChain();
-        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
-        $chain->setPluginManager(TestHelper::createFilterPluginManager());
-        $input = $factory->createInput([
+        $chain   = TestHelper::createFilterChain();
+        $input   = $factory->createInput([
             'name'    => 'foo',
             'filters' => $chain,
         ]);
@@ -643,7 +648,7 @@ final class FactoryTest extends TestCase
         // Filters should pop in the following order:
         // string_to_upper (1001), string_to_lower (1000), string_trim (999)
         $index = 0;
-        foreach ($input->getFilterChain()->getFilters() as $filter) {
+        foreach ($input->getFilterChain()->getIterator() as $filter) {
             switch ($index) {
                 case 0:
                     self::assertInstanceOf(Filter\StringToUpper::class, $filter);
@@ -942,10 +947,7 @@ final class FactoryTest extends TestCase
         $inputFilterPluginManager = $container->get(InputFilterPluginManager::class);
         $factory                  = $container->get(Factory::class);
 
-        $filterChain = new Filter\FilterChain();
-        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
-        $filterChain->setPluginManager($filterPluginManager);
-
+        $filterChain    = new Filter\FilterChain($filterPluginManager);
         $validatorChain = new Validator\ValidatorChain();
         $validatorChain->setPluginManager($validatorPlugins);
 
@@ -1000,7 +1002,7 @@ final class FactoryTest extends TestCase
 
     protected function createDefaultFactory(?InputFilterPluginManager $inputFilterPluginManager = null): Factory
     {
-        $serviceManager = new ServiceManager();
+        $serviceManager = TestHelper::getContainer();
 
         $factory = new Factory(
             new FilterPluginManager($serviceManager),

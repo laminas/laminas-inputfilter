@@ -12,19 +12,18 @@ use Laminas\InputFilter\FileInput\HttpServerFileInputHandler;
 use Laminas\InputFilter\FileInput\PsrFileInputHandler;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputInterface;
+use Laminas\Translator\TranslatorInterface;
 use Laminas\Validator;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\File\UploadFile as UploadValidator;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\NumberComparison;
-use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use LaminasTest\InputFilter\TestAsset\UploadedFileInterfaceStub;
 use LaminasTest\InputFilter\TestHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -812,10 +811,6 @@ final class FileInputTest extends TestCase
 
     public function testNotEmptyMessageIsTranslated(): void
     {
-        /**
-         * @psalm-suppress DeprecatedInterface
-         * @var TranslatorInterface&MockObject $translator
-         */
         $translator = $this->createMock(TranslatorInterface::class);
         AbstractValidator::setDefaultTranslator($translator);
 
@@ -833,7 +828,7 @@ final class FileInputTest extends TestCase
 
     public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled(): void
     {
-        $input = new FileInput(new FilterChain(), new ValidatorChain());
+        $input = new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
         $input->setAutoPrependUploadValidator(true);
         self::assertTrue($input->getAutoPrependUploadValidator());
         self::assertTrue($input->isRequired());

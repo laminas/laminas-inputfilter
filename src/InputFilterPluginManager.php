@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\AbstractSingleInstancePluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
@@ -20,18 +20,18 @@ use function sprintf;
  *
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  * @template InstanceType of InputFilterInterface|InputInterface
- * @extends AbstractPluginManager<InstanceType>
+ * @extends AbstractSingleInstancePluginManager<InstanceType>
  *
  * @final
  */
-class InputFilterPluginManager extends AbstractPluginManager
+class InputFilterPluginManager extends AbstractSingleInstancePluginManager
 {
     /**
      * Default alias of plugins
      *
      * @var string[]
      */
-    protected $aliases = [
+    protected array $aliases = [
         'inputfilter'         => InputFilter::class,
         'inputFilter'         => InputFilter::class,
         'InputFilter'         => InputFilter::class,
@@ -57,7 +57,7 @@ class InputFilterPluginManager extends AbstractPluginManager
      *
      * @var string[]
      */
-    protected $factories = [
+    protected array $factories = [
         InputFilter::class           => InputFilterFactory::class,
         CollectionInputFilter::class => InputFilterFactory::class,
         OptionalInputFilter::class   => InputFilterFactory::class,
@@ -69,10 +69,8 @@ class InputFilterPluginManager extends AbstractPluginManager
 
     /**
      * Whether or not to share by default (v3)
-     *
-     * @var bool
      */
-    protected $sharedByDefault = false;
+    protected bool $sharedByDefault = false;
 
     /**
      * Whether or not to share by default (v2)
@@ -89,7 +87,7 @@ class InputFilterPluginManager extends AbstractPluginManager
      * @psalm-assert InstanceType $instance
      * @param mixed $instance
      */
-    public function validate($instance)
+    public function validate($instance): void
     {
         if ($instance instanceof InputFilterInterface || $instance instanceof InputInterface) {
             // Hook to perform various initialization, when the inputFilter is not created through the factory
@@ -139,11 +137,11 @@ class InputFilterPluginManager extends AbstractPluginManager
      * // Template constraint required or we get mixed added to output. Two templates because union does not work
      * @template T1 of InputInterface
      * @template T2 of InputFilterInterface
-     * @param class-string<T1>|class-string<T2>|string $name
-     * @return ($name is class-string<InputInterface> ? T1 : ($name is class-string<InputFilterInterface> ? T2 : InputInterface|InputFilterInterface))
+     * @param class-string<T1>|class-string<T2>|string $id
+     * @return ($id is class-string<InputInterface> ? T1 : ($id is class-string<InputFilterInterface> ? T2 : InputInterface|InputFilterInterface))
      */
-    public function get($name, ?array $options = null)
+    public function get($id, ?array $options = null): mixed
     {
-        return parent::get($name, $options);
+        return parent::get($id, $options);
     }
 }

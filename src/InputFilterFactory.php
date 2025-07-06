@@ -17,7 +17,7 @@ final class InputFilterFactory implements AbstractFactoryInterface
      * @param string $requestedName
      * @return object
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): mixed
     {
         /** @psalm-suppress InvalidStringClass */
         return new $requestedName($container->get(Factory::class));

@@ -10,9 +10,8 @@ final class FileUploadMock implements ValidatorInterface
 {
     /**
      * @param mixed $value
-     * @return bool
      */
-    public function isValid($value)
+    public function isValid($value): bool
     {
         return true;
     }

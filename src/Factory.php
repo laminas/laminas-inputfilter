@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
-use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
-use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
@@ -22,7 +20,6 @@ use function get_debug_type;
 use function in_array;
 use function is_a;
 use function is_array;
-use function is_callable;
 use function is_int;
 use function is_string;
 use function sprintf;
@@ -101,11 +98,11 @@ final class Factory
         $filters = $spec['filters'] ?? [];
         if ($filters instanceof FilterChain) {
             $filterChain = $filters;
-            $filterChain->setPluginManager($this->filterPluginManager);
+            // TODO - Does this need to do anything else now?
+//            $filterChain->setPluginManager($this->filterPluginManager);
         } else {
-            $filterChain = new FilterChain();
-            $filterChain->setPluginManager($this->filterPluginManager);
-            $this->populateFilters($filterChain, $filters);
+            $filterChain = new FilterChain($this->filterPluginManager);
+            $this->filterPluginManager->build(FilterChain::class, $filters);
         }
 
         $validators = $spec['validators'] ?? [];
@@ -113,9 +110,8 @@ final class Factory
             $validatorChain = $validators;
             $validatorChain->setPluginManager($this->validatorPluginManager);
         } else {
-            $validatorChain = new ValidatorChain();
-            $validatorChain->setPluginManager($this->validatorPluginManager);
-            $this->populateValidators($validatorChain, $validators);
+            $validatorChain = new ValidatorChain($this->validatorPluginManager);
+            $this->validatorPluginManager->build(ValidatorChain::class, $validators);
         }
 
         return [
@@ -358,64 +354,6 @@ final class Factory
         }
 
         return $inputFilter;
-    }
-
-    /**
-     * @param iterable<array-key, FilterInterface|(callable(mixed): mixed)|FilterSpecification> $filters
-     * @throws RuntimeException
-     * @todo Can be replaced with
-     *       `$this->filterPluginManager->build(FilterChain::class, $filters)`
-     *       once SMv4 is installed
-     */
-    private function populateFilters(FilterChain $chain, iterable $filters): void
-    {
-        foreach ($filters as $filter) {
-            if (is_callable($filter)) {
-                $chain->attach($filter);
-                continue;
-            }
-
-            if (! isset($filter['name'])) {
-                throw new RuntimeException(
-                    'Invalid filter specification provided; does not include "name" key',
-                );
-            }
-            $name     = $filter['name'];
-            $priority = $filter['priority'] ?? FilterChain::DEFAULT_PRIORITY;
-            $options  = $filter['options'] ?? [];
-
-            $chain->attachByName($name, $options, $priority);
-        }
-    }
-
-    /**
-     * @param iterable<array-key, ValidatorInterface|ValidatorSpecification> $validators
-     * @throws RuntimeException
-     * @todo Can be replaced with
-     *        `$this->validatorPluginManager->build(ValidatorChain::class, $validators)`
-     *        once SMv4 is installed
-     */
-    private function populateValidators(ValidatorChain $chain, iterable $validators): void
-    {
-        foreach ($validators as $validator) {
-            if ($validator instanceof ValidatorInterface) {
-                $chain->attach($validator);
-                continue;
-            }
-
-            if (! isset($validator['name'])) {
-                throw new RuntimeException(
-                    'Invalid validator specification provided; does not include "name" key',
-                );
-            }
-
-            $chain->attachByName(
-                $validator['name'],
-                $validator['options'] ?? [],
-                $validator['break_chain_on_failure'] ?? false,
-                $validator['priority'] ?? ValidatorChain::DEFAULT_PRIORITY,
-            );
-        }
     }
 
     public function getValidatorPluginManager(): ValidatorPluginManager
