@@ -32,7 +32,7 @@
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-        "laminas/laminas-filter": "^3.0",
+        "laminas/laminas-filter": "^3.2.0",
         "laminas/laminas-servicemanager": "^4.0",
         "laminas/laminas-stdlib": "^3.19",
         "laminas/laminas-validator": "^3.7.0",
