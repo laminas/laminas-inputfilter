@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 
 use function array_diff_key;
-use function array_map;
 use function array_merge;
 use function array_pop;
 use function count;
@@ -208,36 +207,6 @@ final class ArrayInputTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<list<mixed>> $valueMap
-     */
-    protected function createFilterChainMock(array $valueMap = []): FilterChain&MockObject
-    {
-        // ArrayInput filters per each array value
-        $valueMap = array_map(
-            static function ($values) {
-                if (is_array($values[0])) {
-                    /** @psalm-suppress MixedAssignment */
-                    $values[0] = current($values[0]);
-                }
-                if (is_array($values[1])) {
-                    /** @psalm-suppress MixedAssignment */
-                    $values[1] = current($values[1]);
-                }
-                return $values;
-            },
-            $valueMap,
-        );
-
-        /** @var FilterChain&MockObject $filterChain */
-        $filterChain = $this->createMock(FilterChain::class);
-
-        $filterChain->method('filter')
-            ->willReturnMap($valueMap);
-
-        return $filterChain;
-    }
-
     public function testAnArrayInputViaInputFilterIsAcceptable(): void
     {
         $factory = TestHelper::createInputFilterFactory();
@@ -346,7 +315,7 @@ final class ArrayInputTest extends TestCase
 
     public function testCanInjectFilterChain(): void
     {
-        $filterChain = $this->createMock(FilterChain::class);
+        $filterChain = TestHelper::createFilterChain();
 
         $this->input->setFilterChain($filterChain);
         self::assertSame($filterChain, $this->input->getFilterChain());
@@ -594,7 +563,7 @@ final class ArrayInputTest extends TestCase
         $valueRaw      = ['foo'];
         $valueFiltered = ['filtered'];
 
-        $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
+        $filterChain = TestHelper::createFilterChainFixture($valueRaw[0], $valueFiltered[0]);
 
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($valueRaw);
@@ -606,9 +575,7 @@ final class ArrayInputTest extends TestCase
     {
         $valueRaw = 'foo';
 
-        $filterChain = $this->createMock(FilterChain::class);
-
-        $this->input->setFilterChain($filterChain);
+        $this->input->setFilterChain(TestHelper::createFilterChain());
         $this->input->setValue($valueRaw);
 
         self::assertEquals($valueRaw, $this->input->getRawValue());
@@ -619,7 +586,7 @@ final class ArrayInputTest extends TestCase
         $valueRaw      = ['foo'];
         $valueFiltered = ['filtered'];
 
-        $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
+        $filterChain = TestHelper::createFilterChainFixture($valueRaw[0], $valueFiltered[0]);
 
         $this->input->setAllowEmpty(true);
         $this->input->setFilterChain($filterChain);
@@ -687,7 +654,10 @@ final class ArrayInputTest extends TestCase
     #[DataProvider('emptyValueProvider')]
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
-        $filterChain    = $this->createFilterChainMock([[$raw, $filtered]]);
+        $filterChain    = TestHelper::createFilterChainFixture(
+            is_array($raw) ? $raw[0] : $raw,
+            is_array($filtered) ? count($filtered) > 0 ? $filtered[0] : null : $filtered
+        );
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
@@ -909,20 +879,15 @@ final class ArrayInputTest extends TestCase
         $source->method('breakOnFailure')->willReturn(true);
         $source->method('isRequired')->willReturn(true);
         $source->method('getRawValue')->willReturn('foo');
-        $source->method('getFilterChain')->willReturn($this->createMock(FilterChain::class));
+        $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
         $source->method('getValidatorChain')->willReturn(new ValidatorChain());
-
-        $targetFilterChain = $this->createMock(FilterChain::class);
-        $targetFilterChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getFilterChain());
 
         $target = $this->input;
         $target->setName('fooInput');
         $target->setErrorMessage('fooErrorMessage');
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
-        $target->setFilterChain($targetFilterChain);
+        $target->setFilterChain(TestHelper::createFilterChain());
         $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);

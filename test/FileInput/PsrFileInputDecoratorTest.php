@@ -71,12 +71,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         $filteredUpload = $this->createMock(UploadedFileInterface::class);
 
-        $this->input->setFilterChain($this->createFilterChainMock([
-            [
-                $upload,
-                $filteredUpload,
-            ],
-        ]));
+        $this->input->setFilterChain(TestHelper::createFilterChainFixture($upload, $filteredUpload));
 
         self::assertEquals($upload, $this->input->getValue());
         self::assertTrue(
@@ -103,7 +98,7 @@ final class PsrFileInputDecoratorTest extends TestCase
             $filteredValues[] = $this->createMock(UploadedFileInterface::class);
         }
 
-        $this->input->setFilterChain($this->createFilterChainMock([
+        $this->input->setFilterChain(TestHelper::createFilterChainFixtureFromMap([
             [$values[0], $filteredValues[0]],
             [$values[1], $filteredValues[1]],
             [$values[2], $filteredValues[2]],
@@ -128,7 +123,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setValue($value);
 
         $filteredValue = $this->createMock(UploadedFileInterface::class);
-        $this->input->setFilterChain($this->createFilterChainMock([[$value, $filteredValue]]));
+        $this->input->setFilterChain(TestHelper::createFilterChainFixture($value, $filteredValue));
 
         self::assertEquals($value, $this->input->getRawValue());
     }
@@ -143,7 +138,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         $this->input->setValue($badValue);
 
-        $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
+        $this->input->setFilterChain(TestHelper::createFilterChainFixture($badValue, $filteredValue));
         $this->input->setValidatorChain(TestHelper::createValidatorChain($badValue, false));
 
         self::assertFalse($this->input->isValid());
@@ -447,7 +442,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testCanInjectFilterChain(): void
     {
-        $chain = $this->createFilterChainMock();
+        $chain = TestHelper::createFilterChain();
         $this->input->setFilterChain($chain);
         self::assertSame($chain, $this->input->getFilterChain());
     }
@@ -652,7 +647,7 @@ final class PsrFileInputDecoratorTest extends TestCase
     #[DataProvider('emptyValueProvider')]
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
-        $filterChain    = $this->createFilterChainMock([[$raw, $filtered]]);
+        $filterChain    = TestHelper::createFilterChainFixture($raw, $filtered);
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
@@ -875,20 +870,15 @@ final class PsrFileInputDecoratorTest extends TestCase
         $source->method('breakOnFailure')->willReturn(true);
         $source->method('isRequired')->willReturn(true);
         $source->method('getRawValue')->willReturn('foo');
-        $source->method('getFilterChain')->willReturn($this->createFilterChainMock());
+        $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
         $source->method('getValidatorChain')->willReturn(new ValidatorChain());
-
-        $targetFilterChain = $this->createFilterChainMock();
-        $targetFilterChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getFilterChain());
 
         $target = $this->input;
         $target->setName('fooInput');
         $target->setErrorMessage('fooErrorMessage');
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
-        $target->setFilterChain($targetFilterChain);
+        $target->setFilterChain(TestHelper::createFilterChain());
         $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
@@ -1011,20 +1001,5 @@ final class PsrFileInputDecoratorTest extends TestCase
                 ],
             ]
         );
-    }
-
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @return FilterChain&MockObject
-     */
-    public function createFilterChainMock(array $valueMap = [])
-    {
-        /** @var FilterChain&MockObject $filterChain */
-        $filterChain = $this->createMock(FilterChain::class);
-
-        $filterChain->method('filter')
-            ->willReturnMap($valueMap);
-
-        return $filterChain;
     }
 }

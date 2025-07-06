@@ -91,7 +91,7 @@ final class InputTest extends TestCase
 
     public function testCanInjectFilterChain(): void
     {
-        $chain = $this->createFilterChainMock();
+        $chain = TestHelper::createFilterChain();
         $this->input->setFilterChain($chain);
         self::assertSame($chain, $this->input->getFilterChain());
     }
@@ -342,7 +342,7 @@ final class InputTest extends TestCase
         $valueRaw      = 'foo';
         $valueFiltered = 'filtered';
 
-        $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
+        $filterChain = TestHelper::createFilterChainFixture($valueRaw, $valueFiltered);
 
         $this->input->setFilterChain($filterChain);
         $this->input->setValue($valueRaw);
@@ -354,9 +354,7 @@ final class InputTest extends TestCase
     {
         $valueRaw = 'foo';
 
-        $filterChain = $this->createFilterChainMock();
-
-        $this->input->setFilterChain($filterChain);
+        $this->input->setFilterChain(TestHelper::createFilterChain());
         $this->input->setValue($valueRaw);
 
         self::assertEquals($valueRaw, $this->input->getRawValue());
@@ -367,7 +365,7 @@ final class InputTest extends TestCase
         $valueRaw      = 'foo';
         $valueFiltered = 'filtered';
 
-        $filterChain = $this->createFilterChainMock([[$valueRaw, $valueFiltered]]);
+        $filterChain = TestHelper::createFilterChainFixture($valueRaw, $valueFiltered);
 
         $this->input->setAllowEmpty(true);
         $this->input->setFilterChain($filterChain);
@@ -429,7 +427,7 @@ final class InputTest extends TestCase
     #[DataProvider('emptyValueProvider')]
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
-        $filterChain    = $this->createFilterChainMock([[$raw, $filtered]]);
+        $filterChain    = TestHelper::createFilterChainFixture($raw, $filtered);
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
@@ -642,14 +640,10 @@ final class InputTest extends TestCase
         $source->method('breakOnFailure')->willReturn(true);
         $source->method('isRequired')->willReturn(true);
         $source->method('getRawValue')->willReturn('foo');
-        $source->method('getFilterChain')->willReturn($this->createFilterChainMock());
+        $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
         $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
-        $targetFilterChain = $this->createFilterChainMock();
-        $targetFilterChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getFilterChain());
-
+        $targetFilterChain    = TestHelper::createFilterChain();
         $targetValidatorChain = new ValidatorChain();
 
         $target = $this->input;
@@ -968,21 +962,6 @@ final class InputTest extends TestCase
                 'filtered' => new stdClass(),
             ],
         ];
-    }
-
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @return FilterChain&MockObject
-     */
-    public function createFilterChainMock(array $valueMap = [])
-    {
-        /** @var FilterChain&MockObject $filterChain */
-        $filterChain = $this->createMock(FilterChain::class);
-
-        $filterChain->method('filter')
-            ->willReturnMap($valueMap);
-
-        return $filterChain;
     }
 
     protected function createNonEmptyValidatorMock(
