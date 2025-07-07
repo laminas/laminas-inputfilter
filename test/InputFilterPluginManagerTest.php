@@ -147,7 +147,7 @@ final class InputFilterPluginManagerTest extends TestCase
      */
     public static function serviceProvider(): array
     {
-        $inputFilterInterfaceMock = new InputFilterInterfaceStub(FactoryTestHelper::createInputFilterFactory());
+        $inputFilterInterfaceMock = new InputFilterInterfaceStub(TestHelper::createInputFilterFactory());
         $inputInterfaceMock       = new InputInterfaceStub('foo', true);
 
         // phpcs:disable Generic.Files.LineLength.TooLong

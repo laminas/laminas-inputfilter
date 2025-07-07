@@ -24,7 +24,7 @@ final class InputFilterFactoryTest extends TestCase
         $container->expects(self::once())
             ->method('get')
             ->with(Factory::class)
-            ->willReturn(FactoryTestHelper::createInputFilterFactory());
+            ->willReturn(TestHelper::createInputFilterFactory());
 
         $factory = new InputFilterFactory();
 

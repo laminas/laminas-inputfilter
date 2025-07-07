@@ -19,7 +19,7 @@ final class InputFilterAwareTraitTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->factory = FactoryTestHelper::createInputFilterFactory();
+        $this->factory = TestHelper::createInputFilterFactory();
     }
 
     public function testSetInputFilter(): void

@@ -8,7 +8,7 @@ use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
-use LaminasTest\InputFilter\FactoryTestHelper;
+use LaminasTest\InputFilter\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
     {
         parent::setUp();
 
-        $factory = FactoryTestHelper::createInputFilterFactory();
+        $factory = TestHelper::createInputFilterFactory();
 
         $collection = new CollectionInputFilter($factory);
         $collection->setIsRequired(true);
