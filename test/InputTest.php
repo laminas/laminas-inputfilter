@@ -423,7 +423,7 @@ final class InputTest extends TestCase
     }
 
     #[DataProvider('emptyValueProvider')]
-    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
+    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw): void
     {
         $validatorChain = $this->input->getValidatorChain();
 
