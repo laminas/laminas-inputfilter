@@ -29,8 +29,6 @@ use function array_diff_key;
 use function array_merge;
 use function array_pop;
 use function count;
-use function current;
-use function is_array;
 use function iterator_to_array;
 use function json_encode;
 use function sprintf;
@@ -482,18 +480,14 @@ final class ArrayInputTest extends TestCase
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
-        $input = new Input();
+        $input = new ArrayInput();
         $input->setRequired(true);
 
         $customMessage = [
             NotEmptyValidator::IS_EMPTY => "Custom message",
         ];
 
-        $notEmpty = $this->createMock(NotEmptyValidator::class);
-        $notEmpty->expects(self::once())
-            ->method('getOption')
-            ->with('messageTemplates')
-            ->willReturn($customMessage);
+        $notEmpty = new NotEmptyValidator(['messages' => $customMessage]);
 
         $input->getValidatorChain()
             ->attach($notEmpty);
@@ -634,55 +628,37 @@ final class ArrayInputTest extends TestCase
         $this->input->setRequired(true);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
-        $notEmptyMock->expects(self::once())
-            ->method('isValid')
-            ->with(current($raw), null)
-            ->willReturn(false);
-
-        $notEmptyMock->method('getMessages')->willReturn([]);
+        $notEmpty = new NotEmptyValidator();
 
         $validatorChain = $this->input->getValidatorChain();
-        $validatorChain->prependValidator($notEmptyMock);
+        $validatorChain->prependValidator($notEmpty);
         self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
         self::assertEquals(1, count($validators));
-        self::assertEquals($notEmptyMock, $validators[0]['instance']);
+        self::assertEquals($notEmpty, $validators[0]['instance']);
     }
 
     #[DataProvider('emptyValueProvider')]
-    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
+    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw): void
     {
-        $filterChain    = TestHelper::createFilterChainFixture(
-            is_array($raw) ? $raw[0] : $raw,
-            is_array($filtered) ? count($filtered) > 0 ? $filtered[0] : null : $filtered
-        );
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
-        $this->input->setFilterChain($filterChain);
         $this->input->setValue($raw);
 
-        /** @psalm-suppress MixedAssignment */
-        $value = is_array($filtered) ? current($filtered) : $filtered;
+        $mockValidator = TestHelper::createValidatorMock(true);
+        $validatorChain->attach($mockValidator);
 
-        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
-        $notEmptyMock->expects(self::once())
-            ->method('isValid')
-            ->with($value, null)
-            ->willReturn(false);
-
-        $notEmptyMock->method('getMessages')->willReturn([]);
-
-        $validatorChain->attach(TestHelper::createValidatorMock(true));
-        $validatorChain->attach($notEmptyMock);
+        $notEmpty = new NotEmptyValidator();
+        $validatorChain->attach($notEmpty);
 
         self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
         self::assertEquals(2, count($validators));
-        self::assertEquals($notEmptyMock, $validators[1]['instance']);
+        self::assertEquals($mockValidator, $validators[0]['instance']);
+        self::assertEquals($notEmpty, $validators[1]['instance']);
     }
 
     #[DataProvider('isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider')]
@@ -740,8 +716,8 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesTheName(): void
     {
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = new ArrayInput('a');
+        $b = new ArrayInput('b');
         $a->merge($b);
 
         self::assertSame('b', $a->getName());
@@ -749,8 +725,8 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesErrorMessage(): void
     {
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = new ArrayInput('a');
+        $b = new ArrayInput('b');
         $b->setErrorMessage('Foo');
         $a->merge($b);
 
@@ -759,9 +735,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesBreakOnFailureFlag(): void
     {
-        $a = new Input('a');
+        $a = new ArrayInput('a');
         $a->setBreakOnFailure(false);
-        $b = new Input('b');
+        $b = new ArrayInput('b');
         $b->setBreakOnFailure(true);
         $a->merge($b);
 
@@ -770,9 +746,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesRequiredFlag(): void
     {
-        $a = new Input('a');
+        $a = new ArrayInput('a');
         $a->setRequired(false);
-        $b = new Input('b');
+        $b = new ArrayInput('b');
         $b->setRequired(true);
         $a->merge($b);
 
@@ -781,9 +757,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesAllowEmptyFlag(): void
     {
-        $a = new Input('a');
+        $a = new ArrayInput('a');
         $a->setAllowEmpty(false);
-        $b = new Input('b');
+        $b = new ArrayInput('b');
         $b->setAllowEmpty(true);
         $a->merge($b);
 
@@ -792,9 +768,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsCopiesTheValueIfSet(): void
     {
-        $a = new Input('a');
+        $a = new ArrayInput('a');
         $a->setValue('a');
-        $b = new Input('b');
+        $b = new ArrayInput('b');
         $b->setValue('b');
         $a->merge($b);
 
@@ -806,8 +782,8 @@ final class ArrayInputTest extends TestCase
         $filter1 = new ToInt();
         $filter2 = new ToNull();
 
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = new ArrayInput('a');
+        $b = new ArrayInput('b');
 
         $a->getFilterChain()->attach($filter1);
         $b->getFilterChain()->attach($filter2);
@@ -826,8 +802,8 @@ final class ArrayInputTest extends TestCase
         $validator1 = new NotEmptyValidator();
         $validator2 = new NumberComparison(['min' => 1, 'max' => 5]);
 
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = new ArrayInput('a');
+        $b = new ArrayInput('b');
 
         $a->getValidatorChain()->attach($validator1);
         $b->getValidatorChain()->attach($validator2);
@@ -906,7 +882,7 @@ final class ArrayInputTest extends TestCase
      */
     public function testInputMergeWithoutValues(): void
     {
-        $source = new Input();
+        $source = new ArrayInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 
@@ -926,7 +902,7 @@ final class ArrayInputTest extends TestCase
      */
     public function testInputMergeWithSourceValue(): void
     {
-        $source = new Input();
+        $source = new ArrayInput();
         $source->setContinueIfEmpty(true);
         $source->setValue(['foo']);
 
@@ -947,7 +923,7 @@ final class ArrayInputTest extends TestCase
      */
     public function testInputMergeWithTargetValue(): void
     {
-        $source = new Input();
+        $source = new ArrayInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 

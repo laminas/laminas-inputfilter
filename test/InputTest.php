@@ -1,4 +1,6 @@
-<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCaps
+<?php
+
+declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
@@ -263,11 +265,7 @@ final class InputTest extends TestCase
             NotEmptyValidator::IS_EMPTY => "Custom message",
         ];
 
-        $notEmpty = $this->createMock(NotEmptyValidator::class);
-        $notEmpty->expects(self::once())
-            ->method('getOption')
-            ->with('messageTemplates')
-            ->willReturn($customMessage);
+        $notEmpty = new NotEmptyValidator(['messages' => $customMessage]);
 
         $input->getValidatorChain()
             ->attach($notEmpty);
@@ -413,7 +411,7 @@ final class InputTest extends TestCase
         $this->input->setRequired(true);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock($raw);
+        $notEmptyMock = new NotEmptyValidator();
 
         $validatorChain = $this->input->getValidatorChain();
         $validatorChain->prependValidator($notEmptyMock);
@@ -425,24 +423,24 @@ final class InputTest extends TestCase
     }
 
     #[DataProvider('emptyValueProvider')]
-    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
+    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw): void
     {
-        $filterChain    = TestHelper::createFilterChainFixture($raw, $filtered);
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
-        $this->input->setFilterChain($filterChain);
         $this->input->setValue($raw);
 
-        $notEmptyMock = $this->createNonEmptyValidatorMock($filtered);
+        $mockValidator = TestHelper::createValidatorMock(true);
+        $validatorChain->attach($mockValidator);
 
-        $validatorChain->attach(TestHelper::createValidatorMock(true));
+        $notEmptyMock = new NotEmptyValidator();
         $validatorChain->attach($notEmptyMock);
 
         self::assertFalse($this->input->isValid());
 
         $validators = $validatorChain->getValidators();
         self::assertEquals(2, count($validators));
+        self::assertEquals($mockValidator, $validators[0]['instance']);
         self::assertEquals($notEmptyMock, $validators[1]['instance']);
     }
 
@@ -962,19 +960,5 @@ final class InputTest extends TestCase
                 'filtered' => new stdClass(),
             ],
         ];
-    }
-
-    protected function createNonEmptyValidatorMock(
-        mixed $value
-    ): NotEmptyValidator&MockObject {
-        $notEmptyMock = $this->createMock(NotEmptyValidator::class);
-        $notEmptyMock->expects(self::once())
-            ->method('isValid')
-            ->with($value, null)
-            ->willReturn(false);
-
-        $notEmptyMock->method('getMessages')->willReturn([]);
-
-        return $notEmptyMock;
     }
 }
