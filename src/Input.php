@@ -463,8 +463,9 @@ class Input implements
         }
 
         /** @psalm-var array<string, string> $templates */
-        $templates  = $notEmpty->getOption('messageTemplates');
-        $message    = $templates[NotEmpty::IS_EMPTY];
+        $templates = $notEmpty->getOption('messageTemplates');
+        $message   = $templates[NotEmpty::IS_EMPTY];
+        /** @psalm-suppress DeprecatedInterface */
         $translator = $notEmpty->getTranslator();
 
         if ($translator instanceof TranslatorInterface) {

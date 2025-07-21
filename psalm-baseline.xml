@@ -50,13 +50,6 @@
     </UnusedPsalmSuppress>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <DeprecatedInterface>
-      <code><![CDATA[$notEmptyValidator->getTranslator()]]></code>
-    </DeprecatedInterface>
-    <DeprecatedMethod>
-      <code><![CDATA[getOption]]></code>
-      <code><![CDATA[getTranslatorTextDomain]]></code>
-    </DeprecatedMethod>
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
@@ -435,7 +428,6 @@
     </DeprecatedConstant>
     <DeprecatedMethod>
       <code><![CDATA[getFilters]]></code>
-      <code><![CDATA[getMessageTemplates]]></code>
       <code><![CDATA[getPluginManager]]></code>
       <code><![CDATA[getPluginManager]]></code>
       <code><![CDATA[getPluginManager]]></code>

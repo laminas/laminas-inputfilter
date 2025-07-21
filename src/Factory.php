@@ -37,7 +37,7 @@ final class Factory
 
     public function __construct(
         FilterPluginManager $filterPluginManager,
-        ValidatorPluginManager $validatorPluginManager,
+        private readonly ValidatorPluginManager $validatorPluginManager,
         private readonly InputFilterPluginManager $inputFilterPluginManager
     ) {
         $this->defaultFilterChain = new FilterChain();
@@ -306,7 +306,7 @@ final class Factory
                 $inputFilter->setIsRequired($inputFilterSpecification['required']);
             }
             if (isset($inputFilterSpecification['required_message'])) {
-                $inputFilter->getNotEmptyValidator()->setMessage($inputFilterSpecification['required_message']);
+                $inputFilter->setIsRequiredValidationMessage($inputFilterSpecification['required_message']);
             }
             return $inputFilter;
         }
@@ -468,5 +468,10 @@ final class Factory
                 ? $validatorChain->setPluginManager($this->defaultValidatorChain->getPluginManager())
                 : $input->setValidatorChain(clone $this->defaultValidatorChain);
         }
+    }
+
+    public function getValidatorPluginManager(): ValidatorPluginManager
+    {
+        return $this->validatorPluginManager;
     }
 }
