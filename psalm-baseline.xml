@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.11.0@4ed53b7ccebc09ef60ec4c9e464bf8a01bfd35b0">
+<files psalm-version="6.12.1@e71404b0465be25cf7f8a631b298c01c5ddd864f">
   <file src="src/ArrayInput.php">
     <DeprecatedProperty>
       <code><![CDATA[$this->value]]></code>
@@ -427,36 +427,6 @@
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getName]]></code>
     </PossiblyUndefinedMethod>
-  </file>
-  <file src="test/CollectionInputFilterTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$errorMessage]]></code>
-    </InvalidArgument>
-    <InvalidReturnStatement>
-      <code><![CDATA[[
-            // Description => [$required, $count, $data, $inputFilter, $expectedRaw, $expectedValues, $expectedValid, $expectedMessages]
-            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
-            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
-            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIF(), []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
-            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIF(), []     , []          , true , []],
-        ]]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array<string, array{
-     *     0: bool,
-     *     1: null|int,
-     *     2: array,
-     *     3: BaseInputFilter&MockObject,
-     *     4: array,
-     *     5: array,
-     *     6: bool,
-     *     7: array
-     * }>]]></code>
-    </InvalidReturnType>
   </file>
   <file src="test/FactoryTest.php">
     <DeprecatedConstant>

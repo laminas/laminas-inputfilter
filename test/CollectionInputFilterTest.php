@@ -1,4 +1,6 @@
-<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCaps
+<?php
+
+declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
@@ -12,9 +14,11 @@ use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\Digits;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\NumberComparison;
+use Laminas\Validator\Translator\TranslatorInterface;
 use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -42,6 +46,11 @@ final class CollectionInputFilterTest extends TestCase
         $this->factory = TestHelper::createInputFilterFactory();
 
         $this->inputFilter = new CollectionInputFilter($this->factory);
+    }
+
+    protected function tearDown(): void
+    {
+        AbstractValidator::setDefaultTranslator();
     }
 
     public function testSetInputFilterWithInvalidTypeThrowsInvalidArgumentException(): void
@@ -143,7 +152,7 @@ final class CollectionInputFilterTest extends TestCase
      *     0: bool,
      *     1: null|int,
      *     2: array,
-     *     3: BaseInputFilter&MockObject,
+     *     3: BaseInputFilter,
      *     4: array,
      *     5: array,
      *     6: bool,
@@ -160,12 +169,10 @@ final class CollectionInputFilterTest extends TestCase
         ];
         $colRaw       = [$dataRaw];
         $colFiltered  = [$dataFiltered];
-        $errorMessage = [
-            'fooInput' => 'fooError',
-        ];
+        $errorMessage = ['error_type' => ['fooInput' => 'fooError']];
         $colMessages  = [$errorMessage];
 
-        $invalidIF  = fn(): BaseInputFilter =>
+        $invalidIf  = fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(
                 TestHelper::createInputFilterFactory(),
                 false,
@@ -173,23 +180,23 @@ final class CollectionInputFilterTest extends TestCase
                 $dataFiltered,
                 $errorMessage
             );
-        $validIF    = fn(): BaseInputFilter =>
+        $validIf    = fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(TestHelper::createInputFilterFactory(), true, $dataRaw, $dataFiltered);
-        $noValidIF  = fn(): BaseInputFilter =>
+        $noValidIf  = fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(TestHelper::createInputFilterFactory(), null, $dataRaw, $dataFiltered);
         $isRequired = true;
 
         // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
         return [
             // Description => [$required, $count, $data, $inputFilter, $expectedRaw, $expectedValues, $expectedValid, $expectedMessages]
-            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
-            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIF()  , $colRaw, $colFiltered, true , []],
-            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIF(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIF(), []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
-            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIF(), []     , []          , true , []],
+            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIf()  , $colRaw, $colFiltered, true , []],
+            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIf()  , $colRaw, $colFiltered, true , []],
+            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIf(), []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
+            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIf(), []     , []          , true , []],
         ];
         // @phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
     }
@@ -771,6 +778,31 @@ final class CollectionInputFilterTest extends TestCase
 
         self::assertEquals([
             [NotEmpty::IS_EMPTY => $message],
+        ], $this->inputFilter->getMessages());
+    }
+
+    public function testNotEmptyMessageIsTranslated(): void
+    {
+        /** @psalm-suppress DeprecatedInterface */
+        $translator = $this->createMock(TranslatorInterface::class);
+        AbstractValidator::setDefaultTranslator($translator);
+        $notEmpty = new NotEmpty();
+
+        $translatedMessage = 'some translation';
+        /** @psalm-suppress DeprecatedMethod */
+        $translator->expects(self::atLeastOnce())
+            ->method('translate')
+            ->with($notEmpty->getMessageTemplates()[NotEmpty::IS_EMPTY])
+            ->willReturn($translatedMessage);
+
+        $this->inputFilter->setIsRequired(true);
+        $this->inputFilter->setNotEmptyValidator($notEmpty);
+
+        $this->inputFilter->setData([]);
+
+        self::assertFalse($this->inputFilter->isValid());
+        self::assertEquals([
+            [NotEmpty::IS_EMPTY => $translatedMessage],
         ], $this->inputFilter->getMessages());
     }
 
