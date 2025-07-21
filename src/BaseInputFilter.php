@@ -33,6 +33,11 @@ class BaseInputFilter implements
     ReplaceableInputInterface,
     UnfilteredDataInterface
 {
+    public function __construct(
+        protected readonly Factory $factory,
+    ) {
+    }
+
     /** @var array<array-key, mixed>|null */
     protected $data;
 

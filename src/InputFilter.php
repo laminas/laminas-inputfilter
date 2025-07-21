@@ -15,35 +15,6 @@ use function is_array;
  */
 class InputFilter extends BaseInputFilter
 {
-    /** @var Factory|null */
-    protected $factory;
-
-    /**
-     * Set factory to use when adding inputs and filters by spec
-     *
-     * @return InputFilter
-     */
-    public function setFactory(Factory $factory)
-    {
-        $this->factory = $factory;
-        return $this;
-    }
-
-    /**
-     * Get factory to use when adding inputs and filters by spec
-     *
-     * Lazy-loads a Factory instance if none attached.
-     *
-     * @return Factory
-     */
-    public function getFactory()
-    {
-        if (null === $this->factory) {
-            $this->factory = new Factory();
-        }
-        return $this->factory;
-    }
-
     /**
      * Add an input to the input filter
      *
@@ -57,7 +28,7 @@ class InputFilter extends BaseInputFilter
             is_array($input)
             || ($input instanceof Traversable && ! $input instanceof InputFilterInterface)
         ) {
-            $factory = $this->getFactory();
+            $factory = $this->factory;
             $input   = $factory->createInput($input);
         }
 

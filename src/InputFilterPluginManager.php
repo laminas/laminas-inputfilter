@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
-use Laminas\Validator\ValidatorPluginManager;
-use Psr\Container\ContainerInterface;
 
 use function get_debug_type;
 use function sprintf;
@@ -62,9 +58,9 @@ class InputFilterPluginManager extends AbstractPluginManager
      * @var string[]
      */
     protected $factories = [
-        InputFilter::class           => InvokableFactory::class,
-        CollectionInputFilter::class => InvokableFactory::class,
-        OptionalInputFilter::class   => InvokableFactory::class,
+        InputFilter::class           => InputFilterFactory::class,
+        CollectionInputFilter::class => InputFilterFactory::class,
+        OptionalInputFilter::class   => InputFilterFactory::class,
         // v2 canonical FQCN
         'laminasinputfilterinputfilter'           => InvokableFactory::class,
         'laminasinputfiltercollectioninputfilter' => InvokableFactory::class,
@@ -87,58 +83,6 @@ class InputFilterPluginManager extends AbstractPluginManager
      * @var bool
      */
     protected $shareByDefault = false;
-
-    /**
-     * @param null|ConfigInterface|ContainerInterface $configOrContainer
-     * @param ServiceManagerConfiguration $v3config
-     */
-    public function __construct($configOrContainer = null, array $v3config = [])
-    {
-        $this->initializers[] = $this->populateFactory(...);
-        parent::__construct($configOrContainer, $v3config);
-    }
-
-    /**
-     * Inject this and populate the factory with filter chain and validator chain
-     *
-     * @param self|InputFilter $containerOrInputFilter
-     * @param InputFilter|null $inputFilter
-     * @return void
-     */
-    public function populateFactory($containerOrInputFilter, $inputFilter = null)
-    {
-        $inputFilter = $inputFilter ?: $containerOrInputFilter;
-
-        if (! $inputFilter instanceof InputFilter) {
-            return;
-        }
-
-        $factory = $inputFilter->getFactory();
-        $factory->setInputFilterManager($this);
-    }
-
-    /**
-     * Populate the filter and validator managers for the default filter/validator chains.
-     *
-     * @return void
-     */
-    public function populateFactoryPluginManagers(Factory $factory)
-    {
-        /** @psalm-suppress DocblockTypeContradiction */
-        if (! $this->creationContext) {
-            return;
-        }
-
-        $filterChain = $factory->getDefaultFilterChain();
-        if ($filterChain !== null && $this->creationContext->has(FilterPluginManager::class)) {
-            $filterChain->setPluginManager($this->creationContext->get(FilterPluginManager::class));
-        }
-
-        $validatorChain = $factory->getDefaultValidatorChain();
-        if ($validatorChain !== null && $this->creationContext->has(ValidatorPluginManager::class)) {
-            $validatorChain->setPluginManager($this->creationContext->get(ValidatorPluginManager::class));
-        }
-    }
 
     /**
      * @inheritDoc

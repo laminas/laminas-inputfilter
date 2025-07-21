@@ -19,7 +19,7 @@ use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use LaminasTest\InputFilter\TestAsset\UploadedFileInterfaceStub;
-use LaminasTest\InputFilter\TestAsset\ValidatorStub;
+use LaminasTest\InputFilter\TestHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -71,12 +71,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         $filteredUpload = $this->createMock(UploadedFileInterface::class);
 
-        $this->input->setFilterChain($this->createFilterChainMock([
-            [
-                $upload,
-                $filteredUpload,
-            ],
-        ]));
+        $this->input->setFilterChain(TestHelper::createFilterChainFixture($upload, $filteredUpload));
 
         self::assertEquals($upload, $this->input->getValue());
         self::assertTrue(
@@ -103,7 +98,7 @@ final class PsrFileInputDecoratorTest extends TestCase
             $filteredValues[] = $this->createMock(UploadedFileInterface::class);
         }
 
-        $this->input->setFilterChain($this->createFilterChainMock([
+        $this->input->setFilterChain(TestHelper::createFilterChainFixtureFromMap([
             [$values[0], $filteredValues[0]],
             [$values[1], $filteredValues[1]],
             [$values[2], $filteredValues[2]],
@@ -128,7 +123,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         $this->input->setValue($value);
 
         $filteredValue = $this->createMock(UploadedFileInterface::class);
-        $this->input->setFilterChain($this->createFilterChainMock([[$value, $filteredValue]]));
+        $this->input->setFilterChain(TestHelper::createFilterChainFixture($value, $filteredValue));
 
         self::assertEquals($value, $this->input->getRawValue());
     }
@@ -143,8 +138,8 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         $this->input->setValue($badValue);
 
-        $this->input->setFilterChain($this->createFilterChainMock([[$badValue, $filteredValue]]));
-        $this->input->setValidatorChain($this->createValidatorChainMock([[$badValue, null, false]]));
+        $this->input->setFilterChain(TestHelper::createFilterChainFixture($badValue, $filteredValue));
+        $this->input->setValidatorChain(TestHelper::createValidatorChain($badValue, false));
 
         self::assertFalse($this->input->isValid());
         self::assertEquals($badValue, $this->input->getValue());
@@ -315,11 +310,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
 
         $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(null, $value, $context);
+        TestHelper::createValidatorMock(null, $value, $context);
         $validatorInvalid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(false, $value, $context, $validatorMsg);
+        TestHelper::createValidatorMock(false, $value, $context, $validatorMsg);
         $validatorValid   = fn(mixed $value, array|null $context = null): ValidatorInterface =>
-        self::createValidatorMock(true, $value, $context);
+        TestHelper::createValidatorMock(true, $value, $context);
 
         $dataTemplates = [
             'Required: T; AEmpty: T; CIEmpty: T; Validator: T'
@@ -401,13 +396,6 @@ final class PsrFileInputDecoratorTest extends TestCase
         ];
     }
 
-    protected function getDummyValue(): UploadedFileInterface&MockObject
-    {
-        $upload = $this->createMock(UploadedFileInterface::class);
-        $upload->method('getError')->willReturn(UPLOAD_ERR_OK);
-        return $upload;
-    }
-
     public function assertRequiredValidationErrorMessage(Input $input, string $message = ''): void
     {
         $message  = $message ?: 'Expected failure message for required input';
@@ -454,14 +442,14 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testCanInjectFilterChain(): void
     {
-        $chain = $this->createFilterChainMock();
+        $chain = TestHelper::createFilterChain();
         $this->input->setFilterChain($chain);
         self::assertSame($chain, $this->input->getFilterChain());
     }
 
     public function testCanInjectValidatorChain(): void
     {
-        $chain = $this->createValidatorChainMock();
+        $chain = new ValidatorChain();
         $this->input->setValidatorChain($chain);
         self::assertSame($chain, $this->input->getValidatorChain());
     }
@@ -610,7 +598,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         // Validator should not to be called
         $input->getValidatorChain()
-            ->attach(self::createValidatorMock(null, null));
+            ->attach(TestHelper::createValidatorMock(null, null));
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
@@ -639,7 +627,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testValueMayBeInjected(): void
     {
-        $valueRaw = $this->getDummyValue();
+        $valueRaw = ['foo'];
 
         $this->input->setValue($valueRaw);
         self::assertEquals($valueRaw, $this->input->getValue());
@@ -659,7 +647,7 @@ final class PsrFileInputDecoratorTest extends TestCase
     #[DataProvider('emptyValueProvider')]
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
-        $filterChain    = $this->createFilterChainMock([[$raw, $filtered]]);
+        $filterChain    = TestHelper::createFilterChainFixture($raw, $filtered);
         $validatorChain = $this->input->getValidatorChain();
 
         $this->input->setRequired(true);
@@ -675,7 +663,7 @@ final class PsrFileInputDecoratorTest extends TestCase
 
         $notEmptyMock->method('getMessages')->willReturn([]);
 
-        $validatorChain->attach(self::createValidatorMock(true));
+        $validatorChain->attach(TestHelper::createValidatorMock(true));
         $validatorChain->attach($notEmptyMock);
 
         self::assertFalse($this->input->isValid());
@@ -876,34 +864,22 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testMerge(): void
     {
-        $sourceRawValue = $this->getDummyValue();
-
         $source = $this->createMock(InputInterface::class);
         $source->method('getName')->willReturn('bazInput');
         $source->method('getErrorMessage')->willReturn('bazErrorMessage');
         $source->method('breakOnFailure')->willReturn(true);
         $source->method('isRequired')->willReturn(true);
-        $source->method('getRawValue')->willReturn($sourceRawValue);
-        $source->method('getFilterChain')->willReturn($this->createFilterChainMock());
-        $source->method('getValidatorChain')->willReturn($this->createValidatorChainMock());
-
-        $targetFilterChain = $this->createFilterChainMock();
-        $targetFilterChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getFilterChain());
-
-        $targetValidatorChain = $this->createValidatorChainMock();
-        $targetValidatorChain->expects(TestCase::once())
-            ->method('merge')
-            ->with($source->getValidatorChain());
+        $source->method('getRawValue')->willReturn('foo');
+        $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
+        $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
         $target = $this->input;
         $target->setName('fooInput');
         $target->setErrorMessage('fooErrorMessage');
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
-        $target->setFilterChain($targetFilterChain);
-        $target->setValidatorChain($targetValidatorChain);
+        $target->setFilterChain(TestHelper::createFilterChain());
+        $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
@@ -912,7 +888,7 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertEquals('bazErrorMessage', $target->getErrorMessage(), 'getErrorMessage() value not match');
         self::assertTrue($target->breakOnFailure(), 'breakOnFailure() value not match');
         self::assertTrue($target->isRequired(), 'isRequired() value not match');
-        self::assertEquals($sourceRawValue, $target->getRawValue(), 'getRawValue() value not match');
+        self::assertEquals('foo', $target->getRawValue(), 'getRawValue() value not match');
         self::assertTrue($target->hasValue(), 'hasValue() value not match');
     }
 
@@ -1025,55 +1001,5 @@ final class PsrFileInputDecoratorTest extends TestCase
                 ],
             ]
         );
-    }
-
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @return FilterChain&MockObject
-     */
-    public function createFilterChainMock(array $valueMap = [])
-    {
-        /** @var FilterChain&MockObject $filterChain */
-        $filterChain = $this->createMock(FilterChain::class);
-
-        $filterChain->method('filter')
-            ->willReturnMap($valueMap);
-
-        return $filterChain;
-    }
-
-    /**
-     * @param list<list<mixed>> $valueMap
-     * @param string[] $messages
-     * @return ValidatorChain&MockObject
-     */
-    protected function createValidatorChainMock(array $valueMap = [], $messages = [])
-    {
-        /** @var ValidatorChain&MockObject $validatorChain */
-        $validatorChain = $this->createMock(ValidatorChain::class);
-
-        if (empty($valueMap)) {
-            $validatorChain->expects(self::never())
-                ->method('isValid');
-        } else {
-            $validatorChain->expects(self::atLeastOnce())
-                ->method('isValid')
-                ->willReturnMap($valueMap);
-        }
-
-        $validatorChain->method('getMessages')
-            ->willReturn($messages);
-
-        return $validatorChain;
-    }
-
-    /** @param array<string, string> $messages */
-    protected static function createValidatorMock(
-        bool|null $isValid,
-        mixed $value = 'not-set',
-        array|null $context = null,
-        array $messages = []
-    ): ValidatorInterface {
-        return new ValidatorStub($isValid, $value, $context, $messages);
     }
 }

@@ -75,9 +75,9 @@ class InputFilterPluginManagerFactory implements FactoryInterface
      * @return InputFilterPluginManager
      * @psalm-suppress MismatchingDocblockParamType
      */
-    public function createService(ServiceLocatorInterface $container, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        return $this($container, $requestedName ?? InputFilterPluginManager::class, $this->creationOptions);
+        return $this($serviceLocator, $requestedName ?? InputFilterPluginManager::class, $this->creationOptions);
     }
 
     /**
