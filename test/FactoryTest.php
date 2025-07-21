@@ -19,6 +19,7 @@ use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputProviderInterface;
 use Laminas\ServiceManager;
 use Laminas\Validator;
+use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\CustomInput;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -1074,16 +1075,17 @@ final class FactoryTest extends TestCase
             'type'             => CollectionInputFilter::class,
             'required'         => true,
             'required_message' => $message,
-            'inputfilter'      => new InputFilter($factory),
-            'count'            => 3,
+            'count'            => 0,
         ]);
 
         self::assertInstanceOf(CollectionInputFilter::class, $inputFilter);
 
-        $notEmptyValidator = $inputFilter->getNotEmptyValidator();
-        $messageTemplates  = $notEmptyValidator->getMessageTemplates();
-        self::assertArrayHasKey(Validator\NotEmpty::IS_EMPTY, $messageTemplates);
-        self::assertSame($message, $messageTemplates[Validator\NotEmpty::IS_EMPTY]);
+        self::assertFalse($inputFilter->isValid());
+        self::assertSame([[NotEmpty::IS_EMPTY => $message]], $inputFilter->getMessages());
+
+        $inputFilter->setIsRequired(false);
+        self::assertTrue($inputFilter->isValid());
+        self::assertSame([], $inputFilter->getMessages());
     }
 
     protected function createDefaultFactory(?InputFilterPluginManager $inputFilterPluginManager = null): Factory

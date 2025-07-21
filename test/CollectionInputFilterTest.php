@@ -186,19 +186,33 @@ final class CollectionInputFilterTest extends TestCase
             new InputFilterInterfaceStub(TestHelper::createInputFilterFactory(), null, $dataRaw, $dataFiltered);
         $isRequired = true;
 
-        // @phpcs:disable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
         return [
-            // Description => [$required, $count, $data, $inputFilter, $expectedRaw, $expectedValues, $expectedValid, $expectedMessages]
-            'Required: T, Count: N, Valid: T'  => [  $isRequired, null, $colRaw, $validIf()  , $colRaw, $colFiltered, true , []],
-            'Required: T, Count: N, Valid: F'  => [  $isRequired, null, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Count: +1, Valid: F' => [  $isRequired,    2, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: N, Valid: T'  => [! $isRequired, null, $colRaw, $validIf()  , $colRaw, $colFiltered, true , []],
-            'Required: F, Count: N, Valid: F'  => [! $isRequired, null, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: F, Count: +1, Valid: F' => [! $isRequired,    2, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
-            'Required: T, Data: [], Valid: X'  => [  $isRequired, null, []     , $noValidIf(), []     , []          , false, [['isEmpty' => 'Value is required and can\'t be empty']]],
-            'Required: F, Data: [], Valid: X'  => [! $isRequired, null, []     , $noValidIf(), []     , []          , true , []],
+            'Required: T, Count: N, Valid: T'
+                => [$isRequired, null, $colRaw, $validIf(), $colRaw, $colFiltered, true, []],
+            'Required: T, Count: N, Valid: F'
+                => [$isRequired, null, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Count: +1, Valid: F'
+                => [$isRequired,    2, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: N, Valid: T'
+                => [! $isRequired, null, $colRaw, $validIf(), $colRaw, $colFiltered, true, []],
+            'Required: F, Count: N, Valid: F'
+                => [! $isRequired, null, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: F, Count: +1, Valid: F'
+                => [! $isRequired,    2, $colRaw, $invalidIf(), $colRaw, $colFiltered, false, $colMessages],
+            'Required: T, Data: [], Valid: X'
+                => [
+                    $isRequired,
+                    null,
+                    [],
+                    $noValidIf(),
+                    [],
+                    [],
+                    false,
+                    [['isEmpty' => 'Value is required and can\'t be empty']],
+                ],
+            'Required: F, Data: [], Valid: X'
+                => [! $isRequired, null, [], $noValidIf(), [], [], true, []],
         ];
-        // @phpcs:enable Generic.Files.LineLength.TooLong,WebimpressCodingStandard.Arrays.Format.SingleLineSpaceBefore,WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
     }
 
     public function testSetValidationGroupUsingFormStyle(): void
@@ -751,36 +765,6 @@ final class CollectionInputFilterTest extends TestCase
         ], $inputFilter->getMessages());
     }
 
-    public function testLazyLoadsANotEmptyValidatorWhenNoneProvided(): void
-    {
-        self::assertInstanceOf(NotEmpty::class, $this->inputFilter->getNotEmptyValidator());
-    }
-
-    public function testAllowsComposingANotEmptyValidator(): void
-    {
-        $notEmptyValidator = new NotEmpty();
-        $this->inputFilter->setNotEmptyValidator($notEmptyValidator);
-        self::assertSame($notEmptyValidator, $this->inputFilter->getNotEmptyValidator());
-    }
-
-    public function testUsesMessageFromComposedNotEmptyValidatorWhenRequiredButCollectionIsEmpty(): void
-    {
-        $message           = 'this is the validation message';
-        $notEmptyValidator = new NotEmpty();
-        $notEmptyValidator->setMessage($message);
-
-        $this->inputFilter->setIsRequired(true);
-        $this->inputFilter->setNotEmptyValidator($notEmptyValidator);
-
-        $this->inputFilter->setData([]);
-
-        self::assertFalse($this->inputFilter->isValid());
-
-        self::assertEquals([
-            [NotEmpty::IS_EMPTY => $message],
-        ], $this->inputFilter->getMessages());
-    }
-
     public function testNotEmptyMessageIsTranslated(): void
     {
         /** @psalm-suppress DeprecatedInterface */
@@ -796,8 +780,6 @@ final class CollectionInputFilterTest extends TestCase
             ->willReturn($translatedMessage);
 
         $this->inputFilter->setIsRequired(true);
-        $this->inputFilter->setNotEmptyValidator($notEmpty);
-
         $this->inputFilter->setData([]);
 
         self::assertFalse($this->inputFilter->isValid());
@@ -872,5 +854,53 @@ final class CollectionInputFilterTest extends TestCase
                 JSON_THROW_ON_ERROR
             )
         );
+    }
+
+    public function testDefaultValidationMessageViaFactory(): void
+    {
+        $factory = TestHelper::createInputFilterFactory();
+
+        $inputFilter = $factory->createInputFilter(
+            [
+                'type'     => CollectionInputFilter::class,
+                'required' => true,
+            ]
+        );
+
+        $inputFilter->setData([]);
+
+        self::assertFalse($inputFilter->isValid());
+        self::assertEquals([['isEmpty' => 'Value is required and can\'t be empty']], $inputFilter->getMessages());
+    }
+
+    public function testSettingCustomValidationMessageViaFactory(): void
+    {
+        $customMessage = 'Custom required message';
+
+        $factory = TestHelper::createInputFilterFactory();
+
+        $inputFilter = $factory->createInputFilter(
+            [
+                'type'             => CollectionInputFilter::class,
+                'required'         => true,
+                'required_message' => $customMessage,
+            ]
+        );
+
+        $inputFilter->setData([]);
+
+        self::assertFalse($inputFilter->isValid());
+        self::assertEquals([['isEmpty' => $customMessage]], $inputFilter->getMessages());
+    }
+
+    public function testSetIsRequiredValidationMessage(): void
+    {
+        $customMessage = 'Custom required message';
+        $this->inputFilter->setIsRequired(true);
+        $this->inputFilter->setIsRequiredValidationMessage($customMessage);
+        $this->inputFilter->setData([]);
+
+        self::assertFalse($this->inputFilter->isValid());
+        self::assertEquals([['isEmpty' => $customMessage]], $this->inputFilter->getMessages());
     }
 }
