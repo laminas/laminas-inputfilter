@@ -7,7 +7,6 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 
 use function class_exists;
@@ -453,7 +452,7 @@ class Input implements
     protected function prepareRequiredValidationFailureMessage()
     {
         $chain    = $this->getValidatorChain();
-        $notEmpty = $chain->plugin(NotEmpty::class);
+        $notEmpty = null;
 
         foreach ($chain->getValidators() as $validator) {
             if ($validator['instance'] instanceof NotEmpty) {
@@ -462,18 +461,10 @@ class Input implements
             }
         }
 
-        /** @psalm-var array<string, string> $templates */
-        $templates = $notEmpty->getOption('messageTemplates');
-        $message   = $templates[NotEmpty::IS_EMPTY];
-        /** @psalm-suppress DeprecatedInterface */
-        $translator = $notEmpty->getTranslator();
+        $validator = $notEmpty ?: $chain->plugin(NotEmpty::class);
 
-        if ($translator instanceof TranslatorInterface) {
-            $message = $translator->translate($message, $notEmpty->getTranslatorTextDomain());
-        }
+        $validator->isValid(null);
 
-        return [
-            NotEmpty::IS_EMPTY => $message,
-        ];
+        return $validator->getMessages();
     }
 }
