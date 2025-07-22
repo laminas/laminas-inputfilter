@@ -551,21 +551,14 @@ final class PsrFileInputDecoratorTest extends TestCase
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
-        $input = new Input();
+        $input = new FileInput();
         $input->setRequired(true);
 
         $customMessage = [
             NotEmptyValidator::IS_EMPTY => "Custom message",
         ];
 
-        $notEmpty = $this->createMock(NotEmptyValidator::class);
-        $notEmpty->expects(self::once())
-            ->method('getOption')
-            ->with('messageTemplates')
-            ->willReturn($customMessage);
-
-        $input->getValidatorChain()
-            ->attach($notEmpty);
+        $input->getValidatorChain()->attach(new NotEmptyValidator(['messages' => $customMessage]));
 
         self::assertFalse(
             $input->isValid(),

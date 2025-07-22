@@ -191,10 +191,6 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getOption]]></code>
-      <code><![CDATA[getTranslatorTextDomain]]></code>
-    </DeprecatedMethod>
     <DocblockTypeContradiction>
       <code><![CDATA[is_array($this->errorMessage)]]></code>
     </DocblockTypeContradiction>
@@ -204,18 +200,9 @@
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
     </InvalidPropertyAssignmentValue>
-    <MixedArgument>
-      <code><![CDATA[$notEmpty->getTranslatorTextDomain()]]></code>
-    </MixedArgument>
     <MixedAssignment>
-      <code><![CDATA[$translator]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[getOption]]></code>
-      <code><![CDATA[getTranslator]]></code>
-      <code><![CDATA[getTranslatorTextDomain]]></code>
-    </PossiblyUndefinedMethod>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(bool) $allowEmpty]]></code>
       <code><![CDATA[(bool) $breakOnFailure]]></code>
