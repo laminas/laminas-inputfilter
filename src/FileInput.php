@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\InputFilter\FileInput\FileInputDecoratorInterface;
+use Laminas\InputFilter\FileInput\FileInputHandlerInterface;
+use Laminas\Validator\File\UploadFile as UploadValidator;
+use Laminas\Validator\ValidatorChain;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function assert;
@@ -25,15 +27,11 @@ use function is_array;
  * 3. Instead of adding a NotEmpty validator, it will (by default) automatically add
  *    a Laminas\Validator\File\Upload validator.
  */
-class FileInput extends Input
+final class FileInput extends Input
 {
-    /** @var bool */
-    protected $isValid = false;
-
-    /** @var bool */
-    protected $autoPrependUploadValidator = true;
-
-    private ?FileInputDecoratorInterface $implementation = null;
+    private bool $isValid                       = false;
+    private bool $autoPrependUploadValidator    = true;
+    private ?FileInputHandlerInterface $handler = null;
 
     /**
      * @inheritDoc
@@ -41,7 +39,7 @@ class FileInput extends Input
      */
     public function setValue($value)
     {
-        $this->implementation = $this->createDecoratorImplementation($value);
+        $this->handler = $this->createHandler($value);
         parent::setValue($value);
         return $this;
     }
@@ -49,7 +47,7 @@ class FileInput extends Input
     /** @return $this */
     public function resetValue()
     {
-        $this->implementation = null;
+        $this->handler = null;
         return parent::resetValue();
     }
 
@@ -76,10 +74,10 @@ class FileInput extends Input
      */
     public function getValue()
     {
-        if ($this->implementation === null) {
+        if ($this->handler === null) {
             return $this->value;
         }
-        return $this->implementation->getValue();
+        return $this->handler->filterValue($this->value, $this->isValid, $this->getFilterChain());
     }
 
     /**
@@ -91,15 +89,15 @@ class FileInput extends Input
     public function isEmptyFile($rawValue)
     {
         if ($rawValue instanceof UploadedFileInterface) {
-            return FileInput\PsrFileInputDecorator::isEmptyFileDecorator($rawValue);
+            return FileInput\PsrFileInputHandler::isEmptyFile($rawValue);
         }
 
         if (is_array($rawValue)) {
             if (isset($rawValue[0]) && $rawValue[0] instanceof UploadedFileInterface) {
-                return FileInput\PsrFileInputDecorator::isEmptyFileDecorator($rawValue);
+                return FileInput\PsrFileInputHandler::isEmptyFile($rawValue);
             }
 
-            return FileInput\HttpServerFileInputDecorator::isEmptyFileDecorator($rawValue);
+            return FileInput\HttpServerFileInputHandler::isEmptyFile($rawValue);
         }
 
         return true;
@@ -137,8 +135,13 @@ class FileInput extends Input
             return true;
         }
 
-        assert($this->implementation !== null);
-        return $this->implementation->isValid($context);
+        assert($this->handler !== null);
+        $this->isValid = $this->handler->isValid(
+            $rawValue,
+            $this->injectUploadValidator($this->getValidatorChain()),
+            $context
+        );
+        return $this->isValid;
     }
 
     /**
@@ -164,28 +167,46 @@ class FileInput extends Input
         $this->notEmptyValidator = true;
     }
 
-    /**
-     * @param mixed $value
-     * @return FileInputDecoratorInterface
-     */
-    private function createDecoratorImplementation($value)
+    private function createHandler(mixed $value): FileInputHandlerInterface
     {
         // Single PSR-7 instance
         if ($value instanceof UploadedFileInterface) {
-            return new FileInput\PsrFileInputDecorator($this);
+            return new FileInput\PsrFileInputHandler();
         }
 
         if (is_array($value)) {
             if (isset($value[0]) && $value[0] instanceof UploadedFileInterface) {
                 // Array of PSR-7 instances
-                return new FileInput\PsrFileInputDecorator($this);
+                return new FileInput\PsrFileInputHandler();
             }
 
             // Single or multiple SAPI file upload arrays
-            return new FileInput\HttpServerFileInputDecorator($this);
+            return new FileInput\HttpServerFileInputHandler();
         }
 
         // AJAX/XHR/Fetch case
-        return new FileInput\HttpServerFileInputDecorator($this);
+        return new FileInput\HttpServerFileInputHandler();
+    }
+
+    private function injectUploadValidator(ValidatorChain $chain): ValidatorChain
+    {
+        if (! $this->autoPrependUploadValidator) {
+            return $chain;
+        }
+
+        // Check if Upload validator is already first in chain
+        $validators = $chain->getValidators();
+        if (
+            isset($validators[0]['instance'])
+            && $validators[0]['instance'] instanceof UploadValidator
+        ) {
+            $this->autoPrependUploadValidator = false;
+            return $chain;
+        }
+
+        $chain->prependByName(UploadValidator::class, [], true);
+        $this->autoPrependUploadValidator = false;
+
+        return $chain;
     }
 }
