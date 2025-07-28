@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter\FileInput;
 
-use Laminas\InputFilter\FileInput;
-use Laminas\Validator\File\UploadFile as UploadValidator;
+use Laminas\Filter\FilterChain;
 use Laminas\Validator\ValidatorChain;
 
 use function count;
@@ -14,7 +13,7 @@ use function is_array;
 use const UPLOAD_ERR_NO_FILE;
 
 /**
- * Decorator for filtering standard SAPI file uploads.
+ * Handler for validating and filtering standard SAPI file uploads.
  *
  * It differs from Input in a few ways:
  *
@@ -27,17 +26,13 @@ use const UPLOAD_ERR_NO_FILE;
  * 3. Instead of adding a NotEmpty validator, it will (by default) automatically add
  *    a Laminas\Validator\File\Upload validator.
  *
- * @final
+ * @psalm-internal Laminas\InputFilter
+ * @psalm-internal LaminasTest\InputFilter
  */
-class HttpServerFileInputDecorator extends FileInput implements FileInputDecoratorInterface
+final class HttpServerFileInputHandler implements FileInputHandlerInterface
 {
-    /**
-     * Checks if the raw input value is an empty file input eg: no file was uploaded
-     *
-     * @param mixed $rawValue
-     * @return bool
-     */
-    public static function isEmptyFileDecorator($rawValue)
+    /** Checks if the raw input value is an empty file input eg: no file was uploaded */
+    public static function isEmptyFile(mixed $rawValue): bool
     {
         if (! is_array($rawValue)) {
             return true;
@@ -48,41 +43,30 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
         }
 
         if (count($rawValue) === 1 && isset($rawValue[0])) {
-            return self::isEmptyFileDecorator($rawValue[0]);
+            return self::isEmptyFile($rawValue[0]);
         }
 
         return false;
     }
 
-    public function __construct(private readonly FileInput $subject)
+    public function filterValue(mixed $value, bool $isValid, FilterChain $filterChain): mixed
     {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        $value = $this->subject->value;
-
-        if (! $this->subject->isValid || ! is_array($value)) {
+        if (! $isValid || ! is_array($value)) {
             return $value;
         }
 
         // Run filters ~after~ validation, so that is_uploaded_file()
         // validation is not affected by filters.
-        $filter = $this->subject->getFilterChain();
         if (isset($value['tmp_name'])) {
             // Single file input
-            $value = $filter->filter($value);
-            return $value;
+            return $filterChain->filter($value);
         }
 
         // Multi file input (multiple attribute set)
         $newValue = [];
         foreach ($value as $fileData) {
             if (is_array($fileData) && isset($fileData['tmp_name'])) {
-                $newValue[] = $filter->filter($fileData);
+                $newValue[] = $filterChain->filter($fileData);
             }
         }
 
@@ -90,14 +74,10 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
     }
 
     /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
+     * @param mixed $context Extra "context" to provide the validator
      */
-    public function isValid($context = null)
+    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, $context = null): bool
     {
-        $rawValue  = $this->subject->getRawValue();
-        $validator = $this->injectUploadValidator($this->subject->getValidatorChain());
-
         if (! is_array($rawValue)) {
             // This can happen in an AJAX POST, where the input comes across as a string
             $rawValue = [
@@ -118,19 +98,15 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
             ];
         }
 
-        if (is_array($rawValue) && isset($rawValue['tmp_name'])) {
+        if (isset($rawValue['tmp_name'])) {
             // Single file input
-            $this->subject->isValid = $validator->isValid($rawValue, $context);
-            return $this->subject->isValid;
+            return $validatorChain->isValid($rawValue, $context);
         }
 
-        if (is_array($rawValue) && isset($rawValue[0]['tmp_name'])) {
+        if (isset($rawValue[0]['tmp_name'])) {
             // Multi file input (multiple attribute set)
-            $this->subject->isValid = true;
-
             foreach ($rawValue as $value) {
-                if (! $validator->isValid($value, $context)) {
-                    $this->subject->isValid = false;
+                if (! $validatorChain->isValid($value, $context)) {
                     return false; // Do not continue processing files if validation fails
                 }
             }
@@ -138,31 +114,6 @@ class HttpServerFileInputDecorator extends FileInput implements FileInputDecorat
             return true; // We return early from the loop if validation fails
         }
 
-        return $this->subject->isValid;
-    }
-
-    /**
-     * @return ValidatorChain
-     */
-    protected function injectUploadValidator(ValidatorChain $chain)
-    {
-        if (! $this->subject->autoPrependUploadValidator) {
-            return $chain;
-        }
-
-        // Check if Upload validator is already first in chain
-        $validators = $chain->getValidators();
-        if (
-            isset($validators[0]['instance'])
-            && $validators[0]['instance'] instanceof UploadValidator
-        ) {
-            $this->subject->autoPrependUploadValidator = false;
-            return $chain;
-        }
-
-        $chain->prependByName('fileuploadfile', [], true);
-        $this->subject->autoPrependUploadValidator = false;
-
-        return $chain;
+        return false;
     }
 }

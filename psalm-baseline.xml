@@ -155,37 +155,22 @@
       <code><![CDATA[$value]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/FileInput/HttpServerFileInputDecorator.php">
+  <file src="src/FileInput/HttpServerFileInputHandler.php">
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
       <code><![CDATA[$newValue[]]]></code>
-      <code><![CDATA[$rawValue]]></code>
-      <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <RedundantCondition>
-      <code><![CDATA[is_array($rawValue)]]></code>
-      <code><![CDATA[is_array($rawValue)]]></code>
-    </RedundantCondition>
   </file>
-  <file src="src/FileInput/PsrFileInputDecorator.php">
+  <file src="src/FileInput/PsrFileInputHandler.php">
     <MixedArgument>
       <code><![CDATA[$rawValue[0]]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
       <code><![CDATA[$newValue[]]]></code>
-      <code><![CDATA[$rawValue]]></code>
-      <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedReturnStatement>
-      <code><![CDATA[$filter->filter($value)]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedReturnStatement>
-    <MixedReturnTypeCoercion>
-      <code><![CDATA[$newValue]]></code>
-    </MixedReturnTypeCoercion>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$rawValue]]></code>
     </MoreSpecificImplementedParamType>
