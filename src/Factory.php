@@ -7,15 +7,18 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
+use Psr\Container\ContainerInterface;
 use Traversable;
 
 use function assert;
 use function class_exists;
 use function get_debug_type;
+use function is_a;
 use function is_array;
 use function is_callable;
 use function is_int;
@@ -35,8 +38,35 @@ final class Factory
     protected ?FilterChain $defaultFilterChain;
     protected ?ValidatorChain $defaultValidatorChain;
 
+    public static function new(ContainerInterface|null $container = null): self
+    {
+        $container = $container ?? new ServiceManager();
+
+        if ($container->has(self::class)) {
+            return $container->get(self::class);
+        }
+
+        $factory = new Factory(
+            $container->has(FilterPluginManager::class)
+            ? $container->get(FilterPluginManager::class)
+            : new FilterPluginManager($container),
+            $container->has(ValidatorPluginManager::class)
+            ? $container->get(ValidatorPluginManager::class)
+            : new ValidatorPluginManager($container),
+            $container->has(InputFilterPluginManager::class)
+            ? $container->get(InputFilterPluginManager::class)
+            : new InputFilterPluginManager($container),
+        );
+
+        if ($container instanceof ServiceManager) {
+            $container->setService(self::class, $factory);
+        }
+
+        return $factory;
+    }
+
     public function __construct(
-        FilterPluginManager $filterPluginManager,
+        private readonly FilterPluginManager $filterPluginManager,
         private readonly ValidatorPluginManager $validatorPluginManager,
         private readonly InputFilterPluginManager $inputFilterPluginManager
     ) {
@@ -154,7 +184,19 @@ final class Factory
             ));
         }
 
-        $input = $managerInstance ?: new $class();
+        if (is_a($class, Input::class, true)) {
+            $filterChain = new FilterChain();
+            /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+            $filterChain->setPluginManager($this->filterPluginManager);
+
+            $validatorChain = new ValidatorChain();
+            $validatorChain->setPluginManager($this->validatorPluginManager);
+
+            /** @psalm-suppress UnsafeInstantiation */
+            $input = $managerInstance ?: new $class($filterChain, $validatorChain);
+        } else {
+            $input = $managerInstance ?: new $class();
+        }
 
         if ($input instanceof InputFilterInterface) {
             return $this->createInputFilter($inputSpecification);

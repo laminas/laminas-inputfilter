@@ -285,7 +285,7 @@ final class CollectionInputFilterTest extends TestCase
         $firstCollection = new CollectionInputFilter($factory);
         $firstCollection->setInputFilter($firstInputFilter);
 
-        $someInput         = new Input('input');
+        $someInput         = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'input');
         $secondInputFilter = new InputFilter($factory);
         $secondInputFilter->add($someInput, 'input');
 
@@ -809,7 +809,7 @@ final class CollectionInputFilterTest extends TestCase
         $factory = TestHelper::createInputFilterFactory();
 
         $baseInputFilter = (new BaseInputFilter($factory))
-            ->add(new Input(), 'bar');
+            ->add(new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain()), 'bar');
 
         $collectionInputFilter = (new CollectionInputFilter($this->factory))->setInputFilter($baseInputFilter);
         $collectionInputFilter->setData($unfilteredArray);

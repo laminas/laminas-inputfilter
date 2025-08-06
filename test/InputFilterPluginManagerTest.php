@@ -125,7 +125,7 @@ final class InputFilterPluginManagerTest extends TestCase
         self::assertInstanceOf(FilterChain::class, $defaultFilterChain);
         self::assertSame(
             $filterManager,
-            $defaultFilterChain->getPluginManager(),
+            TestHelper::getFilterPluginManagerFromFilterChain($defaultFilterChain),
             'Factory::getDefaultFilterChain() is not populated with the expected plugin manager'
         );
 

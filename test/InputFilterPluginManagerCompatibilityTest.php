@@ -22,7 +22,7 @@ final class InputFilterPluginManagerCompatibilityTest extends TestCase
         $this->markTestSkipped("InputFilterPluginManager accepts multiple instances");
     }
 
-    protected static function getPluginManager(): InputFilterPluginManager
+    protected static function getPluginManager(array $config = []): InputFilterPluginManager
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setService(
@@ -42,8 +42,9 @@ final class InputFilterPluginManagerCompatibilityTest extends TestCase
         return RuntimeException::class;
     }
 
-    protected function getInstanceOf()
+    protected function getInstanceOf(): string
     {
         // InputFilterManager accepts multiple instance types
+        return InputFilterPluginManager::class;
     }
 }

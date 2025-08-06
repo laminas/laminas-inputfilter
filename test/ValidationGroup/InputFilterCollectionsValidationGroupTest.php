@@ -28,9 +28,9 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $collection = new CollectionInputFilter($factory);
         $collection->setIsRequired(true);
 
-        $first = new Input('first');
+        $first = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'first');
         $first->setRequired(true);
-        $second = new Input('second');
+        $second = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'second');
         $second->setRequired(true);
 
         $nestedFilter = new InputFilter($factory);
