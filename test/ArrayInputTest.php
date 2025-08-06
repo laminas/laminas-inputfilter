@@ -45,12 +45,17 @@ final class ArrayInputTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->input = new ArrayInput('foo');
+        $this->input = new ArrayInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'foo');
     }
 
     protected function tearDown(): void
     {
         AbstractValidator::setDefaultTranslator();
+    }
+
+    private function createArrayInput(?string $name = null): ArrayInput
+    {
+        return new ArrayInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
     }
 
     /**
@@ -480,7 +485,7 @@ final class ArrayInputTest extends TestCase
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
-        $input = new ArrayInput();
+        $input = $this->createArrayInput();
         $input->setRequired(true);
 
         $customMessage = [
@@ -716,8 +721,8 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesTheName(): void
     {
-        $a = new ArrayInput('a');
-        $b = new ArrayInput('b');
+        $a = $this->createArrayInput('a');
+        $b = $this->createArrayInput('b');
         $a->merge($b);
 
         self::assertSame('b', $a->getName());
@@ -725,8 +730,8 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesErrorMessage(): void
     {
-        $a = new ArrayInput('a');
-        $b = new ArrayInput('b');
+        $a = $this->createArrayInput('a');
+        $b = $this->createArrayInput('b');
         $b->setErrorMessage('Foo');
         $a->merge($b);
 
@@ -735,9 +740,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesBreakOnFailureFlag(): void
     {
-        $a = new ArrayInput('a');
+        $a = $this->createArrayInput('a');
         $a->setBreakOnFailure(false);
-        $b = new ArrayInput('b');
+        $b = $this->createArrayInput('b');
         $b->setBreakOnFailure(true);
         $a->merge($b);
 
@@ -746,9 +751,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesRequiredFlag(): void
     {
-        $a = new ArrayInput('a');
+        $a = $this->createArrayInput('a');
         $a->setRequired(false);
-        $b = new ArrayInput('b');
+        $b = $this->createArrayInput('b');
         $b->setRequired(true);
         $a->merge($b);
 
@@ -757,9 +762,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesAllowEmptyFlag(): void
     {
-        $a = new ArrayInput('a');
+        $a = $this->createArrayInput('a');
         $a->setAllowEmpty(false);
-        $b = new ArrayInput('b');
+        $b = $this->createArrayInput('b');
         $b->setAllowEmpty(true);
         $a->merge($b);
 
@@ -768,9 +773,9 @@ final class ArrayInputTest extends TestCase
 
     public function testMergingTwoInputsCopiesTheValueIfSet(): void
     {
-        $a = new ArrayInput('a');
+        $a = $this->createArrayInput('a');
         $a->setValue('a');
-        $b = new ArrayInput('b');
+        $b = $this->createArrayInput('b');
         $b->setValue('b');
         $a->merge($b);
 
@@ -782,8 +787,8 @@ final class ArrayInputTest extends TestCase
         $filter1 = new ToInt();
         $filter2 = new ToNull();
 
-        $a = new ArrayInput('a');
-        $b = new ArrayInput('b');
+        $a = $this->createArrayInput('a');
+        $b = $this->createArrayInput('b');
 
         $a->getFilterChain()->attach($filter1);
         $b->getFilterChain()->attach($filter2);
@@ -802,8 +807,8 @@ final class ArrayInputTest extends TestCase
         $validator1 = new NotEmptyValidator();
         $validator2 = new NumberComparison(['min' => 1, 'max' => 5]);
 
-        $a = new ArrayInput('a');
-        $b = new ArrayInput('b');
+        $a = $this->createArrayInput('a');
+        $b = $this->createArrayInput('b');
 
         $a->getValidatorChain()->attach($validator1);
         $b->getValidatorChain()->attach($validator2);
@@ -882,7 +887,7 @@ final class ArrayInputTest extends TestCase
      */
     public function testInputMergeWithoutValues(): void
     {
-        $source = new ArrayInput();
+        $source = $this->createArrayInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 
@@ -902,7 +907,7 @@ final class ArrayInputTest extends TestCase
      */
     public function testInputMergeWithSourceValue(): void
     {
-        $source = new ArrayInput();
+        $source = $this->createArrayInput();
         $source->setContinueIfEmpty(true);
         $source->setValue(['foo']);
 
@@ -923,7 +928,7 @@ final class ArrayInputTest extends TestCase
      */
     public function testInputMergeWithTargetValue(): void
     {
-        $source = new ArrayInput();
+        $source = $this->createArrayInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 

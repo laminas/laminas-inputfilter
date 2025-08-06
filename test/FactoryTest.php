@@ -17,7 +17,7 @@ use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputProviderInterface;
-use Laminas\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Validator;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorPluginManager;
@@ -208,8 +208,6 @@ final class FactoryTest extends TestCase
 
         $factory = $this->createDefaultFactory($pluginManager);
 
-//        $factory->setInputFilterManager($pluginManager);
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             sprintf('"%s" can only set to inputs of type "Laminas\InputFilter\Input"', $specificationKey)
@@ -289,7 +287,7 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
         $inputFilterChain = $input->getFilterChain();
         self::assertNotSame($filterChain, $inputFilterChain);
-        self::assertSame($pluginManager, $inputFilterChain->getPluginManager());
+        self::assertSame($pluginManager, TestHelper::getFilterPluginManagerFromFilterChain($inputFilterChain));
     }
 
     public function testFactoryUsesComposedValidatorChainWhenCreatingNewInputObjects(): void
@@ -316,8 +314,9 @@ final class FactoryTest extends TestCase
         $filterPlugins    = new Filter\FilterPluginManager($smMock);
         $validatorPlugins = new Validator\ValidatorPluginManager($smMock);
         $filterChain      = new Filter\FilterChain();
-        $validatorChain   = new Validator\ValidatorChain();
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
         $filterChain->setPluginManager($filterPlugins);
+        $validatorChain = new Validator\ValidatorChain();
         $validatorChain->setPluginManager($validatorPlugins);
         $factory->setDefaultFilterChain($filterChain);
         $factory->setDefaultValidatorChain($validatorChain);
@@ -478,7 +477,7 @@ final class FactoryTest extends TestCase
     public function testFactoryAcceptsInputInterface(): void
     {
         $factory = $this->createDefaultFactory();
-        $input   = new Input();
+        $input   = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
 
         $inputFilter = $factory->createInputFilter([
             'foo' => $input,
@@ -505,7 +504,17 @@ final class FactoryTest extends TestCase
 
     public function testFactoryWillCreateInputFilterAndAllInputObjectsFromGivenConfiguration(): void
     {
-        $factory     = $this->createDefaultFactory();
+        $serviceManager           = new ServiceManager();
+        $inputFilterPluginManager = new InputFilterPluginManager($serviceManager);
+        $inputFilterPluginManager->setFactory(
+            CustomInput::class,
+            fn () => new CustomInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain())
+        );
+
+        $serviceManager->setService(InputFilterPluginManager::class, $inputFilterPluginManager);
+
+        $factory = Factory::new($serviceManager);
+
         $inputFilter = $factory->createInputFilter([
             'foo'  => [
                 'name'       => 'foo',
@@ -647,7 +656,9 @@ final class FactoryTest extends TestCase
     {
         $factory = $this->createDefaultFactory();
         $chain   = new Filter\FilterChain();
-        $input   = $factory->createInput([
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+        $chain->setPluginManager(TestHelper::createFilterPluginManager());
+        $input = $factory->createInput([
             'name'    => 'foo',
             'filters' => $chain,
         ]);
@@ -818,7 +829,7 @@ final class FactoryTest extends TestCase
 
     public function testSetInputFilterManagerWithServiceManager(): void
     {
-        $serviceManager         = new ServiceManager\ServiceManager();
+        $serviceManager         = new ServiceManager();
         $inputFilterManager     = new InputFilterPluginManager($serviceManager);
         $validatorPluginManager = new Validator\ValidatorPluginManager($serviceManager);
         $filterPluginManager    = new Filter\FilterPluginManager($serviceManager);
@@ -911,9 +922,12 @@ final class FactoryTest extends TestCase
 
     public function testSuggestedTypeMayBePluginNameInInputFilterPluginManager(): void
     {
-        $serviceManager = new ServiceManager\ServiceManager();
+        $serviceManager = new ServiceManager();
         $pluginManager  = new InputFilterPluginManager($serviceManager);
-        $pluginManager->setService('bar', new Input('bar'));
+        $pluginManager->setService(
+            'bar',
+            new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'bar')
+        );
         $factory = new Factory(
             new FilterPluginManager($serviceManager),
             new ValidatorPluginManager($serviceManager),
@@ -930,14 +944,16 @@ final class FactoryTest extends TestCase
 
     public function testInputFromPluginManagerMayBeFurtherConfiguredWithSpec(): void
     {
-        $serviceManager = new ServiceManager\ServiceManager();
+        $serviceManager = new ServiceManager();
         $pluginManager  = new InputFilterPluginManager($serviceManager);
-        $pluginManager->setService('bar', $barInput = new Input('bar'));
-        $factory = new Factory(
-            new FilterPluginManager($serviceManager),
-            new ValidatorPluginManager($serviceManager),
-            $pluginManager
+        $pluginManager->setService(
+            'bar',
+            $barInput   = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'bar')
         );
+
+        $serviceManager->setService(InputFilterPluginManager::class, $pluginManager);
+
+        $factory = Factory::new($serviceManager);
         self::assertTrue($barInput->isRequired());
 
         $input = $factory->createInput([
@@ -1035,22 +1051,31 @@ final class FactoryTest extends TestCase
 
     public function testWhenCreateInputPullsInputFromThePluginManagerItMustNotOverwriteFilterAndValidatorChains(): void
     {
-        $input          = new Input();
-        $filterChain    = new Filter\FilterChain();
+        $serviceManager      = new ServiceManager();
+        $filterPluginManager = new FilterPluginManager($serviceManager);
+
+        $filterChain = new Filter\FilterChain();
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+        $filterChain->setPluginManager($filterPluginManager);
+
         $validatorChain = new Validator\ValidatorChain();
+
+        $input = new Input($filterChain, $validatorChain);
         $input->setFilterChain($filterChain);
         $input->setValidatorChain($validatorChain);
 
-        $serviceManager = new ServiceManager\ServiceManager();
-        $pluginManager  = new InputFilterPluginManager($serviceManager);
-        $pluginManager->setService('Some\Test\Input', $input);
+        $inputFilterPluginManager = new InputFilterPluginManager($serviceManager);
+        $inputFilterPluginManager->setService('Some\Test\Input', $input);
 
-        $factory               = new Factory(
+        $factory = new Factory(
             new FilterPluginManager($serviceManager),
             new ValidatorPluginManager($serviceManager),
-            $pluginManager
+            $inputFilterPluginManager
         );
-        $defaultFilterChain    = new Filter\FilterChain();
+
+        $defaultFilterChain = new Filter\FilterChain();
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+        $defaultFilterChain->setPluginManager($filterPluginManager);
         $defaultValidatorChain = new Validator\ValidatorChain();
         $factory->setDefaultFilterChain($defaultFilterChain);
         $factory->setDefaultValidatorChain($defaultValidatorChain);
@@ -1090,7 +1115,7 @@ final class FactoryTest extends TestCase
 
     protected function createDefaultFactory(?InputFilterPluginManager $inputFilterPluginManager = null): Factory
     {
-        $serviceManager = new ServiceManager\ServiceManager();
+        $serviceManager = new ServiceManager();
 
         $factory = new Factory(
             new FilterPluginManager($serviceManager),

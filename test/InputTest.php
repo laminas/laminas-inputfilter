@@ -39,12 +39,17 @@ final class InputTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->input = new Input('foo');
+        $this->input = $this->createInput('foo');
     }
 
     protected function tearDown(): void
     {
         AbstractValidator::setDefaultTranslator(null);
+    }
+
+    private function createInput(?string $name = null): Input
+    {
+        return new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
     }
 
     public function assertRequiredValidationErrorMessage(Input $input, string $message = ''): void
@@ -258,7 +263,7 @@ final class InputTest extends TestCase
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
-        $input = new Input();
+        $input = $this->createInput();
         $input->setRequired(true);
 
         $customMessage = [
@@ -499,8 +504,8 @@ final class InputTest extends TestCase
 
     public function testMergingTwoInputsModifiesTheName(): void
     {
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = $this->createInput('a');
+        $b = $this->createInput('b');
         $a->merge($b);
 
         self::assertSame('b', $a->getName());
@@ -508,8 +513,8 @@ final class InputTest extends TestCase
 
     public function testMergingTwoInputsModifiesErrorMessage(): void
     {
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = $this->createInput('a');
+        $b = $this->createInput('b');
         $b->setErrorMessage('Foo');
         $a->merge($b);
 
@@ -518,9 +523,9 @@ final class InputTest extends TestCase
 
     public function testMergingTwoInputsModifiesBreakOnFailureFlag(): void
     {
-        $a = new Input('a');
+        $a = $this->createInput('a');
         $a->setBreakOnFailure(false);
-        $b = new Input('b');
+        $b = $this->createInput('b');
         $b->setBreakOnFailure(true);
         $a->merge($b);
 
@@ -529,9 +534,9 @@ final class InputTest extends TestCase
 
     public function testMergingTwoInputsModifiesRequiredFlag(): void
     {
-        $a = new Input('a');
+        $a = $this->createInput('a');
         $a->setRequired(false);
-        $b = new Input('b');
+        $b = $this->createInput('b');
         $b->setRequired(true);
         $a->merge($b);
 
@@ -540,9 +545,9 @@ final class InputTest extends TestCase
 
     public function testMergingTwoInputsModifiesAllowEmptyFlag(): void
     {
-        $a = new Input('a');
+        $a = $this->createInput('a');
         $a->setAllowEmpty(false);
-        $b = new Input('b');
+        $b = $this->createInput('b');
         $b->setAllowEmpty(true);
         $a->merge($b);
 
@@ -551,9 +556,9 @@ final class InputTest extends TestCase
 
     public function testMergingTwoInputsCopiesTheValueIfSet(): void
     {
-        $a = new Input('a');
+        $a = $this->createInput('a');
         $a->setValue('a');
-        $b = new Input('b');
+        $b = $this->createInput('b');
         $b->setValue('b');
         $a->merge($b);
 
@@ -565,8 +570,8 @@ final class InputTest extends TestCase
         $filter1 = new ToInt();
         $filter2 = new ToNull();
 
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = $this->createInput('a');
+        $b = $this->createInput('b');
 
         $a->getFilterChain()->attach($filter1);
         $b->getFilterChain()->attach($filter2);
@@ -585,8 +590,8 @@ final class InputTest extends TestCase
         $validator1 = new NotEmptyValidator();
         $validator2 = new NumberComparison(['min' => 1, 'max' => 5]);
 
-        $a = new Input('a');
-        $b = new Input('b');
+        $a = $this->createInput('a');
+        $b = $this->createInput('b');
 
         $a->getValidatorChain()->attach($validator1);
         $b->getValidatorChain()->attach($validator2);
@@ -668,7 +673,7 @@ final class InputTest extends TestCase
      */
     public function testInputMergeWithoutValues(): void
     {
-        $source = new Input();
+        $source = $this->createInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 
@@ -688,7 +693,7 @@ final class InputTest extends TestCase
      */
     public function testInputMergeWithSourceValue(): void
     {
-        $source = new Input();
+        $source = $this->createInput();
         $source->setContinueIfEmpty(true);
         $source->setValue(['foo']);
 
@@ -709,7 +714,7 @@ final class InputTest extends TestCase
      */
     public function testInputMergeWithTargetValue(): void
     {
-        $source = new Input();
+        $source = $this->createInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 

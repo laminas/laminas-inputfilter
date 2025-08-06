@@ -28,17 +28,11 @@ class Input implements
     /** @var string|null */
     protected $errorMessage;
 
-    /** @var null|FilterChain */
-    protected $filterChain;
-
     /** @var bool */
     protected $notEmptyValidator = false;
 
     /** @var bool */
     protected $required = true;
-
-    /** @var null|ValidatorChain */
-    protected $validatorChain;
 
     /** @var mixed */
     protected $value;
@@ -56,9 +50,11 @@ class Input implements
     /** @var bool */
     protected $hasFallback = false;
 
-    /** @param null|string $name */
-    public function __construct(protected $name = null)
-    {
+    public function __construct(
+        protected FilterChain $filterChain,
+        protected ValidatorChain $validatorChain,
+        protected ?string $name = null
+    ) {
     }
 
     /**
@@ -218,14 +214,8 @@ class Input implements
         return $this->errorMessage;
     }
 
-    /**
-     * @return FilterChain
-     */
-    public function getFilterChain()
+    public function getFilterChain(): FilterChain
     {
-        if (! $this->filterChain) {
-            $this->filterChain = new FilterChain();
-        }
         return $this->filterChain;
     }
 
@@ -258,9 +248,6 @@ class Input implements
      */
     public function getValidatorChain()
     {
-        if (! $this->validatorChain) {
-            $this->validatorChain = new ValidatorChain();
-        }
         return $this->validatorChain;
     }
 

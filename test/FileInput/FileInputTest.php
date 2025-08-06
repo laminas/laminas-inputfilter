@@ -52,7 +52,7 @@ final class FileInputTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->input = new FileInput('foo');
+        $this->input = $this->createFileInput('foo');
         // Upload validator does not work in CLI test environment, disable
         $this->input->setAutoPrependUploadValidator(false);
     }
@@ -60,6 +60,11 @@ final class FileInputTest extends TestCase
     protected function tearDown(): void
     {
         AbstractValidator::setDefaultTranslator();
+    }
+
+    private function createFileInput(?string $name = null): FileInput
+    {
+        return new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
     }
 
     #[DataProvider('validSingleValueProvider')]
@@ -123,7 +128,7 @@ final class FileInputTest extends TestCase
 
     public function testAutoPrependUploadValidatorIsOnByDefault(): void
     {
-        $input = new FileInput('foo');
+        $input = $this->createFileInput('foo');
         self::assertTrue($input->getAutoPrependUploadValidator());
     }
 
@@ -227,7 +232,7 @@ final class FileInputTest extends TestCase
 
     public function testDefaultInjectedUploadValidatorRespectsRelease2Convention(): void
     {
-        $input          = new FileInput('foo');
+        $input          = $this->createFileInput('foo');
         $validatorChain = $input->getValidatorChain();
         $pluginManager  = $validatorChain->getPluginManager();
         $pluginManager->setInvokableClass(UploadValidator::class, TestAsset\FileUploadMock::class);
@@ -241,7 +246,7 @@ final class FileInputTest extends TestCase
      */
     public function testFileInputMerge(): void
     {
-        $source = new FileInput();
+        $source = $this->createFileInput();
         $source->setAutoPrependUploadValidator(true);
 
         $target = $this->input;
@@ -411,7 +416,7 @@ final class FileInputTest extends TestCase
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
-        $input = new FileInput();
+        $input = $this->createFileInput();
         $input->setRequired(true);
 
         $customMessage = [
@@ -568,8 +573,8 @@ final class FileInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesTheName(): void
     {
-        $a = new FileInput('a');
-        $b = new FileInput('b');
+        $a = $this->createFileInput('a');
+        $b = $this->createFileInput('b');
         $a->merge($b);
 
         self::assertSame('b', $a->getName());
@@ -577,8 +582,8 @@ final class FileInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesErrorMessage(): void
     {
-        $a = new FileInput('a');
-        $b = new FileInput('b');
+        $a = $this->createFileInput('a');
+        $b = $this->createFileInput('b');
         $b->setErrorMessage('Foo');
         $a->merge($b);
 
@@ -587,9 +592,9 @@ final class FileInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesBreakOnFailureFlag(): void
     {
-        $a = new FileInput('a');
+        $a = $this->createFileInput('a');
         $a->setBreakOnFailure(false);
-        $b = new FileInput('b');
+        $b = $this->createFileInput('b');
         $b->setBreakOnFailure(true);
         $a->merge($b);
 
@@ -598,9 +603,9 @@ final class FileInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesRequiredFlag(): void
     {
-        $a = new FileInput('a');
+        $a = $this->createFileInput('a');
         $a->setRequired(false);
-        $b = new FileInput('b');
+        $b = $this->createFileInput('b');
         $b->setRequired(true);
         $a->merge($b);
 
@@ -609,9 +614,9 @@ final class FileInputTest extends TestCase
 
     public function testMergingTwoInputsModifiesAllowEmptyFlag(): void
     {
-        $a = new FileInput('a');
+        $a = $this->createFileInput('a');
         $a->setAllowEmpty(false);
-        $b = new FileInput('b');
+        $b = $this->createFileInput('b');
         $b->setAllowEmpty(true);
         $a->merge($b);
 
@@ -621,9 +626,9 @@ final class FileInputTest extends TestCase
     /** @psalm-suppress InvalidArgument */
     public function testMergingTwoInputsCopiesTheValueIfSet(): void
     {
-        $a = new FileInput('a');
+        $a = $this->createFileInput('a');
         $a->setValue('a');
-        $b = new FileInput('b');
+        $b = $this->createFileInput('b');
         $b->setValue('b');
         $a->merge($b);
 
@@ -635,8 +640,8 @@ final class FileInputTest extends TestCase
         $filter1 = new ToInt();
         $filter2 = new ToNull();
 
-        $a = new FileInput('a');
-        $b = new FileInput('b');
+        $a = $this->createFileInput('a');
+        $b = $this->createFileInput('b');
 
         $a->getFilterChain()->attach($filter1);
         $b->getFilterChain()->attach($filter2);
@@ -655,8 +660,8 @@ final class FileInputTest extends TestCase
         $validator1 = new NotEmptyValidator();
         $validator2 = new NumberComparison(['min' => 1, 'max' => 5]);
 
-        $a = new FileInput('a');
-        $b = new FileInput('b');
+        $a = $this->createFileInput('a');
+        $b = $this->createFileInput('b');
 
         $a->getValidatorChain()->attach($validator1);
         $b->getValidatorChain()->attach($validator2);
@@ -737,7 +742,7 @@ final class FileInputTest extends TestCase
      */
     public function testInputMergeWithoutValues(): void
     {
-        $source = new FileInput();
+        $source = $this->createFileInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 
@@ -757,7 +762,7 @@ final class FileInputTest extends TestCase
      */
     public function testInputMergeWithSourceValue(): void
     {
-        $source = new FileInput();
+        $source = $this->createFileInput();
         $source->setContinueIfEmpty(true);
         $source->setValue(['foo']);
 
@@ -778,7 +783,7 @@ final class FileInputTest extends TestCase
      */
     public function testInputMergeWithTargetValue(): void
     {
-        $source = new FileInput();
+        $source = $this->createFileInput();
         $source->setContinueIfEmpty(true);
         self::assertFalse($source->hasValue(), 'Source should not have a value');
 
@@ -818,18 +823,19 @@ final class FileInputTest extends TestCase
 
     public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled(): void
     {
-        $this->input->setAutoPrependUploadValidator(true);
-        self::assertTrue($this->input->getAutoPrependUploadValidator());
-        self::assertTrue($this->input->isRequired());
+        $input = new FileInput(new FilterChain(), new ValidatorChain());
+        $input->setAutoPrependUploadValidator(true);
+        self::assertTrue($input->getAutoPrependUploadValidator());
+        self::assertTrue($input->isRequired());
 
         $uploadedFile = new UploadedFileInterfaceStub(UPLOAD_ERR_NO_FILE);
 
-        $this->input->setValue($uploadedFile);
+        $input->setValue($uploadedFile);
 
-        $validatorChain = $this->input->getValidatorChain();
+        $validatorChain = $input->getValidatorChain();
         self::assertCount(0, $validatorChain->getValidators());
 
-        self::assertFalse($this->input->isValid());
+        self::assertFalse($input->isValid());
         $validators = $validatorChain->getValidators();
         self::assertCount(1, $validators);
         self::assertInstanceOf(Validator\File\UploadFile::class, $validators[0]['instance']);
@@ -858,7 +864,7 @@ final class FileInputTest extends TestCase
      */
     public function testPsrFileInputMerge(): void
     {
-        $source = new FileInput();
+        $source = $this->createFileInput();
         $source->setAutoPrependUploadValidator(true);
 
         $target = $this->input;

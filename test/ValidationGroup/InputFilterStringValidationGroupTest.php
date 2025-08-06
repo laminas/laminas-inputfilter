@@ -18,13 +18,13 @@ final class InputFilterStringValidationGroupTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $first = new Input('first');
+        $first = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'first');
         $first->setRequired(true);
         $first->getValidatorChain()->attach(new StringLength(['min' => 5]));
-        $second = new Input('second');
+        $second = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'second');
         $second->setRequired(true);
         $second->getValidatorChain()->attach(new StringLength(['min' => 5]));
-        $third = new Input('third');
+        $third = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'third');
         $third->setRequired(true);
         $third->getValidatorChain()->attach(new StringLength(['min' => 5]));
 

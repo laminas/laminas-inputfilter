@@ -95,7 +95,9 @@ final class OptionalInputFilterTest extends TestCase
     {
         $optionalInputFilter = new OptionalInputFilter(TestHelper::createInputFilterFactory());
 
-        $optionalInputFilter->add(new Input('brand'));
+        $optionalInputFilter->add(
+            new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'brand')
+        );
 
         $optionalInputFilter->setData(['model' => 'Golf']);
         self::assertFalse($optionalInputFilter->isValid());
@@ -127,8 +129,12 @@ final class OptionalInputFilterTest extends TestCase
         if (! $this->nestedCarInputFilter) {
             /** @var OptionalInputFilter<array{brand: mixed, model:mixed}> $optionalInputFilter */
             $optionalInputFilter = new OptionalInputFilter($factory);
-            $optionalInputFilter->add(new Input('brand'));
-            $optionalInputFilter->add(new Input('model'));
+            $optionalInputFilter->add(
+                new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'brand')
+            );
+            $optionalInputFilter->add(
+                new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'model')
+            );
 
             $this->nestedCarInputFilter = new InputFilter($factory);
             $this->nestedCarInputFilter->add($optionalInputFilter, 'car');

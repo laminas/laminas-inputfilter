@@ -402,8 +402,6 @@
       <code><![CDATA[getFilters]]></code>
       <code><![CDATA[getPluginManager]]></code>
       <code><![CDATA[getPluginManager]]></code>
-      <code><![CDATA[getPluginManager]]></code>
-      <code><![CDATA[setPluginManager]]></code>
       <code><![CDATA[setPluginManager]]></code>
     </DeprecatedMethod>
     <PossiblyNullReference>
@@ -425,15 +423,7 @@
       <code><![CDATA[plugin]]></code>
     </DeprecatedMethod>
   </file>
-  <file src="test/InputFilterPluginManagerCompatibilityTest.php">
-    <InvalidReturnType>
-      <code><![CDATA[getInstanceOf]]></code>
-    </InvalidReturnType>
-  </file>
   <file src="test/InputFilterPluginManagerTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getPluginManager]]></code>
-    </DeprecatedMethod>
     <LessSpecificReturnStatement>
       <code><![CDATA[[
             // Description         => [$serviceName,                  $service,                  $instanceOf]

@@ -87,8 +87,8 @@ final class InputFilterTest extends BaseInputFilterTest
 
     public function testInputsWithoutANameYieldMergedInputsWithAnEmptyName(): void
     {
-        $a = new Input();
-        $b = new Input();
+        $a = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
+        $b = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
 
         $filter = new InputFilter(
             $this->factory

@@ -13,7 +13,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use ReflectionObject;
 
 final class InputFilterPluginManagerFactoryTest extends TestCase
 {
@@ -24,10 +23,6 @@ final class InputFilterPluginManagerFactoryTest extends TestCase
 
         $filters = $factory($container, InputFilterPluginManagerFactory::class);
         self::assertInstanceOf(InputFilterPluginManager::class, $filters);
-
-        $r = new ReflectionObject($filters);
-        $p = $r->getProperty('creationContext');
-        self::assertSame($container, $p->getValue($filters));
     }
 
     /** @psalm-return array<string, array{0: class-string}> */

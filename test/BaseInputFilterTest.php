@@ -50,6 +50,11 @@ class BaseInputFilterTest extends TestCase
         $this->inputFilter = new BaseInputFilter($this->factory);
     }
 
+    private function createInput(?string $name = null): Input
+    {
+        return new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
+    }
+
     public function testInputFilterIsEmptyByDefault(): void
     {
         $filter = $this->inputFilter;
@@ -81,7 +86,7 @@ class BaseInputFilterTest extends TestCase
     public function testReplaceWithInvalidInputTypeThrowsInvalidArgumentException(): void
     {
         $inputFilter = $this->inputFilter;
-        $inputFilter->add(new Input('foo'), 'replace_me');
+        $inputFilter->add($this->createInput('foo'), 'replace_me');
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -98,7 +103,10 @@ class BaseInputFilterTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('no input found matching "not exists"');
-        $inputFilter->replace(new Input('foo'), 'not exists');
+        $inputFilter->replace(
+            $this->createInput('foo'),
+            'not exists'
+        );
     }
 
     public function testGetValueThrowExceptionIfInputDoesNotExists(): void
@@ -268,7 +276,7 @@ class BaseInputFilterTest extends TestCase
     {
         $inputFilter = $this->inputFilter;
 
-        $foo = new Input('foo');
+        $foo = $this->createInput('foo');
         $inputFilter->add($foo, 'bas');
 
         $test = $inputFilter->get('bas');
@@ -284,7 +292,7 @@ class BaseInputFilterTest extends TestCase
     ): void {
         $inputFilter    = $this->inputFilter;
         $nameToReplace  = 'replace_me';
-        $inputToReplace = new Input($nameToReplace);
+        $inputToReplace = $this->createInput($nameToReplace);
 
         $inputFilter->add($inputToReplace);
         $currentNumberOfFilters = count($inputFilter);
@@ -402,7 +410,7 @@ class BaseInputFilterTest extends TestCase
         /** @var Input&MockObject $flatInput */
         $flatInput = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
-            ->setConstructorArgs(['flat'])
+            ->setConstructorArgs([TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'flat'])
             ->getMock();
         $flatInput->expects(self::once())
             ->method('setValue')
@@ -411,7 +419,7 @@ class BaseInputFilterTest extends TestCase
         /** @var Input&MockObject $resetInput */
         $resetInput = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
-            ->setConstructorArgs(['notSet'])
+            ->setConstructorArgs([TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'notSet'])
             ->getMock();
         $resetInput->expects(self::once())
             ->method('resetValue');
@@ -420,8 +428,14 @@ class BaseInputFilterTest extends TestCase
         $filter->add($flatInput);
         $filter->add($resetInput);
         $deepInputFilter = new BaseInputFilter($this->factory);
-        $deepInputFilter->add(new Input(), 'deep-input1');
-        $deepInputFilter->add(new Input(), 'deep-input2');
+        $deepInputFilter->add(
+            $this->createInput(),
+            'deep-input1'
+        );
+        $deepInputFilter->add(
+            $this->createInput(),
+            'deep-input2'
+        );
         $filter->add($deepInputFilter, 'deep');
         $filter->setData($data);
         $filter->setValidationGroup(['deep' => 'deep-input1']);
@@ -568,8 +582,8 @@ class BaseInputFilterTest extends TestCase
     {
         $filter = $this->inputFilter;
 
-        $foo = new Input('foo');
-        $bar = new Input('bar');
+        $foo = $this->createInput('foo');
+        $bar = $this->createInput('bar');
 
         $filter->add($foo);
         $filter->add($bar);
@@ -585,11 +599,11 @@ class BaseInputFilterTest extends TestCase
     {
         $filter = $this->inputFilter;
 
-        $foo1 = new Input('foo');
+        $foo1 = $this->createInput('foo');
         $foo1->setRequired(true);
         $filter->add($foo1);
 
-        $foo2 = new Input('foo');
+        $foo2 = $this->createInput('foo');
         $foo2->setRequired(false);
         $filter->add($foo2);
 
@@ -600,7 +614,7 @@ class BaseInputFilterTest extends TestCase
 
     public function testAddingAnInputFilterWithTheSameNameAsTheInputWillReplace(): void
     {
-        $input  = new Input('a');
+        $input  = $this->createInput('a');
         $filter = new InputFilter($this->factory);
 
         $this->inputFilter->add($input);
@@ -617,10 +631,10 @@ class BaseInputFilterTest extends TestCase
         $inputFilter       = $this->inputFilter;
         $originInputFilter = new BaseInputFilter($this->factory);
 
-        $inputFilter->add(new Input(), 'foo');
-        $inputFilter->add(new Input(), 'bar');
+        $inputFilter->add($this->createInput(), 'foo');
+        $inputFilter->add($this->createInput(), 'bar');
 
-        $originInputFilter->add(new Input(), 'baz');
+        $originInputFilter->add($this->createInput(), 'baz');
 
         $inputFilter->merge($originInputFilter);
 
@@ -639,7 +653,9 @@ class BaseInputFilterTest extends TestCase
         /** @psalm-var BaseInputFilter<array{nested: array{nestedField1: mixed}}> $filter1 */
         $filter1      = new BaseInputFilter($this->factory);
         $nestedFilter = new BaseInputFilter($this->factory);
-        $nestedFilter->add(new Input('nestedField1'));
+        $nestedFilter->add(
+            $this->createInput('nestedField1')
+        );
         $filter1->add($nestedFilter, 'nested');
 
         // non scalar and non null value
@@ -717,7 +733,7 @@ class BaseInputFilterTest extends TestCase
 
         /** @var BaseInputFilter $baseInputFilter */
         $baseInputFilter = (new BaseInputFilter($this->factory))
-            ->add(new Input(), 'bar')
+            ->add($this->createInput(), 'bar')
             ->setData($unfilteredArray);
 
         self::assertSame($unfilteredArray, $baseInputFilter->getUnfilteredData());

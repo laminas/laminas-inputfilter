@@ -13,6 +13,8 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\ValidatorStub;
+use Psr\Container\ContainerInterface;
+use ReflectionProperty;
 
 final class TestHelper
 {
@@ -21,14 +23,30 @@ final class TestHelper
         $serviceManager = new ServiceManager();
 
         $factory = new Factory(
-            new FilterPluginManager($serviceManager),
-            new ValidatorPluginManager($serviceManager),
+            self::createFilterPluginManager($serviceManager),
+            self::createValidatorPluginManager($serviceManager),
             new InputFilterPluginManager($serviceManager)
         );
 
         $serviceManager->setService(Factory::class, $factory);
 
         return $factory;
+    }
+
+    public static function createFilterPluginManager(ContainerInterface|null $container = null): FilterPluginManager
+    {
+        return new FilterPluginManager($container ?? new ServiceManager());
+    }
+
+    public static function createValidatorPluginManager(
+        ContainerInterface|null $container = null
+    ): ValidatorPluginManager {
+        return new ValidatorPluginManager($container ?? new ServiceManager());
+    }
+
+    public static function getFilterPluginManagerFromFilterChain(FilterChain $filterChain): mixed
+    {
+        return (new ReflectionProperty(FilterChain::class, 'plugins'))->getValue($filterChain);
     }
 
     /** @param array<string, string> $messages */
@@ -41,19 +59,30 @@ final class TestHelper
         return new ValidatorStub($isValid, $value, $context, $messages);
     }
 
-    public static function createValidatorChain(mixed $value, bool $isValid): ValidatorChain
+    public static function createValidatorChain(mixed $value = null, bool $isValid = true): ValidatorChain
     {
-        return (new ValidatorChain())->attach(self::createValidatorMock($isValid, $value));
+        $validatorChain = new ValidatorChain();
+        $validatorChain->setPluginManager(self::createValidatorPluginManager());
+        if ($value !== null) {
+            $validatorChain->attach(self::createValidatorMock($isValid, $value));
+        }
+
+        return $validatorChain;
     }
 
     public static function createFilterChain(): FilterChain
     {
-        return new FilterChain();
+        $filterChain = new FilterChain();
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+        $filterChain->setPluginManager(self::createFilterPluginManager());
+        return $filterChain;
     }
 
     public static function createFilterChainFixture(mixed $originalValue, mixed $filteredValue): FilterChain
     {
         $filterChain = new FilterChain();
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+        $filterChain->setPluginManager(self::createFilterPluginManager());
 
         $filterChain->attach(
             fn(mixed $value): mixed => $value === $originalValue ? $filteredValue : $value,
@@ -66,6 +95,8 @@ final class TestHelper
     public static function createFilterChainFixtureFromMap(array $valueMap): FilterChain
     {
         $filterChain = new FilterChain();
+        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
+        $filterChain->setPluginManager(self::createFilterPluginManager());
 
         foreach ($valueMap as $values) {
             $filterChain->attach(
