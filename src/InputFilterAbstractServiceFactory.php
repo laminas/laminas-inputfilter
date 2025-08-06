@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\ServiceManager\AbstractFactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Psr\Container\ContainerInterface;
 
 use function is_array;
 
-/** @final */
-class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
+/**
+ * @psalm-internal Laminas\InputFilter
+ * @psalm-internal LaminasTest\InputFilter
+ */
+final class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
 {
     /** @param string $requestedName */
     public function __invoke(
@@ -42,37 +44,5 @@ class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
         }
 
         return true;
-    }
-
-    /**
-     * Determine if we can create a service with name (v2)
-     *
-     * @deprecated This library is no longer compatible with Service manager V2 and this method will be dropped in the
-     *             next major release.
-     *
-     * @param string $name
-     * @param string $requestedName
-     * @return bool
-     */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-    {
-        return $this->canCreate($serviceLocator, $requestedName);
-    }
-
-    /**
-     * Create the requested service (v2)
-     *
-     * @deprecated This library is no longer compatible with Service manager V2 and this method will be dropped in the
-     *             next major release.
-     *
-     * @param string $name
-     * @param string $requestedName
-     */
-    public function createServiceWithName(
-        ServiceLocatorInterface $serviceLocator,
-        $name,
-        $requestedName
-    ): InputFilterInterface {
-        return $this($serviceLocator, $requestedName);
     }
 }

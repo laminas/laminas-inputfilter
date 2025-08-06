@@ -204,9 +204,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
-    <DeprecatedInterface>
-      <code><![CDATA[InputFilterAbstractServiceFactory]]></code>
-    </DeprecatedInterface>
     <MixedArgument>
       <code><![CDATA[$config]]></code>
     </MixedArgument>
