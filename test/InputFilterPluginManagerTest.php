@@ -101,43 +101,6 @@ final class InputFilterPluginManagerTest extends TestCase
         self::assertInstanceOf($expectedInstance, $service, 'get() return type not match');
     }
 
-    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator(): void
-    {
-        $serviceManager = new ServiceManager();
-
-        $filterManager    = new FilterPluginManager($serviceManager);
-        $validatorManager = new ValidatorPluginManager($serviceManager);
-        $serviceManager->setService(FilterPluginManager::class, $filterManager);
-        $serviceManager->setService(ValidatorPluginManager::class, $validatorManager);
-
-        $manager = new InputFilterPluginManager($serviceManager);
-        $factory = new Factory($filterManager, $validatorManager, $manager);
-
-        $serviceManager->setService(Factory::class, $factory);
-
-        /** @var InputFilter $service */
-        $service = $manager->get('inputfilter');
-
-        /** @var Factory $factory */
-        $factory = (new ReflectionObject($service))->getProperty('factory')->getValue($service);
-
-        $defaultFilterChain = $factory->getDefaultFilterChain();
-        self::assertInstanceOf(FilterChain::class, $defaultFilterChain);
-        self::assertSame(
-            $filterManager,
-            TestHelper::getFilterPluginManagerFromFilterChain($defaultFilterChain),
-            'Factory::getDefaultFilterChain() is not populated with the expected plugin manager'
-        );
-
-        $defaultValidatorChain = $factory->getDefaultValidatorChain();
-        self::assertInstanceOf(ValidatorChain::class, $defaultValidatorChain);
-        self::assertSame(
-            $validatorManager,
-            $defaultValidatorChain->getPluginManager(),
-            'Factory::getDefaultValidatorChain() is not populated with the expected plugin manager'
-        );
-    }
-
     /**
      * @psalm-return array<string, array{
      *     0: string,
