@@ -257,22 +257,6 @@
       <code><![CDATA[$shareByDefault]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="src/InputFilterPluginManagerFactory.php">
-    <DeprecatedClass>
-      <code><![CDATA[new Config($config['input_filters'])]]></code>
-    </DeprecatedClass>
-    <DeprecatedInterface>
-      <code><![CDATA[InputFilterPluginManagerFactory]]></code>
-    </DeprecatedInterface>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setCreationOptions]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedPsalmSuppress>
-      <code><![CDATA[MismatchingDocblockParamType]]></code>
-      <code><![CDATA[MismatchingDocblockParamType]]></code>
-      <code><![CDATA[MoreSpecificImplementedParamType]]></code>
-    </UnusedPsalmSuppress>
-  </file>
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[$this]]></code>
