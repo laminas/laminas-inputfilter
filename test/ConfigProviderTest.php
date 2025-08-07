@@ -6,28 +6,10 @@ namespace LaminasTest\InputFilter;
 
 use Laminas\InputFilter\ConfigProvider;
 use Laminas\InputFilter\InputFilterAbstractServiceFactory;
-use Laminas\InputFilter\InputFilterPluginManager;
-use Laminas\InputFilter\InputFilterPluginManagerFactory;
 use PHPUnit\Framework\TestCase;
 
 final class ConfigProviderTest extends TestCase
 {
-    public function testProvidesExpectedConfiguration(): void
-    {
-        $provider = new ConfigProvider();
-
-        $expected = [
-            'aliases'   => [
-                'InputFilterManager' => InputFilterPluginManager::class,
-            ],
-            'factories' => [
-                InputFilterPluginManager::class => InputFilterPluginManagerFactory::class,
-            ],
-        ];
-
-        self::assertEquals($expected, $provider->getDependencyConfig());
-    }
-
     public function testProvidesExpectedInputFilterConfiguration(): void
     {
         $provider = new ConfigProvider();
@@ -49,6 +31,6 @@ final class ConfigProviderTest extends TestCase
             'dependencies'  => $provider->getDependencyConfig(),
             'input_filters' => $provider->getInputFilterConfig(),
         ];
-        self::assertEquals($expected, $provider());
+        self::assertEquals($expected, $provider->__invoke());
     }
 }

@@ -41,6 +41,7 @@ final class ConfigProvider
                 'InputFilterManager' => InputFilterPluginManager::class,
             ],
             'factories' => [
+                Factory::class                  => FactoryFactory::class,
                 InputFilterPluginManager::class => InputFilterPluginManagerFactory::class,
             ],
         ];
