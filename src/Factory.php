@@ -16,11 +16,8 @@ use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
 
-use function array_intersect;
-use function array_keys;
 use function assert;
 use function class_exists;
-use function count;
 use function get_debug_type;
 use function in_array;
 use function is_a;
@@ -229,7 +226,19 @@ final class Factory
      */
     private function isInputSpecification(array $spec): bool
     {
+        /** @var mixed $type */
+        $type = $spec['type'] ?? null;
+
+        if (is_string($type) && is_a($type, InputInterface::class, true)) {
+            return true;
+        }
+
+        if (is_string($type) && is_a($type, InputFilterInterface::class, true)) {
+            return false;
+        }
+
         $keys = [
+            'type',
             'name',
             'required',
             'allow_empty',
@@ -241,14 +250,11 @@ final class Factory
             'validators',
         ];
 
-        if (count(array_intersect($keys, array_keys($spec))) > 0) {
-            return true;
+        foreach ($keys as $key) {
+            unset($spec[$key]);
         }
 
-        /** @var mixed $type */
-        $type = $spec['type'] ?? null;
-
-        return is_string($type) && is_a($type, InputInterface::class, true);
+        return $spec === [];
     }
 
     /** @param InputSpecification|InputFilterSpecification $spec */
