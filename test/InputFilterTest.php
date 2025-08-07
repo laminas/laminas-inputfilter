@@ -4,57 +4,25 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use ArrayIterator;
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Traversable;
+use PHPUnit\Framework\TestCase;
 
-use function array_merge;
-
+/**
+ * @psalm-import-type InputSpecification from InputFilterInterface
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
+ */
 #[CoversClass(InputFilter::class)]
-final class InputFilterTest extends BaseInputFilterTest
+final class InputFilterTest extends TestCase
 {
-    /** @var InputFilter $inputFilter */
-    protected $inputFilter;
+    private Factory $factory;
 
     protected function setUp(): void
     {
         $this->factory = TestHelper::createInputFilterFactory();
-
-        $this->inputFilter = new InputFilter($this->factory);
-    }
-
-    /**
-     * @psalm-return array<string, array{
-     *     0: array|Traversable,
-     *     1: string,
-     *     2: Input
-     * }>
-     */
-    public static function inputProvider(): array
-    {
-        $dataSets = parent::inputProvider();
-
-        $inputSpecificationAsArray       = [
-            'name' => 'inputFoo',
-        ];
-        $inputSpecificationAsTraversable = new ArrayIterator($inputSpecificationAsArray);
-
-        $inputSpecificationResult = TestHelper::createInputFilterFactory()->createInput([
-            'name' => 'inputFoo',
-        ]);
-
-        // phpcs:disable
-        $inputFilterDataSets = [
-            // Description => [input, expected name, $expectedReturnInput]
-            'array' =>       [$inputSpecificationAsArray      , 'inputFoo', $inputSpecificationResult],
-            'Traversable' => [$inputSpecificationAsTraversable, 'inputFoo', $inputSpecificationResult],
-        ];
-        // phpcs:enable
-        $dataSets = array_merge($dataSets, $inputFilterDataSets);
-
-        return $dataSets;
     }
 
     /**
