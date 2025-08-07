@@ -38,6 +38,9 @@ use const JSON_THROW_ON_ERROR;
 #[CoversClass(CollectionInputFilter::class)]
 final class CollectionInputFilterTest extends TestCase
 {
+    private const EMPTY_ERROR_MESSAGE_KEY = 'isEmpty';
+    private const EMPTY_ERROR_MESSAGE     = 'Value is required and can\'t be empty';
+
     private CollectionInputFilter $inputFilter;
     private Factory $factory;
 
@@ -208,7 +211,7 @@ final class CollectionInputFilterTest extends TestCase
                     [],
                     [],
                     false,
-                    [['isEmpty' => 'Value is required and can\'t be empty']],
+                    [[self::EMPTY_ERROR_MESSAGE_KEY => self::EMPTY_ERROR_MESSAGE]],
                 ],
             'Required: F, Data: [], Valid: X'
                 => [! $isRequired, null, [], $noValidIf(), [], [], true, []],
@@ -578,11 +581,11 @@ final class CollectionInputFilterTest extends TestCase
 
         self::assertArrayHasKey('phone', $messages[0]);
         self::assertCount(1, $messages[0]['phone']);
-        self::assertContains('Value is required and can\'t be empty', $messages[0]['phone']);
+        self::assertContains(self::EMPTY_ERROR_MESSAGE, $messages[0]['phone']);
 
         self::assertArrayHasKey('phone', $messages[1]);
         self::assertCount(1, $messages[1]['phone']);
-        self::assertNotContains('Value is required and can\'t be empty', $messages[1]['phone']);
+        self::assertNotContains(self::EMPTY_ERROR_MESSAGE, $messages[1]['phone']);
         self::assertContains('The input must contain only digits', $messages[1]['phone']);
         // @codingStandardsIgnoreEnd
     }
@@ -629,7 +632,7 @@ final class CollectionInputFilterTest extends TestCase
         self::assertArrayHasKey('phone', $messages[0]);
         self::assertCount(1, $messages[0]['phone']);
         self::assertContains('CUSTOM ERROR MESSAGE', $messages[0]['phone']);
-        self::assertNotContains('Value is required and can\'t be empty', $messages[0]['phone']);
+        self::assertNotContains(self::EMPTY_ERROR_MESSAGE, $messages[0]['phone']);
 
         self::assertArrayHasKey('phone', $messages[1]);
         self::assertCount(1, $messages[1]['phone']);
@@ -770,22 +773,18 @@ final class CollectionInputFilterTest extends TestCase
         /** @psalm-suppress DeprecatedInterface */
         $translator = $this->createMock(TranslatorInterface::class);
         AbstractValidator::setDefaultTranslator($translator);
-        $notEmpty = new NotEmpty();
 
         $translatedMessage = 'some translation';
-        /** @psalm-suppress DeprecatedMethod */
         $translator->expects(self::atLeastOnce())
             ->method('translate')
-            ->with($notEmpty->getMessageTemplates()[NotEmpty::IS_EMPTY])
+            ->with(self::EMPTY_ERROR_MESSAGE, 'default', null)
             ->willReturn($translatedMessage);
 
         $this->inputFilter->setIsRequired(true);
         $this->inputFilter->setData([]);
 
         self::assertFalse($this->inputFilter->isValid());
-        self::assertEquals([
-            [NotEmpty::IS_EMPTY => $translatedMessage],
-        ], $this->inputFilter->getMessages());
+        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $translatedMessage]], $this->inputFilter->getMessages());
     }
 
     public function testSetDataUsingSetDataAndRunningIsValidReturningSameAsOriginalForUnfilteredData(): void
@@ -870,7 +869,7 @@ final class CollectionInputFilterTest extends TestCase
         $inputFilter->setData([]);
 
         self::assertFalse($inputFilter->isValid());
-        self::assertEquals([['isEmpty' => 'Value is required and can\'t be empty']], $inputFilter->getMessages());
+        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => self::EMPTY_ERROR_MESSAGE]], $inputFilter->getMessages());
     }
 
     public function testSettingCustomValidationMessageViaFactory(): void
@@ -890,7 +889,7 @@ final class CollectionInputFilterTest extends TestCase
         $inputFilter->setData([]);
 
         self::assertFalse($inputFilter->isValid());
-        self::assertEquals([['isEmpty' => $customMessage]], $inputFilter->getMessages());
+        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $customMessage]], $inputFilter->getMessages());
     }
 
     public function testSetIsRequiredValidationMessage(): void
@@ -901,6 +900,6 @@ final class CollectionInputFilterTest extends TestCase
         $this->inputFilter->setData([]);
 
         self::assertFalse($this->inputFilter->isValid());
-        self::assertEquals([['isEmpty' => $customMessage]], $this->inputFilter->getMessages());
+        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $customMessage]], $this->inputFilter->getMessages());
     }
 }

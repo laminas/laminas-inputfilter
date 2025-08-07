@@ -48,6 +48,9 @@ use const UPLOAD_ERR_OK;
 #[CoversClass(PsrFileInputHandler::class)]
 final class FileInputTest extends TestCase
 {
+    private const EMPTY_ERROR_MESSAGE_KEY = 'isEmpty';
+    private const EMPTY_ERROR_MESSAGE     = 'Value is required and can\'t be empty';
+
     protected FileInput $input;
 
     protected function setUp(): void
@@ -266,17 +269,11 @@ final class FileInputTest extends TestCase
         $message  = $message ?: 'Expected failure message for required input';
         $message .= ';';
 
-        $expectedKey = NotEmptyValidator::IS_EMPTY;
-        $messages    = $input->getMessages();
-        self::assertArrayHasKey($expectedKey, $messages);
-
-        $notEmpty         = new NotEmptyValidator();
-        $messageTemplates = $notEmpty->getOption('messageTemplates');
-        self::assertIsArray($messageTemplates);
-        self::assertArrayHasKey($expectedKey, $messageTemplates);
+        $messages = $input->getMessages();
+        self::assertArrayHasKey(self::EMPTY_ERROR_MESSAGE_KEY, $messages);
         self::assertEquals(
-            $messageTemplates[$expectedKey],
-            $messages[$expectedKey],
+            self::EMPTY_ERROR_MESSAGE,
+            $messages[self::EMPTY_ERROR_MESSAGE_KEY],
             $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages'
         );
         self::assertCount(
@@ -419,9 +416,7 @@ final class FileInputTest extends TestCase
         $input = $this->createFileInput();
         $input->setRequired(true);
 
-        $customMessage = [
-            NotEmptyValidator::IS_EMPTY => "Custom message",
-        ];
+        $customMessage = [NotEmptyValidator::IS_EMPTY => "Custom message"];
 
         $input->getValidatorChain()->attach(new NotEmptyValidator(['messages' => $customMessage]));
 
@@ -807,18 +802,17 @@ final class FileInputTest extends TestCase
          */
         $translator = $this->createMock(TranslatorInterface::class);
         AbstractValidator::setDefaultTranslator($translator);
-        $notEmpty = new NotEmptyValidator();
 
         $translatedMessage = 'some translation';
         $translator->expects(self::atLeastOnce())
             ->method('translate')
-            ->with($notEmpty->getMessageTemplates()[NotEmptyValidator::IS_EMPTY])
+            ->with(self::EMPTY_ERROR_MESSAGE, 'default', null)
             ->willReturn($translatedMessage);
 
         self::assertFalse($this->input->isValid());
         $messages = $this->input->getMessages();
-        self::assertArrayHasKey('isEmpty', $messages);
-        self::assertSame($translatedMessage, $messages['isEmpty']);
+        self::assertArrayHasKey(self::EMPTY_ERROR_MESSAGE_KEY, $messages);
+        self::assertSame($translatedMessage, $messages[self::EMPTY_ERROR_MESSAGE_KEY]);
     }
 
     public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled(): void
