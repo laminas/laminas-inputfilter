@@ -341,7 +341,7 @@ final class CollectionInputFilterTest extends TestCase
 
         $baseInputFilter = new BaseInputFilter($factory);
 
-        $inputFilterSpecificationAsArray = [];
+        $inputFilterSpecificationAsArray = ['type' => InputFilter::class];
         $inputSpecificationAsTraversable = new ArrayIterator($inputFilterSpecificationAsArray);
 
         return [

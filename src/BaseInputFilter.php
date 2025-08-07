@@ -79,18 +79,13 @@ class BaseInputFilter implements
         return count($this->inputs);
     }
 
-    /**
-     * Add an input to the input filter
-     *
-     * @param InputInterface|InputFilterInterface $input
-     * @param null|string|int $name Name used to retrieve this input. Can be an integer for collections
-     * @return $this
-     * @psalm-suppress MoreSpecificImplementedParamType
-     * @throws Exception\InvalidArgumentException
-     */
-    public function add($input, $name = null)
+    /** @inheritDoc */
+    public function add($input, $name = null): static
     {
-        /** @psalm-suppress RedundantConditionGivenDocblockType */
+        if (is_array($input)) {
+            $input = $this->factory->create($input);
+        }
+
         if (! $input instanceof InputInterface && ! $input instanceof InputFilterInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an instance of %s or %s as its first argument; received "%s"',
