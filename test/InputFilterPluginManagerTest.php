@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
@@ -16,7 +15,6 @@ use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\FileInput\TestAsset\InitializableInputFilterInterface;
 use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;

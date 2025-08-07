@@ -9,7 +9,6 @@ use Laminas\Filter\FilterChain; // phpcs:ignore
 use Laminas\Filter\FilterInterface; // phpcs:ignore
 use Laminas\Validator\ValidatorChain; // phpcs:ignore
 use Laminas\Validator\ValidatorInterface; // phpcs:ignore
-use Traversable;
 
 /**
  * @template TFilteredValues
