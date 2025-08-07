@@ -65,10 +65,9 @@ interface InputFilterInterface extends Countable
     /**
      * Retrieve a named input
      *
-     * @param  array-key $name
-     * @return InputInterface|InputFilterInterface
+     * @param array-key $name
      */
-    public function get($name);
+    public function get($name): InputInterface|InputFilterInterface;
 
     /**
      * Test if an input or input filter by the given name is attached

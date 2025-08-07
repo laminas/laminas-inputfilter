@@ -23,6 +23,8 @@ use function is_int;
 use function sprintf;
 
 /**
+ * @psalm-import-type InputSpecification from InputFilterInterface
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @template TFilteredValues
  * @implements InputFilterInterface<TFilteredValues>
  */
@@ -119,7 +121,7 @@ class BaseInputFilter implements
     /**
      * Replace a named input
      *
-     * @param  InputInterface|InputFilterInterface $input
+     * @param  InputInterface|InputFilterInterface|InputSpecification|InputFilterSpecification $input
      * @param  array-key                           $name Name of the input to replace
      * @throws Exception\InvalidArgumentException If input to replace not exists.
      * @return self
@@ -145,9 +147,8 @@ class BaseInputFilter implements
      *
      * @param  array-key $name
      * @throws Exception\InvalidArgumentException
-     * @return InputInterface|InputFilterInterface
      */
-    public function get($name)
+    public function get($name): InputInterface|InputFilterInterface
     {
         if (! array_key_exists($name, $this->inputs)) {
             throw new Exception\InvalidArgumentException(sprintf(

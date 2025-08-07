@@ -106,6 +106,7 @@ class Input implements
         return $this;
     }
 
+    /** @inheritDoc */
     public function setName($name)
     {
         $this->name = (string) $name;
