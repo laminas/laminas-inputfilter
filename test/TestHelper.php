@@ -6,6 +6,7 @@ namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\ConfigProvider;
 use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\ServiceManager\ServiceManager;
@@ -13,35 +14,70 @@ use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\ValidatorStub;
-use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 
+use function array_replace_recursive;
+
+/** @psalm-import-type ServiceManagerConfiguration from ServiceManager */
 final class TestHelper
 {
-    public static function createInputFilterFactory(): Factory
+    public static function getContainer(array $config = []): ServiceManager
     {
-        $serviceManager = new ServiceManager();
-
-        $factory = new Factory(
-            self::createFilterPluginManager($serviceManager),
-            self::createValidatorPluginManager($serviceManager),
-            new InputFilterPluginManager($serviceManager)
+        $config = array_replace_recursive(
+            (new \Laminas\Filter\ConfigProvider())->__invoke(),
+            (new \Laminas\Validator\ConfigProvider())->__invoke(),
+            (new ConfigProvider())->__invoke(),
+            $config,
         );
 
-        $serviceManager->setService(Factory::class, $factory);
+        /** @psalm-var ServiceManagerConfiguration $deps */
+        $deps                       = $config['dependencies'] ?? [];
+        $deps['services']         ??= [];
+        $deps['services']['config'] = $config;
+
+        /** @psalm-var ServiceManagerConfiguration $deps */
+
+        return new ServiceManager($deps);
+    }
+
+    public static function createInputFilterFactory(ServiceManager|null $container = null): Factory
+    {
+        $container ??= self::getContainer();
+
+        if ($container->has(Factory::class)) {
+            return $container->get(Factory::class);
+        }
+
+        $factory = new Factory(
+            self::createFilterPluginManager($container),
+            self::createValidatorPluginManager($container),
+            new InputFilterPluginManager($container),
+        );
+
+        $container->setService(Factory::class, $factory);
 
         return $factory;
     }
 
-    public static function createFilterPluginManager(ContainerInterface|null $container = null): FilterPluginManager
+    public static function createFilterPluginManager(ServiceManager|null $container = null): FilterPluginManager
     {
-        return new FilterPluginManager($container ?? new ServiceManager());
+        $container ??= self::getContainer();
+        if ($container->has(FilterPluginManager::class)) {
+            return $container->get(FilterPluginManager::class);
+        }
+
+        return new FilterPluginManager($container);
     }
 
     public static function createValidatorPluginManager(
-        ContainerInterface|null $container = null
+        ServiceManager|null $container = null,
     ): ValidatorPluginManager {
-        return new ValidatorPluginManager($container ?? new ServiceManager());
+        $container ??= self::getContainer();
+        if ($container->has(ValidatorPluginManager::class)) {
+            return $container->get(ValidatorPluginManager::class);
+        }
+
+        return new ValidatorPluginManager($container);
     }
 
     public static function getFilterPluginManagerFromFilterChain(FilterChain $filterChain): mixed
@@ -54,7 +90,7 @@ final class TestHelper
         ?bool $isValid,
         mixed $value = 'not-set',
         ?array $context = null,
-        array $messages = []
+        array $messages = [],
     ): ValidatorInterface {
         return new ValidatorStub($isValid, $value, $context, $messages);
     }

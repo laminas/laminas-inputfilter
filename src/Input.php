@@ -106,13 +106,9 @@ class Input implements
         return $this;
     }
 
-    /**
-     * @param  string $name
-     * @return $this
-     */
+    /** @inheritDoc */
     public function setName($name)
     {
-        /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->name = (string) $name;
         return $this;
     }

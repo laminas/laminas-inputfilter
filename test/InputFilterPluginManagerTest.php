@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
@@ -16,7 +15,6 @@ use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\FileInput\TestAsset\InitializableInputFilterInterface;
 use LaminasTest\InputFilter\TestAsset\InputFilterInterfaceStub;
@@ -99,43 +97,6 @@ final class InputFilterPluginManagerTest extends TestCase
         $service = $this->manager->get($alias);
 
         self::assertInstanceOf($expectedInstance, $service, 'get() return type not match');
-    }
-
-    public function testInputFilterInvokableClassSMDependenciesArePopulatedWithServiceLocator(): void
-    {
-        $serviceManager = new ServiceManager();
-
-        $filterManager    = new FilterPluginManager($serviceManager);
-        $validatorManager = new ValidatorPluginManager($serviceManager);
-        $serviceManager->setService(FilterPluginManager::class, $filterManager);
-        $serviceManager->setService(ValidatorPluginManager::class, $validatorManager);
-
-        $manager = new InputFilterPluginManager($serviceManager);
-        $factory = new Factory($filterManager, $validatorManager, $manager);
-
-        $serviceManager->setService(Factory::class, $factory);
-
-        /** @var InputFilter $service */
-        $service = $manager->get('inputfilter');
-
-        /** @var Factory $factory */
-        $factory = (new ReflectionObject($service))->getProperty('factory')->getValue($service);
-
-        $defaultFilterChain = $factory->getDefaultFilterChain();
-        self::assertInstanceOf(FilterChain::class, $defaultFilterChain);
-        self::assertSame(
-            $filterManager,
-            TestHelper::getFilterPluginManagerFromFilterChain($defaultFilterChain),
-            'Factory::getDefaultFilterChain() is not populated with the expected plugin manager'
-        );
-
-        $defaultValidatorChain = $factory->getDefaultValidatorChain();
-        self::assertInstanceOf(ValidatorChain::class, $defaultValidatorChain);
-        self::assertSame(
-            $validatorManager,
-            $defaultValidatorChain->getPluginManager(),
-            'Factory::getDefaultValidatorChain() is not populated with the expected plugin manager'
-        );
     }
 
     /**
