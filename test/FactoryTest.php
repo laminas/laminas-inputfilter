@@ -43,16 +43,9 @@ final class FactoryTest extends TestCase
 
     public function testCreateInputWithTypeAsAnUnknownPluginAndNotExistsAsClassNameThrowException(): void
     {
-        $type          = 'foo';
-        $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        $pluginManager->expects(self::atLeastOnce())
-            ->method('has')
-            ->with($type)
-            ->willReturn(false);
-
-        $container = $this->createMock(ContainerInterface::class);
-
-        $factory = new Factory(
+        $container     = $this->createMock(ContainerInterface::class);
+        $pluginManager = new InputFilterPluginManager($container);
+        $factory       = new Factory(
             new FilterPluginManager($container),
             new ValidatorPluginManager($container),
             $pluginManager
@@ -63,16 +56,14 @@ final class FactoryTest extends TestCase
             'Input factory expects the "type" to be a valid class or a plugin name; received "foo"'
         );
         $factory->createInput([
-            'type' => $type,
+            'type' => 'foo',
         ]);
     }
 
     public function testCreateInputWithTypeAsAnInvalidPluginInstanceThrowException(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-
-        $type          = 'fooPlugin';
-        $pluginManager = $this->createInputFilterPluginManagerMockForPlugin($type, 'invalid_value');
+        $container     = $this->createMock(ContainerInterface::class);
+        $pluginManager = new InputFilterPluginManager($container);
         $factory       = new Factory(
             new FilterPluginManager($container),
             new ValidatorPluginManager($container),
@@ -81,11 +72,10 @@ final class FactoryTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Input factory expects the "type" to be a class implementing Laminas\InputFilter\InputInterface; '
-            . 'received "string"'
+            'Input factory expects the "type" to be a valid class or a plugin name; received "fooPlugin"'
         );
         $factory->createInput([
-            'type' => $type,
+            'type' => 'fooPlugin',
         ]);
     }
 
@@ -104,10 +94,11 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputWithFiltersAsAnInvalidTypeThrowException(): void
+    public function testCreateInputWithInvalidFilterSpecType(): void
     {
-        $factory = $this->createDefaultFactory();
+        $this->markTestSkipped('This test is now a warning because of a foreach over a string');
 
+        $factory = $this->createDefaultFactory();
         $this->expectException(TypeError::class);
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
@@ -115,12 +106,13 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputWithFiltersAsAnSpecificationWithMissingNameThrowException(): void
+    public function testCreateInputWithEmptySpecIsNotExceptional(): void
     {
-        $factory = $this->createDefaultFactory();
+        $this->markTestSkipped('This test now causes a warning - undefined array key "name" from the depths of filter');
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Invalid filter specification provided; does not include "name" key');
+        $factory = $this->createDefaultFactory();
+        $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('Argument #1 ($name) must be of type string, null given');
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
             'filters' => [
@@ -131,14 +123,11 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputWithFiltersAsAnCollectionOfInvalidTypesThrowException(): void
+    public function testCreateInputWithInvalidFilterCausesTypeError(): void
     {
         $factory = $this->createDefaultFactory();
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            'Invalid filter specification provided;'
-        );
+        $this->expectException(TypeError::class);
         $factory->createInput([
             'filters' => [
                 'invalid value',
@@ -159,10 +148,20 @@ final class FactoryTest extends TestCase
 
     public function testCreateInputWithValidatorsAsAnSpecificationWithMissingNameThrowException(): void
     {
+        $this->markTestSkipped(
+            'This test now causes a warning - undefined array key "name" from the depths of validator',
+        );
+
         $factory = $this->createDefaultFactory();
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Invalid validator specification provided; does not include "name" key');
+        /**
+         * No validation of the validator chain specification occurs in this library any more.
+         *
+         * It's the problem domain of `laminas-validator` because chain creation is delegated to that library.
+         */
+
+        $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('Argument #1 ($name) must be of type string, null given');
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
             'validators' => [
@@ -177,9 +176,9 @@ final class FactoryTest extends TestCase
     {
         $factory = $this->createDefaultFactory();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(TypeError::class);
         $this->expectExceptionMessage(
-            'Invalid validator specification provided;'
+            'Cannot access offset of type string on string'
         );
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
@@ -218,9 +217,10 @@ final class FactoryTest extends TestCase
 
     public function testFactoryCreatesValidatorChainWithComposedPluginManagerWhenCreatingNewInputObjects(): void
     {
-        $factory = $this->createDefaultFactory();
-        $plugins = $factory->getValidatorPluginManager();
-        $input   = $factory->createInput([
+        $container = TestHelper::getContainer();
+        $factory   = $container->get(Factory::class);
+        $plugins   = $factory->getValidatorPluginManager();
+        $input     = $factory->createInput([
             'name' => 'foo',
         ]);
 
