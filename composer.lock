@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1238625c53d996a8b3bbe7ef47b93c6c",
+    "content-hash": "192e4f0e1c438e5b6e4e3ff9e0b04e06",
     "packages": [
         {
             "name": "brick/varexporter",
@@ -57,17 +57,11 @@
         },
         {
             "name": "laminas/laminas-filter",
-            "version": "3.2.0",
+            "version": "3.3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-filter.git",
-                "reference": "6f52a226b1321ef27bfc770ffcc5ae6d81f448bd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-filter/zipball/6f52a226b1321ef27bfc770ffcc5ae6d81f448bd",
-                "reference": "6f52a226b1321ef27bfc770ffcc5ae6d81f448bd",
-                "shasum": ""
+                "reference": "b6f74cea2bf467d3746ac9367b69b1fb595ad5b7"
             },
             "require": {
                 "ext-fileinfo": "*",
@@ -85,18 +79,19 @@
                 "ext-bz2": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",
-                "laminas/laminas-coding-standard": "^3.0.1",
+                "laminas/laminas-coding-standard": "^3.1.0",
                 "laminas/laminas-diactoros": "^3.6",
-                "pear/archive_tar": "^1.5.0",
+                "pear/archive_tar": "^1.6.0",
                 "pear/pear": "^1.10.16",
-                "phpunit/phpunit": "^10.5.46",
+                "phpunit/phpunit": "^10.5.51",
                 "psalm/plugin-phpunit": "^0.19.5",
-                "vimeo/psalm": "^6.10.3"
+                "vimeo/psalm": "^6.13.1"
             },
             "suggest": {
                 "laminas/laminas-i18n": "Laminas\\I18n component for filters depending on i18n functionality",
                 "psr/http-factory-implementation": "psr/http-factory-implementation, for creating file upload instances when consuming PSR-7 in file upload filters"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laminas": {
@@ -109,7 +104,32 @@
                     "Laminas\\Filter\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "LaminasTest\\Filter\\": "test/"
+                }
+            },
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@test"
+                ],
+                "cs-check": [
+                    "phpcs"
+                ],
+                "cs-fix": [
+                    "phpcbf"
+                ],
+                "test": [
+                    "phpunit --colors=always"
+                ],
+                "test-coverage": [
+                    "phpunit --colors=always --coverage-clover clover.xml"
+                ],
+                "static-analysis": [
+                    "psalm --shepherd --stats"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -120,20 +140,14 @@
                 "laminas"
             ],
             "support": {
-                "chat": "https://laminas.dev/chat",
                 "docs": "https://docs.laminas.dev/laminas-filter/",
-                "forum": "https://discourse.laminas.dev",
                 "issues": "https://github.com/laminas/laminas-filter/issues",
+                "source": "https://github.com/laminas/laminas-filter",
                 "rss": "https://github.com/laminas/laminas-filter/releases.atom",
-                "source": "https://github.com/laminas/laminas-filter"
+                "chat": "https://laminas.dev/chat",
+                "forum": "https://discourse.laminas.dev"
             },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2025-08-08T16:30:23+00:00"
+            "time": "2025-08-13T22:25:55+00:00"
         },
         {
             "name": "laminas/laminas-servicemanager",
@@ -334,17 +348,11 @@
         },
         {
             "name": "laminas/laminas-validator",
-            "version": "3.7.0",
+            "version": "3.8.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-validator.git",
-                "reference": "b681ca4cfbb9e48e604fc9ecba37b85cf7b2f700"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-validator/zipball/b681ca4cfbb9e48e604fc9ecba37b85cf7b2f700",
-                "reference": "b681ca4cfbb9e48e604fc9ecba37b85cf7b2f700",
-                "shasum": ""
+                "reference": "c504cde25acfe1281cac72d6e32024e56229944f"
             },
             "require": {
                 "ext-ctype": "*",
@@ -363,14 +371,15 @@
             "require-dev": {
                 "laminas/laminas-coding-standard": "^3.1.0",
                 "laminas/laminas-diactoros": "^3.6.0",
-                "phpunit/phpunit": "^10.5.48",
+                "phpunit/phpunit": "^10.5.51",
                 "psalm/plugin-phpunit": "^0.19.5",
-                "vimeo/psalm": "^6.13.0"
+                "vimeo/psalm": "^6.13.1"
             },
             "suggest": {
                 "laminas/laminas-i18n": "Laminas\\I18n component to allow translation of validation error messages",
                 "laminas/laminas-i18n-resources": "Translations of validator messages"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "laminas": {
@@ -383,7 +392,32 @@
                     "Laminas\\Validator\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "LaminasTest\\Validator\\": "test/"
+                }
+            },
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@test"
+                ],
+                "cs-check": [
+                    "phpcs"
+                ],
+                "cs-fix": [
+                    "phpcbf"
+                ],
+                "test": [
+                    "phpunit --colors=always"
+                ],
+                "test-coverage": [
+                    "phpunit --colors=always --coverage-clover clover.xml"
+                ],
+                "static-analysis": [
+                    "psalm --shepherd --stats"
+                ]
+            },
             "license": [
                 "BSD-3-Clause"
             ],
@@ -394,20 +428,14 @@
                 "validator"
             ],
             "support": {
-                "chat": "https://laminas.dev/chat",
                 "docs": "https://docs.laminas.dev/laminas-validator/",
-                "forum": "https://discourse.laminas.dev",
                 "issues": "https://github.com/laminas/laminas-validator/issues",
+                "source": "https://github.com/laminas/laminas-validator",
                 "rss": "https://github.com/laminas/laminas-validator/releases.atom",
-                "source": "https://github.com/laminas/laminas-validator"
+                "chat": "https://laminas.dev/chat",
+                "forum": "https://discourse.laminas.dev"
             },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2025-08-08T10:16:45+00:00"
+            "time": "2025-08-13T22:16:33+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5664,7 +5692,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "laminas/laminas-filter": 20,
+        "laminas/laminas-validator": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

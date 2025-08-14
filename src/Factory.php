@@ -10,6 +10,7 @@ use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
@@ -101,8 +102,7 @@ final class Factory
             // TODO - Does this need to do anything else now?
 //            $filterChain->setPluginManager($this->filterPluginManager);
         } else {
-            $filterChain = new FilterChain($this->filterPluginManager);
-            $this->filterPluginManager->build(FilterChain::class, $filters);
+            $filterChain = new FilterChain($this->filterPluginManager, $spec);
         }
 
         $validators = $spec['validators'] ?? [];
@@ -111,7 +111,14 @@ final class Factory
             $validatorChain->setPluginManager($this->validatorPluginManager);
         } else {
             $validatorChain = new ValidatorChain($this->validatorPluginManager);
-            $this->validatorPluginManager->build(ValidatorChain::class, $validators);
+            foreach ($validators as $validatorSpec) {
+                if (is_callable($validatorSpec) || $spec instanceof ValidatorInterface) {
+                    $validatorChain->attach($validatorSpec);
+                    continue;
+                }
+
+                $validatorChain->attachByName($validatorSpec['name'], $validatorSpec['options'] ?? []);
+            }
         }
 
         return [
