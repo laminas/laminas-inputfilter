@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use Laminas\Filter;
-use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilter;
@@ -14,6 +13,7 @@ use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputInterface;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
@@ -22,10 +22,14 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use ReflectionProperty;
 
 use function assert;
 use function is_string;
+use function iterator_to_array;
 use function strrev;
 
 #[CoversClass(InputFilterAbstractServiceFactory::class)]
@@ -95,9 +99,18 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
         self::assertInstanceOf(InputFilterInterface::class, $filter);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws ReflectionException
+     */
     #[Depends('testCreatesInputFilterInstance')]
     public function testUsesConfiguredValidationAndFilterManagerServicesWhenCreatingInputFilter(): void
     {
+        $filter    = static function (): void {
+        };
+        $validator = new NotEmpty();
+
         $services = TestHelper::getContainer([
             'input_filter_specs' => [
                 'filter' => [
@@ -113,48 +126,40 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
                     ],
                 ],
             ],
+            'filters'            => [
+                'services' => [
+                    'foo_filter' => $filter,
+                ],
+            ],
+            'validators'         => [
+                'services' => [
+                    'foo_validator' => $validator,
+                ],
+            ],
         ]);
-
-        $filterPluginManager = $services->get(FilterPluginManager::class);
-        $filter              = static function (): void {
-        };
-        $filterPluginManager->configure(['services' => ['foo_filter' => $filter]]);
-
-        $validatorPluginManager = $services->get(ValidatorPluginManager::class);
-
-        $validator = $this->createMock(ValidatorInterface::class);
-        $validatorPluginManager->configure(['services' => ['foo_validator' => $validator]]);
-
-        // Temporary assertions to check configuration
-        self::assertSame($filter, $filterPluginManager->get('foo_filter'));
-        self::assertSame($validator, $validatorPluginManager->get('foo_validator'));
-        // End
 
         $inputFilter = $this->factory->__invoke($services, 'filter');
         self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
         self::assertTrue($inputFilter->has('input'));
-
         $input = $inputFilter->get('input');
         self::assertInstanceOf(InputInterface::class, $input);
 
-        $filterChain = $input->getFilterChain();
-        self::assertInstanceOf(FilterChain::class, $filterChain);
-//        self::assertSame($this->filterPluginManager, $filterChain->getPluginManager());
+        $filterChain = iterator_to_array($input->getFilterChain(), false);
         self::assertCount(1, $filterChain);
-//        self::assertSame($filter, $filterChain->plugin('foo'));
-        self::assertCount(1, $filterChain);
+        self::assertSame($filter, $filterChain[0]);
 
         $validatorChain = $input->getValidatorChain();
         self::assertInstanceOf(ValidatorChain::class, $validatorChain);
-        self::assertSame($validatorPluginManager, $validatorChain->getPluginManager());
         self::assertCount(1, $validatorChain);
         self::assertSame($validator, $validatorChain->plugin('foo_validator'));
-        self::assertCount(1, $validatorChain);
     }
 
     public function testRetrieveInputFilterFromInputFilterPluginManager(): void
     {
-        $services = TestHelper::getContainer([
+        $filter    = static function (): void {
+        };
+        $validator = $this->createMock(ValidatorInterface::class);
+        $services  = TestHelper::getContainer([
             'input_filter_specs' => [
                 'foobar' => [
                     'input' => [
@@ -169,17 +174,17 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
                     ],
                 ],
             ],
+            'filters'            => [
+                'services' => [
+                    'foo' => $filter,
+                ],
+            ],
+            'validators'         => [
+                'services' => [
+                    'foo' => $validator,
+                ],
+            ],
         ]);
-
-        $validator = $this->createMock(ValidatorInterface::class);
-        $this->validatorPluginManager->setService('foo', $validator);
-
-        $filter = static function (): void {
-        };
-        $this->filterPluginManager->setService('foo', $filter);
-
-        $this->services->get(InputFilterPluginManager::class)
-            ->addAbstractFactory(InputFilterAbstractServiceFactory::class);
 
         $inputFilter = $services->get(InputFilterPluginManager::class)->get('foobar');
         self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
@@ -225,7 +230,7 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
      */
     public function testWillUseCustomFiltersWhenProvided(): void
     {
-        $filter = new class implements Filter\FilterInterface
+        $filter = new /** @implements FilterInterface<mixed> */ class implements FilterInterface
         {
             public function filter(mixed $value): string
             {
@@ -253,6 +258,11 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
                     ],
                 ],
             ],
+            'filters'            => [
+                'factories' => [
+                    'CustomFilter' => static fn (): FilterInterface => $filter,
+                ],
+            ],
         ]);
 
         $this->filterPluginManager->configure(['services' => ['CustomFilter' => $filter]]);
@@ -269,8 +279,6 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
         $filters = $input->getFilterChain();
         self::assertCount(1, $filters);
 
-        $callback = $filters->getIterator()->top();
-        self::assertIsCallable($callback);
-        self::assertSame('oof', $callback('foo'));
+        self::assertSame('oof', $filters->filter('foo'));
     }
 }

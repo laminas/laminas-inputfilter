@@ -91,22 +91,12 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Factory.php">
-    <DeprecatedConstant>
-      <code><![CDATA[FilterChain::DEFAULT_PRIORITY]]></code>
-    </DeprecatedConstant>
     <MixedArgument>
       <code><![CDATA[$inputFilterSpecification['count']]]></code>
       <code><![CDATA[$inputFilterSpecification['input_filter']]]></code>
       <code><![CDATA[$inputFilterSpecification['required']]]></code>
       <code><![CDATA[$inputFilterSpecification['required_message']]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value['type']]]></code>
     </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
   </file>
   <file src="src/FileInput.php">
     <InvalidPropertyAssignmentValue>
@@ -194,25 +184,9 @@
       <code><![CDATA[InputFilterPluginManager]]></code>
       <code><![CDATA[InputFilterPluginManager]]></code>
     </MethodSignatureMismatch>
-    <MethodSignatureMustProvideReturnType>
-      <code><![CDATA[get]]></code>
-    </MethodSignatureMustProvideReturnType>
-    <MixedReturnStatement>
-      <code><![CDATA[parent::get($name, $options)]]></code>
-      <code><![CDATA[parent::get($name, $options)]]></code>
-    </MixedReturnStatement>
     <NonInvariantDocblockPropertyType>
       <code><![CDATA[$factories]]></code>
     </NonInvariantDocblockPropertyType>
-    <ParamNameMismatch>
-      <code><![CDATA[$name]]></code>
-    </ParamNameMismatch>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[validatePlugin]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$shareByDefault]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
@@ -288,59 +262,11 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/CollectionInputFilterTest.php">
-    <InvalidArgument>
-      <code><![CDATA[[
-                'element' => [
-                    'type'  => InputFilter::class,
-                    'type1' => [
-                        'type'         => CollectionInputFilter::class,
-                        'input_filter' => [
-                            'test_field' => [
-                                'type'         => CollectionInputFilter::class,
-                                'input_filter' => [
-                                    'test_field1' => [
-                                        'required'   => false,
-                                        'validators' => [
-                                            [
-                                                'name'    => NumberComparison::class,
-                                                'options' => [
-                                                    'min'     => 50,
-                                                    'max'     => 100,
-                                                    'message' => '%value% is incorrect',
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                    'price'       => [
-                                        'required'   => false,
-                                        'validators' => [
-                                            [
-                                                'name'    => NumberComparison::class,
-                                                'options' => [
-                                                    'min'     => 50,
-                                                    'max'     => 100,
-                                                    'message' => '%value% is incorrect',
-                                                ],
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ]]]></code>
-    </InvalidArgument>
+    <InvalidArgument/>
   </file>
   <file src="test/FactoryTest.php">
-    <DeprecatedConstant>
-      <code><![CDATA[Filter\FilterChain::DEFAULT_PRIORITY]]></code>
-      <code><![CDATA[Filter\FilterChain::DEFAULT_PRIORITY]]></code>
-    </DeprecatedConstant>
-    <DeprecatedMethod>
-      <code><![CDATA[getFilters]]></code>
-      <code><![CDATA[getPluginManager]]></code>
-    </DeprecatedMethod>
+    <DeprecatedConstant/>
+    <DeprecatedMethod/>
     <InvalidArgument>
       <code><![CDATA[[
             'foo'  => [
@@ -440,13 +366,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[continueIfEmpty]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="test/InputFilterAbstractServiceFactoryTest.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getFilters]]></code>
-      <code><![CDATA[getPluginManager]]></code>
-      <code><![CDATA[plugin]]></code>
-    </DeprecatedMethod>
   </file>
   <file src="test/InputFilterPluginManagerTest.php">
     <LessSpecificReturnStatement>
