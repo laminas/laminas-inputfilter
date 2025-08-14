@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
-use Laminas\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
@@ -86,44 +87,24 @@ final class Factory
     }
 
     /**
-     * @todo           should return and check for interfaces when SMv4 is installed
-     * @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade
      * @param InputSpecification $spec
      * @return array{
-     *     filterChain: FilterChain,
-     *     validatorChain: ValidatorChain,
+     *     filterChain: FilterChainInterface,
+     *     validatorChain: ValidatorChainInterface,
      * }
      */
     private function buildChainsFromSpecification(array $spec): array
     {
-        $filters = $spec['filters'] ?? [];
-        if ($filters instanceof FilterChain) {
-            $filterChain = $filters;
-            // TODO - Does this need to do anything else now?
-//            $filterChain->setPluginManager($this->filterPluginManager);
-        } else {
-            $filterChain = new FilterChain($this->filterPluginManager, $spec);
-        }
-
+        $filters    = $spec['filters'] ?? [];
         $validators = $spec['validators'] ?? [];
-        if ($validators instanceof ValidatorChain) {
-            $validatorChain = $validators;
-            $validatorChain->setPluginManager($this->validatorPluginManager);
-        } else {
-            $validatorChain = new ValidatorChain($this->validatorPluginManager);
-            foreach ($validators as $validatorSpec) {
-                if (is_callable($validatorSpec) || $spec instanceof ValidatorInterface) {
-                    $validatorChain->attach($validatorSpec);
-                    continue;
-                }
-
-                $validatorChain->attachByName($validatorSpec['name'], $validatorSpec['options'] ?? []);
-            }
-        }
 
         return [
-            'filterChain'    => $filterChain,
-            'validatorChain' => $validatorChain,
+            'filterChain'    => $filters instanceof FilterChainInterface
+                ? $filters
+                : $this->filterPluginManager->build(FilterChain::class, ['filters' => $filters]),
+            'validatorChain' => $validators instanceof ValidatorChainInterface
+                ? $validators
+                : $this->validatorPluginManager->build(ValidatorChain::class, $validators),
         ];
     }
 
@@ -338,6 +319,8 @@ final class Factory
                 $inputFilter->add($value, $key);
                 continue;
             }
+
+            assert(is_array($value));
 
             // Patch to enable nested, integer indexed input_filter_specs.
             // Check type and name are in spec, and that composed type is
