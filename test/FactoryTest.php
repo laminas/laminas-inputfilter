@@ -1013,20 +1013,4 @@ final class FactoryTest extends TestCase
 
         return $factory;
     }
-
-    private function createInputFilterPluginManagerMockForPlugin(
-        string $pluginName,
-        mixed $pluginValue,
-    ): InputFilterPluginManager {
-        $pluginManager = $this->createMock(InputFilterPluginManager::class);
-        $pluginManager->expects(self::atLeastOnce())
-            ->method('has')
-            ->with($pluginName)
-            ->willReturn(true);
-        $pluginManager->expects(self::atLeastOnce())
-            ->method('get')
-            ->with($pluginName)
-            ->willReturn($pluginValue);
-        return $pluginManager;
-    }
 }
