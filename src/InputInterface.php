@@ -105,10 +105,7 @@ interface InputInterface
      */
     public function getValue();
 
-    /**
-     * @return bool
-     */
-    public function isValid();
+    public function isValid(): bool;
 
     /**
      * @return array<array-key, string>

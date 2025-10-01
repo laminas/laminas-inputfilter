@@ -74,9 +74,9 @@ final class HttpServerFileInputHandler implements FileInputHandlerInterface
     }
 
     /**
-     * @param mixed $context Extra "context" to provide the validator
+     * @param array<string, mixed>|null $context Extra "context" to provide the validator
      */
-    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, $context = null): bool
+    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, ?array $context = null): bool
     {
         if (! is_array($rawValue)) {
             // This can happen in an AJAX POST, where the input comes across as a string

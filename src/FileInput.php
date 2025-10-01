@@ -103,11 +103,8 @@ final class FileInput extends Input
         return true;
     }
 
-    /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
-     */
-    public function isValid($context = null)
+    /** @inheritDoc */
+    public function isValid(?array $context = null): bool
     {
         $rawValue        = $this->getRawValue();
         $hasValue        = $this->hasValue();
