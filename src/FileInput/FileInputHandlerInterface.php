@@ -24,6 +24,6 @@ interface FileInputHandlerInterface
 
     public function filterValue(mixed $value, bool $isValid, FilterChain $filterChain): mixed;
 
-    /** @param mixed $context Extra "context" to provide the validator */
-    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, $context = null): bool;
+    /** @param array<string, mixed> $context Extra "context" to provide the validator */
+    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, ?array $context = null): bool;
 }
