@@ -96,8 +96,6 @@ final class FactoryTest extends TestCase
 
     public function testCreateInputWithInvalidFilterSpecType(): void
     {
-        $this->markTestSkipped('This test is now a warning because of a foreach over a string');
-
         $factory = $this->createDefaultFactory();
         $this->expectException(TypeError::class);
         /** @psalm-suppress InvalidArgument */

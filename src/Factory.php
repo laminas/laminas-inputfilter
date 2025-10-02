@@ -6,6 +6,7 @@ namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterChainInterface;
+use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceManager;
@@ -15,6 +16,7 @@ use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
+use TypeError;
 
 use function assert;
 use function class_exists;
@@ -22,6 +24,7 @@ use function get_debug_type;
 use function in_array;
 use function is_a;
 use function is_array;
+use function is_callable;
 use function is_int;
 use function is_string;
 use function sprintf;
@@ -97,6 +100,11 @@ final class Factory
     {
         $filters    = $spec['filters'] ?? [];
         $validators = $spec['validators'] ?? [];
+
+        if (! is_array($filters) && ! is_callable($filters) && ! $filters instanceof FilterInterface) {
+            throw new TypeError("filters must be an array, callable, or FilterInterface. Received: "
+                . get_debug_type($filters));
+        }
 
         return [
             'filterChain'    => $filters instanceof FilterChainInterface

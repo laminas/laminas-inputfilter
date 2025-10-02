@@ -23,6 +23,9 @@ use function sprintf;
  */
 final class InputFilterPluginManager extends AbstractSingleInstancePluginManager
 {
+    /** @var class-string<InputFilterInterface> */
+    protected string $instanceOf = InputFilterInterface::class;
+
     /**
      * Default alias of plugins
      *
