@@ -522,9 +522,6 @@
     <NonInvariantDocblockPropertyType>
       <code><![CDATA[$inputFilter]]></code>
     </NonInvariantDocblockPropertyType>
-    <OverriddenPropertyAccess>
-      <code><![CDATA[$inputFilter]]></code>
-    </OverriddenPropertyAccess>
     <PossiblyInvalidArgument>
       <code><![CDATA[$factory]]></code>
     </PossiblyInvalidArgument>
