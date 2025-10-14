@@ -395,8 +395,7 @@ class BaseInputFilterTest extends TestCase
             ],
         ];
         $expectedData = array_merge($data, ['notSet' => null]);
-        /** @var Input&MockObject $flatInput */
-        $flatInput = $this->getMockBuilder(Input::class)
+        $flatInput    = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(['flat'])
             ->getMock();
@@ -404,7 +403,6 @@ class BaseInputFilterTest extends TestCase
             ->method('setValue')
             ->with('foo');
         // Inputs without value must be reset for to have clean states when use different setData arguments
-        /** @var Input&MockObject $resetInput */
         $resetInput = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
             ->setConstructorArgs(['notSet'])
@@ -994,7 +992,7 @@ class BaseInputFilterTest extends TestCase
         return [
             // Description => callable
             'array'       => static fn(array $data): array => $data,
-            'Traversable' => fn(array $data) => $this->getMockBuilder(FilterIterator::class)
+            'Traversable' => fn(array $data): iterable => $this->getMockBuilder(FilterIterator::class)
                 ->setConstructorArgs([new ArrayIterator($data)])
                 ->getMock(),
         ];
