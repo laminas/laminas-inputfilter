@@ -218,7 +218,7 @@ class BaseInputFilterTest extends TestCase
     public function testAddHasGet(
         InputInterface|InputFilterInterface|iterable $input,
         ?string $name,
-        ?string $expectedInputName,
+        string $expectedInputName,
         object $expectedInput
     ): void {
         $inputFilter = $this->inputFilter;
@@ -246,7 +246,7 @@ class BaseInputFilterTest extends TestCase
     public function testAddRemove(
         InputInterface|InputFilterInterface|iterable $input,
         ?string $name,
-        ?string $expectedInputName
+        string $expectedInputName
     ): void {
         $inputFilter = $this->inputFilter;
 
@@ -723,19 +723,19 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: InputInterface,
+     *     0: InputInterface|InputFilterInterface|iterable,
      *     1: null|string,
-     *     2: null|string,
-     *     3: InputInterface,
+     *     2: string,
+     *     3: InputInterface|InputFilterInterface,
      * }>
      */
     public static function addMethodArgumentsProvider(): array
     {
         $inputTypes = static::inputProvider();
 
-        $inputName = static fn($inputTypeData) => $inputTypeData[1];
+        $inputName = static fn(array $inputTypeData): string => $inputTypeData[1];
 
-        $sameInput = static fn($inputTypeData) => $inputTypeData[2];
+        $sameInput = static fn(array $inputTypeData): InputInterface|InputFilterInterface => $inputTypeData[2];
 
         // phpcs:disable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
         $dataTemplates = [
@@ -750,10 +750,17 @@ class BaseInputFilterTest extends TestCase
         $dataSets = [];
         foreach ($dataTemplates as $dataTemplateDescription => $dataTemplate) {
             foreach ($dataTemplate[0] as $inputTypeDescription => $inputTypeData) {
+                if ($dataTemplate[1] === null && $inputTypeData[1] === null) {
+                    /**
+                     * Input name must be provided explicitly or implicitly.
+                     * InputFilterInterface does not have an instance name so it can't be set implicitly.
+                     */
+                    continue;
+                }
                 $tmpTemplate    = $dataTemplate;
                 $tmpTemplate[0] = $inputTypeData[0]; // expand input
-                if (is_callable($dataTemplate[2])) {
-                    $tmpTemplate[2] = $dataTemplate[2]($inputTypeData);
+                if (is_callable($tmpTemplate[2])) {
+                    $tmpTemplate[2] = $tmpTemplate[2]($inputTypeData);
                 }
                 $tmpTemplate[3] = $dataTemplate[3]($inputTypeData);
 
@@ -920,7 +927,7 @@ class BaseInputFilterTest extends TestCase
 
     /**
      * @psalm-return array<string, array{
-     *     0: InputInterface|InputFilterInterface,
+     *     0: InputInterface|InputFilterInterface|iterable,
      *     1: null|string,
      *     2: InputInterface|InputFilterInterface,
      * }>
