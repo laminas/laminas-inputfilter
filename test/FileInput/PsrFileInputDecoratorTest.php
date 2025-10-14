@@ -501,8 +501,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertTrue($input->continueIfEmpty());
     }
 
+    /**
+     * @psalm-suppress UnusedParam Unused named parameter for data provider
+     */
     #[DataProvider('setValueProvider')]
-    public function testSetFallbackValue(mixed $raw): void
+    public function testSetFallbackValue(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
 
@@ -513,8 +516,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertTrue($input->hasFallback(), 'hasFallback() value not match');
     }
 
+    /**
+     * @psalm-suppress UnusedParam Unused named parameter for data provider
+     */
     #[DataProvider('setValueProvider')]
-    public function testClearFallbackValue(mixed $raw): void
+    public function testClearFallbackValue(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
         $input->setFallbackValue($raw);
@@ -619,8 +625,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
     }
 
+    /**
+     * @psalm-suppress UnusedParam Unused named parameter for data provider
+     */
     #[DataProvider('emptyValueProvider')]
-    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue(mixed $raw): void
+    public function testNotEmptyValidatorNotInjectedIfContinueIfEmptyIsTrue(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -714,8 +723,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertEquals($value, $this->input->getValue(), 'getValue() must return the filtered value always');
     }
 
+    /**
+     * @psalm-suppress UnusedParam Unused named parameter for data provider
+     */
     #[DataProvider('setValueProvider')]
-    public function testSetValuePutInputInTheDesiredState(mixed $raw): void
+    public function testSetValuePutInputInTheDesiredState(mixed $raw, mixed $filtered): void
     {
         $input = $this->input;
         self::assertFalse($input->hasValue(), 'Input should not have value by default');
@@ -725,8 +737,11 @@ final class PsrFileInputDecoratorTest extends TestCase
         self::assertTrue($input->hasValue(), "hasValue() didn't return true when value was set");
     }
 
+    /**
+     * @psalm-suppress UnusedParam Unused named parameter for data provider
+     */
     #[DataProvider('setValueProvider')]
-    public function testResetValueReturnsInputValueToDefaultValue(mixed $raw): void
+    public function testResetValueReturnsInputValueToDefaultValue(mixed $raw, mixed $filtered): void
     {
         $input         = $this->input;
         $originalInput = clone $input;
