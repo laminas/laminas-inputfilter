@@ -37,9 +37,6 @@
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$inputs]]></code>
     </MixedPropertyTypeCoercion>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$this->inputs]]></code>
-    </PossiblyNullArrayOffset>
     <TooManyArguments>
       <code><![CDATA[isValid]]></code>
       <code><![CDATA[isValid]]></code>
@@ -367,17 +364,6 @@
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </InvalidArgument>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$dataSets]]></code>
-    </LessSpecificReturnStatement>
-    <MissingClosureParamType>
-      <code><![CDATA[$inputTypeData]]></code>
-      <code><![CDATA[$inputTypeData]]></code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[static fn($inputTypeData) => $inputTypeData[1]]]></code>
-      <code><![CDATA[static fn($inputTypeData) => $inputTypeData[2]]]></code>
-    </MissingClosureReturnType>
     <MixedArgument>
       <code><![CDATA[$input]]></code>
       <code><![CDATA[$set[5]]]></code>
@@ -388,10 +374,6 @@
       <code><![CDATA[$msg]]></code>
       <code><![CDATA[$msg]]></code>
     </MixedArgumentTypeCoercion>
-    <MixedArrayAccess>
-      <code><![CDATA[$inputTypeData[1]]]></code>
-      <code><![CDATA[$inputTypeData[2]]]></code>
-    </MixedArrayAccess>
     <MixedArrayAssignment>
       <code><![CDATA[$set[0][$name]]]></code>
       <code><![CDATA[$set[5][$name]]]></code>
@@ -405,9 +387,11 @@
       <code><![CDATA[$set[0][$name]]]></code>
       <code><![CDATA[$set[5][$name]]]></code>
       <code><![CDATA[$set[6][$name]]]></code>
-      <code><![CDATA[$tmpTemplate[2]]]></code>
-      <code><![CDATA[$tmpTemplate[3]]]></code>
     </MixedAssignment>
+    <MixedReturnStatement>
+      <code><![CDATA[$inputTypeData[1]]]></code>
+      <code><![CDATA[$inputTypeData[2]]]></code>
+    </MixedReturnStatement>
     <MixedReturnTypeCoercion>
       <code><![CDATA[$dataSets]]></code>
       <code><![CDATA[array<string, array{
@@ -421,14 +405,6 @@
      *     7: string[]
      * }>]]></code>
     </MixedReturnTypeCoercion>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array<string, array{
-     *     0: InputInterface,
-     *     1: null|string,
-     *     2: null|string,
-     *     3: InputInterface,
-     * }>]]></code>
-    </MoreSpecificReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$input]]></code>
       <code><![CDATA[$input]]></code>
@@ -436,13 +412,6 @@
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </PossiblyInvalidArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$expectedInputName]]></code>
-      <code><![CDATA[$expectedInputName]]></code>
-      <code><![CDATA[$expectedInputName]]></code>
-      <code><![CDATA[$expectedInputName]]></code>
-      <code><![CDATA[$expectedInputName]]></code>
-    </PossiblyNullArgument>
     <PossiblyUndefinedMethod>
       <code><![CDATA[getName]]></code>
       <code><![CDATA[getName]]></code>
@@ -506,13 +475,6 @@
     </MoreSpecificReturnType>
   </file>
   <file src="test/InputFilterTest.php">
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[array<string, array{
-     *     0: array|Traversable,
-     *     1: string,
-     *     2: Input
-     * }>]]></code>
-    </ImplementedReturnTypeMismatch>
     <LessSpecificReturnStatement>
       <code><![CDATA[$dataSets]]></code>
     </LessSpecificReturnStatement>
