@@ -173,7 +173,6 @@ class CollectionInputFilter extends InputFilter
             ));
         }
 
-        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $this->data = $data;
         return $this;
     }

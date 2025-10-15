@@ -7,7 +7,7 @@ on:
     tags:
 
 env:
-  default_php: 8.1
+  default_php: 8.2
   php_extensions:
 
 
@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.2.2
-      - uses: shivammathur/setup-php@2.34.1
+      - uses: actions/checkout@v5.0.0
+      - uses: shivammathur/setup-php@2.35.5
 
         with:
           php-version: ${{ env.default_php }}

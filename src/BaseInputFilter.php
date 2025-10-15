@@ -20,6 +20,7 @@ use function func_get_args;
 use function get_debug_type;
 use function is_array;
 use function is_int;
+use function is_string;
 use function sprintf;
 
 /**
@@ -100,6 +101,29 @@ class BaseInputFilter implements
 
         if ($input instanceof InputInterface && ($name === null || $name === '' || is_int($name))) {
             $name = $input->getName();
+
+            /** @psalm-suppress DocblockTypeContradiction Input conflicts with InputInterface docblock and allows null. */
+            if ($name === null || $name === '') {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    '%s: input instance must have a valid name or input name must be provided as a parameter',
+                    __METHOD__,
+                ));
+            }
+        }
+
+        if (! is_string($name) && ! is_int($name)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: input name expected to be string or int, %s given',
+                __METHOD__,
+                get_debug_type($name)
+            ));
+        }
+
+        if ($name === '') {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: input name can not be an empty string',
+                __METHOD__,
+            ));
         }
 
         if (
@@ -128,6 +152,15 @@ class BaseInputFilter implements
      */
     public function replace($input, $name)
     {
+        /** @psalm-suppress DocblockTypeContradiction  */
+        if (! is_string($name) && ! is_int($name)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: input name expected to be string or int, %s given',
+                __METHOD__,
+                get_debug_type($name),
+            ));
+        }
+
         if (! array_key_exists($name, $this->inputs)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s: no input found matching "%s"',
@@ -150,6 +183,15 @@ class BaseInputFilter implements
      */
     public function get($name): InputInterface|InputFilterInterface
     {
+        /** @psalm-suppress DocblockTypeContradiction  */
+        if (! is_string($name) && ! is_int($name)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: input name expected to be string or int, %s given',
+                __METHOD__,
+                get_debug_type($name),
+            ));
+        }
+
         if (! array_key_exists($name, $this->inputs)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s: no input found matching "%s"',
@@ -168,6 +210,14 @@ class BaseInputFilter implements
      */
     public function has($name)
     {
+        /** @psalm-suppress DocblockTypeContradiction  */
+        if (! is_string($name) && ! is_int($name)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: input name expected to be string or int, %s given',
+                __METHOD__,
+                get_debug_type($name),
+            ));
+        }
         return array_key_exists($name, $this->inputs);
     }
 
@@ -179,6 +229,14 @@ class BaseInputFilter implements
      */
     public function remove($name)
     {
+        /** @psalm-suppress DocblockTypeContradiction  */
+        if (! is_string($name) && ! is_int($name)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s: input name expected to be string or int, %s given',
+                __METHOD__,
+                get_debug_type($name),
+            ));
+        }
         unset($this->inputs[$name]);
         return $this;
     }

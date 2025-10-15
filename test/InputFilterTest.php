@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use Laminas\InputFilter\Factory;
-use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -51,20 +50,5 @@ final class InputFilterTest extends TestCase
         // null provided for nested filter
         $filter1->setData(['nested' => null]);
         self::assertEquals($expect, $filter1->getValues());
-    }
-
-    public function testInputsWithoutANameYieldMergedInputsWithAnEmptyName(): void
-    {
-        $a = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
-        $b = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
-
-        $filter = new InputFilter(
-            $this->factory
-        );
-        $filter->add($a);
-        $filter->add($b);
-
-        self::assertCount(1, $filter->getInputs());
-        self::assertSame($a, $filter->get(''));
     }
 }
