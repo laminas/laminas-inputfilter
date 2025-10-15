@@ -436,8 +436,9 @@ final class InputTest extends TestCase
         self::assertEquals($notEmptyMock, $validators[0]['instance']);
     }
 
+    /** @psalm-suppress UnusedParam Unused named parameter for data provider */
     #[DataProvider('emptyValueProvider')]
-    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw): void
+    public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
         $validatorChain = $this->input->getValidatorChain();
 

@@ -1,5 +1,6 @@
 <?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName
 
+
 declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
@@ -7,7 +8,6 @@ namespace LaminasTest\InputFilter;
 use ArrayIterator;
 use ArrayObject;
 use Closure;
-use FilterIterator;
 use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
@@ -531,16 +531,10 @@ final class BaseInputFilterTest extends TestCase
             ],
         ];
         $expectedData = array_merge($data, ['notSet' => null]);
-        $flatInput    = $this->getMockBuilder(Input::class)
-            ->enableProxyingToOriginalMethods()
-            ->setConstructorArgs([TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'flat'])
-            ->getMock();
-        $flatInput->expects(self::once())
-            ->method('setValue')
-            ->with('foo');
+        $flatInput    = $this->createInput('flat');
         // Inputs without value must be reset for to have clean states when use different setData arguments
         $resetInput = $this->getMockBuilder(Input::class)
-            ->enableProxyingToOriginalMethods()
+            ->onlyMethods(['resetValue'])
             ->setConstructorArgs([TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'notSet'])
             ->getMock();
         $resetInput->expects(self::once())
@@ -1073,9 +1067,7 @@ final class BaseInputFilterTest extends TestCase
         return [
             // Description => callable
             'array'       => static fn(array $data): array => $data,
-            'Traversable' => fn(array $data): iterable => $this->getMockBuilder(FilterIterator::class)
-                ->setConstructorArgs([new ArrayIterator($data)])
-                ->getMock(),
+            'Traversable' => fn(array $data): iterable => new ArrayIterator($data),
         ];
     }
 }

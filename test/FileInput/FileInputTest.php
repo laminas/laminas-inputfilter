@@ -170,8 +170,9 @@ final class FileInputTest extends TestCase
         self::assertCount(0, $validatorChain->getValidators());
     }
 
+    /** @psalm-suppress UnusedParam Unused named parameter for data provider */
     #[DataProvider('invalidSingleValueProvider')]
-    public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists(mixed $raw): void
+    public function testRequiredUploadValidatorValidatorNotAddedWhenOneExists(mixed $raw, mixed $filtered): void
     {
         $this->input->setAutoPrependUploadValidator(true);
         self::assertTrue($this->input->getAutoPrependUploadValidator());

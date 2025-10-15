@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use Laminas\InputFilter\Factory;
-use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
