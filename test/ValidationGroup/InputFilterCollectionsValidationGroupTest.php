@@ -8,6 +8,7 @@ use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use LaminasTest\InputFilter\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -22,20 +23,22 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
     {
         parent::setUp();
 
-        $collection = new CollectionInputFilter();
+        $factory = TestHelper::createInputFilterFactory();
+
+        $collection = new CollectionInputFilter($factory);
         $collection->setIsRequired(true);
 
-        $first = new Input('first');
+        $first = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'first');
         $first->setRequired(true);
-        $second = new Input('second');
+        $second = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'second');
         $second->setRequired(true);
 
-        $nestedFilter = new InputFilter();
+        $nestedFilter = new InputFilter($factory);
         $nestedFilter->add($first);
         $nestedFilter->add($second);
         $collection->setInputFilter($nestedFilter);
 
-        $this->inputFilter = new InputFilter();
+        $this->inputFilter = new InputFilter($factory);
         $this->inputFilter->add($collection, 'stuff');
     }
 

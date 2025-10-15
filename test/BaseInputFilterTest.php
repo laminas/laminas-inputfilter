@@ -1,4 +1,6 @@
-<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName.NotCamelCaps
+<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.ValidVariableName
+
+declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
@@ -9,6 +11,7 @@ use FilterIterator;
 use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
@@ -29,21 +32,33 @@ use function array_walk;
 use function assert;
 use function count;
 use function in_array;
-use function is_callable;
+use function is_array;
 use function json_encode;
 use function sprintf;
+use function uniqid;
 
 use const JSON_THROW_ON_ERROR;
 
+/**
+ * @psalm-import-type InputSpecification from InputFilterInterface
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
+ */
 #[CoversClass(BaseInputFilter::class)]
-class BaseInputFilterTest extends TestCase
+final class BaseInputFilterTest extends TestCase
 {
-    /** @var BaseInputFilter */
-    protected $inputFilter;
+    protected Factory $factory;
+    protected BaseInputFilter $inputFilter;
 
     protected function setUp(): void
     {
-        $this->inputFilter = new BaseInputFilter();
+        $this->factory = TestHelper::createInputFilterFactory();
+
+        $this->inputFilter = new BaseInputFilter($this->factory);
+    }
+
+    private function createInput(?string $name = null): Input
+    {
+        return new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
     }
 
     public function testInputFilterIsEmptyByDefault(): void
@@ -77,7 +92,7 @@ class BaseInputFilterTest extends TestCase
     public function testReplaceWithInvalidInputTypeThrowsInvalidArgumentException(): void
     {
         $inputFilter = $this->inputFilter;
-        $inputFilter->add(new Input('foo'), 'replace_me');
+        $inputFilter->add($this->createInput('foo'), 'replace_me');
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -94,7 +109,10 @@ class BaseInputFilterTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('no input found matching "not exists"');
-        $inputFilter->replace(new Input('foo'), 'not exists');
+        $inputFilter->replace(
+            $this->createInput('foo'),
+            'not exists'
+        );
     }
 
     public function testGetValueThrowExceptionIfInputDoesNotExists(): void
@@ -153,7 +171,7 @@ class BaseInputFilterTest extends TestCase
     {
         $inputFilter = $this->inputFilter;
 
-        $nestedInputFilter = new BaseInputFilter();
+        $nestedInputFilter = new BaseInputFilter($this->factory);
 
         /** @var InputInterface&MockObject $nestedInput1 */
         $nestedInput1 = $this->createMock(InputInterface::class);
@@ -211,60 +229,112 @@ class BaseInputFilterTest extends TestCase
         $inputFilter->getUnknown();
     }
 
+    public function testAddHasFluentInterface(): void
+    {
+        $input = self::createInput('anything');
+        self::assertSame(
+            $this->inputFilter,
+            $this->inputFilter->add($input),
+        );
+    }
+
+    public function testRemoveHasFluentInterface(): void
+    {
+        $input = self::createInput('anything');
+        $this->inputFilter->add($input);
+
+        self::assertSame(
+            $this->inputFilter,
+            $this->inputFilter->remove('anything'),
+        );
+    }
+
+    /**
+     * @return array<string, array{
+     *     0: InputInterface|InputFilterInterface,
+     *     1: non-empty-string,
+     * }>
+     */
+    public static function addItemsDataProvider(): array
+    {
+        $input       = self::createInputInterfaceMock('anything', null);
+        $inputFilter = self::createInputFilterInterfaceMock();
+
+        return [
+            'Input with non-empty name'       => [
+                $input,
+                'example',
+            ],
+            'InputFilter with non-empty name' => [
+                $inputFilter,
+                'example',
+            ],
+        ];
+    }
+
     /**
      * Verify the state of the input filter is the desired after change it using the method `add()`
      */
-    #[DataProvider('addMethodArgumentsProvider')]
+    #[DataProvider('addItemsDataProvider')]
     public function testAddHasGet(
-        InputInterface|InputFilterInterface|iterable $input,
-        ?string $name,
-        string $expectedInputName,
-        object $expectedInput
+        InputInterface|InputFilterInterface $input,
+        string $name,
     ): void {
-        $inputFilter = $this->inputFilter;
         self::assertFalse(
-            $inputFilter->has($expectedInputName),
-            "InputFilter shouldn't have an input with the name $expectedInputName yet"
+            $this->inputFilter->has($name),
+            "InputFilter shouldn't have an input with the name $name yet"
         );
-        $currentNumberOfFilters = count($inputFilter);
 
-        $return = $inputFilter->add($input, $name);
-        self::assertSame($inputFilter, $return, "add() must return it self");
+        $initialCount = count($this->inputFilter);
 
-        // **Check input collection state**
-        self::assertTrue($inputFilter->has($expectedInputName), "There is no input with name $expectedInputName");
-        self::assertCount($currentNumberOfFilters + 1, $inputFilter, 'Number of filters must be increased by 1');
+        $this->inputFilter->add($input, $name);
 
-        $returnInput = $inputFilter->get($expectedInputName);
-        self::assertEquals($expectedInput, $returnInput, 'get() does not match the expected input');
+        self::assertTrue(
+            $this->inputFilter->has($name),
+            "There is no input with name $name",
+        );
+
+        self::assertCount(
+            $initialCount + 1,
+            $this->inputFilter,
+            'Number of inputs should have increased by 1',
+        );
+
+        self::assertSame(
+            $input,
+            $this->inputFilter->get($name),
+            'get() does not match the expected input',
+        );
     }
 
     /**
      * Verify the state of the input filter is the desired after change it using the method `add()` and `remove()`
      */
-    #[DataProvider('addMethodArgumentsProvider')]
+    #[DataProvider('addItemsDataProvider')]
     public function testAddRemove(
-        InputInterface|InputFilterInterface|iterable $input,
-        ?string $name,
-        string $expectedInputName
+        InputInterface|InputFilterInterface $input,
+        string $name,
     ): void {
-        $inputFilter = $this->inputFilter;
+        $this->inputFilter->add($input, $name);
+        $this->inputFilter->remove($name);
 
-        $inputFilter->add($input, $name);
-        $currentNumberOfFilters = count($inputFilter);
+        self::assertFalse(
+            $this->inputFilter->has($name),
+            "There is no input with name $name",
+        );
 
-        $return = $inputFilter->remove($expectedInputName);
-        self::assertSame($inputFilter, $return, 'remove() must return it self');
-
-        self::assertFalse($inputFilter->has($expectedInputName), "There is no input with name $expectedInputName");
-        self::assertCount($currentNumberOfFilters - 1, $inputFilter, 'Number of filters must be decreased by 1');
+        self::assertCount(
+            0,
+            $this->inputFilter,
+            'There should be zero inputs',
+        );
     }
 
     public function testAddingInputWithNameDoesNotInjectNameInInput(): void
     {
         $inputFilter = $this->inputFilter;
 
-        $foo = new Input('foo');
+        $foo = $this->createInput('foo');
         $inputFilter->add($foo, 'bas');
 
         $test = $inputFilter->get('bas');
@@ -272,25 +342,91 @@ class BaseInputFilterTest extends TestCase
         self::assertEquals('foo', $foo->getName(), 'Input name should not change');
     }
 
+    /**
+     * @psalm-return array<string, array{
+     *     0: InputInterface|InputFilterInterface|InputSpecification|InputFilterSpecification,
+     *     1: class-string,
+     * }>
+     */
+    public static function inputProvider(): array
+    {
+        $input       = self::createInputInterfaceMock('fooInput', null);
+        $inputFilter = self::createInputFilterInterfaceMock();
+
+        return [
+            'InputInterface'       => [
+                $input,
+                $input::class,
+            ],
+            'InputFilterInterface' => [
+                $inputFilter,
+                $inputFilter::class,
+            ],
+            'Input Spec'           => [
+                [
+                    'name' => uniqid(),
+                ],
+                Input::class,
+            ],
+            'InputFilter Spec'     => [
+                [
+                    'type' => InputFilter::class,
+                    'foo'  => [
+                        'name' => 'foo',
+                    ],
+                    'bar'  => [
+                        'name' => 'bar',
+                    ],
+                ],
+                InputFilter::class,
+            ],
+        ];
+    }
+
+    /**
+     * @param InputInterface|InputFilterInterface|InputSpecification|InputFilterSpecification $input
+     * @param class-string $expectedType
+     */
     #[DataProvider('inputProvider')]
     public function testReplace(
-        InputInterface|InputFilterInterface|iterable $input,
-        ?string $inputName,
-        object $expectedInput
+        InputInterface|InputFilterInterface|array $input,
+        string $expectedType,
     ): void {
-        $inputFilter    = $this->inputFilter;
         $nameToReplace  = 'replace_me';
-        $inputToReplace = new Input($nameToReplace);
+        $inputToReplace = $this->createInput($nameToReplace);
 
-        $inputFilter->add($inputToReplace);
-        $currentNumberOfFilters = count($inputFilter);
+        $this->inputFilter->add($inputToReplace);
+        $currentNumberOfFilters = count($this->inputFilter);
 
-        $return = $inputFilter->replace($input, $nameToReplace);
-        self::assertSame($inputFilter, $return, 'replace() must return it self');
-        self::assertCount($currentNumberOfFilters, $inputFilter, "Number of filters shouldn't change");
+        self::assertSame(
+            $this->inputFilter,
+            $this->inputFilter->replace($input, $nameToReplace),
+            'replace() must return it self',
+        );
 
-        $returnInput = $inputFilter->get($nameToReplace);
-        self::assertEquals($expectedInput, $returnInput, 'get() does not match the expected input');
+        self::assertCount($currentNumberOfFilters, $this->inputFilter, "Number of filters shouldn't change");
+
+        $object = $this->inputFilter->get($nameToReplace);
+
+        self::assertInstanceOf(
+            $expectedType,
+            $object,
+            sprintf(
+                'Expected "%s" but the instance was "%s"',
+                $expectedType,
+                $object::class,
+            ),
+        );
+
+        if (is_array($input)) {
+            return;
+        }
+
+        self::assertSame(
+            $input,
+            $object,
+            'get() does not match the expected input',
+        );
     }
 
     /**
@@ -397,7 +533,7 @@ class BaseInputFilterTest extends TestCase
         $expectedData = array_merge($data, ['notSet' => null]);
         $flatInput    = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
-            ->setConstructorArgs(['flat'])
+            ->setConstructorArgs([TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'flat'])
             ->getMock();
         $flatInput->expects(self::once())
             ->method('setValue')
@@ -405,7 +541,7 @@ class BaseInputFilterTest extends TestCase
         // Inputs without value must be reset for to have clean states when use different setData arguments
         $resetInput = $this->getMockBuilder(Input::class)
             ->enableProxyingToOriginalMethods()
-            ->setConstructorArgs(['notSet'])
+            ->setConstructorArgs([TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'notSet'])
             ->getMock();
         $resetInput->expects(self::once())
             ->method('resetValue');
@@ -413,9 +549,15 @@ class BaseInputFilterTest extends TestCase
         $filter = $this->inputFilter;
         $filter->add($flatInput);
         $filter->add($resetInput);
-        $deepInputFilter = new BaseInputFilter();
-        $deepInputFilter->add(new Input(), 'deep-input1');
-        $deepInputFilter->add(new Input(), 'deep-input2');
+        $deepInputFilter = new BaseInputFilter($this->factory);
+        $deepInputFilter->add(
+            $this->createInput(),
+            'deep-input1'
+        );
+        $deepInputFilter->add(
+            $this->createInput(),
+            'deep-input2'
+        );
         $filter->add($deepInputFilter, 'deep');
         $filter->setData($data);
         $filter->setValidationGroup(['deep' => 'deep-input1']);
@@ -562,8 +704,8 @@ class BaseInputFilterTest extends TestCase
     {
         $filter = $this->inputFilter;
 
-        $foo = new Input('foo');
-        $bar = new Input('bar');
+        $foo = $this->createInput('foo');
+        $bar = $this->createInput('bar');
 
         $filter->add($foo);
         $filter->add($bar);
@@ -571,6 +713,8 @@ class BaseInputFilterTest extends TestCase
         $filters = $filter->getInputs();
 
         self::assertCount(2, $filters);
+        self::assertInstanceOf(Input::class, $filters['foo']);
+        self::assertInstanceOf(Input::class, $filters['bar']);
         self::assertEquals('foo', $filters['foo']->getName());
         self::assertEquals('bar', $filters['bar']->getName());
     }
@@ -579,11 +723,11 @@ class BaseInputFilterTest extends TestCase
     {
         $filter = $this->inputFilter;
 
-        $foo1 = new Input('foo');
+        $foo1 = $this->createInput('foo');
         $foo1->setRequired(true);
         $filter->add($foo1);
 
-        $foo2 = new Input('foo');
+        $foo2 = $this->createInput('foo');
         $foo2->setRequired(false);
         $filter->add($foo2);
 
@@ -594,8 +738,8 @@ class BaseInputFilterTest extends TestCase
 
     public function testAddingAnInputFilterWithTheSameNameAsTheInputWillReplace(): void
     {
-        $input  = new Input('a');
-        $filter = new InputFilter();
+        $input  = $this->createInput('a');
+        $filter = new InputFilter($this->factory);
 
         $this->inputFilter->add($input);
 
@@ -609,12 +753,12 @@ class BaseInputFilterTest extends TestCase
     public function testMerge(): void
     {
         $inputFilter       = $this->inputFilter;
-        $originInputFilter = new BaseInputFilter();
+        $originInputFilter = new BaseInputFilter($this->factory);
 
-        $inputFilter->add(new Input(), 'foo');
-        $inputFilter->add(new Input(), 'bar');
+        $inputFilter->add($this->createInput(), 'foo');
+        $inputFilter->add($this->createInput(), 'bar');
 
-        $originInputFilter->add(new Input(), 'baz');
+        $originInputFilter->add($this->createInput(), 'baz');
 
         $inputFilter->merge($originInputFilter);
 
@@ -631,9 +775,11 @@ class BaseInputFilterTest extends TestCase
     public function testNestedInputFilterShouldAllowNonArrayValueForData(): void
     {
         /** @psalm-var BaseInputFilter<array{nested: array{nestedField1: mixed}}> $filter1 */
-        $filter1      = new BaseInputFilter();
-        $nestedFilter = new BaseInputFilter();
-        $nestedFilter->add(new Input('nestedField1'));
+        $filter1      = new BaseInputFilter($this->factory);
+        $nestedFilter = new BaseInputFilter($this->factory);
+        $nestedFilter->add(
+            $this->createInput('nestedField1')
+        );
         $filter1->add($nestedFilter, 'nested');
 
         // non scalar and non null value
@@ -649,7 +795,7 @@ class BaseInputFilterTest extends TestCase
 
     public function testInstanceOfUnfilteredDataInterface(): void
     {
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
 
         self::assertInstanceOf(
             UnfilteredDataInterface::class,
@@ -660,14 +806,14 @@ class BaseInputFilterTest extends TestCase
 
     public function testGetUnfilteredDataReturnsArray(): void
     {
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
 
         self::assertIsArray($baseInputFilter->getUnfilteredData());
     }
 
     public function testSetUnfilteredDataReturnsBaseInputFilter(): void
     {
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
 
         self::assertInstanceOf(BaseInputFilter::class, $baseInputFilter->setUnfilteredData([]));
     }
@@ -678,7 +824,7 @@ class BaseInputFilterTest extends TestCase
             'foo' => 'bar',
         ];
 
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
         $baseInputFilter->setUnfilteredData($testArray);
 
         self::assertSame($testArray, $baseInputFilter->getUnfilteredData());
@@ -690,7 +836,7 @@ class BaseInputFilterTest extends TestCase
             'foo' => 'bar',
         ];
 
-        $baseInputFilter = new BaseInputFilter();
+        $baseInputFilter = new BaseInputFilter($this->factory);
         $baseInputFilter->setData($testArray);
 
         self::assertSame($testArray, $baseInputFilter->getUnfilteredData());
@@ -710,63 +856,13 @@ class BaseInputFilterTest extends TestCase
         );
 
         /** @var BaseInputFilter $baseInputFilter */
-        $baseInputFilter = (new BaseInputFilter())
-            ->add(new Input(), 'bar')
+        $baseInputFilter = (new BaseInputFilter($this->factory))
+            ->add($this->createInput(), 'bar')
             ->setData($unfilteredArray);
 
         self::assertSame($unfilteredArray, $baseInputFilter->getUnfilteredData());
         self::assertSame($filteredArray, $baseInputFilter->getValues());
         self::assertSame($filteredArray, $baseInputFilter->getRawValues());
-    }
-
-    /**
-     * @psalm-return array<string, array{
-     *     0: InputInterface|InputFilterInterface|iterable,
-     *     1: null|string,
-     *     2: string,
-     *     3: InputInterface|InputFilterInterface,
-     * }>
-     */
-    public static function addMethodArgumentsProvider(): array
-    {
-        $inputTypes = static::inputProvider();
-
-        $inputName = static fn(array $inputTypeData): string => $inputTypeData[1];
-
-        $sameInput = static fn(array $inputTypeData): InputInterface|InputFilterInterface => $inputTypeData[2];
-
-        // phpcs:disable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
-        $dataTemplates = [
-            // Description => [[$input argument], $name argument, $expectedName, $expectedInput]
-            'null'        => [$inputTypes, null         , $inputName   , $sameInput],
-            'custom_name' => [$inputTypes, 'custom_name', 'custom_name', $sameInput],
-        ];
-        // phpcs:enable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
-
-        // Expand data template matrix for each possible input type.
-        // Description => [$input argument, $name argument, $expectedName, $expectedInput]
-        $dataSets = [];
-        foreach ($dataTemplates as $dataTemplateDescription => $dataTemplate) {
-            foreach ($dataTemplate[0] as $inputTypeDescription => $inputTypeData) {
-                if ($dataTemplate[1] === null && $inputTypeData[1] === null) {
-                    /**
-                     * Input name must be provided explicitly or implicitly.
-                     * InputFilterInterface does not have an instance name so it can't be set implicitly.
-                     */
-                    continue;
-                }
-                $tmpTemplate    = $dataTemplate;
-                $tmpTemplate[0] = $inputTypeData[0]; // expand input
-                if (is_callable($tmpTemplate[2])) {
-                    $tmpTemplate[2] = $tmpTemplate[2]($inputTypeData);
-                }
-                $tmpTemplate[3] = $dataTemplate[3]($inputTypeData);
-
-                $dataSets[$inputTypeDescription . ' / ' . $dataTemplateDescription] = $tmpTemplate;
-            }
-        }
-
-        return $dataSets;
     }
 
     /**
@@ -924,42 +1020,27 @@ class BaseInputFilterTest extends TestCase
     }
 
     /**
-     * @psalm-return array<string, array{
-     *     0: InputInterface|InputFilterInterface|iterable,
-     *     1: null|string,
-     *     2: InputInterface|InputFilterInterface,
-     * }>
-     */
-    public static function inputProvider(): array
-    {
-        $input       = self::createInputInterfaceMock('fooInput', null);
-        $inputFilter = self::createInputFilterInterfaceMock();
-
-        // phpcs:disable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
-        return [
-            // Description         => [input,     expected name, $expectedReturnInput]
-            'InputInterface'       => [$input,       'fooInput',       $input],
-            'InputFilterInterface' => [$inputFilter,       null, $inputFilter],
-        ];
-        // phpcs:enable WebimpressCodingStandard.WhiteSpace.CommaSpacing.SpaceBeforeComma
-    }
-
-    /**
      * @param array<string, mixed> $getRawValues
      * @param array<string, mixed> $getValues
      * @param array<array-key, array<string, string>> $getMessages
      */
-    private static function createInputFilterInterfaceMock(
+    public static function createInputFilterInterfaceMock(
         bool|null $isValid = null,
         array $getRawValues = [],
         array $getValues = [],
         array $getMessages = []
     ): InputFilterInterfaceStub {
-        return new InputFilterInterfaceStub($isValid, $getRawValues, $getValues, $getMessages);
+        return new InputFilterInterfaceStub(
+            TestHelper::createInputFilterFactory(),
+            $isValid,
+            $getRawValues,
+            $getValues,
+            $getMessages
+        );
     }
 
     /** @param array<string, string> $getMessages */
-    private static function createInputInterfaceMock(
+    public static function createInputInterfaceMock(
         string $name,
         bool|null $isRequired,
         bool|null $isValid = null,

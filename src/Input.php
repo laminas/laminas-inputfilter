@@ -7,7 +7,6 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChain;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 
 use function class_exists;
@@ -29,17 +28,11 @@ class Input implements
     /** @var string|null */
     protected $errorMessage;
 
-    /** @var null|FilterChain */
-    protected $filterChain;
-
     /** @var bool */
     protected $notEmptyValidator = false;
 
     /** @var bool */
     protected $required = true;
-
-    /** @var null|ValidatorChain */
-    protected $validatorChain;
 
     /** @var mixed */
     protected $value;
@@ -57,9 +50,11 @@ class Input implements
     /** @var bool */
     protected $hasFallback = false;
 
-    /** @param null|string $name */
-    public function __construct(protected $name = null)
-    {
+    public function __construct(
+        protected FilterChain $filterChain,
+        protected ValidatorChain $validatorChain,
+        protected ?string $name = null
+    ) {
     }
 
     /**
@@ -111,13 +106,9 @@ class Input implements
         return $this;
     }
 
-    /**
-     * @param  string $name
-     * @return $this
-     */
+    /** @inheritDoc */
     public function setName($name)
     {
-        /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->name = (string) $name;
         return $this;
     }
@@ -219,14 +210,8 @@ class Input implements
         return $this->errorMessage;
     }
 
-    /**
-     * @return FilterChain
-     */
-    public function getFilterChain()
+    public function getFilterChain(): FilterChain
     {
-        if (! $this->filterChain) {
-            $this->filterChain = new FilterChain();
-        }
         return $this->filterChain;
     }
 
@@ -259,9 +244,6 @@ class Input implements
      */
     public function getValidatorChain()
     {
-        if (! $this->validatorChain) {
-            $this->validatorChain = new ValidatorChain();
-        }
         return $this->validatorChain;
     }
 
@@ -453,7 +435,7 @@ class Input implements
     protected function prepareRequiredValidationFailureMessage()
     {
         $chain    = $this->getValidatorChain();
-        $notEmpty = $chain->plugin(NotEmpty::class);
+        $notEmpty = null;
 
         foreach ($chain->getValidators() as $validator) {
             if ($validator['instance'] instanceof NotEmpty) {
@@ -462,17 +444,10 @@ class Input implements
             }
         }
 
-        /** @psalm-var array<string, string> $templates */
-        $templates  = $notEmpty->getOption('messageTemplates');
-        $message    = $templates[NotEmpty::IS_EMPTY];
-        $translator = $notEmpty->getTranslator();
+        $validator = $notEmpty ?: $chain->plugin(NotEmpty::class);
 
-        if ($translator instanceof TranslatorInterface) {
-            $message = $translator->translate($message, $notEmpty->getTranslatorTextDomain());
-        }
+        $validator->isValid(null);
 
-        return [
-            NotEmpty::IS_EMPTY => $message,
-        ];
+        return $validator->getMessages();
     }
 }

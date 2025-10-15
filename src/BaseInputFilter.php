@@ -24,6 +24,8 @@ use function is_string;
 use function sprintf;
 
 /**
+ * @psalm-import-type InputSpecification from InputFilterInterface
+ * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @template TFilteredValues
  * @implements InputFilterInterface<TFilteredValues>
  */
@@ -34,6 +36,11 @@ class BaseInputFilter implements
     ReplaceableInputInterface,
     UnfilteredDataInterface
 {
+    public function __construct(
+        protected readonly Factory $factory,
+    ) {
+    }
+
     /** @var array<array-key, mixed>|null */
     protected $data;
 
@@ -75,18 +82,13 @@ class BaseInputFilter implements
         return count($this->inputs);
     }
 
-    /**
-     * Add an input to the input filter
-     *
-     * @param InputInterface|InputFilterInterface $input
-     * @param null|string|int $name Name used to retrieve this input. Can be an integer for collections
-     * @return $this
-     * @psalm-suppress MoreSpecificImplementedParamType
-     * @throws Exception\InvalidArgumentException
-     */
-    public function add($input, $name = null)
+    /** @inheritDoc */
+    public function add($input, $name = null): static
     {
-        /** @psalm-suppress RedundantConditionGivenDocblockType */
+        if (is_array($input)) {
+            $input = $this->factory->create($input);
+        }
+
         if (! $input instanceof InputInterface && ! $input instanceof InputFilterInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an instance of %s or %s as its first argument; received "%s"',
@@ -143,7 +145,7 @@ class BaseInputFilter implements
     /**
      * Replace a named input
      *
-     * @param  InputInterface|InputFilterInterface $input
+     * @param  InputInterface|InputFilterInterface|InputSpecification|InputFilterSpecification $input
      * @param  array-key                           $name Name of the input to replace
      * @throws Exception\InvalidArgumentException If input to replace not exists.
      * @return self
@@ -178,9 +180,8 @@ class BaseInputFilter implements
      *
      * @param  array-key $name
      * @throws Exception\InvalidArgumentException
-     * @return InputInterface|InputFilterInterface
      */
-    public function get($name)
+    public function get($name): InputInterface|InputFilterInterface
     {
         /** @psalm-suppress DocblockTypeContradiction  */
         if (! is_string($name) && ! is_int($name)) {

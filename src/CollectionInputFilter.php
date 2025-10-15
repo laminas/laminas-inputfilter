@@ -37,9 +37,7 @@ class CollectionInputFilter extends InputFilter
 
     /** @var BaseInputFilter|null */
     protected $inputFilter;
-
-    /** @var NotEmpty|null */
-    protected $notEmptyValidator;
+    private ?string $emptyErrorMessage = null;
 
     /**
      * Set the input filter to use when looping the data
@@ -51,7 +49,7 @@ class CollectionInputFilter extends InputFilter
     public function setInputFilter($inputFilter)
     {
         if (is_iterable($inputFilter)) {
-            $inputFilter = $this->getFactory()->createInputFilter($inputFilter);
+            $inputFilter = $this->factory->createInputFilter($inputFilter);
         }
 
         /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
@@ -77,7 +75,7 @@ class CollectionInputFilter extends InputFilter
     public function getInputFilter()
     {
         if (null === $this->inputFilter) {
-            $this->inputFilter = new InputFilter();
+            $this->inputFilter = new InputFilter($this->factory);
         }
 
         return $this->inputFilter;
@@ -85,13 +83,23 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Set if the collection can be empty
-     *
-     * @param bool $isRequired
-     * @return $this
      */
-    public function setIsRequired($isRequired)
+    public function setIsRequired(bool $isRequired): static
     {
         $this->isRequired = $isRequired;
+
+        return $this;
+    }
+
+    /**
+     * Set a custom error message for the collection being empty.
+     * If not called, CollectionInputFilter will default to the NotEmpty validators IS_EMPTY message
+     *
+     * @param non-empty-string $message
+     */
+    public function setIsRequiredValidationMessage(string $message): static
+    {
+        $this->emptyErrorMessage = $message;
 
         return $this;
     }
@@ -170,38 +178,6 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * Retrieve the NotEmpty validator to use for failed "required" validations.
-     *
-     * This validator will be used to produce a validation failure message in
-     * cases where the collection is empty but required.
-     *
-     * @return NotEmpty
-     */
-    public function getNotEmptyValidator()
-    {
-        if ($this->notEmptyValidator === null) {
-            $this->notEmptyValidator = new NotEmpty();
-        }
-
-        return $this->notEmptyValidator;
-    }
-
-    /**
-     * Set the NotEmpty validator to use for failed "required" validations.
-     *
-     * This validator will be used to produce a validation failure message in
-     * cases where the collection is empty but required.
-     *
-     * @return $this
-     */
-    public function setNotEmptyValidator(NotEmpty $notEmptyValidator)
-    {
-        $this->notEmptyValidator = $notEmptyValidator;
-
-        return $this;
-    }
-
-    /**
      * @inheritDoc
      */
     public function isValid($context = null)
@@ -211,7 +187,7 @@ class CollectionInputFilter extends InputFilter
         $valid                    = true;
 
         if ($this->getCount() < 1 && $this->isRequired) {
-            $this->collectionMessages[] = $this->prepareRequiredValidationFailureMessage();
+            $this->collectionMessages[] = $this->getEmptyValidationErrorMessages();
             $valid                      = false;
         }
 
@@ -336,21 +312,17 @@ class CollectionInputFilter extends InputFilter
         return $unknownInputs;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    protected function prepareRequiredValidationFailureMessage()
+    /** @return array<string, string> */
+    private function getEmptyValidationErrorMessages(): array
     {
-        $notEmptyValidator = $this->getNotEmptyValidator();
-        /** @var array<string, string> $templates */
-        $templates  = $notEmptyValidator->getOption('messageTemplates');
-        $message    = $templates[NotEmpty::IS_EMPTY];
-        $translator = $notEmptyValidator->getTranslator();
+        $options = $this->emptyErrorMessage === null
+            ? []
+            : ['messages' => [NotEmpty::IS_EMPTY => $this->emptyErrorMessage]];
 
-        return [
-            NotEmpty::IS_EMPTY => $translator
-                ? $translator->translate($message, $notEmptyValidator->getTranslatorTextDomain())
-                : $message,
-        ];
+        $validator = $this->factory->getValidatorPluginManager()->build(NotEmpty::class, $options);
+
+        $validator->isValid(null);
+
+        return $validator->getMessages();
     }
 }

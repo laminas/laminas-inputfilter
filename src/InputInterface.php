@@ -33,7 +33,7 @@ interface InputInterface
     public function setFilterChain(FilterChain $filterChain);
 
     /**
-     * @param string $name
+     * @param array-key $name
      * @return $this
      */
     public function setName($name);

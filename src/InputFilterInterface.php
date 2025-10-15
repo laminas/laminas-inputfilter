@@ -9,7 +9,6 @@ use Laminas\Filter\FilterChain; // phpcs:ignore
 use Laminas\Filter\FilterInterface; // phpcs:ignore
 use Laminas\Validator\ValidatorChain; // phpcs:ignore
 use Laminas\Validator\ValidatorInterface; // phpcs:ignore
-use Traversable;
 
 /**
  * @template TFilteredValues
@@ -33,12 +32,11 @@ use Traversable;
  *     error_message?: string|null,
  *     fallback_value?: mixed|null,
  *     break_on_failure?: bool,
- *     filters?: FilterChain|iterable<array-key, FilterSpecification|callable|FilterInterface>,
+ *     filters?: FilterChain|iterable<array-key, FilterSpecification|(callable(mixed):mixed)|FilterInterface>,
  *     validators?: ValidatorChain|iterable<array-key, ValidatorSpecification|ValidatorInterface>,
- *     ...
  * }
  * @psalm-type InputFilterSpecification = array{
- *     type?: class-string<InputFilterInterface>|string,
+ *     type: class-string<InputFilterInterface>|string,
  * }&array<array-key, InputSpecification|InputFilterInterface|InputInterface>
  * @psalm-type CollectionSpecification = array{
  *     type?: class-string<InputFilterInterface>|string,
@@ -55,22 +53,21 @@ interface InputFilterInterface extends Countable
     /**
      * Add an input to the input filter
      *
-     * @param  InputInterface|InputFilterInterface|InputSpecification|Traversable $input
+     * @param  InputInterface|InputFilterInterface|InputSpecification|InputFilterSpecification $input
      *     Implementations MUST handle at least one of the specified types, and
      *     raise an exception for any they cannot process.
      * @param  null|array-key $name Name used to retrieve this input
-     * @return InputFilterInterface
      * @throws Exception\InvalidArgumentException If unable to handle the input type.
+     * @return $this
      */
-    public function add($input, $name = null);
+    public function add($input, $name = null): static;
 
     /**
      * Retrieve a named input
      *
-     * @param  array-key $name
-     * @return InputInterface|InputFilterInterface
+     * @param array-key $name
      */
-    public function get($name);
+    public function get($name): InputInterface|InputFilterInterface;
 
     /**
      * Test if an input or input filter by the given name is attached
