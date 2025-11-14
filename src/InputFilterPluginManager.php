@@ -8,7 +8,9 @@ use Laminas\ServiceManager\AbstractSingleInstancePluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\InitializableInterface;
+use Psr\Container\ContainerInterface;
 
+use function array_replace_recursive;
 use function get_debug_type;
 use function sprintf;
 
@@ -23,42 +25,38 @@ use function sprintf;
  */
 final class InputFilterPluginManager extends AbstractSingleInstancePluginManager
 {
+    private const DEFAULT_CONFIGURATION = [
+        'factories' => [
+            InputFilter::class           => InputFilterFactory::class,
+            CollectionInputFilter::class => InputFilterFactory::class,
+            OptionalInputFilter::class   => InputFilterFactory::class,
+        ],
+        'aliases'   => [
+            'inputfilter'         => InputFilter::class,
+            'inputFilter'         => InputFilter::class,
+            'InputFilter'         => InputFilter::class,
+            'collection'          => CollectionInputFilter::class,
+            'Collection'          => CollectionInputFilter::class,
+            'optionalinputfilter' => OptionalInputFilter::class,
+            'optionalInputFilter' => OptionalInputFilter::class,
+            'OptionalInputFilter' => OptionalInputFilter::class,
+        ],
+    ];
+
     /** @var class-string<InputFilterInterface> */
     protected string $instanceOf = InputFilterInterface::class;
 
-    /**
-     * Default alias of plugins
-     *
-     * @var string[]
-     */
-    protected array $aliases = [
-        'inputfilter'         => InputFilter::class,
-        'inputFilter'         => InputFilter::class,
-        'InputFilter'         => InputFilter::class,
-        'collection'          => CollectionInputFilter::class,
-        'Collection'          => CollectionInputFilter::class,
-        'optionalinputfilter' => OptionalInputFilter::class,
-        'optionalInputFilter' => OptionalInputFilter::class,
-        'OptionalInputFilter' => OptionalInputFilter::class,
-
-        // v2 normalized FQCNs
-        'zendinputfilterinputfilter'           => InputFilter::class,
-        'zendinputfiltercollectioninputfilter' => CollectionInputFilter::class,
-        'zendinputfilteroptionalinputfilter'   => OptionalInputFilter::class,
-    ];
-
-    /**
-     * Default set of plugins
-     *
-     * @var string[]
-     */
-    protected array $factories = [
-        InputFilter::class           => InputFilterFactory::class,
-        CollectionInputFilter::class => InputFilterFactory::class,
-        OptionalInputFilter::class   => InputFilterFactory::class,
-    ];
-
     protected bool $sharedByDefault = false;
+
+    public function __construct(
+        ContainerInterface $creationContext,
+        array $config = [],
+    ) {
+        /** @psalm-var ServiceManagerConfiguration $config */
+        $config = array_replace_recursive(self::DEFAULT_CONFIGURATION, $config);
+
+        parent::__construct($creationContext, $config);
+    }
 
     /**
      * @inheritDoc
@@ -81,7 +79,7 @@ final class InputFilterPluginManager extends AbstractSingleInstancePluginManager
             'Plugin of type %s is invalid; must implement %s or %s',
             get_debug_type($instance),
             InputFilterInterface::class,
-            InputInterface::class
+            InputInterface::class,
         ));
     }
 }
