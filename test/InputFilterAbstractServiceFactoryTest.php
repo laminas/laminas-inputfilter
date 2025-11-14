@@ -60,7 +60,7 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
     }
 
     #[DataProvider('canCreateProvider')]
-    public function testCanCreate(?array $config = null, bool $expectedResult): void
+    public function testCanCreate(array|null $config, bool $expectedResult): void
     {
         $services = new ServiceManager();
 
@@ -71,6 +71,7 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
         self::assertEquals($expectedResult, $this->factory->canCreate($services, 'filter'));
     }
 
+    /** @return array<string, array{0: array|null, 1: bool}> */
     public static function canCreateProvider(): array
     {
         return [
