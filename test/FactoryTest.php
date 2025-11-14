@@ -106,8 +106,6 @@ final class FactoryTest extends TestCase
 
     public function testCreateInputWithEmptySpecIsNotExceptional(): void
     {
-        $this->markTestSkipped('This test now causes a warning - undefined array key "name" from the depths of filter');
-
         $factory = $this->createDefaultFactory();
         $this->expectException(TypeError::class);
         $this->expectExceptionMessage('Argument #1 ($name) must be of type string, null given');
@@ -146,10 +144,6 @@ final class FactoryTest extends TestCase
 
     public function testCreateInputWithValidatorsAsAnSpecificationWithMissingNameThrowException(): void
     {
-        $this->markTestSkipped(
-            'This test now causes a warning - undefined array key "name" from the depths of validator',
-        );
-
         $factory = $this->createDefaultFactory();
 
         /**
