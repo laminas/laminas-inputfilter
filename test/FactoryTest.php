@@ -433,6 +433,7 @@ final class FactoryTest extends TestCase
 
         $factory = $serviceManager->get(Factory::class);
 
+        /** @psalm-suppress InvalidArgument This appears valid but the Psalm diff makes my eyes bleed */
         $inputFilter = $factory->createInputFilter([
             'foo'  => [
                 'name'       => 'foo',

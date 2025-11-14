@@ -268,8 +268,11 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
 
         $this->filterPluginManager->configure(['services' => ['CustomFilter' => $filter]]);
 
-        $services->get(InputFilterPluginManager::class)
-            ->addAbstractFactory(InputFilterAbstractServiceFactory::class);
+        $services->get(InputFilterPluginManager::class)->configure([
+            'abstract_factories' => [
+                InputFilterAbstractServiceFactory::class,
+            ],
+        ]);
 
         $inputFilter = $services->get(InputFilterPluginManager::class)->get('test');
         self::assertInstanceOf(InputFilterInterface::class, $inputFilter);
