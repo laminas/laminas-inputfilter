@@ -185,7 +185,7 @@
       <code><![CDATA[InputFilterPluginManager]]></code>
     </MethodSignatureMismatch>
     <NonInvariantDocblockPropertyType>
-      <code><![CDATA[$factories]]></code>
+      <code><![CDATA[$instanceOf]]></code>
     </NonInvariantDocblockPropertyType>
   </file>
   <file src="src/InputInterface.php">
@@ -261,12 +261,7 @@
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="test/CollectionInputFilterTest.php">
-    <InvalidArgument/>
-  </file>
   <file src="test/FactoryTest.php">
-    <DeprecatedConstant/>
-    <DeprecatedMethod/>
     <InvalidArgument>
       <code><![CDATA[[
             'foo'  => [
