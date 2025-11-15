@@ -31,8 +31,8 @@ use function sprintf;
 
 /**
  * @psalm-import-type InputSpecification from InputFilterInterface
- * @psalm-import-type FilterSpecification from InputFilterInterface
- * @psalm-import-type ValidatorSpecification from InputFilterInterface
+ * @psalm-import-type FilterSpecification from FilterChain
+ * @psalm-import-type ValidatorSpecification from ValidatorChain
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @psalm-import-type CollectionSpecification from InputFilterInterface
  */
@@ -104,6 +104,14 @@ final class Factory
         if (! is_array($filters) && ! is_callable($filters) && ! $filters instanceof FilterInterface) {
             throw new TypeError("filters must be an array, callable, or FilterInterface. Received: "
                 . get_debug_type($filters));
+        }
+
+        if (is_array($filters)) {
+            FilterChain::validateSpecification(['filters' => $filters]);
+        }
+
+        if (is_array($validators)) {
+            ValidatorChain::validateSpecification($validators);
         }
 
         return [

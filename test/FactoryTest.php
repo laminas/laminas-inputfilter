@@ -18,6 +18,7 @@ use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputProviderInterface;
 use Laminas\Validator\Digits;
+use Laminas\Validator\Exception\InvalidSpecificationArrayException;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
 use Laminas\Validator\ValidatorChain;
@@ -106,11 +107,10 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputWithEmptySpecIsNotExceptional(): void
+    public function testCreateInputWithEmptyFilterSpecIsExceptional(): void
     {
         $factory = $this->createDefaultFactory();
-        $this->expectException(TypeError::class);
-        $this->expectExceptionMessage('Argument #1 ($name) must be of type string, null given');
+        $this->expectException(Filter\Exception\InvalidSpecificationArrayException::class);
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
             'filters' => [
@@ -121,11 +121,11 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputWithInvalidFilterCausesTypeError(): void
+    public function testFilterSpecificationsAreValidatedByUpstreamFilter(): void
     {
         $factory = $this->createDefaultFactory();
 
-        $this->expectException(TypeError::class);
+        $this->expectException(Filter\Exception\InvalidSpecificationArrayException::class);
         $factory->createInput([
             'filters' => [
                 'invalid value',
@@ -144,18 +144,10 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputWithValidatorsAsAnSpecificationWithMissingNameThrowException(): void
+    public function testCreateInputWithValidatorsAsAnSpecificationWithMissingNameThrowsException(): void
     {
         $factory = $this->createDefaultFactory();
-
-        /**
-         * No validation of the validator chain specification occurs in this library any more.
-         *
-         * It's the problem domain of `laminas-validator` because chain creation is delegated to that library.
-         */
-
-        $this->expectException(TypeError::class);
-        $this->expectExceptionMessage('Argument #1 ($name) must be of type string, null given');
+        $this->expectException(InvalidSpecificationArrayException::class);
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
             'validators' => [
@@ -169,11 +161,7 @@ final class FactoryTest extends TestCase
     public function testCreateInputWithValidatorsAsAnCollectionOfInvalidTypesThrowException(): void
     {
         $factory = $this->createDefaultFactory();
-
-        $this->expectException(TypeError::class);
-        $this->expectExceptionMessage(
-            'Cannot access offset of type string on string'
-        );
+        $this->expectException(InvalidSpecificationArrayException::class);
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
             'validators' => [
