@@ -62,11 +62,7 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
     #[DataProvider('canCreateProvider')]
     public function testCanCreate(array|null $config, bool $expectedResult): void
     {
-        $services = new ServiceManager();
-
-        if ($config !== null) {
-            $services->setService('config', $config);
-        }
+        $services = new ServiceManager($config === null ? [] : ['services' => ['config' => $config]]);
 
         self::assertEquals($expectedResult, $this->factory->canCreate($services, 'filter'));
     }
