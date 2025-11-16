@@ -8,6 +8,7 @@ use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
@@ -16,7 +17,6 @@ use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
-use TypeError;
 
 use function assert;
 use function class_exists;
@@ -95,6 +95,7 @@ final class Factory
      *     filterChain: FilterChainInterface,
      *     validatorChain: ValidatorChainInterface,
      * }
+     * @throws InvalidArgumentException
      */
     private function buildChainsFromSpecification(array $spec): array
     {
@@ -102,7 +103,7 @@ final class Factory
         $validators = $spec['validators'] ?? [];
 
         if (! is_array($filters) && ! is_callable($filters) && ! $filters instanceof FilterInterface) {
-            throw new TypeError("filters must be an array, callable, or FilterInterface. Received: "
+            throw new InvalidArgumentException("filters must be an array, callable, or FilterInterface. Received: "
                 . get_debug_type($filters));
         }
 
@@ -128,7 +129,7 @@ final class Factory
      * Factory for input objects
      *
      * @param InputSpecification|InputProviderInterface $inputSpecification
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws RuntimeException
      */
     public function createInput(array|InputProviderInterface $inputSpecification): InputInterface
@@ -276,7 +277,7 @@ final class Factory
      * @param InputFilterSpecification|CollectionSpecification|Traversable|InputFilterProviderInterface $inputFilterSpecification
      * @return InputFilterInterface
      * @throws RuntimeException
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function createInputFilter($inputFilterSpecification)
     {
@@ -290,7 +291,7 @@ final class Factory
 
         /** @psalm-suppress DocblockTypeContradiction */
         if (! is_array($inputFilterSpecification)) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
                 get_debug_type($inputFilterSpecification),

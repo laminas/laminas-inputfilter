@@ -100,7 +100,8 @@ final class FactoryTest extends TestCase
     public function testCreateInputWithInvalidFilterSpecType(): void
     {
         $factory = $this->createDefaultFactory();
-        $this->expectException(TypeError::class);
+
+        $this->expectException(InvalidArgumentException::class);
         /** @psalm-suppress InvalidArgument */
         $factory->createInput([
             'filters' => 'invalid_value',
