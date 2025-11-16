@@ -39,7 +39,7 @@ final class InputFilterPluginManagerCompatibilityTest extends TestCase
         return new InputFilterPluginManager($serviceManager);
     }
 
-    public function testShareByDefaultAndSharedByDefault(): void
+    public function testInputFiltersAreNotSharedByDefault(): void
     {
         $manager     = self::getPluginManager();
         $inputFilter = $manager->get(InputFilter::class);
