@@ -242,15 +242,13 @@ final class FactoryTest extends TestCase
 
     public function testFactoryWillCreateInputWithSuggestedFilters(): void
     {
-        $factory      = $this->createDefaultFactory();
-        $htmlEntities = new Filter\HtmlEntities();
-        $input        = $factory->createInput([
+        $factory = $this->createDefaultFactory();
+        $input   = $factory->createInput([
             'name'    => 'foo',
             'filters' => [
                 [
                     'name' => Filter\StringTrim::class,
                 ],
-                $htmlEntities,
                 [
                     'name'    => Filter\StringToLower::class,
                     'options' => [
@@ -261,29 +259,19 @@ final class FactoryTest extends TestCase
         ]);
         self::assertInstanceOf(InputInterface::class, $input);
         self::assertEquals('foo', $input->getName());
-        $chain = $input->getFilterChain();
-        $index = 0;
-        foreach ($chain as $filter) {
-            self::assertInstanceOf(Filter\FilterInterface::class, $filter);
-            switch ($index) {
-                case 0:
-                    self::assertInstanceOf(Filter\StringTrim::class, $filter);
-                    break;
-                case 1:
-                    self::assertSame($htmlEntities, $filter);
-                    break;
-                case 2:
-                    self::assertInstanceOf(Filter\StringToLower::class, $filter);
-                    self::assertEquals(
-                        'iso-8859-1',
-                        (new ReflectionObject($filter))->getProperty('encoding')->getValue($filter)
-                    );
-                    break;
-                default:
-                    self::fail('Found more filters than expected');
-            }
-            $index++;
-        }
+        self::assertCount(2, $input->getFilterChain());
+
+        $input->setValue('   Encodable with ISO-8859-1  ');
+
+        self::assertEquals('encodable with iso-8859-1', $input->getValue());
+
+        $input->setValue('αλώπηξ not encodable with iso-8859-1');
+
+        self::assertNotEquals(
+            'αλώπηξ not encodable with iso-8859-1',
+            $input->getValue(),
+            'This is likely failing due to the StringToLower not having the encoding set'
+        );
     }
 
     public function testFactoryWillCreateInputWithSuggestedValidators(): void
