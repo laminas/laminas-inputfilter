@@ -29,3 +29,19 @@ jobs:
       - uses: ramsey/composer-install@3.1.1
       - run: make install-tools
       - run: make composer-require-checker
+
+  psalm-security-report:
+    name: "Psalm Security Report"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5.0.0
+      - uses: shivammathur/setup-php@2.35.5
+        with:
+          php-version: ${{ env.default_php }}
+      - uses: ramsey/composer-install@3.1.1
+      - name: "Psalm"
+        run: vendor/bin/psalm --report=results.sarif
+      - name: "Upload Security Analysis results to GitHub"
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
