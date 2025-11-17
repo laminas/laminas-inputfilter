@@ -20,10 +20,9 @@ use function is_array;
  */
 final class InputFilterPluginManagerFactory implements FactoryInterface
 {
-    /** @param string|null $requestedName */
     public function __invoke(
         ContainerInterface $container,
-        $requestedName = null,
+        string $requestedName,
         ?array $options = null
     ): InputFilterPluginManager {
         $pluginManager = new InputFilterPluginManager($container, $options ?? []);

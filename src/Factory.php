@@ -36,7 +36,7 @@ use function sprintf;
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @psalm-import-type CollectionSpecification from InputFilterInterface
  */
-final class Factory
+final readonly class Factory
 {
     public static function new(ContainerInterface|null $container = null): self
     {
@@ -66,9 +66,9 @@ final class Factory
     }
 
     public function __construct(
-        private readonly FilterPluginManager $filterPluginManager,
-        private readonly ValidatorPluginManager $validatorPluginManager,
-        private readonly InputFilterPluginManager $inputFilterPluginManager,
+        private FilterPluginManager $filterPluginManager,
+        private ValidatorPluginManager $validatorPluginManager,
+        private InputFilterPluginManager $inputFilterPluginManager,
     ) {
     }
 

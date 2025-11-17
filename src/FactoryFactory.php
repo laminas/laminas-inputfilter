@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
  * @psalm-internal Laminas\InputFilter
  * @psalm-internal LaminasTest\InputFilter
  */
-final class FactoryFactory
+final readonly class FactoryFactory
 {
     public function __invoke(ContainerInterface $container): Factory
     {
