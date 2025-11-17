@@ -15,10 +15,9 @@ use function is_array;
  */
 final class InputFilterAbstractServiceFactory implements AbstractFactoryInterface
 {
-    /** @param string $requestedName */
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
+        string $requestedName,
         ?array $options = null
     ): InputFilterInterface {
         $allConfig = $container->get('config');
@@ -28,8 +27,7 @@ final class InputFilterAbstractServiceFactory implements AbstractFactoryInterfac
         return $factory->createInputFilter($config);
     }
 
-    /** @param string $requestedName */
-    public function canCreate(ContainerInterface $container, $requestedName): bool
+    public function canCreate(ContainerInterface $container, string $requestedName): bool
     {
         if (! $container->has('config')) {
             return false;

@@ -78,7 +78,7 @@ final class InputFilterPluginManagerFactoryTest extends TestCase
             ->willReturn($config);
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container);
+        $inputFilters = $factory($container, 'foo');
 
         self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
         self::assertTrue($inputFilters->has('test'));
@@ -97,7 +97,7 @@ final class InputFilterPluginManagerFactoryTest extends TestCase
         $container->expects(self::never())->method('get');
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container);
+        $inputFilters = $factory($container, 'foo');
 
         self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
     }
@@ -115,7 +115,7 @@ final class InputFilterPluginManagerFactoryTest extends TestCase
             ->willReturn(['foo' => 'bar']);
 
         $factory      = new InputFilterPluginManagerFactory();
-        $inputFilters = $factory($container);
+        $inputFilters = $factory($container, 'foo');
 
         self::assertInstanceOf(InputFilterPluginManager::class, $inputFilters);
         self::assertFalse($inputFilters->has('foo'));

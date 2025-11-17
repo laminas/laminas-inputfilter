@@ -11,7 +11,7 @@ use Laminas\ServiceManager\ServiceManager;
  * @psalm-internal Laminas\InputFilter
  * @psalm-internal LaminasTest\InputFilter
  */
-final class ConfigProvider
+final readonly class ConfigProvider
 {
     /**
      * Return configuration for this component.
