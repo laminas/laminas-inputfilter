@@ -26,6 +26,7 @@ use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use LaminasTest\InputFilter\TestAsset\CustomInput;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -274,7 +275,21 @@ final class FactoryTest extends TestCase
         );
     }
 
-    public function testFactoryWillCreateInputWithSuggestedValidators(): void
+    /** @return array<array-key, array{string, bool}> */
+    public static function digitStringProvider(): array
+    {
+        return [
+            ['', false],
+            ['aaa', false],
+            ['123', true],
+            ['12345', true],
+            ['12', false],
+            ['123456', false],
+        ];
+    }
+
+    #[DataProvider('digitStringProvider')]
+    public function testFactoryWillCreateInputWithSuggestedValidators(string $value, bool $isValid): void
     {
         $factory = $this->createDefaultFactory();
         $digits  = new Digits();
@@ -297,30 +312,11 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
         self::assertEquals('foo', $input->getName());
         $chain = $input->getValidatorChain();
-        $index = 0;
-        foreach ($chain->getValidators() as $validator) {
-            $validator = $validator['instance'];
-            switch ($index) {
-                case 0:
-                    self::assertInstanceOf(NotEmpty::class, $validator);
-                    break;
-                case 1:
-                    self::assertSame($digits, $validator);
-                    break;
-                case 2:
-                    self::assertInstanceOf(StringLength::class, $validator);
-                    self::assertFalse($validator->isValid('aa'));
-                    self::assertFalse($validator->isValid('aaaaaa'));
-                    self::assertTrue($validator->isValid('aaa'));
-                    self::assertTrue($validator->isValid('aaaaa'));
-                    break;
-                default:
-                    self::fail('Found more validators than expected');
-            }
-            $index++;
-        }
-        // Assure that previous foreach has been run
-        self::assertEquals(3, $index);
+        self::assertCount(3, $chain->getValidators());
+
+        $input->setValue($value);
+
+        self::assertSame($isValid, $input->isValid());
     }
 
     public function testFactoryWillCreateInputWithSuggestedRequiredFlagAndAlternativeAllowEmptyFlag(): void
