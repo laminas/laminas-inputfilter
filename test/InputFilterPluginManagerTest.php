@@ -66,13 +66,12 @@ final class InputFilterPluginManagerTest extends TestCase
         $this->expectExceptionMessage(
             'must implement Laminas\InputFilter\InputFilterInterface or Laminas\InputFilter\InputInterface'
         );
-        /** @psalm-suppress InvalidArgument */
-        $this->manager->setService('test', $this);
+        $this->manager->configure(['services' => ['test' => $this]]);
     }
 
     public function testLoadingInvalidElementRaisesException(): void
     {
-        $this->manager->setInvokableClass('test', stdClass::class);
+        $this->manager->configure(['invokables' => ['test' => stdClass::class]]);
         $this->expectException($this->getServiceNotFoundException());
         $this->manager->get('test');
     }
@@ -123,7 +122,7 @@ final class InputFilterPluginManagerTest extends TestCase
     #[DataProvider('serviceProvider')]
     public function testGet(string $serviceName, InputInterface|InputFilterInterface $service): void
     {
-        $this->manager->setService($serviceName, $service);
+        $this->manager->configure(['services' => [$serviceName => $service]]);
 
         self::assertSame($service, $this->manager->get($serviceName), 'get() value not match');
     }
@@ -133,7 +132,7 @@ final class InputFilterPluginManagerTest extends TestCase
         $mock = $this->createMock(InitializableInputFilterInterface::class);
         // Init is called twice. Once during `setService` and once during `get`
         $mock->expects(self::exactly(2))->method('init');
-        $this->manager->setService('PluginName', $mock);
+        $this->manager->configure(['services' => ['PluginName' => $mock]]);
         self::assertSame($mock, $this->manager->get('PluginName'), 'get() value not match');
     }
 

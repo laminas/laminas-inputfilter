@@ -321,11 +321,8 @@ class Input implements
         return $this;
     }
 
-    /**
-     * @param  mixed $context Extra "context" to provide the validator
-     * @return bool
-     */
-    public function isValid($context = null)
+    /** @param  array<string, mixed>|null $context Extra "context" to provide the validator */
+    public function isValid(?array $context = null): bool
     {
         if (is_array($this->errorMessage)) {
             $this->errorMessage = null;

@@ -48,7 +48,7 @@ class ArrayInput extends Input
     }
 
     /** @inheritDoc */
-    public function isValid($context = null)
+    public function isValid(?array $context = null): bool
     {
         $hasValue    = $this->hasValue();
         $required    = $this->isRequired();

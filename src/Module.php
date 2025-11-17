@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
-use Laminas\ModuleManager\ModuleManager;
-use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
- * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
+ * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  * @final
  */
 class Module
@@ -18,8 +17,8 @@ class Module
      *
      * @return array<string, mixed>
      * @psalm-return array{
-     *     service_manager: ServiceManagerConfigurationType,
-     *     input_filters: ServiceManagerConfigurationType,
+     *     service_manager: ServiceManagerConfiguration,
+     *     input_filters: ServiceManagerConfiguration,
      * }
      */
     public function getConfig()

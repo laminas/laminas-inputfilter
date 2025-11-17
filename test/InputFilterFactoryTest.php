@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
-use Error;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilter;
@@ -28,14 +27,12 @@ final class InputFilterFactoryTest extends TestCase
 
         $factory = new InputFilterFactory();
 
-        $result = $factory($container, $className);
+        $result = $factory->__invoke($container, $className);
 
-        $this->assertInstanceOf($className, $result);
+        self::assertInstanceOf($className, $result);
     }
 
-    /**
-     * @return class-string[][]
-     */
+    /** @return list<array{0:class-string}> */
     public static function supportedClassProvider(): array
     {
         return [
@@ -47,11 +44,10 @@ final class InputFilterFactoryTest extends TestCase
 
     public function testUnsupportedClass(): void
     {
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage('UnsupportedClassName');
-
         $factory = new InputFilterFactory();
-
-        $factory($this->createMock(ContainerInterface::class), 'UnsupportedClassName');
+        self::assertFalse($factory->canCreate(
+            $this->createMock(ContainerInterface::class),
+            'Not the right thing…',
+        ));
     }
 }

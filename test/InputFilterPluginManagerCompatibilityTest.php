@@ -6,6 +6,7 @@ namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Factory;
+use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\ServiceManager;
@@ -13,14 +14,16 @@ use Laminas\Validator\ValidatorPluginManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionProperty;
 use stdClass;
 
 use function assert;
 use function class_exists;
+use function count;
 
+/** @psalm-import-type ServiceManagerConfiguration from ServiceManager */
 final class InputFilterPluginManagerCompatibilityTest extends TestCase
 {
+    /** @param ServiceManagerConfiguration $config */
     protected static function getPluginManager(array $config = []): InputFilterPluginManager
     {
         $serviceManager = new ServiceManager($config);
@@ -36,43 +39,35 @@ final class InputFilterPluginManagerCompatibilityTest extends TestCase
         return new InputFilterPluginManager($serviceManager);
     }
 
-    public function testShareByDefaultAndSharedByDefault(): void
+    public function testInputFiltersAreNotSharedByDefault(): void
     {
-        $manager        = self::getPluginManager();
-        $reflection     = new ReflectionClass($manager);
-        $shareByDefault = $sharedByDefault = true;
+        $manager     = self::getPluginManager();
+        $inputFilter = $manager->get(InputFilter::class);
+        self::assertInstanceOf(InputFilter::class, $inputFilter);
 
-        foreach ($reflection->getProperties() as $prop) {
-            if ($prop->getName() === 'shareByDefault') {
-                /** @var mixed $shareByDefault */
-                $shareByDefault = $prop->getValue($manager);
-                self::assertIsBool($shareByDefault);
-            }
-            if ($prop->getName() === 'sharedByDefault') {
-                /** @var mixed $sharedByDefault */
-                $sharedByDefault = $prop->getValue($manager);
-                self::assertIsBool($sharedByDefault);
-            }
-        }
+        $anotherOne = $manager->get(InputFilter::class);
 
-        self::assertSame(
-            $shareByDefault,
-            $sharedByDefault,
-            'Values of shareByDefault and sharedByDefault do not match'
-        );
+        self::assertNotSame($inputFilter, $anotherOne);
     }
 
     public function testRegisteringInvalidElementRaisesException(): void
     {
         $this->expectException(InvalidServiceException::class);
-        /** @psalm-suppress InvalidArgument */
-        self::getPluginManager()->setService('test', $this);
+        self::getPluginManager()->configure([
+            'services' => [
+                'test' => $this,
+            ],
+        ]);
     }
 
     public function testLoadingInvalidElementRaisesException(): void
     {
         $manager = self::getPluginManager();
-        $manager->setInvokableClass('test', stdClass::class);
+        $manager->configure([
+            'invokables' => [
+                'test' => stdClass::class,
+            ],
+        ]);
         $this->expectException(InvalidServiceException::class);
         $manager->get('test');
     }
@@ -90,15 +85,22 @@ final class InputFilterPluginManagerCompatibilityTest extends TestCase
     public static function aliasProvider(): array
     {
         $manager    = self::getPluginManager();
-        $reflection = new ReflectionProperty($manager, 'aliases');
-        $data       = [];
-        foreach ($reflection->getValue($manager) as $alias => $expected) {
+        $reflection = new ReflectionClass($manager);
+        $constant   = $reflection->getConstant('DEFAULT_CONFIGURATION');
+        self::assertIsArray($constant);
+        $aliases = $constant['aliases'] ?? [];
+        self::assertIsArray($aliases);
+        self::assertGreaterThan(0, count($aliases));
+
+        $data = [];
+        foreach ($aliases as $alias => $expected) {
             self::assertIsString($alias);
             self::assertIsString($expected);
             assert(class_exists($expected));
 
             $data[] = [$alias, $expected];
         }
+
         return $data;
     }
 }

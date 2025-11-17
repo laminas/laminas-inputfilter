@@ -7,26 +7,27 @@ namespace Laminas\InputFilter;
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+use function is_a;
+
 /**
  * @psalm-internal Laminas\InputFilter
  * @psalm-internal LaminasTest\InputFilter
  */
 final class InputFilterFactory implements AbstractFactoryInterface
 {
-    /**
-     * @param string $requestedName
-     * @return object
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
-    {
-        /** @psalm-suppress InvalidStringClass */
+    /** @inheritDoc */
+    public function __invoke(
+        ContainerInterface $container,
+        string $requestedName,
+        ?array $options = null,
+    ): InputFilterInterface {
+        assert(is_a($requestedName, InputFilterInterface::class, true));
+
         return new $requestedName($container->get(Factory::class));
     }
 
-    /**
-     * @param string $requestedName
-     */
-    public function canCreate(ContainerInterface $container, $requestedName): bool
+    public function canCreate(ContainerInterface $container, string $requestedName): bool
     {
         return match ($requestedName) {
             InputFilter::class,

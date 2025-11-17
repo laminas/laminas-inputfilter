@@ -32,20 +32,20 @@
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
-        "laminas/laminas-filter": "^2.19",
-        "laminas/laminas-servicemanager": "^3.21.0",
+        "laminas/laminas-filter": "^3.4.0",
+        "laminas/laminas-servicemanager": "^4.0",
         "laminas/laminas-stdlib": "^3.19",
-        "laminas/laminas-validator": "^2.60.0",
+        "laminas/laminas-validator": "^3.11.0",
         "psr/container": "^1.1 || ^2.0"
     },
     "require-dev": {
         "ext-json": "*",
         "laminas/laminas-coding-standard": "^3.1.0",
-        "phpunit/phpunit": "^11.5.42",
+        "phpunit/phpunit": "^11.5.44",
         "psalm/plugin-phpunit": "^0.19.5",
         "psr/http-message": "^2.0",
         "vimeo/psalm": "^6.13.1",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.12.1"
     },
     "suggest": {
         "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"

@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
-use Laminas\Validator\ValidatorInterface;
+use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Psr\Container\ContainerInterface;
 use Traversable;
@@ -29,8 +31,8 @@ use function sprintf;
 
 /**
  * @psalm-import-type InputSpecification from InputFilterInterface
- * @psalm-import-type FilterSpecification from InputFilterInterface
- * @psalm-import-type ValidatorSpecification from InputFilterInterface
+ * @psalm-import-type FilterSpecification from FilterChain
+ * @psalm-import-type ValidatorSpecification from ValidatorChain
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @psalm-import-type CollectionSpecification from InputFilterInterface
  */
@@ -88,39 +90,38 @@ final class Factory
     }
 
     /**
-     * @todo           should return and check for interfaces when SMv4 is installed
-     * @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade
      * @param InputSpecification $spec
      * @return array{
-     *     filterChain: FilterChain,
-     *     validatorChain: ValidatorChain,
+     *     filterChain: FilterChainInterface,
+     *     validatorChain: ValidatorChainInterface,
      * }
+     * @throws InvalidArgumentException
      */
     private function buildChainsFromSpecification(array $spec): array
     {
-        $filters = $spec['filters'] ?? [];
-        if ($filters instanceof FilterChain) {
-            $filterChain = $filters;
-            $filterChain->setPluginManager($this->filterPluginManager);
-        } else {
-            $filterChain = new FilterChain();
-            $filterChain->setPluginManager($this->filterPluginManager);
-            $this->populateFilters($filterChain, $filters);
+        $filters    = $spec['filters'] ?? [];
+        $validators = $spec['validators'] ?? [];
+
+        if (! is_array($filters) && ! is_callable($filters) && ! $filters instanceof FilterInterface) {
+            throw new InvalidArgumentException("filters must be an array, callable, or FilterInterface. Received: "
+                . get_debug_type($filters));
         }
 
-        $validators = $spec['validators'] ?? [];
-        if ($validators instanceof ValidatorChain) {
-            $validatorChain = $validators;
-            $validatorChain->setPluginManager($this->validatorPluginManager);
-        } else {
-            $validatorChain = new ValidatorChain();
-            $validatorChain->setPluginManager($this->validatorPluginManager);
-            $this->populateValidators($validatorChain, $validators);
+        if (is_array($filters)) {
+            FilterChain::validateSpecification(['filters' => $filters]);
+        }
+
+        if (is_array($validators)) {
+            ValidatorChain::validateSpecification($validators);
         }
 
         return [
-            'filterChain'    => $filterChain,
-            'validatorChain' => $validatorChain,
+            'filterChain'    => $filters instanceof FilterChainInterface
+                ? $filters
+                : $this->filterPluginManager->build(FilterChain::class, ['filters' => $filters]),
+            'validatorChain' => $validators instanceof ValidatorChainInterface
+                ? $validators
+                : $this->validatorPluginManager->build(ValidatorChain::class, $validators),
         ];
     }
 
@@ -128,7 +129,7 @@ final class Factory
      * Factory for input objects
      *
      * @param InputSpecification|InputProviderInterface $inputSpecification
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws RuntimeException
      */
     public function createInput(array|InputProviderInterface $inputSpecification): InputInterface
@@ -276,7 +277,7 @@ final class Factory
      * @param InputFilterSpecification|CollectionSpecification|Traversable|InputFilterProviderInterface $inputFilterSpecification
      * @return InputFilterInterface
      * @throws RuntimeException
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function createInputFilter($inputFilterSpecification)
     {
@@ -290,7 +291,7 @@ final class Factory
 
         /** @psalm-suppress DocblockTypeContradiction */
         if (! is_array($inputFilterSpecification)) {
-            throw new Exception\InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable; received "%s"',
                 __METHOD__,
                 get_debug_type($inputFilterSpecification),
@@ -336,6 +337,8 @@ final class Factory
                 continue;
             }
 
+            assert(is_array($value));
+
             // Patch to enable nested, integer indexed input_filter_specs.
             // Check type and name are in spec, and that composed type is
             // an input filter...
@@ -358,64 +361,6 @@ final class Factory
         }
 
         return $inputFilter;
-    }
-
-    /**
-     * @param iterable<array-key, FilterInterface|(callable(mixed): mixed)|FilterSpecification> $filters
-     * @throws RuntimeException
-     * @todo Can be replaced with
-     *       `$this->filterPluginManager->build(FilterChain::class, $filters)`
-     *       once SMv4 is installed
-     */
-    private function populateFilters(FilterChain $chain, iterable $filters): void
-    {
-        foreach ($filters as $filter) {
-            if (is_callable($filter)) {
-                $chain->attach($filter);
-                continue;
-            }
-
-            if (! isset($filter['name'])) {
-                throw new RuntimeException(
-                    'Invalid filter specification provided; does not include "name" key',
-                );
-            }
-            $name     = $filter['name'];
-            $priority = $filter['priority'] ?? FilterChain::DEFAULT_PRIORITY;
-            $options  = $filter['options'] ?? [];
-
-            $chain->attachByName($name, $options, $priority);
-        }
-    }
-
-    /**
-     * @param iterable<array-key, ValidatorInterface|ValidatorSpecification> $validators
-     * @throws RuntimeException
-     * @todo Can be replaced with
-     *        `$this->validatorPluginManager->build(ValidatorChain::class, $validators)`
-     *        once SMv4 is installed
-     */
-    private function populateValidators(ValidatorChain $chain, iterable $validators): void
-    {
-        foreach ($validators as $validator) {
-            if ($validator instanceof ValidatorInterface) {
-                $chain->attach($validator);
-                continue;
-            }
-
-            if (! isset($validator['name'])) {
-                throw new RuntimeException(
-                    'Invalid validator specification provided; does not include "name" key',
-                );
-            }
-
-            $chain->attachByName(
-                $validator['name'],
-                $validator['options'] ?? [],
-                $validator['break_chain_on_failure'] ?? false,
-                $validator['priority'] ?? ValidatorChain::DEFAULT_PRIORITY,
-            );
-        }
     }
 
     public function getValidatorPluginManager(): ValidatorPluginManager

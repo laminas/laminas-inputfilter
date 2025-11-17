@@ -11,17 +11,16 @@ use Laminas\InputFilter\ArrayInput;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputInterface;
+use Laminas\Translator\TranslatorInterface;
 use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\IsArray;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\NumberComparison;
-use Laminas\Validator\Translator\TranslatorInterface;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -963,10 +962,6 @@ final class ArrayInputTest extends TestCase
 
     public function testNotEmptyMessageIsTranslated(): void
     {
-        /**
-         * @psalm-suppress DeprecatedInterface
-         * @var TranslatorInterface&MockObject $translator
-         */
         $translator = $this->createMock(TranslatorInterface::class);
         AbstractValidator::setDefaultTranslator($translator);
 

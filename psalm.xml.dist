@@ -23,11 +23,18 @@
     </plugins>
 
     <issueHandlers>
+        <!-- Code in `test/StaticAnalysis` will always appear unused -->
         <UnusedClass>
             <errorLevel type="suppress">
                 <directory name="test/StaticAnalysis" />
             </errorLevel>
         </UnusedClass>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="test/StaticAnalysis" />
+            </errorLevel>
+        </PossiblyUnusedMethod>
+
         <MissingOverrideAttribute>
             <errorLevel type="suppress">
                 <directory name="src" />

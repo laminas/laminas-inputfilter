@@ -12,17 +12,8 @@ use Laminas\Validator\ValidatorInterface; // phpcs:ignore
 
 /**
  * @template TFilteredValues
- * @psalm-type FilterSpecification = array{
- *     name: string|class-string<FilterInterface>,
- *     priority?: int,
- *     options?: array<string, mixed>,
- * }
- * @psalm-type ValidatorSpecification = array{
- *     name: string|class-string<ValidatorInterface>,
- *     priority?: int,
- *     break_chain_on_failure?: bool,
- *     options?: array<string, mixed>,
- * }
+ * @psalm-import-type FilterSpecification from FilterChain
+ * @psalm-import-type ValidatorSpecification from ValidatorChain
  * @psalm-type InputSpecification = array{
  *     type?: string|class-string<InputFilterInterface>,
  *     name?: array-key,

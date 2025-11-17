@@ -97,8 +97,7 @@ final class TestHelper
 
     public static function createValidatorChain(mixed $value = null, bool $isValid = true): ValidatorChain
     {
-        $validatorChain = new ValidatorChain();
-        $validatorChain->setPluginManager(self::createValidatorPluginManager());
+        $validatorChain = new ValidatorChain(self::createValidatorPluginManager());
         if ($value !== null) {
             $validatorChain->attach(self::createValidatorMock($isValid, $value));
         }
@@ -108,17 +107,12 @@ final class TestHelper
 
     public static function createFilterChain(): FilterChain
     {
-        $filterChain = new FilterChain();
-        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
-        $filterChain->setPluginManager(self::createFilterPluginManager());
-        return $filterChain;
+        return new FilterChain(self::createFilterPluginManager());
     }
 
     public static function createFilterChainFixture(mixed $originalValue, mixed $filteredValue): FilterChain
     {
-        $filterChain = new FilterChain();
-        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
-        $filterChain->setPluginManager(self::createFilterPluginManager());
+        $filterChain = new FilterChain(self::createFilterPluginManager());
 
         $filterChain->attach(
             fn(mixed $value): mixed => $value === $originalValue ? $filteredValue : $value,
@@ -130,9 +124,7 @@ final class TestHelper
     /** @param array<int, array<mixed, mixed>> $valueMap */
     public static function createFilterChainFixtureFromMap(array $valueMap): FilterChain
     {
-        $filterChain = new FilterChain();
-        /** @psalm-suppress DeprecatedMethod removal will be done in Service Manager 4 upgrade */
-        $filterChain->setPluginManager(self::createFilterPluginManager());
+        $filterChain = new FilterChain(self::createFilterPluginManager());
 
         foreach ($valueMap as $values) {
             $filterChain->attach(
