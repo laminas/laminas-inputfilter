@@ -189,14 +189,6 @@
       <code><![CDATA[$this]]></code>
     </PossiblyUnusedReturnValue>
   </file>
-  <file src="src/Module.php">
-    <UndefinedDocblockClass>
-      <code><![CDATA[ModuleManager]]></code>
-    </UndefinedDocblockClass>
-    <UnusedParam>
-      <code><![CDATA[$moduleManager]]></code>
-    </UnusedParam>
-  </file>
   <file src="src/OptionalInputFilter.php">
     <ClassMustBeFinal>
       <code><![CDATA[OptionalInputFilter]]></code>
@@ -293,20 +285,5 @@
      *     2: class-string<InputInterface>
      * }>]]></code>
     </MoreSpecificReturnType>
-  </file>
-  <file src="test/TestAsset/ModuleEventInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getParam]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="test/TestAsset/ModuleManagerInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getEvent]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="test/TestAsset/ServiceListenerInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addServiceManager]]></code>
-    </PossiblyUnusedMethod>
   </file>
 </files>
