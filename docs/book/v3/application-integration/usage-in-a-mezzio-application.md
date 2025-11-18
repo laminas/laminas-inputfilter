@@ -1,16 +1,13 @@
 # Usage in a Mezzio Application
 
-The following example shows _one_ potential use case of laminas-inputfilter within
-a Mezzio-based application. The example uses a module, config provider
-configuration, laminas-servicemanager as a dependency injection container, the
-laminas-inputfilter plugin manager and a request handler.
+The following example shows _one_ potential use case of laminas-inputfilter within a Mezzio-based application.
+The example uses a module, config provider configuration, laminas-servicemanager as a dependency injection container, the laminas-inputfilter plugin manager and a request handler.
 
 Before starting, make sure the lamina-inputfilter is [installed and configured](../installation.md).
 
 ## Create Input Filter
 
-Create an input filter as separate class, e.g.
-`src/Album/InputFilter/QueryInputFilter.php`:
+Create an input filter as separate class, e.g. `src/Album/InputFilter/QueryInputFilter.php`:
 
 ```php
 namespace Album\InputFilter;
@@ -51,8 +48,7 @@ final class QueryInputFilter extends InputFilter
 
 ### Create Handler
 
-Using the input filter in a request handler, e.g.
-`src/Album/Handler/ListHandler.php`:
+Using the input filter in a request handler, e.g. `src/Album/Handler/ListHandler.php`:
 
 ```php
 namespace Album\Handler;
@@ -115,7 +111,7 @@ final class ConfigProvider
             'dependencies' => $this->getDependencies(),
         ];
     }
-    
+
     public function getDependencies() : array
     {
         return [
@@ -125,7 +121,7 @@ final class ConfigProvider
             ],
         ];
     }
-    
+
     // …
 }
 </code></pre>
