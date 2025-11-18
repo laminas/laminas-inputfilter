@@ -3,7 +3,7 @@
 The following example shows _one_ potential use case of laminas-inputfilter within a Mezzio-based application.
 The example uses a module, config provider configuration, laminas-servicemanager as a dependency injection container, the laminas-inputfilter plugin manager and a request handler.
 
-Before starting, make sure the lamina-inputfilter is [installed and configured](../installation.md).
+Before starting, make sure the laminas-inputfilter is [installed and configured](../installation.md).
 
 ## Create Input Filter
 
@@ -46,7 +46,7 @@ final class QueryInputFilter extends InputFilter
 
 ## Using Input Filter
 
-### Create Handler
+### Create Request Handler
 
 Using the input filter in a request handler, e.g. `src/Album/Handler/ListHandler.php`:
 
@@ -88,7 +88,7 @@ final readonly class ListHandler implements RequestHandlerInterface
 
 > INFO: **Instantiating the Input Filter**
 >
-> The input filter plugin manager (`Laminas\InputFilter\InputFilterPluginManager`) is used instead of directly instantiating the input filter to ensure to get the filter and validator plugin managers injected.
+> The input filter plugin manager (`Laminas\InputFilter\InputFilterPluginManager`) is used instead of directly instantiating the input filter to ensure that the filter and validator plugin managers are injected correctly.
 > This allows usage of any filters and validators registered with their respective plugin managers.
 >
 > Additionally, the input filter plugin manager calls the `init` method _after_ instantiating the input filter, ensuring all dependencies are fully injected first.
