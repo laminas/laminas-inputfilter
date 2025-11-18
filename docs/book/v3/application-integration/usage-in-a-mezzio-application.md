@@ -1,16 +1,13 @@
-# Usage in a mezzio Application
+# Usage in a Mezzio Application
 
-The following example shows _one_ potential use case of laminas-inputfilter within
-a mezzio based application. The example uses a module, config provider
-configuration, laminas-servicemanager as dependency injection container, the
-laminas-inputfilter plugin manager and a request handler.
+The following example shows _one_ potential use case of laminas-inputfilter within a Mezzio-based application.
+The example uses a module, config provider configuration, laminas-servicemanager as a dependency injection container, the laminas-inputfilter plugin manager and a request handler.
 
-Before starting, make sure laminas-inputfilter is [installed and configured](../installation.md).
+Before starting, make sure the laminas-inputfilter is [installed and configured](../installation.md).
 
 ## Create Input Filter
 
-Create an input filter as separate class, e.g.
-`src/Album/InputFilter/QueryInputFilter.php`:
+Create an input filter as separate class, e.g. `src/Album/InputFilter/QueryInputFilter.php`:
 
 ```php
 namespace Album\InputFilter;
@@ -19,9 +16,9 @@ use Laminas\Filter\ToInt;
 use Laminas\I18n\Validator\IsInt;
 use Laminas\InputFilter\InputFilter;
 
-class QueryInputFilter extends InputFilter
+final class QueryInputFilter extends InputFilter
 {
-    public function init()
+    public function init(): void
     {
         // Page
         $this->add(
@@ -30,8 +27,8 @@ class QueryInputFilter extends InputFilter
                 'allow_empty'       => true,
                 'validators'        => [
                     [
-                        'name' => IsInt::class,                        
-                    ],                    
+                        'name' => IsInt::class,
+                    ],
                 ],
                 'filters'           => [
                     [
@@ -49,10 +46,9 @@ class QueryInputFilter extends InputFilter
 
 ## Using Input Filter
 
-### Create Handler
+### Create Request Handler
 
-Using the input filter in a request handler, e.g.
-`src/Album/Handler/ListHandler.php`:
+Using the input filter in a request handler, e.g. `src/Album/Handler/ListHandler.php`:
 
 ```php
 namespace Album\Handler;
@@ -64,27 +60,21 @@ use Psr\Http\Message\ResponseInterface;
 use Laminas\InputFilter\InputFilterInterface;
 use Mezzio\Template\TemplateRendererInterface;
 
-class ListHandler implements RequestHandlerInterface
+final readonly class ListHandler implements RequestHandlerInterface
 {
-    /** @var InputFilterInterface */
-    private $inputFilter;
-
-    /** @var TemplateRendererInterface */
-    private $renderer;
-    
     public function __construct(
-        InputFilterInterface $inputFilter,
-        TemplateRendererInterface $renderer
-    ) {
-        $this->inputFilter = $inputFilter;
-        $this->renderer    = $renderer;
-    }
+        private InputFilterPluginManager $inputFilterPluginManager
+        private TemplateRendererInterface $renderer
+    ) {}
     
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $this->inputFilter->setData($request->getQueryParams());
-        $this->inputFilter->isValid();
-        $filteredParams = $this->inputFilter->getValues();
+        $inputFilter = $this->inputFilterPluginManager->get(QueryInputFilter::class);
+        assert($inputFilter instanceof QueryInputFilter);
+    
+        $inputFilter->setData($request->getQueryParams());
+        $inputFilter->isValid();
+        $filteredParams = $inputFilter->getValues();
         
         // …
 
@@ -96,83 +86,45 @@ class ListHandler implements RequestHandlerInterface
 }
 ```
 
-### Create Factory for Handler
-
-Fetch the `QueryInputFilter` from the input filter plugin manager in a factory,
-e.g. `src/Album/Handler/ListHandlerFactory.php`:
-
-```php
-namespace Album\Handler;
-
-use Album\InputFilter\QueryInputFilter;
-use Psr\Container\ContainerInterface;
-use Laminas\InputFilter\InputFilterPluginManager;
-
-class ListHandlerFactory
-{
-    public function __invoke(ContainerInterface $container)
-    {
-        /** @var InputFilterPluginManager $pluginManager */
-        $pluginManager = $container->get(InputFilterPluginManager::class);
-        $inputFilter   = $pluginManager->get(QueryInputFilter::class);
-
-        return new ListHandler(
-            $inputFilter,
-            $container->get(TemplateRendererInterface::class)
-        );
-    }
-}
-```
-
-> ### Instantiating the InputFilter
+> INFO: **Instantiating the Input Filter**
 >
-> The `InputFilterPluginManager` is used instead of directly instantiating the
-> input filter to ensure to get the filter and validator plugin managers
-> injected. This allows usage of any filters and validators registered with
-> their respective plugin managers.
+> The input filter plugin manager (`Laminas\InputFilter\InputFilterPluginManager`) is used instead of directly instantiating the input filter to ensure that the filter and validator plugin managers are injected correctly.
+> This allows usage of any filters and validators registered with their respective plugin managers.
 >
-> Additionally the `InputFilterPluginManager` calls the `init` method _after_
-> instantiating the input filter, ensuring all dependencies are fully injected
-> first.
+> Additionally, the input filter plugin manager calls the `init` method _after_ instantiating the input filter, ensuring all dependencies are fully injected first.
 
-## Register Input Filter and Handler
+## Register Request Handler
 
-Extend the configuration provider of the module to register the input filter and
-the request handler, e.g. `src/Album/ConfigProvider.php`:
+Extend the configuration provider of the module to register the request handler, e.g. `src/Album/ConfigProvider.php`:
 
-```php
+<!-- markdownlint-disable MD033 -->
+<pre class="language-php" data-line="3,18"><code>
 namespace Album;
 
-class ConfigProvider
+use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
+
+final class ConfigProvider
 {
     public function __invoke() : array
     {
         return [
-            'dependencies'  => $this->getDependencies(),
-            'input_filters' => $this->getInputFilters(), // <-- Add this line
+            'dependencies' => $this->getDependencies(),
         ];
     }
-    
+
     public function getDependencies() : array
     {
         return [
             'factories' => [
-                Handler\ListHandler::class => Handler\ListHandlerFactory::class, // <-- Add this line
+                Handler\ListHandler::class => ReflectionBasedAbstractFactory::class,
                 // …
             ],
         ];
     }
 
-    // Add the following method
-    public function getInputFilters() : array
-    {
-        return [
-            'factories' => [
-                InputFilter\QueryInputFilter::class => InvokableFactory::class,
-            ],
-        ];
-    }
-    
     // …
 }
-```
+</code></pre>
+<!-- markdownlint-enable MD033 -->
+
+The example uses the [reflection factory from laminas-servicemanager](https://docs.laminas.dev/laminas-servicemanager/reflection-abstract-factory/) to resolve the constructor dependencies for the request handler class.
