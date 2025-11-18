@@ -163,17 +163,6 @@
       <code><![CDATA[$config]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/InputFilterAwareInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getInputFilter]]></code>
-      <code><![CDATA[setInputFilter]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/InputFilterAwareTrait.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[InputFilterInterface]]></code>
-    </InvalidNullableReturnType>
-  </file>
   <file src="src/InputFilterInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[InputFilterInterface]]></code>
