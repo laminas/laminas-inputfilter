@@ -26,7 +26,6 @@
     },
     "extra": {
         "laminas": {
-            "component": "Laminas\\InputFilter",
             "config-provider": "Laminas\\InputFilter\\ConfigProvider"
         }
     },
