@@ -45,3 +45,29 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
+
+  rector:
+    name: Rector on Default PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5.0.0
+      - uses: shivammathur/setup-php@2.35.5
+        with:
+          php-version: ${{ env.default_php }}
+          tools: composer
+      - uses: ramsey/composer-install@v3
+      - run: make install-tools
+      - run: make rector-ci
+
+  composer-unused:
+    name: Check for Unused Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5.0.0
+      - uses: shivammathur/setup-php@2.35.5
+        with:
+          php-version: ${{ env.default_php }}
+          tools: composer
+      - uses: ramsey/composer-install@v3
+      - run: make install-tools
+      - run: make unused-ci
