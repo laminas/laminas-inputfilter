@@ -92,8 +92,6 @@ if ($inputFilter->isValid()) {           // FileInput validators are run, but no
 
 ## PSR-7 Support
 
-> Available since version 2.9.0
-
 You may also pass an array of uploaded files from a [PSR-7 ServerRequestInterface](http://www.php-fig.org/psr/psr-7/#serverrequestinterface).
 
 ```php

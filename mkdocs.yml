@@ -19,14 +19,12 @@ nav:
     - v3:
       - Introduction: v3/intro.md
       - Installation: v3/installation.md
-      - Reference:
-        - Specifications: v3/specs.md
-        - "File Upload Input": v3/file-input.md
-        - "Optional Input Filters": v3/optional-input-filters.md
-        - "Unfiltered Data": v3/unfiltered-data.md
+      - Specifications: v3/specs.md
+      - "File Upload Input": v3/file-input.md
+      - "Optional Input Filters": v3/optional-input-filters.md
+      - "Unfiltered Data": v3/unfiltered-data.md
       - "Application Integration":
-          - "Usage in a laminas-mvc application": v3/application-integration/usage-in-a-laminas-mvc-application.md
-          - "Usage in a mezzio application": v3/application-integration/usage-in-a-mezzio-application.md
+          - "Usage in a Mezzio application": v3/application-integration/usage-in-a-mezzio-application.md
       - Cookbook:
           - "Using Input Filters in Forms of laminas-form": v3/cookbook/input-filter-in-forms.md
           - "Using Static Analysis tools with laminas-inputfilter": v3/cookbook/enhanced-type-inference.md
@@ -39,7 +37,6 @@ extra:
     project: Components
     installation:
       config_provider_class: 'Laminas\InputFilter\ConfigProvider'
-      module_class: 'Laminas\InputFilter\Module'
     current_version: v3
     versions:
       - v2

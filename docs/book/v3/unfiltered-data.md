@@ -1,7 +1,5 @@
 # Unfiltered Data
 
-> Available since version 2.10.0
-
 On input filters, there are several methods for retrieving the data:
 
 - `getValues()` will return all known values after filtering them.
