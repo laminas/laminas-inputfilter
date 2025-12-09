@@ -41,9 +41,6 @@
       <code><![CDATA[isValid]]></code>
       <code><![CDATA[isValid]]></code>
     </TooManyArguments>
-    <UnusedPsalmSuppress>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-    </UnusedPsalmSuppress>
   </file>
   <file src="src/CollectionInputFilter.php">
     <ImplementedParamTypeMismatch>
@@ -165,7 +162,7 @@
   </file>
   <file src="src/InputFilterInterface.php">
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[InputFilterInterface]]></code>
+      <code><![CDATA[static]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/InputFilterPluginManager.php">

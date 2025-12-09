@@ -53,7 +53,7 @@ interface InputInterface
      * @param mixed $value
      * @return $this
      */
-    public function setValue($value);
+    public function setValue($value): static;
 
     /**
      * @return $this

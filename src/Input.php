@@ -61,7 +61,7 @@ class Input implements
      * @param  bool $allowEmpty
      * @return $this
      */
-    public function setAllowEmpty($allowEmpty)
+    public function setAllowEmpty($allowEmpty): static
     {
         $this->allowEmpty = (bool) $allowEmpty;
         return $this;
@@ -71,7 +71,7 @@ class Input implements
      * @param  bool $breakOnFailure
      * @return $this
      */
-    public function setBreakOnFailure($breakOnFailure)
+    public function setBreakOnFailure($breakOnFailure): static
     {
         $this->breakOnFailure = (bool) $breakOnFailure;
         return $this;
@@ -81,7 +81,7 @@ class Input implements
      * @param bool $continueIfEmpty
      * @return $this
      */
-    public function setContinueIfEmpty($continueIfEmpty)
+    public function setContinueIfEmpty($continueIfEmpty): static
     {
         $this->continueIfEmpty = (bool) $continueIfEmpty;
         return $this;
@@ -91,7 +91,7 @@ class Input implements
      * @param  string|null $errorMessage
      * @return $this
      */
-    public function setErrorMessage($errorMessage)
+    public function setErrorMessage($errorMessage): static
     {
         $this->errorMessage = null === $errorMessage ? null : (string) $errorMessage;
         return $this;
@@ -100,14 +100,14 @@ class Input implements
     /**
      * @return $this
      */
-    public function setFilterChain(FilterChain $filterChain)
+    public function setFilterChain(FilterChain $filterChain): static
     {
         $this->filterChain = $filterChain;
         return $this;
     }
 
     /** @inheritDoc */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = (string) $name;
         return $this;
@@ -117,7 +117,7 @@ class Input implements
      * @param  bool $required
      * @return $this
      */
-    public function setRequired($required)
+    public function setRequired($required): static
     {
         /** @psalm-suppress RedundantCastGivenDocblockType */
         $this->required = (bool) $required;
@@ -127,7 +127,7 @@ class Input implements
     /**
      * @return $this
      */
-    public function setValidatorChain(ValidatorChain $validatorChain)
+    public function setValidatorChain(ValidatorChain $validatorChain): static
     {
         $this->validatorChain = $validatorChain;
         return $this;
@@ -145,7 +145,7 @@ class Input implements
      * @param  mixed $value
      * @return $this
      */
-    public function setValue($value)
+    public function setValue($value): static
     {
         $this->value    = $value;
         $this->hasValue = true;
@@ -160,7 +160,7 @@ class Input implements
      *
      * @return $this
      */
-    public function resetValue()
+    public function resetValue(): static
     {
         $this->value    = null;
         $this->hasValue = false;
@@ -171,7 +171,7 @@ class Input implements
      * @param  mixed $value
      * @return $this
      */
-    public function setFallbackValue($value)
+    public function setFallbackValue($value): static
     {
         $this->fallbackValue = $value;
         $this->hasFallback   = true;
@@ -299,7 +299,7 @@ class Input implements
     /**
      * @return $this
      */
-    public function merge(InputInterface $input)
+    public function merge(InputInterface $input): static
     {
         $this->setBreakOnFailure($input->breakOnFailure());
         if ($input instanceof Input) {

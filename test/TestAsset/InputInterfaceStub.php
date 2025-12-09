@@ -30,19 +30,19 @@ final readonly class InputInterfaceStub implements InputInterface
     }
 
     /** @inheritDoc */
-    public function setAllowEmpty($allowEmpty)
+    public function setAllowEmpty($allowEmpty): static
     {
         return $this;
     }
 
     /** @inheritDoc */
-    public function setBreakOnFailure($breakOnFailure)
+    public function setBreakOnFailure($breakOnFailure): static
     {
         return $this;
     }
 
     /** @inheritDoc */
-    public function setErrorMessage($errorMessage)
+    public function setErrorMessage($errorMessage): static
     {
         return $this;
     }
@@ -72,7 +72,7 @@ final readonly class InputInterfaceStub implements InputInterface
     }
 
     /** @inheritDoc */
-    public function setValue($value)
+    public function setValue($value): static
     {
         return $this;
     }

@@ -26,7 +26,7 @@ class OptionalInputFilter extends InputFilter
      * @return $this
      * @throws Exception\InvalidArgumentException
      */
-    public function setData($data)
+    public function setData($data): static
     {
         parent::setData($this->isEmpty($data) ? [] : $data);
 

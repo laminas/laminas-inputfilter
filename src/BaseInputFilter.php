@@ -148,9 +148,8 @@ class BaseInputFilter implements
      * @param  InputInterface|InputFilterInterface|InputSpecification|InputFilterSpecification $input
      * @param  array-key                           $name Name of the input to replace
      * @throws Exception\InvalidArgumentException If input to replace not exists.
-     * @return self
      */
-    public function replace($input, $name)
+    public function replace($input, $name): static
     {
         /** @psalm-suppress DocblockTypeContradiction  */
         if (! is_string($name) && ! is_int($name)) {
@@ -224,10 +223,9 @@ class BaseInputFilter implements
     /**
      * Remove a named input
      *
-     * @param  array-key $name
-     * @return InputFilterInterface
+     * @param array-key $name
      */
-    public function remove($name)
+    public function remove($name): static
     {
         /** @psalm-suppress DocblockTypeContradiction  */
         if (! is_string($name) && ! is_int($name)) {
@@ -246,9 +244,8 @@ class BaseInputFilter implements
      *
      * @param  iterable|null $data null is cast to an empty array.
      * @throws Exception\InvalidArgumentException
-     * @return InputFilterInterface
      */
-    public function setData($data)
+    public function setData($data): static
     {
         // A null value indicates an empty set
         if (null === $data) {
@@ -259,7 +256,7 @@ class BaseInputFilter implements
             $data = ArrayUtils::iteratorToArray($data);
         }
 
-        /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
+        /** @psalm-suppress DocblockTypeContradiction */
         if (! is_array($data)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable argument; received %s',
@@ -369,9 +366,8 @@ class BaseInputFilter implements
      *
      * @param  array-key|array<array-key, array-key> $name
      * @throws Exception\InvalidArgumentException
-     * @return InputFilterInterface
      */
-    public function setValidationGroup($name)
+    public function setValidationGroup($name): static
     {
         if ($name === self::VALIDATE_ALL) {
             $this->validationGroup = null;
@@ -675,7 +671,7 @@ class BaseInputFilter implements
      *
      * @return $this
      */
-    public function merge(BaseInputFilter $inputFilter)
+    public function merge(BaseInputFilter $inputFilter): static
     {
         foreach ($inputFilter->getInputs() as $name => $input) {
             $this->add($input, $name);
@@ -696,7 +692,7 @@ class BaseInputFilter implements
      * @param array<array-key, mixed> $data
      * @return $this
      */
-    public function setUnfilteredData($data)
+    public function setUnfilteredData($data): static
     {
         $this->unfilteredData = $data;
         return $this;

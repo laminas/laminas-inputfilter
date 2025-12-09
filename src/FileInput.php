@@ -37,7 +37,7 @@ final class FileInput extends Input
      * @inheritDoc
      * @param array|UploadedFileInterface $value
      */
-    public function setValue($value)
+    public function setValue($value): static
     {
         $this->handler = $this->createHandler($value);
         parent::setValue($value);
@@ -45,7 +45,7 @@ final class FileInput extends Input
     }
 
     /** @return $this */
-    public function resetValue()
+    public function resetValue(): static
     {
         $this->handler = null;
         return parent::resetValue();
@@ -55,7 +55,7 @@ final class FileInput extends Input
      * @param  bool $value Enable/Disable automatically prepending an Upload validator
      * @return $this
      */
-    public function setAutoPrependUploadValidator($value)
+    public function setAutoPrependUploadValidator($value): self
     {
         $this->autoPrependUploadValidator = $value;
         return $this;
@@ -144,7 +144,7 @@ final class FileInput extends Input
     /**
      * @return $this
      */
-    public function merge(InputInterface $input)
+    public function merge(InputInterface $input): static
     {
         parent::merge($input);
         if ($input instanceof FileInput) {
@@ -156,10 +156,8 @@ final class FileInput extends Input
     /**
      * No-op, NotEmpty validator does not apply for FileInputs.
      * See also: BaseInputFilter::isValid()
-     *
-     * @return void
      */
-    protected function injectNotEmptyValidator()
+    protected function injectNotEmptyValidator(): void
     {
         $this->notEmptyValidator = true;
     }

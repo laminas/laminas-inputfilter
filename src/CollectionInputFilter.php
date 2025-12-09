@@ -44,9 +44,8 @@ class CollectionInputFilter extends InputFilter
      *
      * @param BaseInputFilter|InputFilterSpecification|Traversable $inputFilter
      * @throws Exception\RuntimeException
-     * @return CollectionInputFilter
      */
-    public function setInputFilter($inputFilter)
+    public function setInputFilter($inputFilter): static
     {
         if (is_iterable($inputFilter)) {
             $inputFilter = $this->factory->createInputFilter($inputFilter);
@@ -116,11 +115,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Set the count of data to validate
-     *
-     * @param int $count
-     * @return CollectionInputFilter
      */
-    public function setCount($count)
+    public function setCount(int $count): static
     {
         $this->count = $count > 0 ? $count : 0;
 
@@ -145,7 +141,7 @@ class CollectionInputFilter extends InputFilter
      * @param iterable|null $data
      * @return $this
      */
-    public function setData($data)
+    public function setData($data): static
     {
         /** @psalm-suppress DocblockTypeContradiction, RedundantConditionGivenDocblockType */
         if (! is_array($data) && ! $data instanceof Traversable) {
@@ -231,7 +227,7 @@ class CollectionInputFilter extends InputFilter
      * @param string|array<array-key, list<string>> $name
      * @return $this
      */
-    public function setValidationGroup($name)
+    public function setValidationGroup($name): static
     {
         if ($name === self::VALIDATE_ALL) {
             $name = null;

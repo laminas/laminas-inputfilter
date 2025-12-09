@@ -25,7 +25,7 @@ class ArrayInput extends Input
      *
      * @inheritDoc
      */
-    public function resetValue()
+    public function resetValue(): static
     {
         $this->value    = [];
         $this->hasValue = false;

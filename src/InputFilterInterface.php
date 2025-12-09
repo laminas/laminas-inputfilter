@@ -103,9 +103,8 @@ interface InputFilterInterface extends Countable
      * each specifying a single input.
      *
      * @param  array-key|list<array-key> $name
-     * @return InputFilterInterface
      */
-    public function setValidationGroup($name);
+    public function setValidationGroup($name): static;
 
     /**
      * Return a list of inputs that were invalid.
