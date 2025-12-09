@@ -169,18 +169,13 @@ final class InputTest extends TestCase
         self::assertFalse($input->hasFallback(), 'hasFallback() value not match');
     }
 
-    /**
-     * @param string|string[] $fallbackValue
-     * @param string|string[] $originalValue
-     * @param string|string[] $expectedValue
-     */
     #[DataProvider('fallbackValueVsIsValidProvider')]
     public function testFallbackValueVsIsValidRules(
         bool $required,
-        $fallbackValue,
-        $originalValue,
+        string $fallbackValue,
+        string $originalValue,
         bool $isValid,
-        $expectedValue
+        string $expectedValue
     ): void {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -200,11 +195,8 @@ final class InputTest extends TestCase
         self::assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
 
-    /**
-     * @param string|string[] $fallbackValue
-     */
     #[DataProvider('fallbackValueVsIsValidProvider')]
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, $fallbackValue): void
+    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, string $fallbackValue): void
     {
         $expectedValue = $fallbackValue; // Should always return the fallback value
 

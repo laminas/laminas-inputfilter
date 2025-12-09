@@ -99,10 +99,10 @@ final class ArrayInputTest extends TestCase
     /**
      * @psalm-return array<string, array{
      *     0: bool,
-     *     1: string[],
-     *     2: string[],
+     *     1: list<string>,
+     *     2: list<string>,
      *     3: bool,
-     *     4: string[]
+     *     4: list<string>
      * }>
      */
     public static function fallbackValueVsIsValidProvider(): array
@@ -393,17 +393,17 @@ final class ArrayInputTest extends TestCase
     }
 
     /**
-     * @param string|string[] $fallbackValue
-     * @param string|string[] $originalValue
-     * @param string|string[] $expectedValue
+     * @param list<string> $fallbackValue
+     * @param list<string> $originalValue
+     * @param list<string> $expectedValue
      */
     #[DataProvider('fallbackValueVsIsValidProvider')]
     public function testFallbackValueVsIsValidRules(
         bool $required,
-        $fallbackValue,
-        $originalValue,
+        array $fallbackValue,
+        array $originalValue,
         bool $isValid,
-        $expectedValue
+        array $expectedValue
     ): void {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -424,10 +424,10 @@ final class ArrayInputTest extends TestCase
     }
 
     /**
-     * @param string|string[] $fallbackValue
+     * @param list<string> $fallbackValue
      */
     #[DataProvider('fallbackValueVsIsValidProvider')]
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, string|array $fallbackValue): void
+    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, array $fallbackValue): void
     {
         $expectedValue = $fallbackValue; // Should always return the fallback value
 

@@ -591,8 +591,11 @@ final class BaseInputFilterTest extends TestCase
      * @param string|array<string, string> $expectedContext
      */
     #[DataProvider('contextProvider')]
-    public function testValidationContext($data, ?string $customContext, $expectedContext): void
-    {
+    public function testValidationContext(
+        iterable $data,
+        ?string $customContext,
+        string|array $expectedContext,
+    ): void {
         $filter = $this->inputFilter;
 
         $input = self::createInputInterfaceMock('fooInput', true, true, $expectedContext);
