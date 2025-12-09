@@ -585,9 +585,9 @@ class BaseInputFilter implements
      * Return the unknown input
      *
      * @throws Exception\RuntimeException
-     * @return array
+     * @return array<array-key, mixed>
      */
-    public function getUnknown()
+    public function getUnknown(): array
     {
         if (null === $this->data) {
             throw new Exception\RuntimeException(sprintf(
@@ -616,7 +616,7 @@ class BaseInputFilter implements
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getInputs()
+    public function getInputs(): array
     {
         return $this->inputs;
     }

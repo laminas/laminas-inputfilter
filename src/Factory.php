@@ -274,13 +274,13 @@ final readonly class Factory
      * Factory for input filters
      *
      * phpcs:ignore Generic.Files.LineLength.TooLong, SlevomatCodingStandard.Commenting.DocCommentSpacing
-     * @param InputFilterSpecification|CollectionSpecification|Traversable|InputFilterProviderInterface $inputFilterSpecification
-     * @return InputFilterInterface
+     * @param InputFilterSpecification|CollectionSpecification|InputFilterProviderInterface|iterable $inputFilterSpecification
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function createInputFilter($inputFilterSpecification)
-    {
+    public function createInputFilter(
+        iterable|InputFilterProviderInterface $inputFilterSpecification,
+    ): InputFilterInterface {
         if ($inputFilterSpecification instanceof InputFilterProviderInterface) {
             $inputFilterSpecification = $inputFilterSpecification->getInputFilterSpecification();
         }

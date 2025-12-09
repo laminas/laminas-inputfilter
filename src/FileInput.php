@@ -55,7 +55,7 @@ final class FileInput extends Input
      * @param  bool $value Enable/Disable automatically prepending an Upload validator
      * @return $this
      */
-    public function setAutoPrependUploadValidator($value): self
+    public function setAutoPrependUploadValidator(bool $value): self
     {
         $this->autoPrependUploadValidator = $value;
         return $this;

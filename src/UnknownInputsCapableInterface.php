@@ -11,18 +11,17 @@ namespace Laminas\InputFilter;
 interface UnknownInputsCapableInterface
 {
     /**
-     * Is the data set has unknown input ?
+     * Does the data set contain unknown inputs?
      *
      * @throws Exception\RuntimeException
-     * @return bool
      */
-    public function hasUnknown();
+    public function hasUnknown(): bool;
 
     /**
      * Return the unknown input
      *
      * @throws Exception\RuntimeException
-     * @return array
+     * @return array<array-key, mixed>
      */
-    public function getUnknown();
+    public function getUnknown(): array;
 }

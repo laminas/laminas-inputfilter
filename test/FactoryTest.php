@@ -174,16 +174,6 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputFilterWithInvalidDataTypeThrowsInvalidArgumentException(): void
-    {
-        $factory = $this->createDefaultFactory();
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('expects an array or Traversable; received "string"');
-        /** @psalm-suppress InvalidArgument */
-        $factory->createInputFilter('invalid_value');
-    }
-
     public function testFactoryCreatesFilterChainWithComposedPluginManagerWhenCreatingNewInputObjects(): void
     {
         $container = TestHelper::getContainer();
@@ -417,7 +407,6 @@ final class FactoryTest extends TestCase
 
         $factory = $serviceManager->get(Factory::class);
 
-        /** @psalm-suppress InvalidArgument This appears valid but the Psalm diff makes my eyes bleed */
         $inputFilter = $factory->createInputFilter([
             'foo'  => [
                 'name'       => 'foo',
@@ -753,11 +742,6 @@ final class FactoryTest extends TestCase
     {
         $factory = $this->createDefaultFactory();
 
-        /**
-         * null is not acceptable as an input spec for the psalm type
-         *
-         * @psalm-suppress InvalidArgument
-         */
         $inputFilter = $factory->createInputFilter([
             'foo' => [
                 'name' => 'foo',

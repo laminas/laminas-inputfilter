@@ -285,7 +285,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * {@inheritdoc}
      */
-    public function getUnknown()
+    public function getUnknown(): array
     {
         if ($this->data === null) {
             throw new Exception\RuntimeException(sprintf(

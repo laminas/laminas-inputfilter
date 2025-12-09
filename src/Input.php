@@ -129,11 +129,7 @@ class Input implements
         return $this;
     }
 
-    /**
-     * @param  mixed $value
-     * @return $this
-     */
-    public function setFallbackValue($value): static
+    public function setFallbackValue(mixed $value): static
     {
         $this->fallbackValue = $value;
         $this->hasFallback   = true;

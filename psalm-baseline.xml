@@ -216,29 +216,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/FactoryTest.php">
-    <InvalidArgument>
-      <code><![CDATA[[
-            0 => [
-                'type' => InputFilter::class,
-                'name' => 'bar',
-                '0'    => [
-                    'name' => 'bat',
-                ],
-                '1'    => [
-                    'name' => 'baz',
-                ],
-            ],
-            1 => [
-                'type'         => CollectionInputFilter::class,
-                'name'         => 'foo',
-                'input_filter' => [
-                    '0' => [
-                        'name' => 'bat',
-                    ],
-                ],
-            ],
-        ]]]></code>
-    </InvalidArgument>
     <UndefinedInterfaceMethod>
       <code><![CDATA[continueIfEmpty]]></code>
     </UndefinedInterfaceMethod>

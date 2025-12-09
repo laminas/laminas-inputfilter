@@ -643,7 +643,6 @@ final class CollectionInputFilterTest extends TestCase
     {
         $factory = TestHelper::createInputFilterFactory();
 
-        /** @psalm-suppress InvalidArgument */
         $inputFilter = $factory->createInputFilter(
             [
                 'element' => [
