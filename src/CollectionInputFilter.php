@@ -241,7 +241,7 @@ class CollectionInputFilter extends InputFilter
      * @return array<array-key, array>
      * @psalm-return TFilteredValues
      */
-    public function getValues()
+    public function getValues(): array
     {
         return $this->collectionValues;
     }
@@ -249,7 +249,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * @return array<array-key, array>
      */
-    public function getRawValues()
+    public function getRawValues(): array
     {
         return $this->collectionRawValues;
     }
@@ -277,7 +277,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * @return array<array-key, array<string, array<array-key, string>>>
      */
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->collectionMessages;
     }

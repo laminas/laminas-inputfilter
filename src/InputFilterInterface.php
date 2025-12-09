@@ -103,7 +103,7 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getInvalidInput();
+    public function getInvalidInput(): array;
 
     /**
      * Return a list of inputs that were valid.
@@ -113,7 +113,7 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getValidInput();
+    public function getValidInput(): array;
 
     /**
      * Retrieve a value from a named input
@@ -129,7 +129,7 @@ interface InputFilterInterface extends Countable
      * @return array<array-key, mixed>
      * @psalm-return TFilteredValues
      */
-    public function getValues();
+    public function getValues(): array;
 
     /**
      * Retrieve a raw (unfiltered) value from a named input
@@ -144,7 +144,7 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, mixed>
      */
-    public function getRawValues();
+    public function getRawValues(): array;
 
     /**
      * Return a list of validation failure messages
@@ -154,5 +154,5 @@ interface InputFilterInterface extends Countable
      *
      * @return array<array-key, array<array-key, string|array>>
      */
-    public function getMessages();
+    public function getMessages(): array;
 }

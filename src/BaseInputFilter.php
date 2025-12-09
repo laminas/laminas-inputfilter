@@ -375,7 +375,7 @@ class BaseInputFilter implements
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getInvalidInput()
+    public function getInvalidInput(): array
     {
         return is_array($this->invalidInputs) ? $this->invalidInputs : [];
     }
@@ -388,7 +388,7 @@ class BaseInputFilter implements
      *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
-    public function getValidInput()
+    public function getValidInput(): array
     {
         return is_array($this->validInputs) ? $this->validInputs : [];
     }
@@ -424,7 +424,7 @@ class BaseInputFilter implements
      *
      * @return TFilteredValues
      */
-    public function getValues()
+    public function getValues(): array
     {
         $inputs = $this->validationGroup ?? array_keys($this->inputs);
         $values = [];
@@ -470,7 +470,7 @@ class BaseInputFilter implements
      *
      * @return array<array-key, mixed>
      */
-    public function getRawValues()
+    public function getRawValues(): array
     {
         $values = [];
         foreach ($this->inputs as $name => $input) {
@@ -493,7 +493,7 @@ class BaseInputFilter implements
      *
      * @return array<array-key, array<array-key, string|array>>
      */
-    public function getMessages()
+    public function getMessages(): array
     {
         $messages = [];
         foreach ($this->getInvalidInput() as $name => $input) {
@@ -575,9 +575,8 @@ class BaseInputFilter implements
      * Is the data set has unknown input ?
      *
      * @throws Exception\RuntimeException
-     * @return bool
      */
-    public function hasUnknown()
+    public function hasUnknown(): bool
     {
         return $this->getUnknown() ? true : false;
     }
