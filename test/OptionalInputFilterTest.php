@@ -47,7 +47,7 @@ final class OptionalInputFilterTest extends TestCase
         $inputFilter->setData($data);
 
         self::assertTrue($inputFilter->isValid());
-        self::assertEquals($data, $inputFilter->getValues());
+        self::assertEquals(['car' => ['brand' => null, 'model' => null]], $inputFilter->getValues());
     }
 
     public function testValidatesSuccessfullyWhenNoDataProvided(): void
@@ -58,7 +58,7 @@ final class OptionalInputFilterTest extends TestCase
         $inputFilter->setData($data);
 
         self::assertTrue($inputFilter->isValid());
-        self::assertEquals(['car' => null], $inputFilter->getValues());
+        self::assertEquals(['car' => ['brand' => null, 'model' => null]], $inputFilter->getValues());
     }
 
     public function testValidationFailureWhenInvalidDataSetIsProvided(): void
@@ -84,7 +84,7 @@ final class OptionalInputFilterTest extends TestCase
         $inputFilter->setData($data);
 
         self::assertTrue($inputFilter->isValid());
-        self::assertEquals($data, $inputFilter->getValues());
+        self::assertEquals(['car' => ['brand' => null, 'model' => null]], $inputFilter->getValues());
     }
 
     /**

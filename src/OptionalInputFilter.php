@@ -47,21 +47,6 @@ class OptionalInputFilter extends InputFilter
         return true;
     }
 
-    /**
-     * Return a list of filtered values, or null if the data was missing entirely
-     * Null is returned instead of an empty array to prevent it being passed to a hydrator,
-     *     which would likely cause failures later on in your program
-     * Fallbacks for the inputs are not respected by design
-     *
-     * @return TFilteredValues|null
-     */
-    public function getValues()
-    {
-        return ! $this->isEmpty($this->data)
-            ? parent::getValues()
-            : null;
-    }
-
     private function isEmpty(iterable|null $data): bool
     {
         $data = is_iterable($data) ? ArrayUtils::iteratorToArray($data) : $data;
