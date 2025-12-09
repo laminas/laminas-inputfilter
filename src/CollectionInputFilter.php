@@ -176,7 +176,7 @@ class CollectionInputFilter extends InputFilter
     /**
      * @inheritDoc
      */
-    public function isValid($context = null)
+    public function isValid($context = null): bool
     {
         $this->collectionMessages = [];
         $inputFilter              = $this->getInputFilter();

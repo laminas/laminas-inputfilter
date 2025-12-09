@@ -38,7 +38,7 @@ class OptionalInputFilter extends InputFilter
      *
      * {@inheritDoc}
      */
-    public function isValid($context = null)
+    public function isValid($context = null): bool
     {
         if (! $this->isEmpty($this->data)) {
             return parent::isValid($context);

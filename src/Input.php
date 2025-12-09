@@ -379,7 +379,7 @@ class Input implements
      *
      * @return array<string, string>
      */
-    protected function prepareRequiredValidationFailureMessage()
+    protected function prepareRequiredValidationFailureMessage(): array
     {
         $chain = $this->getValidatorChain();
         /**

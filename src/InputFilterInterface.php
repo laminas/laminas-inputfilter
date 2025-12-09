@@ -49,32 +49,23 @@ interface InputFilterInterface extends Countable
      *     raise an exception for any they cannot process.
      * @param  null|array-key $name Name used to retrieve this input
      * @throws Exception\InvalidArgumentException If unable to handle the input type.
-     * @return $this
      */
-    public function add($input, $name = null): static;
+    public function add($input, int|string|null $name = null): static;
 
     /**
      * Retrieve a named input
-     *
-     * @param array-key $name
      */
-    public function get($name): InputInterface|InputFilterInterface;
+    public function get(int|string $name): InputInterface|InputFilterInterface;
 
     /**
      * Test if an input or input filter by the given name is attached
-     *
-     * @param  array-key $name
-     * @return bool
      */
-    public function has($name);
+    public function has(int|string $name): bool;
 
     /**
      * Remove a named input
-     *
-     * @param  array-key $name
-     * @return InputFilterInterface
      */
-    public function remove($name);
+    public function remove(int|string $name): static;
 
     /**
      * Set data to use when validating and filtering
@@ -86,10 +77,8 @@ interface InputFilterInterface extends Countable
 
     /**
      * Is the data set valid?
-     *
-     * @return bool
      */
-    public function isValid();
+    public function isValid(): bool;
 
     /**
      * Provide a list of one or more elements indicating the complete set to validate
@@ -128,11 +117,8 @@ interface InputFilterInterface extends Countable
 
     /**
      * Retrieve a value from a named input
-     *
-     * @param  array-key $name
-     * @return mixed
      */
-    public function getValue($name);
+    public function getValue(int|string $name): mixed;
 
     /**
      * Return a list of filtered values
@@ -147,11 +133,8 @@ interface InputFilterInterface extends Countable
 
     /**
      * Retrieve a raw (unfiltered) value from a named input
-     *
-     * @param  array-key $name
-     * @return mixed
      */
-    public function getRawValue($name);
+    public function getRawValue(int|string $name): mixed;
 
     /**
      * Return a list of unfiltered values

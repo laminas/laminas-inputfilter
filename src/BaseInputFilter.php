@@ -175,20 +175,10 @@ class BaseInputFilter implements
     /**
      * Retrieve a named input
      *
-     * @param  array-key $name
      * @throws Exception\InvalidArgumentException
      */
-    public function get($name): InputInterface|InputFilterInterface
+    public function get(int|string $name): InputInterface|InputFilterInterface
     {
-        /** @psalm-suppress DocblockTypeContradiction  */
-        if (! is_string($name) && ! is_int($name)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s: input name expected to be string or int, %s given',
-                __METHOD__,
-                get_debug_type($name),
-            ));
-        }
-
         if (! array_key_exists($name, $this->inputs)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s: no input found matching "%s"',
@@ -199,40 +189,13 @@ class BaseInputFilter implements
         return $this->inputs[$name];
     }
 
-    /**
-     * Test if an input or input filter by the given name is attached
-     *
-     * @param  array-key $name
-     * @return bool
-     */
-    public function has($name)
+    public function has(int|string $name): bool
     {
-        /** @psalm-suppress DocblockTypeContradiction  */
-        if (! is_string($name) && ! is_int($name)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s: input name expected to be string or int, %s given',
-                __METHOD__,
-                get_debug_type($name),
-            ));
-        }
         return array_key_exists($name, $this->inputs);
     }
 
-    /**
-     * Remove a named input
-     *
-     * @param array-key $name
-     */
-    public function remove($name): static
+    public function remove(int|string $name): static
     {
-        /** @psalm-suppress DocblockTypeContradiction  */
-        if (! is_string($name) && ! is_int($name)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s: input name expected to be string or int, %s given',
-                __METHOD__,
-                get_debug_type($name),
-            ));
-        }
         unset($this->inputs[$name]);
         return $this;
     }
@@ -276,9 +239,8 @@ class BaseInputFilter implements
      *
      * @param  mixed|null $context
      * @throws Exception\RuntimeException
-     * @return bool
      */
-    public function isValid($context = null)
+    public function isValid($context = null): bool
     {
         if (null === $this->data) {
             throw new Exception\RuntimeException(sprintf(
@@ -434,11 +396,9 @@ class BaseInputFilter implements
     /**
      * Retrieve a value from a named input
      *
-     * @param  array-key $name
      * @throws Exception\InvalidArgumentException
-     * @return mixed
      */
-    public function getValue($name)
+    public function getValue(int|string $name): mixed
     {
         if (! array_key_exists($name, $this->inputs)) {
             throw new Exception\InvalidArgumentException(sprintf(
@@ -484,11 +444,9 @@ class BaseInputFilter implements
     /**
      * Retrieve a raw (unfiltered) value from a named input
      *
-     * @param  array-key $name
      * @throws Exception\InvalidArgumentException
-     * @return mixed
      */
-    public function getRawValue($name)
+    public function getRawValue(int|string $name): mixed
     {
         if (! array_key_exists($name, $this->inputs)) {
             throw new Exception\InvalidArgumentException(sprintf(
