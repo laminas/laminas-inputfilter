@@ -11,9 +11,9 @@ use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputInterface;
 
 /** @psalm-suppress PossiblyUnusedMethod */
-final class InputFilterPluginManagerType
+final readonly class InputFilterPluginManagerType
 {
-    public function __construct(private readonly InputFilterPluginManager $manager)
+    public function __construct(private InputFilterPluginManager $manager)
     {
     }
 
