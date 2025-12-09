@@ -7,6 +7,7 @@ namespace Laminas\InputFilter;
 use Laminas\InputFilter\FileInput\FileInputHandlerInterface;
 use Laminas\Validator\File\UploadFile as UploadValidator;
 use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorChainInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function assert;
@@ -37,14 +38,13 @@ final class FileInput extends Input
      * @inheritDoc
      * @param array|UploadedFileInterface $value
      */
-    public function setValue($value): static
+    public function setValue(mixed $value): static
     {
         $this->handler = $this->createHandler($value);
         parent::setValue($value);
         return $this;
     }
 
-    /** @return $this */
     public function resetValue(): static
     {
         $this->handler = null;
@@ -61,18 +61,12 @@ final class FileInput extends Input
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getAutoPrependUploadValidator()
+    public function getAutoPrependUploadValidator(): bool
     {
         return $this->autoPrependUploadValidator;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         if ($this->handler === null) {
             return $this->value;
@@ -141,9 +135,6 @@ final class FileInput extends Input
         return $this->isValid;
     }
 
-    /**
-     * @return $this
-     */
     public function merge(InputInterface $input): static
     {
         parent::merge($input);
@@ -183,8 +174,10 @@ final class FileInput extends Input
         return new FileInput\HttpServerFileInputHandler();
     }
 
-    private function injectUploadValidator(ValidatorChain $chain): ValidatorChain
+    private function injectUploadValidator(ValidatorChainInterface $chain): ValidatorChain
     {
+        assert($chain instanceof ValidatorChain);
+
         if (! $this->autoPrependUploadValidator) {
             return $chain;
         }

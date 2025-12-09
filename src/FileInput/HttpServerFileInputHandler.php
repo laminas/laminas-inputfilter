@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter\FileInput;
 
-use Laminas\Filter\FilterChain;
-use Laminas\Validator\ValidatorChain;
+use Laminas\Filter\FilterChainInterface;
+use Laminas\Validator\ValidatorChainInterface;
 
 use function count;
 use function is_array;
@@ -49,7 +49,7 @@ final class HttpServerFileInputHandler implements FileInputHandlerInterface
         return false;
     }
 
-    public function filterValue(mixed $value, bool $isValid, FilterChain $filterChain): mixed
+    public function filterValue(mixed $value, bool $isValid, FilterChainInterface $filterChain): mixed
     {
         if (! $isValid || ! is_array($value)) {
             return $value;
@@ -76,7 +76,7 @@ final class HttpServerFileInputHandler implements FileInputHandlerInterface
     /**
      * @param array<string, mixed>|null $context Extra "context" to provide the validator
      */
-    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, ?array $context = null): bool
+    public function isValid(mixed $rawValue, ValidatorChainInterface $validatorChain, ?array $context = null): bool
     {
         if (! is_array($rawValue)) {
             // This can happen in an AJAX POST, where the input comes across as a string

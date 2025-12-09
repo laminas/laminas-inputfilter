@@ -9,6 +9,7 @@
     findUnusedCode="true"
     findUnusedBaselineEntry="true"
     findUnusedPsalmSuppress="true"
+    ensureOverrideAttribute="false"
 >
     <projectFiles>
         <directory name="src"/>
@@ -34,13 +35,6 @@
                 <directory name="test/StaticAnalysis" />
             </errorLevel>
         </PossiblyUnusedMethod>
-
-        <MissingOverrideAttribute>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="test" />
-            </errorLevel>
-        </MissingOverrideAttribute>
     </issueHandlers>
 
     <stubs>

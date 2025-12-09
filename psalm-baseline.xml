@@ -7,17 +7,9 @@
       <code><![CDATA[$this->value]]></code>
       <code><![CDATA[$this->value]]></code>
     </DeprecatedProperty>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareNotArrayFailureMessage()]]></code>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[! $required]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/BaseInputFilter.php">
     <InvalidReturnStatement>
@@ -37,6 +29,9 @@
     <MixedPropertyTypeCoercion>
       <code><![CDATA[$inputs]]></code>
     </MixedPropertyTypeCoercion>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[count]]></code>
+    </PossiblyUnusedMethod>
     <TooManyArguments>
       <code><![CDATA[isValid]]></code>
       <code><![CDATA[isValid]]></code>
@@ -84,7 +79,7 @@
   </file>
   <file src="src/EmptyContextInterface.php">
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
+      <code><![CDATA[static]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Factory.php">
@@ -96,9 +91,6 @@
     </MixedArgument>
   </file>
   <file src="src/FileInput.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MixedAssignment>
       <code><![CDATA[$rawValue]]></code>
     </MixedAssignment>
@@ -110,7 +102,6 @@
   <file src="src/FileInput/HttpServerFileInputHandler.php">
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
-      <code><![CDATA[$newValue[]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
   </file>
@@ -128,24 +119,18 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_array($this->errorMessage)]]></code>
-    </DocblockTypeContradiction>
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[null|string]]></code>
     </ImplementedReturnTypeMismatch>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->errorMessage]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string|null]]></code>
+    </InvalidReturnType>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) $allowEmpty]]></code>
-      <code><![CDATA[(bool) $breakOnFailure]]></code>
-      <code><![CDATA[(bool) $continueIfEmpty]]></code>
-      <code><![CDATA[(string) $errorMessage]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <MixedArgument>
@@ -177,13 +162,13 @@
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/OptionalInputFilter.php">

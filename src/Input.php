@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorChainInterface;
 
+use function assert;
 use function class_exists;
 use function is_array;
 
@@ -16,91 +19,53 @@ class Input implements
     InputInterface,
     EmptyContextInterface
 {
-    /** @var bool */
-    protected $allowEmpty = false;
-
-    /** @var bool */
-    protected $continueIfEmpty = false;
-
-    /** @var bool */
-    protected $breakOnFailure = false;
-
-    /** @var string|null */
-    protected $errorMessage;
-
-    /** @var bool */
-    protected $notEmptyValidator = false;
-
-    /** @var bool */
-    protected $required = true;
-
-    /** @var mixed */
-    protected $value;
-
+    protected bool $allowEmpty      = false;
+    protected bool $continueIfEmpty = false;
+    protected bool $breakOnFailure  = false;
+    /** @var string|array<array-key, string>|null */
+    protected string|array|null $errorMessage = null;
+    protected bool $notEmptyValidator         = false;
+    protected bool $required                  = true;
+    protected mixed $value                    = null; // phpcs:ignore
     /**
-     * Flag for distinguish when $value contains the value previously set or the default one.
-     *
-     * @var bool
+     * Flag to distinguish when $value contains the value previously set or the default one.
      */
-    protected $hasValue = false;
-
-    /** @var mixed|null */
-    protected $fallbackValue;
-
-    /** @var bool */
-    protected $hasFallback = false;
+    protected bool $hasValue = false;
+    protected mixed $fallbackValue;
+    protected bool $hasFallback = false;
 
     public function __construct(
-        protected FilterChain $filterChain,
-        protected ValidatorChain $validatorChain,
+        protected FilterChainInterface $filterChain,
+        protected ValidatorChainInterface $validatorChain,
         protected ?string $name = null
     ) {
     }
 
-    /**
-     * @param  bool $allowEmpty
-     * @return $this
-     */
-    public function setAllowEmpty($allowEmpty): static
+    public function setAllowEmpty(bool $allowEmpty): static
     {
-        $this->allowEmpty = (bool) $allowEmpty;
+        $this->allowEmpty = $allowEmpty;
         return $this;
     }
 
-    /**
-     * @param  bool $breakOnFailure
-     * @return $this
-     */
-    public function setBreakOnFailure($breakOnFailure): static
+    public function setBreakOnFailure(bool $breakOnFailure): static
     {
-        $this->breakOnFailure = (bool) $breakOnFailure;
+        $this->breakOnFailure = $breakOnFailure;
         return $this;
     }
 
-    /**
-     * @param bool $continueIfEmpty
-     * @return $this
-     */
-    public function setContinueIfEmpty($continueIfEmpty): static
+    public function setContinueIfEmpty(bool $continueIfEmpty): static
     {
-        $this->continueIfEmpty = (bool) $continueIfEmpty;
+        $this->continueIfEmpty = $continueIfEmpty;
         return $this;
     }
 
-    /**
-     * @param  string|null $errorMessage
-     * @return $this
-     */
-    public function setErrorMessage($errorMessage): static
+    public function setErrorMessage(string|null $errorMessage): static
     {
-        $this->errorMessage = null === $errorMessage ? null : (string) $errorMessage;
+        $this->errorMessage = $errorMessage;
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function setFilterChain(FilterChain $filterChain): static
+    public function setFilterChain(FilterChainInterface $filterChain): static
     {
         $this->filterChain = $filterChain;
         return $this;
@@ -124,10 +89,7 @@ class Input implements
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function setValidatorChain(ValidatorChain $validatorChain): static
+    public function setValidatorChain(ValidatorChainInterface $validatorChain): static
     {
         $this->validatorChain = $validatorChain;
         return $this;
@@ -141,11 +103,8 @@ class Input implements
      * @see Input::getValue() For retrieve the input value.
      * @see Input::hasValue() For to know if input value was set.
      * @see Input::resetValue() For reset the input value to the default state.
-     *
-     * @param  mixed $value
-     * @return $this
      */
-    public function setValue($value): static
+    public function setValue(mixed $value): static
     {
         $this->value    = $value;
         $this->hasValue = true;
@@ -178,26 +137,17 @@ class Input implements
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function allowEmpty()
+    public function allowEmpty(): bool
     {
         return $this->allowEmpty;
     }
 
-    /**
-     * @return bool
-     */
-    public function breakOnFailure()
+    public function breakOnFailure(): bool
     {
         return $this->breakOnFailure;
     }
 
-    /**
-     * @return bool
-     */
-    public function continueIfEmpty()
+    public function continueIfEmpty(): bool
     {
         return $this->continueIfEmpty;
     }
@@ -210,7 +160,7 @@ class Input implements
         return $this->errorMessage;
     }
 
-    public function getFilterChain(): FilterChain
+    public function getFilterChain(): FilterChainInterface
     {
         return $this->filterChain;
     }
@@ -223,34 +173,22 @@ class Input implements
         return $this->name;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRawValue()
+    public function getRawValue(): mixed
     {
         return $this->value;
     }
 
-    /**
-     * @return bool
-     */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
-    /**
-     * @return ValidatorChain
-     */
-    public function getValidatorChain()
+    public function getValidatorChain(): ValidatorChainInterface
     {
         return $this->validatorChain;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         $filter = $this->getFilterChain();
         return $filter->filter($this->value);
@@ -265,32 +203,23 @@ class Input implements
      * @see Input::getValue() For retrieve the input value.
      * @see Input::setValue() For set a new value.
      * @see Input::resetValue() For reset the input value to the default state.
-     *
-     * @return bool
      */
-    public function hasValue()
+    public function hasValue(): bool
     {
         return $this->hasValue;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFallbackValue()
+    public function getFallbackValue(): mixed
     {
         return $this->fallbackValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasFallback()
+    public function hasFallback(): bool
     {
         return $this->hasFallback;
     }
 
-    /** @return void */
-    public function clearFallbackValue()
+    public function clearFallbackValue(): void
     {
         $this->hasFallback   = false;
         $this->fallbackValue = null;
@@ -313,11 +242,24 @@ class Input implements
             $this->setValue($input->getRawValue());
         }
 
-        $filterChain = $input->getFilterChain();
-        $this->getFilterChain()->merge($filterChain);
+        $sourceFilterChain = $input->getFilterChain();
+        $targetFilterChain = $this->getFilterChain();
 
-        $validatorChain = $input->getValidatorChain();
-        $this->getValidatorChain()->merge($validatorChain);
+        assert(
+            $sourceFilterChain instanceof FilterChain
+            &&
+            $targetFilterChain instanceof FilterChain
+        );
+        $targetFilterChain->merge($sourceFilterChain);
+
+        $sourceValidatorChain = $input->getValidatorChain();
+        $targetValidatorChain = $this->getValidatorChain();
+        assert(
+            $sourceValidatorChain instanceof ValidatorChain
+            &&
+            $targetValidatorChain instanceof ValidatorChain
+        );
+        $targetValidatorChain->merge($sourceValidatorChain);
         return $this;
     }
 
@@ -394,15 +336,16 @@ class Input implements
         return $validator->getMessages();
     }
 
-    /**
-     * @return void
-     */
-    protected function injectNotEmptyValidator()
+    protected function injectNotEmptyValidator(): void
     {
         if ((! $this->isRequired() && $this->allowEmpty()) || $this->notEmptyValidator) {
             return;
         }
         $chain = $this->getValidatorChain();
+        /**
+         * @todo Refactor injection of not-empty validator to use DI
+         */
+        assert($chain instanceof ValidatorChain);
 
         // Check if NotEmpty validator is already in chain
         $validators = $chain->getValidators();
@@ -431,7 +374,12 @@ class Input implements
      */
     protected function prepareRequiredValidationFailureMessage()
     {
-        $chain    = $this->getValidatorChain();
+        $chain = $this->getValidatorChain();
+        /**
+         * @todo Refactor "Empty" error message provision so that users can configure an acceptable validator,
+         *       translate error messages correctly etc.
+         */
+        assert($chain instanceof ValidatorChain);
         $notEmpty = null;
 
         foreach ($chain->getValidators() as $validator) {

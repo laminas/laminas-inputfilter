@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter\FileInput;
 
-use Laminas\Filter\FilterChain;
-use Laminas\Validator\ValidatorChain;
+use Laminas\Filter\FilterChainInterface;
+use Laminas\Validator\ValidatorChainInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function is_array;
@@ -45,7 +45,7 @@ final class PsrFileInputHandler implements FileInputHandlerInterface
         return $rawValue->getError() === UPLOAD_ERR_NO_FILE;
     }
 
-    public function filterValue(mixed $value, bool $isValid, FilterChain $filterChain): mixed
+    public function filterValue(mixed $value, bool $isValid, FilterChainInterface $filterChain): mixed
     {
         // Run filters ~after~ validation, so that is_uploaded_file()
         // validation is not affected by filters.
@@ -69,7 +69,7 @@ final class PsrFileInputHandler implements FileInputHandlerInterface
     /**
      * @param array<string, mixed>|null $context Extra "context" to provide the validator
      */
-    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, ?array $context = null): bool
+    public function isValid(mixed $rawValue, ValidatorChainInterface $validatorChain, ?array $context = null): bool
     {
         if (is_array($rawValue)) {
             // Multi file input (multiple attribute set)

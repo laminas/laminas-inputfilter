@@ -146,6 +146,7 @@ final class FileInputTest extends TestCase
             'error'    => 0,
         ]);
         $validatorChain = $this->input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
         self::assertCount(0, $validatorChain->getValidators());
 
         self::assertFalse($this->input->isValid());
@@ -160,6 +161,7 @@ final class FileInputTest extends TestCase
         self::assertTrue($this->input->isRequired());
         $this->input->setValue(['tmp_name' => 'bar']);
         $validatorChain = $this->input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
         self::assertCount(0, $validatorChain->getValidators());
 
         self::assertTrue(
@@ -181,6 +183,7 @@ final class FileInputTest extends TestCase
         $uploadValidator = new UploadValidator();
 
         $validatorChain = $this->input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
         $validatorChain->prependValidator($uploadValidator);
         self::assertFalse(
             $this->input->isValid(),
@@ -237,7 +240,8 @@ final class FileInputTest extends TestCase
     {
         $input          = $this->createFileInput('foo');
         $validatorChain = $input->getValidatorChain();
-        $pluginManager  = $validatorChain->getPluginManager();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+        $pluginManager = $validatorChain->getPluginManager();
         $pluginManager->setInvokableClass(UploadValidator::class, TestAsset\FileUploadMock::class);
         $input->setValue([]);
 
@@ -476,9 +480,9 @@ final class FileInputTest extends TestCase
         $input->setContinueIfEmpty(true);
         $input->setValue($raw);
         $input->isValid();
-        $validators = $input->getValidatorChain()
-            ->getValidators();
-        self::assertEmpty($validators);
+        $validators = $input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validators);
+        self::assertCount(0, $validators);
     }
 
     public function testDefaultGetValue(): void
@@ -510,6 +514,7 @@ final class FileInputTest extends TestCase
     {
         $filterChain    = TestHelper::createFilterChainFixture($raw, $filtered);
         $validatorChain = $this->input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
 
         $this->input->setRequired(true);
         $this->input->setFilterChain($filterChain);
@@ -519,8 +524,7 @@ final class FileInputTest extends TestCase
 
         self::assertTrue($this->input->isValid());
 
-        $validators = $validatorChain->getValidators();
-        self::assertEquals(1, count($validators));
+        self::assertCount(1, $validatorChain);
     }
 
     #[DataProvider('isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider')]
@@ -653,16 +657,19 @@ final class FileInputTest extends TestCase
         $a = $this->createFileInput('a');
         $b = $this->createFileInput('b');
 
-        $a->getFilterChain()->attach($filter1);
+        $filterChain = $a->getFilterChain();
+        self::assertInstanceOf(FilterChain::class, $filterChain);
+
+        $filterChain->attach($filter1);
         $b->getFilterChain()->attach($filter2);
 
-        self::assertNotContains($filter2, $a->getFilterChain());
-        self::assertCount(1, $a->getFilterChain());
+        self::assertNotContains($filter2, $filterChain);
+        self::assertCount(1, $filterChain);
 
         $a->merge($b);
 
-        self::assertContains($filter2, $a->getFilterChain());
-        self::assertCount(2, $a->getFilterChain());
+        self::assertContains($filter2, $filterChain);
+        self::assertCount(2, $filterChain);
     }
 
     public function testThatMergingTwoInputsMergesTheValidatorChain(): void
@@ -673,17 +680,20 @@ final class FileInputTest extends TestCase
         $a = $this->createFileInput('a');
         $b = $this->createFileInput('b');
 
-        $a->getValidatorChain()->attach($validator1);
+        $validatorChain = $a->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+
+        $validatorChain->attach($validator1);
         $b->getValidatorChain()->attach($validator2);
 
-        self::assertCount(1, $a->getValidatorChain());
-        self::assertValidatorChainNotContains($validator2, $a->getValidatorChain());
+        self::assertCount(1, $validatorChain);
+        self::assertValidatorChainNotContains($validator2, $validatorChain);
 
         $a->merge($b);
 
-        $chain = iterator_to_array($a->getValidatorChain()->getIterator());
+        $chain = iterator_to_array($validatorChain->getIterator());
         self::assertCount(2, $chain);
-        self::assertValidatorChainContains($validator2, $a->getValidatorChain());
+        self::assertValidatorChainContains($validator2, $validatorChain);
     }
 
     private static function validatorChainContains(ValidatorInterface $validator, ValidatorChain $chain): bool
@@ -838,6 +848,7 @@ final class FileInputTest extends TestCase
         $input->setValue($uploadedFile);
 
         $validatorChain = $input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
         self::assertCount(0, $validatorChain->getValidators());
 
         self::assertFalse($input->isValid());
@@ -855,13 +866,17 @@ final class FileInputTest extends TestCase
 
         $this->input->setValue($uploadedFile);
         $validatorChain = $this->input->getValidatorChain();
-        self::assertCount(0, $validatorChain->getValidators());
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+        self::assertCount(0, $validatorChain);
 
         self::assertTrue(
             $this->input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
         );
-        self::assertCount(0, $validatorChain->getValidators());
+
+        $validatorChain = $this->input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+        self::assertCount(0, $validatorChain);
     }
 
     /**

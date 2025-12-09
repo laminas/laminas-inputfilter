@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter;
 
+use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Factory;
@@ -141,7 +142,9 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
         $input = $inputFilter->get('input');
         self::assertInstanceOf(InputInterface::class, $input);
 
-        $filterChain = iterator_to_array($input->getFilterChain(), false);
+        $filterChain = $input->getFilterChain();
+        self::assertInstanceOf(FilterChain::class, $filterChain);
+        $filterChain = iterator_to_array($filterChain, false);
         self::assertCount(1, $filterChain);
         self::assertSame($filter, $filterChain[0]);
 
@@ -277,8 +280,6 @@ final class InputFilterAbstractServiceFactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
 
         $filters = $input->getFilterChain();
-        self::assertCount(1, $filters);
-
         self::assertSame('oof', $filters->filter('foo'));
     }
 }
