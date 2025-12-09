@@ -399,8 +399,10 @@ final class FactoryTest extends TestCase
         $inputFilterPluginManager = $serviceManager->get(InputFilterPluginManager::class);
         $inputFilterPluginManager->configure([
             'factories' => [
-                CustomInput::class
-                    => fn () => new CustomInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain()),
+                CustomInput::class => static fn (): CustomInput => new CustomInput(
+                    TestHelper::createFilterChain(),
+                    TestHelper::createValidatorChain(),
+                ),
             ],
         ]);
 
@@ -659,7 +661,7 @@ final class FactoryTest extends TestCase
                     'name'     => 'Callback',
                     'priority' => ValidatorChainInterface::DEFAULT_PRIORITY + 1, // 2
                     'options'  => [
-                        'callback' => static function () use (&$order) {
+                        'callback' => static function () use (&$order): true {
                             self::assertSame(0, $order);
                             ++$order;
 
