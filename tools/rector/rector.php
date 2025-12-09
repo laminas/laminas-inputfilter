@@ -11,7 +11,4 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/../../src',
         __DIR__ . '/../../test',
-    ])
-    ->withPreparedSets(
-        typeDeclarations: true,
-    );
+    ]);

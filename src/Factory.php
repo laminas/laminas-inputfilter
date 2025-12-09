@@ -40,7 +40,7 @@ final readonly class Factory
 {
     public static function new(ContainerInterface|null $container = null): self
     {
-        $container = $container ?? new ServiceManager();
+        $container ??= new ServiceManager();
 
         if ($container->has(self::class)) {
             return $container->get(self::class);

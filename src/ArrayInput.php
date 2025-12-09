@@ -42,7 +42,7 @@ class ArrayInput extends Input
         $filter = $this->getFilterChain();
 
         return array_map(
-            static fn (mixed $value): mixed => $filter->filter($value),
+            $filter->filter(...),
             $this->value,
         );
     }

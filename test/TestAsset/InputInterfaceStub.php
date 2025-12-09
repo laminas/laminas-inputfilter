@@ -14,18 +14,18 @@ use function func_num_args;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 
-final class InputInterfaceStub implements InputInterface
+final readonly class InputInterfaceStub implements InputInterface
 {
     /** @param array<string, string> $getMessages */
     public function __construct(
-        private readonly string $name,
-        private readonly bool|null $isRequired,
-        private readonly bool|null $isValid = null,
-        private readonly array|string|null $context = null,
-        private readonly mixed $getRawValue = null,
-        private readonly mixed $getValue = null,
-        private readonly array $getMessages = [],
-        private readonly bool $breakOnFailure = false
+        private string $name,
+        private bool|null $isRequired,
+        private bool|null $isValid = null,
+        private array|string|null $context = null,
+        private mixed $getRawValue = null,
+        private mixed $getValue = null,
+        private array $getMessages = [],
+        private bool $breakOnFailure = false
     ) {
     }
 
