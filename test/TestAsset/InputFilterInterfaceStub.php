@@ -30,7 +30,7 @@ final class InputFilterInterfaceStub extends InputFilter
     }
 
     /** @inheritDoc */
-    public function isValid($context = null)
+    public function isValid($context = null): bool
     {
         assertNotNull($this->isValid, 'isValid was not expected to be called');
 

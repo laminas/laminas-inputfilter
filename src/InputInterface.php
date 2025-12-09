@@ -17,11 +17,7 @@ interface InputInterface
 
     public function setFilterChain(FilterChainInterface $filterChain): static;
 
-    /**
-     * @param array-key $name
-     * @return $this
-     */
-    public function setName($name);
+    public function setName(string|int $name): static;
 
     public function setRequired(bool $required): static;
 
@@ -35,17 +31,11 @@ interface InputInterface
 
     public function breakOnFailure(): bool;
 
-    /**
-     * @return string|null
-     */
-    public function getErrorMessage();
+    public function getErrorMessage(): string|null;
 
     public function getFilterChain(): FilterChainInterface;
 
-    /**
-     * @return string
-     */
-    public function getName();
+    public function getName(): int|string|null;
 
     public function getRawValue(): mixed;
 

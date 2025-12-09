@@ -101,8 +101,6 @@ class BaseInputFilter implements
 
         if ($input instanceof InputInterface && ($name === null || $name === '' || is_int($name))) {
             $name = $input->getName();
-
-            /** @psalm-suppress DocblockTypeContradiction Input conflicts with InputInterface docblock and allows null. */
             if ($name === null || $name === '') {
                 throw new Exception\InvalidArgumentException(sprintf(
                     '%s: input instance must have a valid name or input name must be provided as a parameter',

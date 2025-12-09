@@ -119,15 +119,6 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[null|string]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->errorMessage]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[string|null]]></code>
-    </InvalidReturnType>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
@@ -161,7 +152,7 @@
   </file>
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[$this]]></code>
+      <code><![CDATA[static]]></code>
       <code><![CDATA[static]]></code>
       <code><![CDATA[static]]></code>
       <code><![CDATA[static]]></code>

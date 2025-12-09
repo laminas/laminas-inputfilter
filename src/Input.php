@@ -14,6 +14,7 @@ use Laminas\Validator\ValidatorChainInterface;
 use function assert;
 use function class_exists;
 use function is_array;
+use function reset;
 
 class Input implements
     InputInterface,
@@ -22,7 +23,10 @@ class Input implements
     protected bool $allowEmpty      = false;
     protected bool $continueIfEmpty = false;
     protected bool $breakOnFailure  = false;
-    /** @var string|array<array-key, string>|null */
+    /**
+     * @todo ArrayInput needs refactoring so that this type cannot be an array
+     * @var string|array<array-key, string>|null
+     */
     protected string|array|null $errorMessage = null;
     protected bool $notEmptyValidator         = false;
     protected bool $required                  = true;
@@ -37,7 +41,7 @@ class Input implements
     public function __construct(
         protected FilterChainInterface $filterChain,
         protected ValidatorChainInterface $validatorChain,
-        protected ?string $name = null
+        protected string|int|null $name = null
     ) {
     }
 
@@ -71,10 +75,9 @@ class Input implements
         return $this;
     }
 
-    /** @inheritDoc */
-    public function setName($name): static
+    public function setName(string|int $name): static
     {
-        $this->name = (string) $name;
+        $this->name = $name;
         return $this;
     }
 
@@ -153,11 +156,15 @@ class Input implements
     }
 
     /**
-     * @return string|null
+     * @todo Once ArrayInput is refactored, remove the array checks here
      */
-    public function getErrorMessage()
+    public function getErrorMessage(): string|null
     {
-        return $this->errorMessage;
+        $errorMessage = is_array($this->errorMessage)
+            ? reset($this->errorMessage)
+            : $this->errorMessage;
+
+        return $errorMessage === false ? null : $errorMessage;
     }
 
     public function getFilterChain(): FilterChainInterface
@@ -165,10 +172,7 @@ class Input implements
         return $this->filterChain;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getName()
+    public function getName(): int|string|null
     {
         return $this->name;
     }
@@ -235,7 +239,10 @@ class Input implements
             $this->setContinueIfEmpty($input->continueIfEmpty());
         }
         $this->setErrorMessage($input->getErrorMessage());
-        $this->setName($input->getName());
+        $name = $input->getName();
+        if ($name !== null) {
+            $this->setName($name);
+        }
         $this->setRequired($input->isRequired());
         $this->setAllowEmpty($input->allowEmpty());
         if (! $input instanceof Input || $input->hasValue()) {

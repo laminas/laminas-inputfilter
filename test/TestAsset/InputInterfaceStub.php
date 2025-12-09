@@ -49,8 +49,7 @@ final readonly class InputInterfaceStub implements InputInterface
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
-    public function setName($name): never
+    public function setName(string|int $name): never
     {
         throw new Exception('Not implemented');
     }
