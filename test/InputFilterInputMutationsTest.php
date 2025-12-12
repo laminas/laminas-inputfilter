@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
  * - has()
  * - get()
  * - getInputs()
+ * - count()
  */
 final class InputFilterInputMutationsTest extends TestCase
 {
@@ -289,6 +290,16 @@ final class InputFilterInputMutationsTest extends TestCase
 
         self::assertCount(1, $inputFilter, 'There should only be 1 input still');
         self::assertCount(1, $filterChain1, 'The Filter chain for the existing input should have been mutated');
+    }
+
+    public function testExplicitCallToCountMethod(): void
+    {
+        $inputFilter = $this->createEmptyInputFilter();
+        self::assertSame(0, $inputFilter->count());
+
+        $inputFilter->add($this->factory->createInput(['name' => 'fred']));
+
+        self::assertSame(1, $inputFilter->count());
     }
 
     public function testAddingAnInputFilterWithTheSameNameAsTheInputWillReplace(): void

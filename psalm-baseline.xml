@@ -33,9 +33,6 @@
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[count]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/CollectionInputFilter.php">
     <InvalidPropertyAssignmentValue>
