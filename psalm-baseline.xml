@@ -7,6 +7,9 @@
       <code><![CDATA[$this->value]]></code>
       <code><![CDATA[$this->value]]></code>
     </DeprecatedProperty>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
@@ -14,68 +17,34 @@
   <file src="src/BaseInputFilter.php">
     <InvalidReturnStatement>
       <code><![CDATA[$values]]></code>
+      <code><![CDATA[array_map(
+            static fn (InputInterface|InputFilterInterface $input): array => $input->getMessages(),
+            $this->getInvalidInput(),
+        )]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[TFilteredValues]]></code>
+      <code><![CDATA[array]]></code>
     </InvalidReturnType>
     <MixedArgumentTypeCoercion>
-      <code><![CDATA[$inputs]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
-      <code><![CDATA[$inputContext]]></code>
-      <code><![CDATA[$unknownInputs[$key]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$inputs]]></code>
-    </MixedPropertyTypeCoercion>
     <PossiblyUnusedMethod>
       <code><![CDATA[count]]></code>
     </PossiblyUnusedMethod>
-    <TooManyArguments>
-      <code><![CDATA[isValid]]></code>
-      <code><![CDATA[isValid]]></code>
-    </TooManyArguments>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-    </ImplementedParamTypeMismatch>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
-      <code><![CDATA[$this->invalidInputs]]></code>
-      <code><![CDATA[$this->validInputs]]></code>
     </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->collectionValues]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[TFilteredValues]]></code>
-    </InvalidReturnType>
-    <MixedArgument>
-      <code><![CDATA[$data]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$data]]></code>
-    </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$this->collectionValues]]></code>
-    </MixedPropertyTypeCoercion>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[array[]]]></code>
-      <code><![CDATA[array[]]]></code>
-    </PossiblyUnusedReturnValue>
-    <UnusedPsalmSuppress>
-      <code><![CDATA[DocblockTypeContradiction]]></code>
-      <code><![CDATA[DocblockTypeContradiction]]></code>
-      <code><![CDATA[DocblockTypeContradiction]]></code>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-    </UnusedPsalmSuppress>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$name]]></code>
+    </PropertyTypeCoercion>
   </file>
   <file src="src/EmptyContextInterface.php">
     <PossiblyUnusedReturnValue>
@@ -100,6 +69,10 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/FileInput/HttpServerFileInputHandler.php">
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
       <code><![CDATA[$value]]></code>
@@ -109,6 +82,10 @@
     <MixedArgument>
       <code><![CDATA[$rawValue[0]]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
       <code><![CDATA[$newValue[]]]></code>
@@ -119,9 +96,20 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
-    <MixedAssignment>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
+    <InvalidReturnStatement>
+      <code><![CDATA[(array) $this->errorMessage]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+    </LessSpecificReturnStatement>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <MixedArgument>
@@ -169,7 +157,6 @@
   </file>
   <file src="test/BaseInputFilterTest.php">
     <InvalidArgument>
-      <code><![CDATA[['nested' => ['nested-input1', 'nested-input2']]]]></code>
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </InvalidArgument>
