@@ -46,11 +46,6 @@
       <code><![CDATA[$name]]></code>
     </PropertyTypeCoercion>
   </file>
-  <file src="src/EmptyContextInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[static]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="src/Factory.php">
     <MixedArgument>
       <code><![CDATA[$inputFilterSpecification['count']]]></code>
@@ -124,11 +119,6 @@
       <code><![CDATA[$config]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/InputFilterInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[static]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="src/InputFilterPluginManager.php">
     <MethodSignatureMismatch>
       <code><![CDATA[InputFilterPluginManager]]></code>
@@ -140,13 +130,6 @@
   </file>
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
-      <code><![CDATA[static]]></code>
       <code><![CDATA[static]]></code>
     </PossiblyUnusedReturnValue>
   </file>

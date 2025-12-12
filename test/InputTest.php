@@ -1032,4 +1032,44 @@ final class InputTest extends TestCase
             ],
         ];
     }
+
+    public function testFluentInterfaceIsProvidedByCommonMethods(): void
+    {
+        self::assertSame(
+            $this->input,
+            $this->input->setRequired(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setAllowEmpty(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setName('foo'),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setBreakOnFailure(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setContinueIfEmpty(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setFallbackValue('muppet'),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setValue('muppet'),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setFilterChain(TestHelper::createFilterChain()),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setValidatorChain(TestHelper::createValidatorChain()),
+        );
+    }
 }

@@ -120,4 +120,12 @@ final class InputFilterStringValidationGroupTest extends TestCase
         $this->inputFilter->setData(['second' => 'Freddy']);
         self::assertFalse($this->inputFilter->isValid());
     }
+
+    public function testSetValidationGroupHasFluentInterface(): void
+    {
+        self::assertSame(
+            $this->inputFilter,
+            $this->inputFilter->setValidationGroup('first'),
+        );
+    }
 }

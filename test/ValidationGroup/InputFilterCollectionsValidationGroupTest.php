@@ -203,4 +203,15 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
 
         self::assertTrue($this->inputFilter->isValid());
     }
+
+    public function testSetValidationGroupOnACollectionHasAFluentInterface(): void
+    {
+        $collection = $this->inputFilter->get('stuff');
+        self::assertInstanceOf(CollectionInputFilter::class, $collection);
+
+        self::assertSame(
+            $collection,
+            $collection->setValidationGroup(['first']),
+        );
+    }
 }
