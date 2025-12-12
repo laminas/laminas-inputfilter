@@ -179,8 +179,8 @@ final class InputFilterInputMutationsTest extends TestCase
     public function testReplaceHasFluentInterface(): void
     {
         $inputFilter = $this->createEmptyInputFilter();
-        $input1       = $this->factory->createInput(['name' => 'goat']);
-        $input2       = $this->factory->createInput(['name' => 'goat']);
+        $input1      = $this->factory->createInput(['name' => 'goat']);
+        $input2      = $this->factory->createInput(['name' => 'goat']);
 
         $inputFilter->add($input1);
 
