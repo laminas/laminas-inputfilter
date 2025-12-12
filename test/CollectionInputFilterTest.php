@@ -24,7 +24,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Traversable;
 
 use function count;
@@ -54,18 +53,6 @@ final class CollectionInputFilterTest extends TestCase
     protected function tearDown(): void
     {
         AbstractValidator::setDefaultTranslator();
-    }
-
-    public function testSetInputFilterWithInvalidTypeThrowsInvalidArgumentException(): void
-    {
-        $inputFilter = $this->inputFilter;
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            'expects an instance of Laminas\InputFilter\BaseInputFilter; received "stdClass"'
-        );
-        /** @psalm-suppress InvalidArgument */
-        $inputFilter->setInputFilter(new stdClass());
     }
 
     /**
@@ -499,44 +486,6 @@ final class CollectionInputFilterTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('invalid item in collection');
-        $collectionInputFilter->setData($data);
-    }
-
-    #[DataProvider('invalidCollections')]
-    public function testSettingDataAsTraversableWithInvalidCollectionsRaisesException(array $data): void
-    {
-        $collectionInputFilter = $this->inputFilter;
-        $data                  = new ArrayIterator($data);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('invalid item in collection');
-        $collectionInputFilter->setData($data);
-    }
-
-    /** @psalm-return array<string, array{0: mixed}> */
-    public static function invalidDataType(): array
-    {
-        return [
-            'null'       => [null],
-            'false'      => [false],
-            'true'       => [true],
-            'zero'       => [0],
-            'int'        => [1],
-            'zero-float' => [0.0],
-            'float'      => [1.1],
-            'string'     => ['this is not'],
-            'object'     => [(object) ['this' => 'is invalid']],
-        ];
-    }
-
-    #[DataProvider('invalidDataType')]
-    public function testSettingDataWithNonArrayNonTraversableRaisesException(mixed $data): void
-    {
-        $collectionInputFilter = $this->inputFilter;
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('invalid collection');
-        /** @psalm-suppress MixedArgument */
         $collectionInputFilter->setData($data);
     }
 

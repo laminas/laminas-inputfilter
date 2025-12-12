@@ -98,7 +98,7 @@ final class FileInput extends Input
     }
 
     /** @inheritDoc */
-    public function isValid(?array $context = null): bool
+    public function isValid(array|null $context = null): bool
     {
         $rawValue        = $this->getRawValue();
         $hasValue        = $this->hasValue();

@@ -6,6 +6,7 @@ namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterChainInterface;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorChain;
@@ -20,12 +21,13 @@ class Input implements
     InputInterface,
     EmptyContextInterface
 {
+    protected string|int|null $name = null;
     protected bool $allowEmpty      = false;
     protected bool $continueIfEmpty = false;
     protected bool $breakOnFailure  = false;
     /**
      * @todo ArrayInput needs refactoring so that this type cannot be an array
-     * @var string|array<array-key, string>|null
+     * @var string|array<string, string>|null
      */
     protected string|array|null $errorMessage = null;
     protected bool $notEmptyValidator         = false;
@@ -41,8 +43,11 @@ class Input implements
     public function __construct(
         protected FilterChainInterface $filterChain,
         protected ValidatorChainInterface $validatorChain,
-        protected string|int|null $name = null
+        string|int|null $name = null
     ) {
+        if ($name !== null) {
+            $this->setName($name);
+        }
     }
 
     public function setAllowEmpty(bool $allowEmpty): static
@@ -77,18 +82,17 @@ class Input implements
 
     public function setName(string|int $name): static
     {
+        if ($name === '') {
+            throw new InvalidArgumentException('Input names cannot be an empty string');
+        }
+
         $this->name = $name;
         return $this;
     }
 
-    /**
-     * @param  bool $required
-     * @return $this
-     */
-    public function setRequired($required): static
+    public function setRequired(bool $required): static
     {
-        /** @psalm-suppress RedundantCastGivenDocblockType */
-        $this->required = (bool) $required;
+        $this->required = $required;
         return $this;
     }
 
@@ -266,41 +270,38 @@ class Input implements
         return $this;
     }
 
-    /** @param  array<string, mixed>|null $context Extra "context" to provide the validator */
-    public function isValid(?array $context = null): bool
+    /** @inheritDoc */
+    public function isValid(array|null $context = null): bool
     {
         if (is_array($this->errorMessage)) {
             $this->errorMessage = null;
         }
 
-        $value           = $this->getValue();
-        $hasValue        = $this->hasValue();
-        $empty           = $value === null || $value === '' || $value === [];
-        $required        = $this->isRequired();
-        $allowEmpty      = $this->allowEmpty();
-        $continueIfEmpty = $this->continueIfEmpty();
+        /** @psalm-var mixed $value */
+        $value = $this->getValue();
+        $empty = $value === null || $value === '' || $value === [];
 
-        if (! $hasValue && $this->hasFallback()) {
+        if (! $this->hasValue && $this->hasFallback()) {
             $this->setValue($this->getFallbackValue());
             return true;
         }
 
-        if (! $hasValue && ! $required) {
+        if (! $this->hasValue && ! $this->required) {
             return true;
         }
 
-        if (! $hasValue) { // required, but no value
+        if (! $this->hasValue) { // required, but no value
             if ($this->errorMessage === null) {
                 $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
             }
             return false;
         }
 
-        if ($empty && ! $required && ! $continueIfEmpty) {
+        if ($empty && ! $this->required && ! $this->continueIfEmpty) {
             return true;
         }
 
-        if ($empty && $allowEmpty && ! $continueIfEmpty) {
+        if ($empty && $this->allowEmpty && ! $this->continueIfEmpty) {
             return true;
         }
 
@@ -308,7 +309,7 @@ class Input implements
         // If we do not allow empty and the "continue if empty" flag are
         // BOTH false, we inject the "not empty" validator into the chain,
         // which adds that logic into the validation routine.
-        if (! $allowEmpty && ! $continueIfEmpty) {
+        if (! $this->allowEmpty && ! $this->continueIfEmpty) {
             $this->injectNotEmptyValidator();
         }
 
@@ -322,10 +323,8 @@ class Input implements
         return $result;
     }
 
-    /**
-     * @return array<array-key, string>
-     */
-    public function getMessages()
+    /** @inheritDoc */
+    public function getMessages(): array
     {
         if (null !== $this->errorMessage) {
             return (array) $this->errorMessage;

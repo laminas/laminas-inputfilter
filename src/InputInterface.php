@@ -7,6 +7,7 @@ namespace Laminas\InputFilter;
 use Laminas\Filter\FilterChainInterface;
 use Laminas\Validator\ValidatorChainInterface;
 
+/** @psalm-import-type InputErrorMessages from InputFilterInterface */
 interface InputInterface
 {
     public function setAllowEmpty(bool $allowEmpty): static;
@@ -45,10 +46,9 @@ interface InputInterface
 
     public function getValue(): mixed;
 
-    public function isValid(): bool;
+    /** @param array<array-key, mixed>|null $context */
+    public function isValid(array|null $context = null): bool;
 
-    /**
-     * @return array<array-key, string>
-     */
-    public function getMessages();
+    /** @return InputErrorMessages */
+    public function getMessages(): array;
 }

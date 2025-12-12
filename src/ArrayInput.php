@@ -44,7 +44,7 @@ class ArrayInput extends Input
     }
 
     /** @inheritDoc */
-    public function isValid(?array $context = null): bool
+    public function isValid(array|null $context = null): bool
     {
         if (! $this->hasValue && $this->hasFallback) {
             $this->setValue($this->getFallbackValue());

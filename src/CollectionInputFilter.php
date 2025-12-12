@@ -5,60 +5,69 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\Validator\NotEmpty;
-use Traversable;
 
+use function assert;
 use function count;
 use function get_debug_type;
 use function is_array;
 use function is_iterable;
+use function iterator_to_array;
+use function max;
 use function sprintf;
 
 /**
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @template TFilteredValues
- * @extends InputFilter<TFilteredValues>
+ * @extends InputFilter<array<array-key, TFilteredValues>>
  */
 class CollectionInputFilter extends InputFilter
 {
-    /** @var bool */
-    protected $isRequired = false;
-
-    /** @var null|int */
-    protected $count;
-
+    protected bool $isRequired = false;
+    protected int|null $count  = null;
+    /** @var array<array-key, TFilteredValues> */
+    protected array $collectionValues = [];
     /** @var array<array-key, array> */
-    protected $collectionValues = [];
-
-    /** @var array<array-key, array> */
-    protected $collectionRawValues = [];
-
+    protected array $collectionRawValues = [];
     /** @var array<array-key, array<string, array<array-key, string>>> */
-    protected $collectionMessages = [];
+    protected array $collectionMessages = [];
+    /** @var InputFilterInterface<TFilteredValues>|null */
+    protected InputFilterInterface|null $inputFilter = null;
+    private string|null $emptyErrorMessage           = null;
 
-    /** @var BaseInputFilter|null */
-    protected $inputFilter;
-    private ?string $emptyErrorMessage = null;
+    /**
+     * Data in a collection is guaranteed to be an array of arrays
+     *
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @var array<array-key, array<array-key, mixed>>|null
+     */
+    protected array|null $data = null;
+
+    /**
+     * In Collections, the type is not compatible with the parent class
+     *
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @var array<array-key, array<array-key, InputInterface|InputFilterInterface>>|null
+     */
+    protected array|null $invalidInputs = null;
+
+    /**
+     * In Collections, the type is not compatible with the parent class
+     *
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @var array<array-key, array<array-key, InputInterface|InputFilterInterface>>|null
+     */
+    protected array|null $validInputs = null;
 
     /**
      * Set the input filter to use when looping the data
      *
-     * @param BaseInputFilter|InputFilterSpecification|Traversable $inputFilter
-     * @throws Exception\RuntimeException
+     * @param InputFilterInterface<TFilteredValues>|InputFilterSpecification|iterable $inputFilter
      */
-    public function setInputFilter($inputFilter): static
+    public function setInputFilter(InputFilterInterface|iterable $inputFilter): static
     {
         if (is_iterable($inputFilter)) {
+            /** @psalm-var InputFilterInterface<TFilteredValues> $inputFilter */
             $inputFilter = $this->factory->createInputFilter($inputFilter);
-        }
-
-        /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
-        if (! $inputFilter instanceof BaseInputFilter) {
-            throw new Exception\RuntimeException(sprintf(
-                '%s expects an instance of %s; received "%s"',
-                __METHOD__,
-                BaseInputFilter::class,
-                get_debug_type($inputFilter)
-            ));
         }
 
         $this->inputFilter = $inputFilter;
@@ -69,9 +78,9 @@ class CollectionInputFilter extends InputFilter
     /**
      * Get the input filter used when looping the data
      *
-     * @return BaseInputFilter
+     * @return InputFilterInterface<TFilteredValues>
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         if (null === $this->inputFilter) {
             $this->inputFilter = new InputFilter($this->factory);
@@ -105,10 +114,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Get if collection can be empty
-     *
-     * @return bool
      */
-    public function getIsRequired()
+    public function getIsRequired(): bool
     {
         return $this->isRequired;
     }
@@ -118,17 +125,15 @@ class CollectionInputFilter extends InputFilter
      */
     public function setCount(int $count): static
     {
-        $this->count = $count > 0 ? $count : 0;
+        $this->count = max($count, 0);
 
         return $this;
     }
 
     /**
      * Get the count of data to validate, use the count of data by default
-     *
-     * @return int
      */
-    public function getCount()
+    public function getCount(): int
     {
         if (null === $this->count) {
             return $this->data !== null ? count($this->data) : 0;
@@ -137,27 +142,15 @@ class CollectionInputFilter extends InputFilter
         return $this->count;
     }
 
-    /**
-     * @param iterable|null $data
-     * @return $this
-     */
-    public function setData($data): static
+    /** @inheritDoc */
+    public function setData(iterable|null $data): static
     {
-        /** @psalm-suppress DocblockTypeContradiction, RedundantConditionGivenDocblockType */
-        if (! is_array($data) && ! $data instanceof Traversable) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable collection; invalid collection of type %s provided',
-                __METHOD__,
-                get_debug_type($data)
-            ));
-        }
-
+        $data = iterator_to_array($data ?? []);
         $this->setUnfilteredData($data);
 
-        /** @psalm-suppress MixedAssignment */
+        /** @psalm-var mixed $item */
         foreach ($data as $item) {
-            /** @psalm-suppress RedundantConditionGivenDocblockType, DocblockTypeContradiction */
-            if (is_iterable($item)) {
+            if (is_array($item)) {
                 continue;
             }
 
@@ -165,18 +158,21 @@ class CollectionInputFilter extends InputFilter
                 '%s expects each item in a collection to be an array or Traversable; '
                 . 'invalid item in collection of type %s detected',
                 __METHOD__,
-                get_debug_type($item)
+                get_debug_type($item),
             ));
         }
 
+        /**
+         * Psalm cannot infer this from the previous scope
+         *
+         * @psalm-var array<array-key, array> $data
+         */
         $this->data = $data;
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function isValid($context = null): bool
+    /** @inheritDoc */
+    public function isValid(array|null $context = null): bool
     {
         $this->collectionMessages = [];
         $inputFilter              = $this->getInputFilter();
@@ -199,14 +195,22 @@ class CollectionInputFilter extends InputFilter
             return $valid;
         }
 
-        /** @psalm-suppress MixedAssignment */
         foreach ($this->data as $key => $data) {
-            /** @psalm-suppress MixedArgument */
+            assert($this->isKey($key));
+
             $inputFilter->setData($data);
 
-            if (null !== $this->validationGroup) {
+            if ($this->validationGroup !== null && isset($this->validationGroup[$key])) {
                 $inputFilter->setValidationGroup($this->validationGroup[$key]);
             }
+
+            /**
+             * @todo The current implementation will validate all sets using the same validation group if only
+             *       the first item uses a validation group.
+             *       For example, setValidationGroup([0 => 'fieldName']) will mean that only `fieldName` is validated
+             *       for all items in the set.
+             *       The group should be set to VALIDATE_ALL on each iteration, and modified on a per-key basis.
+             */
 
             if ($inputFilter->isValid($context)) {
                 $this->validInputs[$key] = $inputFilter->getValidInput();
@@ -223,11 +227,8 @@ class CollectionInputFilter extends InputFilter
         return $valid;
     }
 
-    /**
-     * @param string|array<array-key, list<string>> $name
-     * @return $this
-     */
-    public function setValidationGroup($name): static
+    /** @inheritDoc */
+    public function setValidationGroup(int|string|array $name): static
     {
         if ($name === self::VALIDATE_ALL) {
             $name = null;
@@ -237,10 +238,7 @@ class CollectionInputFilter extends InputFilter
         return $this;
     }
 
-    /**
-     * @return array<array-key, array>
-     * @psalm-return TFilteredValues
-     */
+    /** @return array<array-key, TFilteredValues> */
     public function getValues(): array
     {
         return $this->collectionValues;
@@ -256,22 +254,18 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Clear collectionValues
-     *
-     * @return array[]
      */
-    public function clearValues()
+    public function clearValues(): void
     {
-        return $this->collectionValues = [];
+        $this->collectionValues = [];
     }
 
     /**
      * Clear collectionRawValues
-     *
-     * @return array[]
      */
-    public function clearRawValues()
+    public function clearRawValues(): void
     {
-        return $this->collectionRawValues = [];
+        $this->collectionRawValues = [];
     }
 
     /**
@@ -282,25 +276,27 @@ class CollectionInputFilter extends InputFilter
         return $this->collectionMessages;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** @inheritDoc */
     public function getUnknown(): array
     {
         if ($this->data === null) {
             throw new Exception\RuntimeException(sprintf(
                 '%s: no data present!',
-                __METHOD__
+                __METHOD__,
             ));
         }
 
         $inputFilter = $this->getInputFilter();
+        if (! $inputFilter instanceof UnknownInputsCapableInterface) {
+            return [];
+        }
 
         $unknownInputs = [];
         foreach ($this->data as $key => $data) {
             $inputFilter->setData($data);
+            $unknown = $inputFilter->getUnknown();
 
-            if ($unknown = $inputFilter->getUnknown()) {
+            if (count($unknown) > 0) {
                 $unknownInputs[$key] = $unknown;
             }
         }

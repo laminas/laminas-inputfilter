@@ -7,6 +7,7 @@ namespace Laminas\InputFilter;
 use Countable;
 use Laminas\Filter\FilterChain; // phpcs:ignore
 use Laminas\Filter\FilterInterface; // phpcs:ignore
+use Laminas\InputFilter\Exception\InputNotFoundException;
 use Laminas\Validator\ValidatorChain; // phpcs:ignore
 use Laminas\Validator\ValidatorInterface; // phpcs:ignore
 
@@ -36,6 +37,8 @@ use Laminas\Validator\ValidatorInterface; // phpcs:ignore
  *     required?: bool,
  *     required_message?: string,
  * }&array<array-key, InputSpecification>
+ * @psalm-type InputErrorMessages = array<string, string>
+ * @psalm-type InputFilterErrorMessages = array<array-key, InputErrorMessages|InputErrorMessages[]>
  */
 interface InputFilterInterface extends Countable
 {
@@ -50,10 +53,15 @@ interface InputFilterInterface extends Countable
      * @param  null|array-key $name Name used to retrieve this input
      * @throws Exception\InvalidArgumentException If unable to handle the input type.
      */
-    public function add($input, int|string|null $name = null): static;
+    public function add(
+        InputInterface|InputFilterInterface|array $input,
+        int|string|null $name = null,
+    ): static;
 
     /**
      * Retrieve a named input
+     *
+     * @throws InputNotFoundException
      */
     public function get(int|string $name): InputInterface|InputFilterInterface;
 
@@ -70,15 +78,16 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
-     * @param  iterable|null $data
-     * @return InputFilterInterface
+     * @param  iterable<array-key, mixed>|null $data
      */
-    public function setData($data);
+    public function setData(iterable|null $data): static;
 
     /**
      * Is the data set valid?
+     *
+     * @param array<array-key, mixed>|null $context
      */
-    public function isValid(): bool;
+    public function isValid(array|null $context = null): bool;
 
     /**
      * Provide a list of one or more elements indicating the complete set to validate
@@ -91,9 +100,10 @@ interface InputFilterInterface extends Countable
      * Implementations should allow passing a single array value, or multiple arguments,
      * each specifying a single input.
      *
-     * @param  array-key|list<array-key> $name
+     * @param array-key|array<array-key, mixed> $name
+     * @throws InputNotFoundException
      */
-    public function setValidationGroup($name): static;
+    public function setValidationGroup(int|string|array $name): static;
 
     /**
      * Return a list of inputs that were invalid.
@@ -133,6 +143,8 @@ interface InputFilterInterface extends Countable
 
     /**
      * Retrieve a raw (unfiltered) value from a named input
+     *
+     * @throws InputNotFoundException
      */
     public function getRawValue(int|string $name): mixed;
 
@@ -152,7 +164,7 @@ interface InputFilterInterface extends Countable
      * Should return an associative array of named input/message list pairs.
      * Pairs should only be returned for inputs that failed validation.
      *
-     * @return array<array-key, array<array-key, string|array>>
+     * @return InputFilterErrorMessages|InputFilterErrorMessages[]
      */
     public function getMessages(): array;
 }

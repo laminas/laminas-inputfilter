@@ -73,9 +73,7 @@ final class HttpServerFileInputHandler implements FileInputHandlerInterface
         return $newValue;
     }
 
-    /**
-     * @param array<string, mixed>|null $context Extra "context" to provide the validator
-     */
+    /** @inheritDoc */
     public function isValid(mixed $rawValue, ValidatorChainInterface $validatorChain, ?array $context = null): bool
     {
         if (! is_array($rawValue)) {

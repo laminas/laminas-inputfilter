@@ -11,22 +11,15 @@ use function is_iterable;
 /**
  * InputFilter which only checks the containing Inputs when non-empty data is set,
  * else it reports valid
- * This is analog to {@see Input} with the option ->setRequired(false)
+ * This is analogous to {@see Input} with the option ->setRequired(false)
  *
  * @template TFilteredValues
  * @extends InputFilter<TFilteredValues>
  */
 class OptionalInputFilter extends InputFilter
 {
-    /**
-     * Set data to use when validating and filtering
-     *
-     * @param iterable|null $data must be a non-empty iterable in order trigger
-     *                            actual validation, else it is always valid
-     * @return $this
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setData($data): static
+    /** @inheritDoc */
+    public function setData(iterable|null $data): static
     {
         parent::setData($this->isEmpty($data) ? [] : $data);
 
@@ -38,7 +31,7 @@ class OptionalInputFilter extends InputFilter
      *
      * {@inheritDoc}
      */
-    public function isValid($context = null): bool
+    public function isValid(array|null $context = null): bool
     {
         if (! $this->isEmpty($this->data)) {
             return parent::isValid($context);

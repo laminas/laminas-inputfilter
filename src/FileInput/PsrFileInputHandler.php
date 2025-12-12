@@ -26,6 +26,8 @@ use const UPLOAD_ERR_NO_FILE;
  * 3. Instead of adding a NotEmpty validator, it will (by default) automatically add
  *    a Laminas\Validator\File\Upload validator.
  *
+ * @internal
+ *
  * @psalm-internal Laminas\InputFilter
  * @psalm-internal LaminasTest\InputFilter
  */
@@ -66,9 +68,7 @@ final class PsrFileInputHandler implements FileInputHandlerInterface
         return $filterChain->filter($value);
     }
 
-    /**
-     * @param array<string, mixed>|null $context Extra "context" to provide the validator
-     */
+    /** @inheritDoc */
     public function isValid(mixed $rawValue, ValidatorChainInterface $validatorChain, ?array $context = null): bool
     {
         if (is_array($rawValue)) {

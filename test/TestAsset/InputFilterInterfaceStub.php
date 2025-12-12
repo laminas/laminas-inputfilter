@@ -30,18 +30,20 @@ final class InputFilterInterfaceStub extends InputFilter
     }
 
     /** @inheritDoc */
-    public function isValid($context = null): bool
+    public function isValid(array|null $context = null): bool
     {
         assertNotNull($this->isValid, 'isValid was not expected to be called');
 
         return $this->isValid;
     }
 
+    /** @inheritDoc */
     public function getValues(): array
     {
         return $this->getValues;
     }
 
+    /** @inheritDoc */
     public function getRawValues(): array
     {
         return $this->getRawValues;

@@ -122,7 +122,7 @@ final readonly class InputInterfaceStub implements InputInterface
     }
 
     /** @inheritDoc */
-    public function isValid(): bool
+    public function isValid(array|null $context = null): bool
     {
         assertNotNull($this->isValid, 'isValid was not expected to be called');
 
