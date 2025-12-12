@@ -8,6 +8,7 @@ use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\ToInt;
 use Laminas\Filter\ToNull;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputInterface;
 use Laminas\Translator\TranslatorInterface;
@@ -75,9 +76,41 @@ final class InputTest extends TestCase
         );
     }
 
-    public function testConstructorRequiresAName(): void
+    public function testAnEmptyStringNameIsExceptionalViaTheConstructor(): void
     {
-        self::assertEquals('foo', $this->input->getName());
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Input names cannot be an empty string');
+        new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), '');
+    }
+
+    public function testAnEmptyStringNameInSetNameIsExceptional(): void
+    {
+        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), null);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Input names cannot be an empty string');
+        $input->setName('');
+    }
+
+    /** @return list<array{0: string|int}> */
+    public static function validNamesForSetName(): array
+    {
+        return [
+            ['any-string'],
+            ['really, any string'],
+            [0],
+            [-10],
+            [99],
+        ];
+    }
+
+    #[DataProvider('validNamesForSetName')]
+    public function testValidInputNames(int|string $name): void
+    {
+        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), null);
+        self::assertNull($input->getName());
+        $input->setName($name);
+        self::assertSame($name, $input->getName());
     }
 
     public function testInputHasEmptyFilterChainByDefault(): void
