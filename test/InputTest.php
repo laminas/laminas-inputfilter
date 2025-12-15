@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\ToInt;
 use Laminas\Filter\ToNull;
+use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputInterface;
 use Laminas\Translator\TranslatorInterface;
@@ -14,6 +16,7 @@ use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\NumberComparison;
 use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -64,18 +67,50 @@ final class InputTest extends TestCase
         self::assertEquals(
             self::EMPTY_ERROR_MESSAGE,
             $messages[self::EMPTY_ERROR_MESSAGE_KEY],
-            $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages'
+            $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages',
         );
         self::assertCount(
             1,
             $messages,
-            $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages'
+            $message . ' missing NotEmpty::IS_EMPTY key and/or contains additional messages',
         );
     }
 
-    public function testConstructorRequiresAName(): void
+    public function testAnEmptyStringNameIsExceptionalViaTheConstructor(): void
     {
-        self::assertEquals('foo', $this->input->getName());
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Input names cannot be an empty string');
+        new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), '');
+    }
+
+    public function testAnEmptyStringNameInSetNameIsExceptional(): void
+    {
+        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), null);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Input names cannot be an empty string');
+        $input->setName('');
+    }
+
+    /** @return list<array{0: string|int}> */
+    public static function validNamesForSetName(): array
+    {
+        return [
+            ['any-string'],
+            ['really, any string'],
+            [0],
+            [-10],
+            [99],
+        ];
+    }
+
+    #[DataProvider('validNamesForSetName')]
+    public function testValidInputNames(int|string $name): void
+    {
+        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), null);
+        self::assertNull($input->getName());
+        $input->setName($name);
+        self::assertSame($name, $input->getName());
     }
 
     public function testInputHasEmptyFilterChainByDefault(): void
@@ -169,18 +204,13 @@ final class InputTest extends TestCase
         self::assertFalse($input->hasFallback(), 'hasFallback() value not match');
     }
 
-    /**
-     * @param string|string[] $fallbackValue
-     * @param string|string[] $originalValue
-     * @param string|string[] $expectedValue
-     */
     #[DataProvider('fallbackValueVsIsValidProvider')]
     public function testFallbackValueVsIsValidRules(
         bool $required,
-        $fallbackValue,
-        $originalValue,
+        string $fallbackValue,
+        string $originalValue,
         bool $isValid,
-        $expectedValue
+        string $expectedValue,
     ): void {
         $input = $this->input;
         $input->setContinueIfEmpty(true);
@@ -193,18 +223,15 @@ final class InputTest extends TestCase
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when fallback value is set. Detail: '
-            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
+            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR),
         );
         self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
         self::assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
         self::assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
 
-    /**
-     * @param string|string[] $fallbackValue
-     */
     #[DataProvider('fallbackValueVsIsValidProvider')]
-    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, $fallbackValue): void
+    public function testFallbackValueVsIsValidRulesWhenValueNotSet(bool $required, string $fallbackValue): void
     {
         $expectedValue = $fallbackValue; // Should always return the fallback value
 
@@ -218,7 +245,7 @@ final class InputTest extends TestCase
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when fallback value is set. Detail: '
-            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
+            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR),
         );
         self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
         self::assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
@@ -232,7 +259,7 @@ final class InputTest extends TestCase
 
         self::assertFalse(
             $input->isValid(),
-            'isValid() should be return always false when no fallback value, is required, and not data is set.'
+            'isValid() should be return always false when no fallback value, is required, and not data is set.',
         );
         $this->assertRequiredValidationErrorMessage($input);
     }
@@ -245,7 +272,7 @@ final class InputTest extends TestCase
 
         self::assertFalse(
             $input->isValid(),
-            'isValid() should be return always false when no fallback value, is required, and not data is set.'
+            'isValid() should be return always false when no fallback value, is required, and not data is set.',
         );
         self::assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
@@ -258,7 +285,7 @@ final class InputTest extends TestCase
         self::assertFalse(
             $input->isValid(),
             'isValid() should always return false when no fallback value is present, '
-            . 'the input is required, and no data is set.'
+            . 'the input is required, and no data is set.',
         );
         $this->assertRequiredValidationErrorMessage($input);
     }
@@ -277,7 +304,7 @@ final class InputTest extends TestCase
         self::assertFalse(
             $input->isValid(),
             'isValid() should always return false when no fallback value is present, '
-            . 'the input is required, and no data is set.'
+            . 'the input is required, and no data is set.',
         );
         self::assertEquals($customMessage, $input->getMessages());
     }
@@ -291,7 +318,7 @@ final class InputTest extends TestCase
         self::assertFalse(
             $input->isValid(),
             'isValid() should always return false when no fallback value is present, '
-            . 'the input is required, and no data is set.'
+            . 'the input is required, and no data is set.',
         );
         self::assertSame(['FAILED TO VALIDATE'], $input->getMessages());
     }
@@ -309,7 +336,7 @@ final class InputTest extends TestCase
         self::assertTrue(
             $input->isValid(),
             'isValid() should be return always true when is not required, and no data is set. Detail: '
-            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
+            . json_encode($input->getMessages(), JSON_THROW_ON_ERROR),
         );
         self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
     }
@@ -324,9 +351,8 @@ final class InputTest extends TestCase
         $input->setContinueIfEmpty(true);
         $input->setValue($raw);
         $input->isValid();
-        $validators = $input->getValidatorChain()
-                                ->getValidators();
-        self::assertEmpty($validators);
+        $validators = self::assertValidatorChain($input->getValidatorChain())->getValidators();
+        self::assertCount(0, $validators);
     }
 
     public function testDefaultGetValue(): void
@@ -379,7 +405,7 @@ final class InputTest extends TestCase
 
         self::assertTrue(
             $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
+            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR),
         );
     }
 
@@ -402,17 +428,17 @@ final class InputTest extends TestCase
     {
         self::assertTrue($this->input->isRequired());
         $this->input->setValue($raw);
-        $validatorChain = $this->input->getValidatorChain();
-        self::assertEquals(0, count($validatorChain->getValidators()));
+        $validatorChain = self::assertValidatorChain($this->input->getValidatorChain());
+        self::assertCount(0, $validatorChain->getValidators());
 
         self::assertFalse($this->input->isValid());
         $messages = $this->input->getMessages();
         self::assertArrayHasKey(self::EMPTY_ERROR_MESSAGE_KEY, $messages);
-        self::assertEquals(1, count($validatorChain->getValidators()));
+        self::assertCount(1, $validatorChain->getValidators());
 
         // Assert that NotEmpty validator wasn't added again
         self::assertFalse($this->input->isValid());
-        self::assertEquals(1, count($validatorChain->getValidators()));
+        self::assertCount(1, $validatorChain->getValidators());
     }
 
     /**
@@ -426,7 +452,7 @@ final class InputTest extends TestCase
 
         $notEmptyMock = new NotEmptyValidator();
 
-        $validatorChain = $this->input->getValidatorChain();
+        $validatorChain = self::assertValidatorChain($this->input->getValidatorChain());
         $validatorChain->prependValidator($notEmptyMock);
         self::assertFalse($this->input->isValid());
 
@@ -439,7 +465,7 @@ final class InputTest extends TestCase
     #[DataProvider('emptyValueProvider')]
     public function testDoNotInjectNotEmptyValidatorIfAnywhereInChain(mixed $raw, mixed $filtered): void
     {
-        $validatorChain = $this->input->getValidatorChain();
+        $validatorChain = self::assertValidatorChain($this->input->getValidatorChain());
 
         $this->input->setRequired(true);
         $this->input->setValue($raw);
@@ -467,7 +493,7 @@ final class InputTest extends TestCase
         ValidatorInterface $validator,
         mixed $value,
         bool $expectedIsValid,
-        array $expectedMessages
+        array $expectedMessages,
     ): void {
         $this->input->setRequired($required);
         $this->input->setAllowEmpty($allowEmpty);
@@ -479,7 +505,7 @@ final class InputTest extends TestCase
         self::assertEquals(
             $expectedIsValid,
             $this->input->isValid(),
-            'isValid() value not match. Detail: ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
+            'isValid() value not match. Detail: ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR),
         );
         self::assertEquals($expectedMessages, $this->input->getMessages(), 'getMessages() value not match');
         self::assertEquals($value, $this->input->getRawValue(), 'getRawValue() must return the value always');
@@ -588,16 +614,17 @@ final class InputTest extends TestCase
         $a = $this->createInput('a');
         $b = $this->createInput('b');
 
-        $a->getFilterChain()->attach($filter1);
+        $filterChainA = self::assertFilterChain($a->getFilterChain());
+        $filterChainA->attach($filter1);
         $b->getFilterChain()->attach($filter2);
 
-        self::assertNotContains($filter2, $a->getFilterChain());
-        self::assertCount(1, $a->getFilterChain());
+        self::assertNotContains($filter2, $filterChainA);
+        self::assertCount(1, $filterChainA);
 
         $a->merge($b);
 
-        self::assertContains($filter2, $a->getFilterChain());
-        self::assertCount(2, $a->getFilterChain());
+        self::assertContains($filter2, $filterChainA);
+        self::assertCount(2, $filterChainA);
     }
 
     public function testThatMergingTwoInputsMergesTheValidatorChain(): void
@@ -608,21 +635,46 @@ final class InputTest extends TestCase
         $a = $this->createInput('a');
         $b = $this->createInput('b');
 
-        $a->getValidatorChain()->attach($validator1);
+        $validatorChainA = self::assertValidatorChain($a->getValidatorChain());
+        $validatorChainA->attach($validator1);
         $b->getValidatorChain()->attach($validator2);
 
-        self::assertCount(1, $a->getValidatorChain());
-        self::assertValidatorChainNotContains($validator2, $a->getValidatorChain());
+        self::assertCount(1, $validatorChainA);
+        self::assertValidatorChainNotContains($validator2, $validatorChainA);
 
         $a->merge($b);
 
-        $chain = iterator_to_array($a->getValidatorChain()->getIterator());
+        $chain = iterator_to_array($validatorChainA->getIterator());
         self::assertCount(2, $chain);
-        self::assertValidatorChainContains($validator2, $a->getValidatorChain());
+        self::assertValidatorChainContains($validator2, $validatorChainA);
     }
 
-    private static function validatorChainContains(ValidatorInterface $validator, ValidatorChain $chain): bool
+    private static function assertValidatorChain(ValidatorChainInterface $chain): ValidatorChain
     {
+        self::assertInstanceOf(
+            ValidatorChain::class,
+            $chain,
+        );
+
+        return $chain;
+    }
+
+    private static function assertFilterChain(FilterChainInterface $chain): FilterChain
+    {
+        self::assertInstanceOf(
+            FilterChain::class,
+            $chain,
+        );
+
+        return $chain;
+    }
+
+    private static function validatorChainContains(
+        ValidatorInterface $validator,
+        ValidatorChainInterface $chain,
+    ): bool {
+        $chain = self::assertValidatorChain($chain);
+
         $found = false;
         foreach ($chain as $spec) {
             if ($spec['instance'] === $validator) {
@@ -634,16 +686,20 @@ final class InputTest extends TestCase
         return $found;
     }
 
-    private static function assertValidatorChainContains(ValidatorInterface $validator, ValidatorChain $chain): void
-    {
+    private static function assertValidatorChainContains(
+        ValidatorInterface $validator,
+        ValidatorChainInterface $chain,
+    ): void {
         self::assertTrue(self::validatorChainContains($validator, $chain), sprintf(
             'The validator of type "%s" was not found in the chain',
             $validator::class,
         ));
     }
 
-    private static function assertValidatorChainNotContains(ValidatorInterface $validator, ValidatorChain $chain): void
-    {
+    private static function assertValidatorChainNotContains(
+        ValidatorInterface $validator,
+        ValidatorChainInterface $chain,
+    ): void {
         self::assertFalse(self::validatorChainContains($validator, $chain), sprintf(
             'The validator of type "%s" was found in the chain and was not expected to be present',
             $validator::class,
@@ -975,5 +1031,45 @@ final class InputTest extends TestCase
                 'filtered' => new stdClass(),
             ],
         ];
+    }
+
+    public function testFluentInterfaceIsProvidedByCommonMethods(): void
+    {
+        self::assertSame(
+            $this->input,
+            $this->input->setRequired(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setAllowEmpty(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setName('foo'),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setBreakOnFailure(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setContinueIfEmpty(true),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setFallbackValue('muppet'),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setValue('muppet'),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setFilterChain(TestHelper::createFilterChain()),
+        );
+        self::assertSame(
+            $this->input,
+            $this->input->setValidatorChain(TestHelper::createValidatorChain()),
+        );
     }
 }

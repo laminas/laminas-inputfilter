@@ -7,6 +7,7 @@ namespace Laminas\InputFilter;
 use Laminas\InputFilter\FileInput\FileInputHandlerInterface;
 use Laminas\Validator\File\UploadFile as UploadValidator;
 use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorChainInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function assert;
@@ -37,15 +38,14 @@ final class FileInput extends Input
      * @inheritDoc
      * @param array|UploadedFileInterface $value
      */
-    public function setValue($value)
+    public function setValue(mixed $value): static
     {
         $this->handler = $this->createHandler($value);
         parent::setValue($value);
         return $this;
     }
 
-    /** @return $this */
-    public function resetValue()
+    public function resetValue(): static
     {
         $this->handler = null;
         return parent::resetValue();
@@ -55,24 +55,18 @@ final class FileInput extends Input
      * @param  bool $value Enable/Disable automatically prepending an Upload validator
      * @return $this
      */
-    public function setAutoPrependUploadValidator($value)
+    public function setAutoPrependUploadValidator(bool $value): self
     {
         $this->autoPrependUploadValidator = $value;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getAutoPrependUploadValidator()
+    public function getAutoPrependUploadValidator(): bool
     {
         return $this->autoPrependUploadValidator;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         if ($this->handler === null) {
             return $this->value;
@@ -104,7 +98,7 @@ final class FileInput extends Input
     }
 
     /** @inheritDoc */
-    public function isValid(?array $context = null): bool
+    public function isValid(array|null $context = null): bool
     {
         $rawValue        = $this->getRawValue();
         $hasValue        = $this->hasValue();
@@ -141,10 +135,7 @@ final class FileInput extends Input
         return $this->isValid;
     }
 
-    /**
-     * @return $this
-     */
-    public function merge(InputInterface $input)
+    public function merge(InputInterface $input): static
     {
         parent::merge($input);
         if ($input instanceof FileInput) {
@@ -156,10 +147,8 @@ final class FileInput extends Input
     /**
      * No-op, NotEmpty validator does not apply for FileInputs.
      * See also: BaseInputFilter::isValid()
-     *
-     * @return void
      */
-    protected function injectNotEmptyValidator()
+    protected function injectNotEmptyValidator(): void
     {
         $this->notEmptyValidator = true;
     }
@@ -185,8 +174,10 @@ final class FileInput extends Input
         return new FileInput\HttpServerFileInputHandler();
     }
 
-    private function injectUploadValidator(ValidatorChain $chain): ValidatorChain
+    private function injectUploadValidator(ValidatorChainInterface $chain): ValidatorChain
     {
+        assert($chain instanceof ValidatorChain);
+
         if (! $this->autoPrependUploadValidator) {
             return $chain;
         }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter\TestAsset;
 
 use Exception;
-use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\InputFilter\InputInterface;
-use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorChainInterface;
 
 use function func_get_arg;
 use function func_num_args;
@@ -29,97 +29,81 @@ final readonly class InputInterfaceStub implements InputInterface
     ) {
     }
 
-    /** @inheritDoc */
-    public function setAllowEmpty($allowEmpty)
+    public function setAllowEmpty(bool $allowEmpty): static
     {
         return $this;
     }
 
-    /** @inheritDoc */
-    public function setBreakOnFailure($breakOnFailure)
+    public function setBreakOnFailure(bool $breakOnFailure): static
     {
         return $this;
     }
 
-    /** @inheritDoc */
-    public function setErrorMessage($errorMessage)
+    public function setErrorMessage(string|null $errorMessage): static
     {
         return $this;
     }
 
-    /** @inheritDoc */
-    public function setFilterChain(FilterChain $filterChain): never
+    public function setFilterChain(FilterChainInterface $filterChain): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
-    public function setName($name): never
+    public function setName(string|int $name): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
-    public function setRequired($required): never
+    public function setRequired(bool $required): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
-    public function setValidatorChain(ValidatorChain $validatorChain): never
+    public function setValidatorChain(ValidatorChainInterface $validatorChain): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
-    public function setValue($value)
+    public function setValue(mixed $value): static
     {
         return $this;
     }
 
-    /** @inheritDoc */
     public function merge(InputInterface $input): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
     public function allowEmpty(): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
     public function breakOnFailure(): bool
     {
         return $this->breakOnFailure;
     }
 
-    /** @inheritDoc */
     public function getErrorMessage(): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
     public function getFilterChain(): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /** @inheritDoc */
     public function getRawValue(): mixed
     {
         return $this->getRawValue;
     }
 
-    /** @inheritDoc */
     public function isRequired(): bool
     {
         assertNotNull($this->isRequired, 'isRequired was not expected to be called');
@@ -127,20 +111,18 @@ final readonly class InputInterfaceStub implements InputInterface
         return $this->isRequired;
     }
 
-    /** @inheritDoc */
     public function getValidatorChain(): never
     {
         throw new Exception('Not implemented');
     }
 
-    /** @inheritDoc */
     public function getValue(): mixed
     {
         return $this->getValue;
     }
 
     /** @inheritDoc */
-    public function isValid(): bool
+    public function isValid(array|null $context = null): bool
     {
         assertNotNull($this->isValid, 'isValid was not expected to be called');
 

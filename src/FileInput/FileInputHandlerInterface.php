@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter\FileInput;
 
-use Laminas\Filter\FilterChain;
-use Laminas\Validator\ValidatorChain;
+use Laminas\Filter\FilterChainInterface;
+use Laminas\Validator\ValidatorChainInterface;
 
 /**
  * FileInputInterface defines expected methods for validating and filtering uploaded files.
@@ -22,8 +22,8 @@ interface FileInputHandlerInterface
     /** Checks if the raw input value is an empty file input eg: no file was uploaded */
     public static function isEmptyFile(mixed $rawValue): bool;
 
-    public function filterValue(mixed $value, bool $isValid, FilterChain $filterChain): mixed;
+    public function filterValue(mixed $value, bool $isValid, FilterChainInterface $filterChain): mixed;
 
-    /** @param array<string, mixed> $context Extra "context" to provide the validator */
-    public function isValid(mixed $rawValue, ValidatorChain $validatorChain, ?array $context = null): bool;
+    /** @param array<array-key, mixed> $context Extra "context" to provide the validator */
+    public function isValid(mixed $rawValue, ValidatorChainInterface $validatorChain, ?array $context = null): bool;
 }

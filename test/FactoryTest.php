@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter;
 
 use Laminas\Filter;
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
@@ -172,16 +174,6 @@ final class FactoryTest extends TestCase
         ]);
     }
 
-    public function testCreateInputFilterWithInvalidDataTypeThrowsInvalidArgumentException(): void
-    {
-        $factory = $this->createDefaultFactory();
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('expects an array or Traversable; received "string"');
-        /** @psalm-suppress InvalidArgument */
-        $factory->createInputFilter('invalid_value');
-    }
-
     public function testFactoryCreatesFilterChainWithComposedPluginManagerWhenCreatingNewInputObjects(): void
     {
         $container = TestHelper::getContainer();
@@ -193,6 +185,7 @@ final class FactoryTest extends TestCase
         ]);
 
         $inputFilterChain = $input->getFilterChain();
+        self::assertInstanceOf(FilterChain::class, $inputFilterChain);
         self::assertSame(
             $plugins,
             TestHelper::getFilterPluginManagerFromFilterChain($inputFilterChain),
@@ -209,6 +202,7 @@ final class FactoryTest extends TestCase
         ]);
 
         $inputValidatorChain = $input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $inputValidatorChain);
         self::assertSame(
             $plugins,
             $inputValidatorChain->getPluginManager(),
@@ -232,8 +226,10 @@ final class FactoryTest extends TestCase
         self::assertCount(1, $inputFilter);
         $input = $inputFilter->get('foo');
         self::assertInstanceOf(InputInterface::class, $input);
-        $inputFilterChain    = $input->getFilterChain();
+        $inputFilterChain = $input->getFilterChain();
+        self::assertInstanceOf(FilterChain::class, $inputFilterChain);
         $inputValidatorChain = $input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $inputValidatorChain);
         self::assertSame(
             $filterPlugins,
             (new ReflectionObject($inputFilterChain))->getProperty('plugins')->getValue($inputFilterChain)
@@ -260,7 +256,9 @@ final class FactoryTest extends TestCase
         ]);
         self::assertInstanceOf(InputInterface::class, $input);
         self::assertEquals('foo', $input->getName());
-        self::assertCount(2, $input->getFilterChain());
+        $filterChain = $input->getFilterChain();
+        self::assertInstanceOf(FilterChain::class, $filterChain);
+        self::assertCount(2, $filterChain);
 
         $input->setValue('   Encodable with ISO-8859-1  ');
 
@@ -312,7 +310,8 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
         self::assertEquals('foo', $input->getName());
         $chain = $input->getValidatorChain();
-        self::assertCount(3, $chain->getValidators());
+        self::assertInstanceOf(ValidatorChain::class, $chain);
+        self::assertCount(3, $chain);
 
         $input->setValue($value);
 
@@ -399,14 +398,15 @@ final class FactoryTest extends TestCase
         $inputFilterPluginManager = $serviceManager->get(InputFilterPluginManager::class);
         $inputFilterPluginManager->configure([
             'factories' => [
-                CustomInput::class
-                    => fn () => new CustomInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain()),
+                CustomInput::class => static fn (): CustomInput => new CustomInput(
+                    TestHelper::createFilterChain(),
+                    TestHelper::createValidatorChain(),
+                ),
             ],
         ]);
 
         $factory = $serviceManager->get(Factory::class);
 
-        /** @psalm-suppress InvalidArgument This appears valid but the Psalm diff makes my eyes bleed */
         $inputFilter = $factory->createInputFilter([
             'foo'  => [
                 'name'       => 'foo',
@@ -490,12 +490,16 @@ final class FactoryTest extends TestCase
                 case 'foo':
                     self::assertInstanceOf(Input::class, $input);
                     self::assertFalse($input->isRequired());
-                    self::assertCount(2, $input->getValidatorChain());
+                    $validatorChain = $input->getValidatorChain();
+                    self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+                    self::assertCount(2, $validatorChain);
                     break;
                 case 'bar':
                     self::assertInstanceOf(Input::class, $input);
                     self::assertTrue($input->allowEmpty());
-                    self::assertCount(2, $input->getFilterChain());
+                    $filterChain = $input->getFilterChain();
+                    self::assertInstanceOf(FilterChain::class, $filterChain);
+                    self::assertCount(2, $filterChain);
                     break;
                 case 'baz':
                     self::assertInstanceOf(InputFilter::class, $input);
@@ -503,11 +507,15 @@ final class FactoryTest extends TestCase
                     $foo = $input->get('foo');
                     self::assertInstanceOf(Input::class, $foo);
                     self::assertFalse($foo->isRequired());
-                    self::assertCount(2, $foo->getValidatorChain());
+                    $validatorChain = $foo->getValidatorChain();
+                    self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+                    self::assertCount(2, $validatorChain);
                     $bar = $input->get('bar');
                     self::assertInstanceOf(Input::class, $bar);
                     self::assertTrue($bar->allowEmpty());
-                    self::assertCount(2, $bar->getFilterChain());
+                    $filterChain = $bar->getFilterChain();
+                    self::assertInstanceOf(FilterChain::class, $filterChain);
+                    self::assertCount(2, $filterChain);
                     break;
                 case 'bat':
                     self::assertInstanceOf(CustomInput::class, $input);
@@ -597,11 +605,11 @@ final class FactoryTest extends TestCase
             'filters' => [
                 [
                     'name'     => 'StringTrim',
-                    'priority' => Filter\FilterChain::DEFAULT_PRIORITY - 1, // 999
+                    'priority' => FilterChainInterface::DEFAULT_PRIORITY - 1, // 999
                 ],
                 [
                     'name'     => 'StringToUpper',
-                    'priority' => Filter\FilterChain::DEFAULT_PRIORITY + 1, //1001
+                    'priority' => FilterChainInterface::DEFAULT_PRIORITY + 1, //1001
                 ],
                 [
                     'name' => 'StringToLower', // default priority 1000
@@ -611,12 +619,14 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
 
         // We should have 3 filters
-        self::assertEquals(3, $input->getFilterChain()->count());
+        $filterChain = $input->getFilterChain();
+        self::assertInstanceOf(FilterChain::class, $filterChain);
+        self::assertCount(3, $filterChain);
 
         // Filters should pop in the following order:
         // string_to_upper (1001), string_to_lower (1000), string_trim (999)
         $index = 0;
-        foreach ($input->getFilterChain()->getIterator() as $filter) {
+        foreach ($filterChain as $filter) {
             switch ($index) {
                 case 0:
                     self::assertInstanceOf(Filter\StringToUpper::class, $filter);
@@ -659,7 +669,7 @@ final class FactoryTest extends TestCase
                     'name'     => 'Callback',
                     'priority' => ValidatorChainInterface::DEFAULT_PRIORITY + 1, // 2
                     'options'  => [
-                        'callback' => static function () use (&$order) {
+                        'callback' => static function () use (&$order): true {
                             self::assertSame(0, $order);
                             ++$order;
 
@@ -683,7 +693,9 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(InputInterface::class, $input);
 
         // We should have 3 validators
-        self::assertEquals(3, $input->getValidatorChain()->count());
+        $validatorChain = $input->getValidatorChain();
+        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+        self::assertCount(3, $validatorChain);
 
         $input->setValue(['foo' => false]);
         self::assertTrue($input->isValid());
@@ -730,11 +742,6 @@ final class FactoryTest extends TestCase
     {
         $factory = $this->createDefaultFactory();
 
-        /**
-         * null is not acceptable as an input spec for the psalm type
-         *
-         * @psalm-suppress InvalidArgument
-         */
         $inputFilter = $factory->createInputFilter([
             'foo' => [
                 'name' => 'foo',
@@ -914,7 +921,7 @@ final class FactoryTest extends TestCase
         $inputFilterPluginManager = $container->get(InputFilterPluginManager::class);
         $factory                  = $container->get(Factory::class);
 
-        $filterChain    = new Filter\FilterChain($filterPluginManager);
+        $filterChain    = new FilterChain($filterPluginManager);
         $validatorChain = new ValidatorChain();
         $validatorChain->setPluginManager($validatorPlugins);
 

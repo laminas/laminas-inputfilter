@@ -6,14 +6,7 @@ namespace Laminas\InputFilter;
 
 interface EmptyContextInterface
 {
-    /**
-     * @param bool $continueIfEmpty
-     * @return self
-     */
-    public function setContinueIfEmpty($continueIfEmpty);
+    public function setContinueIfEmpty(bool $continueIfEmpty): static;
 
-    /**
-     * @return bool
-     */
-    public function continueIfEmpty();
+    public function continueIfEmpty(): bool;
 }

@@ -7,88 +7,41 @@
       <code><![CDATA[$this->value]]></code>
       <code><![CDATA[$this->value]]></code>
     </DeprecatedProperty>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareNotArrayFailureMessage()]]></code>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[! $required]]></code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/BaseInputFilter.php">
     <InvalidReturnStatement>
       <code><![CDATA[$values]]></code>
+      <code><![CDATA[array_map(
+            static fn (InputInterface|InputFilterInterface $input): array => $input->getMessages(),
+            $this->getInvalidInput(),
+        )]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[TFilteredValues]]></code>
+      <code><![CDATA[array]]></code>
     </InvalidReturnType>
     <MixedArgumentTypeCoercion>
-      <code><![CDATA[$inputs]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
-      <code><![CDATA[$inputContext]]></code>
-      <code><![CDATA[$unknownInputs[$key]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$inputs]]></code>
-    </MixedPropertyTypeCoercion>
-    <TooManyArguments>
-      <code><![CDATA[isValid]]></code>
-      <code><![CDATA[isValid]]></code>
-    </TooManyArguments>
-    <UnusedPsalmSuppress>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-    </UnusedPsalmSuppress>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <ImplementedParamTypeMismatch>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-    </ImplementedParamTypeMismatch>
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
-      <code><![CDATA[$this->invalidInputs]]></code>
-      <code><![CDATA[$this->validInputs]]></code>
     </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->collectionValues]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[TFilteredValues]]></code>
-    </InvalidReturnType>
-    <MixedArgument>
-      <code><![CDATA[$data]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$data]]></code>
-    </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$this->collectionValues]]></code>
-    </MixedPropertyTypeCoercion>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[array[]]]></code>
-      <code><![CDATA[array[]]]></code>
-    </PossiblyUnusedReturnValue>
-    <UnusedPsalmSuppress>
-      <code><![CDATA[DocblockTypeContradiction]]></code>
-      <code><![CDATA[DocblockTypeContradiction]]></code>
-      <code><![CDATA[DocblockTypeContradiction]]></code>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-      <code><![CDATA[RedundantConditionGivenDocblockType]]></code>
-    </UnusedPsalmSuppress>
-  </file>
-  <file src="src/EmptyContextInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$name]]></code>
+    </PropertyTypeCoercion>
   </file>
   <file src="src/Factory.php">
     <MixedArgument>
@@ -99,9 +52,6 @@
     </MixedArgument>
   </file>
   <file src="src/FileInput.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MixedAssignment>
       <code><![CDATA[$rawValue]]></code>
     </MixedAssignment>
@@ -111,9 +61,12 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/FileInput/HttpServerFileInputHandler.php">
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
-      <code><![CDATA[$newValue[]]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
   </file>
@@ -121,6 +74,10 @@
     <MixedArgument>
       <code><![CDATA[$rawValue[0]]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$fileData]]></code>
       <code><![CDATA[$newValue[]]]></code>
@@ -131,24 +88,20 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_array($this->errorMessage)]]></code>
-    </DocblockTypeContradiction>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[null|string]]></code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MixedAssignment>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(bool) $allowEmpty]]></code>
-      <code><![CDATA[(bool) $breakOnFailure]]></code>
-      <code><![CDATA[(bool) $continueIfEmpty]]></code>
-      <code><![CDATA[(string) $errorMessage]]></code>
-    </RedundantCastGivenDocblockType>
+    <InvalidReturnStatement>
+      <code><![CDATA[(array) $this->errorMessage]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+    </LessSpecificReturnStatement>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$context]]></code>
+    </MixedArgumentTypeCoercion>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <MixedArgument>
@@ -163,11 +116,6 @@
       <code><![CDATA[$config]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/InputFilterInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[InputFilterInterface]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="src/InputFilterPluginManager.php">
     <MethodSignatureMismatch>
       <code><![CDATA[InputFilterPluginManager]]></code>
@@ -179,14 +127,7 @@
   </file>
   <file src="src/InputInterface.php">
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
+      <code><![CDATA[static]]></code>
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/OptionalInputFilter.php">
@@ -196,7 +137,6 @@
   </file>
   <file src="test/BaseInputFilterTest.php">
     <InvalidArgument>
-      <code><![CDATA[['nested' => ['nested-input1', 'nested-input2']]]]></code>
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </InvalidArgument>
@@ -243,29 +183,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/FactoryTest.php">
-    <InvalidArgument>
-      <code><![CDATA[[
-            0 => [
-                'type' => InputFilter::class,
-                'name' => 'bar',
-                '0'    => [
-                    'name' => 'bat',
-                ],
-                '1'    => [
-                    'name' => 'baz',
-                ],
-            ],
-            1 => [
-                'type'         => CollectionInputFilter::class,
-                'name'         => 'foo',
-                'input_filter' => [
-                    '0' => [
-                        'name' => 'bat',
-                    ],
-                ],
-            ],
-        ]]]></code>
-    </InvalidArgument>
     <UndefinedInterfaceMethod>
       <code><![CDATA[continueIfEmpty]]></code>
     </UndefinedInterfaceMethod>
