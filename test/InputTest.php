@@ -62,7 +62,7 @@ final class InputTest extends TestCase
         $message  = $message ?: 'Expected failure message for required input';
         $message .= ';';
 
-        $messages = $input->getMessages();
+        $messages = $input->getMessages()->toArray();
         self::assertArrayHasKey(self::EMPTY_ERROR_MESSAGE_KEY, $messages);
         self::assertEquals(
             self::EMPTY_ERROR_MESSAGE,
@@ -225,7 +225,11 @@ final class InputTest extends TestCase
             'isValid() should be return always true when fallback value is set. Detail: '
             . json_encode($input->getMessages(), JSON_THROW_ON_ERROR),
         );
-        self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
+        self::assertEquals(
+            [],
+            $input->getMessages()->toArray(),
+            'getMessages() should be empty because the input is valid',
+        );
         self::assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
         self::assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
@@ -247,7 +251,11 @@ final class InputTest extends TestCase
             'isValid() should be return always true when fallback value is set. Detail: '
             . json_encode($input->getMessages(), JSON_THROW_ON_ERROR),
         );
-        self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
+        self::assertEquals(
+            [],
+            $input->getMessages()->toArray(),
+            'getMessages() should be empty because the input is valid',
+        );
         self::assertSame($expectedValue, $input->getRawValue(), 'getRawValue() value not match');
         self::assertSame($expectedValue, $input->getValue(), 'getValue() value not match');
     }
@@ -274,7 +282,7 @@ final class InputTest extends TestCase
             $input->isValid(),
             'isValid() should be return always false when no fallback value, is required, and not data is set.',
         );
-        self::assertSame(['FAILED TO VALIDATE'], $input->getMessages());
+        self::assertSame(['FAILED TO VALIDATE'], $input->getMessages()->toArray());
     }
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesNotEmptyValidatorIsEmptyErrorMessage(): void
@@ -306,7 +314,7 @@ final class InputTest extends TestCase
             'isValid() should always return false when no fallback value is present, '
             . 'the input is required, and no data is set.',
         );
-        self::assertEquals($customMessage, $input->getMessages());
+        self::assertEquals($customMessage, $input->getMessages()->toArray());
     }
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesCustomErrorMessageWhenSet(): void
@@ -320,7 +328,7 @@ final class InputTest extends TestCase
             'isValid() should always return false when no fallback value is present, '
             . 'the input is required, and no data is set.',
         );
-        self::assertSame(['FAILED TO VALIDATE'], $input->getMessages());
+        self::assertSame(['FAILED TO VALIDATE'], $input->getMessages()->toArray());
     }
 
     public function testNotRequiredWithoutFallbackAndValueNotSetThenIsValid(): void
@@ -338,7 +346,11 @@ final class InputTest extends TestCase
             'isValid() should be return always true when is not required, and no data is set. Detail: '
             . json_encode($input->getMessages(), JSON_THROW_ON_ERROR),
         );
-        self::assertEquals([], $input->getMessages(), 'getMessages() should be empty because the input is valid');
+        self::assertEquals(
+            [],
+            $input->getMessages()->toArray(),
+            'getMessages() should be empty because the input is valid',
+        );
     }
 
     /**
@@ -432,7 +444,7 @@ final class InputTest extends TestCase
         self::assertCount(0, $validatorChain->getValidators());
 
         self::assertFalse($this->input->isValid());
-        $messages = $this->input->getMessages();
+        $messages = $this->input->getMessages()->toArray();
         self::assertArrayHasKey(self::EMPTY_ERROR_MESSAGE_KEY, $messages);
         self::assertCount(1, $validatorChain->getValidators());
 
@@ -507,7 +519,7 @@ final class InputTest extends TestCase
             $this->input->isValid(),
             'isValid() value not match. Detail: ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR),
         );
-        self::assertEquals($expectedMessages, $this->input->getMessages(), 'getMessages() value not match');
+        self::assertEquals($expectedMessages, $this->input->getMessages()->toArray(), 'getMessages() value not match');
         self::assertEquals($value, $this->input->getRawValue(), 'getRawValue() must return the value always');
         self::assertEquals($value, $this->input->getValue(), 'getValue() must return the filtered value always');
     }
@@ -813,7 +825,7 @@ final class InputTest extends TestCase
             ->willReturn($translatedMessage);
 
         self::assertFalse($this->input->isValid());
-        $messages = $this->input->getMessages();
+        $messages = $this->input->getMessages()->toArray();
         self::assertArrayHasKey(self::EMPTY_ERROR_MESSAGE_KEY, $messages);
         self::assertSame($translatedMessage, $messages[self::EMPTY_ERROR_MESSAGE_KEY]);
     }
@@ -852,7 +864,7 @@ final class InputTest extends TestCase
      */
     public static function setValueProvider(): array
     {
-        return array_merge(static::emptyValueProvider(), static::mixedValueProvider());
+        return array_merge(self::emptyValueProvider(), self::mixedValueProvider());
     }
 
     /**
@@ -868,8 +880,8 @@ final class InputTest extends TestCase
      */
     public static function isRequiredVsAllowEmptyVsContinueIfEmptyVsIsValidProvider(): array
     {
-        $allValues   = static::setValueProvider();
-        $emptyValues = static::emptyValueProvider();
+        $allValues   = self::setValueProvider();
+        $emptyValues = self::emptyValueProvider();
 
         $nonEmptyValues = array_diff_key($allValues, $emptyValues);
 

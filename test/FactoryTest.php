@@ -971,11 +971,11 @@ final class FactoryTest extends TestCase
         self::assertInstanceOf(CollectionInputFilter::class, $inputFilter);
 
         self::assertFalse($inputFilter->isValid());
-        self::assertSame([[NotEmpty::IS_EMPTY => $message]], $inputFilter->getMessages());
+        self::assertSame([[NotEmpty::IS_EMPTY => $message]], $inputFilter->getMessages()->toArray());
 
         $inputFilter->setIsRequired(false);
         self::assertTrue($inputFilter->isValid());
-        self::assertSame([], $inputFilter->getMessages());
+        self::assertSame([], $inputFilter->getMessages()->toArray());
     }
 
     protected function createDefaultFactory(): Factory

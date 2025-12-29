@@ -8,6 +8,7 @@ use ArrayIterator;
 use ArrayObject;
 use Laminas\InputFilter\BaseInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\ErrorMessages;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
 use Laminas\InputFilter\Factory;
@@ -134,7 +135,11 @@ final class CollectionInputFilterTest extends TestCase
         );
         self::assertEquals($expectedRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
         self::assertEquals($expectedValues, $this->inputFilter->getValues(), 'getValues() value not match');
-        self::assertEquals($expectedMessages, $this->inputFilter->getMessages(), 'getMessages() value not match');
+        self::assertEquals(
+            $expectedMessages,
+            $this->inputFilter->getMessages()->toArray(),
+            'getMessages() value not match',
+        );
     }
 
     /**
@@ -235,7 +240,7 @@ final class CollectionInputFilterTest extends TestCase
         );
         self::assertEquals($colRaw, $this->inputFilter->getRawValues(), 'getRawValues() value not match');
         self::assertEquals($colFiltered, $this->inputFilter->getValues(), 'getValues() value not match');
-        self::assertEquals([], $this->inputFilter->getMessages(), 'getMessages() value not match');
+        self::assertEquals([], $this->inputFilter->getMessages()->toArray(), 'getMessages() value not match');
     }
 
     /** @psalm-return array<string, array{count: null|int, isValid: bool}> */
@@ -407,7 +412,7 @@ final class CollectionInputFilterTest extends TestCase
                 ->method('isValid');
         }
         $inputFilter->method('getMessages')
-            ->willReturn($getMessages);
+            ->willReturn(new ErrorMessages($getMessages));
 
         return $inputFilter;
     }
@@ -522,21 +527,23 @@ final class CollectionInputFilterTest extends TestCase
         ]);
 
         $isValid  = $collectionInputFilter->isValid();
-        $messages = $collectionInputFilter->getMessages();
+        $messages = $collectionInputFilter->getMessages()->toArray();
 
-        // @codingStandardsIgnoreStart
         self::assertFalse($isValid);
         self::assertCount(2, $messages);
 
+        self::assertIsArray($messages[0]);
         self::assertArrayHasKey('phone', $messages[0]);
+        self::assertIsArray($messages[0]['phone']);
         self::assertCount(1, $messages[0]['phone']);
         self::assertContains(self::EMPTY_ERROR_MESSAGE, $messages[0]['phone']);
 
+        self::assertIsArray($messages[1]);
         self::assertArrayHasKey('phone', $messages[1]);
+        self::assertIsArray($messages[1]['phone']);
         self::assertCount(1, $messages[1]['phone']);
         self::assertNotContains(self::EMPTY_ERROR_MESSAGE, $messages[1]['phone']);
         self::assertContains('The input must contain only digits', $messages[1]['phone']);
-        // @codingStandardsIgnoreEnd
     }
 
     public function testCollectionValidationUsesCustomInputErrorMessages(): void
@@ -573,17 +580,21 @@ final class CollectionInputFilterTest extends TestCase
         ]);
 
         $isValid  = $collectionInputFilter->isValid();
-        $messages = $collectionInputFilter->getMessages();
+        $messages = $collectionInputFilter->getMessages()->toArray();
 
         self::assertFalse($isValid);
         self::assertCount(2, $messages);
 
+        self::assertIsArray($messages[0]);
         self::assertArrayHasKey('phone', $messages[0]);
+        self::assertIsArray($messages[0]['phone']);
         self::assertCount(1, $messages[0]['phone']);
         self::assertContains('CUSTOM ERROR MESSAGE', $messages[0]['phone']);
         self::assertNotContains(self::EMPTY_ERROR_MESSAGE, $messages[0]['phone']);
 
+        self::assertIsArray($messages[1]);
         self::assertArrayHasKey('phone', $messages[1]);
+        self::assertIsArray($messages[1]['phone']);
         self::assertCount(1, $messages[1]['phone']);
         self::assertContains('CUSTOM ERROR MESSAGE', $messages[1]['phone']);
     }
@@ -720,7 +731,7 @@ final class CollectionInputFilterTest extends TestCase
                     ],
                 ],
             ],
-        ], $inputFilter->getMessages());
+        ], $inputFilter->getMessages()->toArray());
     }
 
     public function testNotEmptyMessageIsTranslated(): void
@@ -738,7 +749,10 @@ final class CollectionInputFilterTest extends TestCase
         $this->inputFilter->setData([]);
 
         self::assertFalse($this->inputFilter->isValid());
-        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $translatedMessage]], $this->inputFilter->getMessages());
+        self::assertEquals(
+            [[self::EMPTY_ERROR_MESSAGE_KEY => $translatedMessage]],
+            $this->inputFilter->getMessages()->toArray(),
+        );
     }
 
     public function testSetDataUsingSetDataAndRunningIsValidReturningSameAsOriginalForUnfilteredData(): void
@@ -823,7 +837,10 @@ final class CollectionInputFilterTest extends TestCase
         $inputFilter->setData([]);
 
         self::assertFalse($inputFilter->isValid());
-        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => self::EMPTY_ERROR_MESSAGE]], $inputFilter->getMessages());
+        self::assertEquals(
+            [[self::EMPTY_ERROR_MESSAGE_KEY => self::EMPTY_ERROR_MESSAGE]],
+            $inputFilter->getMessages()->toArray(),
+        );
     }
 
     public function testSettingCustomValidationMessageViaFactory(): void
@@ -843,7 +860,7 @@ final class CollectionInputFilterTest extends TestCase
         $inputFilter->setData([]);
 
         self::assertFalse($inputFilter->isValid());
-        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $customMessage]], $inputFilter->getMessages());
+        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $customMessage]], $inputFilter->getMessages()->toArray());
     }
 
     public function testSetIsRequiredValidationMessage(): void
@@ -854,6 +871,9 @@ final class CollectionInputFilterTest extends TestCase
         $this->inputFilter->setData([]);
 
         self::assertFalse($this->inputFilter->isValid());
-        self::assertEquals([[self::EMPTY_ERROR_MESSAGE_KEY => $customMessage]], $this->inputFilter->getMessages());
+        self::assertEquals(
+            [[self::EMPTY_ERROR_MESSAGE_KEY => $customMessage]],
+            $this->inputFilter->getMessages()->toArray(),
+        );
     }
 }

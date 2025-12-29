@@ -6,6 +6,7 @@ namespace LaminasTest\InputFilter\TestAsset;
 
 use Exception;
 use Laminas\Filter\FilterChainInterface;
+use Laminas\InputFilter\ErrorMessages;
 use Laminas\InputFilter\InputInterface;
 use Laminas\Validator\ValidatorChainInterface;
 
@@ -133,9 +134,8 @@ final readonly class InputInterfaceStub implements InputInterface
         return $this->isValid;
     }
 
-    /** @return array<string, string> */
-    public function getMessages(): array
+    public function getMessages(): ErrorMessages
     {
-        return $this->getMessages;
+        return new ErrorMessages($this->getMessages);
     }
 }

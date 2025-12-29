@@ -17,14 +17,9 @@
   <file src="src/BaseInputFilter.php">
     <InvalidReturnStatement>
       <code><![CDATA[$values]]></code>
-      <code><![CDATA[array_map(
-            static fn (InputInterface|InputFilterInterface $input): array => $input->getMessages(),
-            $this->getInvalidInput(),
-        )]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
       <code><![CDATA[TFilteredValues]]></code>
-      <code><![CDATA[array]]></code>
     </InvalidReturnType>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$value]]></code>
@@ -35,10 +30,6 @@
     </MixedAssignment>
   </file>
   <file src="src/CollectionInputFilter.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->collectionMessages]]></code>
-      <code><![CDATA[$this->collectionMessages]]></code>
-    </InvalidPropertyAssignmentValue>
     <PropertyTypeCoercion>
       <code><![CDATA[$name]]></code>
     </PropertyTypeCoercion>
@@ -88,12 +79,6 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[(array) $this->errorMessage]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[array]]></code>
-    </InvalidReturnType>
     <LessSpecificReturnStatement>
       <code><![CDATA[$this]]></code>
       <code><![CDATA[$this]]></code>
