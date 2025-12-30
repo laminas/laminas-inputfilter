@@ -37,8 +37,6 @@ use Laminas\Validator\ValidatorInterface; // phpcs:ignore
  *     required?: bool,
  *     required_message?: string,
  * }&array<array-key, InputSpecification>
- * @psalm-type InputErrorMessages = array<string, string>
- * @psalm-type InputFilterErrorMessages = array<array-key, InputErrorMessages|InputErrorMessages[]>
  */
 interface InputFilterInterface extends Countable
 {
@@ -159,12 +157,7 @@ interface InputFilterInterface extends Countable
     public function getRawValues(): array;
 
     /**
-     * Return a list of validation failure messages
-     *
-     * Should return an associative array of named input/message list pairs.
-     * Pairs should only be returned for inputs that failed validation.
-     *
-     * @return InputFilterErrorMessages|InputFilterErrorMessages[]
+     * Return validation failure messages
      */
-    public function getMessages(): array;
+    public function getMessages(): ErrorMessages;
 }

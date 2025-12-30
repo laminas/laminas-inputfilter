@@ -28,7 +28,7 @@ class CollectionInputFilter extends InputFilter
     protected array $collectionValues = [];
     /** @var array<array-key, array> */
     protected array $collectionRawValues = [];
-    /** @var array<array-key, array<string, array<array-key, string>>> */
+    /** @var array<array-key, ErrorMessages> */
     protected array $collectionMessages = [];
     /** @var InputFilterInterface<TFilteredValues>|null */
     protected InputFilterInterface|null $inputFilter = null;
@@ -268,12 +268,9 @@ class CollectionInputFilter extends InputFilter
         $this->collectionRawValues = [];
     }
 
-    /**
-     * @return array<array-key, array<string, array<array-key, string>>>
-     */
-    public function getMessages(): array
+    public function getMessages(): ErrorMessages
     {
-        return $this->collectionMessages;
+        return new ErrorMessages($this->collectionMessages);
     }
 
     /** @inheritDoc */
@@ -304,8 +301,7 @@ class CollectionInputFilter extends InputFilter
         return $unknownInputs;
     }
 
-    /** @return array<string, string> */
-    private function getEmptyValidationErrorMessages(): array
+    private function getEmptyValidationErrorMessages(): ErrorMessages
     {
         $options = $this->emptyErrorMessage === null
             ? []
@@ -315,6 +311,6 @@ class CollectionInputFilter extends InputFilter
 
         $validator->isValid(null);
 
-        return $validator->getMessages();
+        return new ErrorMessages($validator->getMessages());
     }
 }

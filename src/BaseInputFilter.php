@@ -408,13 +408,12 @@ class BaseInputFilter implements
         return $values;
     }
 
-    /** @inheritDoc */
-    public function getMessages(): array
+    public function getMessages(): ErrorMessages
     {
-        return array_map(
-            static fn (InputInterface|InputFilterInterface $input): array => $input->getMessages(),
+        return new ErrorMessages(array_map(
+            static fn (InputInterface|InputFilterInterface $input): ErrorMessages => $input->getMessages(),
             $this->getInvalidInput(),
-        );
+        ));
     }
 
     /**

@@ -150,7 +150,7 @@ final class BaseInputFilterTest extends TestCase
         self::assertEquals($expectedIsValid, $inputFilter->isValid(), 'isValid() value not match');
         self::assertEquals($expectedInvalidInputs, $inputFilter->getInvalidInput(), 'getInvalidInput() value not match');
         self::assertEquals($expectedValidInputs, $inputFilter->getValidInput(), 'getValidInput() value not match');
-        self::assertEquals($expectedMessages, $inputFilter->getMessages(), 'getMessages() value not match');
+        self::assertEquals($expectedMessages, $inputFilter->getMessages()->toArray(), 'getMessages() value not match');
         // phpcs:enable Generic.Files.LineLength.TooLong
 
         // ** Check unknown fields **

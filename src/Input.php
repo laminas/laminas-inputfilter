@@ -323,19 +323,18 @@ class Input implements
         return $result;
     }
 
-    /** @inheritDoc */
-    public function getMessages(): array
+    public function getMessages(): ErrorMessages
     {
-        if (null !== $this->errorMessage) {
-            return (array) $this->errorMessage;
+        if ($this->errorMessage !== null) {
+            return new ErrorMessages((array) $this->errorMessage);
         }
 
         if ($this->hasFallback()) {
-            return [];
+            return new ErrorMessages([]);
         }
 
         $validator = $this->getValidatorChain();
-        return $validator->getMessages();
+        return new ErrorMessages($validator->getMessages());
     }
 
     protected function injectNotEmptyValidator(): void

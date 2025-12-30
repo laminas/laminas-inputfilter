@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter\TestAsset;
 
+use Laminas\InputFilter\ErrorMessages;
 use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilter;
 
+use function array_map;
 use function PHPUnit\Framework\assertNotNull;
 
 /**
@@ -50,8 +52,11 @@ final class InputFilterInterfaceStub extends InputFilter
     }
 
     /** @inheritDoc */
-    public function getMessages(): array
+    public function getMessages(): ErrorMessages
     {
-        return $this->getMessages;
+        return new ErrorMessages(array_map(
+            static fn (array $messages): ErrorMessages => new ErrorMessages($messages),
+            $this->getMessages,
+        ));
     }
 }
