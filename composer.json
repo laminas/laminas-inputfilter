@@ -45,7 +45,7 @@
         "psalm/plugin-phpunit": "^0.19.5",
         "psr/http-message": "^2.0",
         "vimeo/psalm": "^6.13.1",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^2.0"
     },
     "suggest": {
         "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"
