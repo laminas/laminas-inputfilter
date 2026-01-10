@@ -2,46 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/file-input/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/installation/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/intro/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/optional-input-filters/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/specs/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/unfiltered-data/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/application-integration/usage-in-a-laminas-mvc-application/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/application-integration/usage-in-a-mezzio-application/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/cookbook/enhanced-type-inference/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
     <url>
          <loc>https://docs.laminas.dev/laminas-inputfilter/v2/cookbook/input-filter-in-forms/</loc>
-         <lastmod>2025-10-14</lastmod>
+         <lastmod>2026-01-10</lastmod>
     </url>
 </urlset>
