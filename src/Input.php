@@ -74,12 +74,6 @@ class Input implements
         return $this;
     }
 
-    public function setFilterChain(FilterChainInterface $filterChain): static
-    {
-        $this->filterChain = $filterChain;
-        return $this;
-    }
-
     public function setName(string|int $name): static
     {
         if ($name === '') {
@@ -93,12 +87,6 @@ class Input implements
     public function setRequired(bool $required): static
     {
         $this->required = $required;
-        return $this;
-    }
-
-    public function setValidatorChain(ValidatorChainInterface $validatorChain): static
-    {
-        $this->validatorChain = $validatorChain;
         return $this;
     }
 
