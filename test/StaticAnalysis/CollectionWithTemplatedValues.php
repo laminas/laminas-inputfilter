@@ -8,13 +8,12 @@ use Laminas\InputFilter\CollectionInputFilter;
 
 /**
  * @psalm-import-type FilteredValues from InputFilterWithTemplatedValues as CollectionShape
- * @psalm-type FilteredValues = array<array-key, CollectionShape>
- * @extends CollectionInputFilter<FilteredValues>
+ * @extends CollectionInputFilter<CollectionShape>
  */
 final class CollectionWithTemplatedValues extends CollectionInputFilter
 {
     public function init(): void
     {
-        $this->setInputFilter(new InputFilterWithTemplatedValues());
+        $this->setInputFilter(new InputFilterWithTemplatedValues($this->factory));
     }
 }

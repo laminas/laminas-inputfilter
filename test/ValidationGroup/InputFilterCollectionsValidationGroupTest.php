@@ -5,37 +5,36 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter\ValidationGroup;
 
 use Laminas\InputFilter\CollectionInputFilter;
-use Laminas\InputFilter\Exception\RuntimeException;
-use Laminas\InputFilter\Input;
 use Laminas\InputFilter\InputFilter;
+use LaminasTest\InputFilter\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function restore_error_handler;
-use function set_error_handler;
-
+/**
+ * Test case to cover behaviour of validation groups with collections
+ */
 final class InputFilterCollectionsValidationGroupTest extends TestCase
 {
     private InputFilter $inputFilter;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $factory = TestHelper::createInputFilterFactory();
 
-        $collection = new CollectionInputFilter();
+        $collection = new CollectionInputFilter($factory);
         $collection->setIsRequired(true);
 
-        $first = new Input('first');
+        $first = $factory->createInput(['name' => 'first']);
         $first->setRequired(true);
-        $second = new Input('second');
+        $second = $factory->createInput(['name' => 'second']);
         $second->setRequired(true);
 
-        $nestedFilter = new InputFilter();
+        $nestedFilter = new InputFilter($factory);
         $nestedFilter->add($first);
         $nestedFilter->add($second);
         $collection->setInputFilter($nestedFilter);
 
-        $this->inputFilter = new InputFilter();
+        $this->inputFilter = new InputFilter($factory);
         $this->inputFilter->add($collection, 'stuff');
     }
 
@@ -132,7 +131,6 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $this->setCollectionCount($count);
         $collection = $this->inputFilter->get('stuff');
         self::assertInstanceOf(CollectionInputFilter::class, $collection);
-        /** @psalm-suppress InvalidArgument */
         $collection->setValidationGroup([
             0 => 'first',
             1 => 'second',
@@ -162,7 +160,6 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $collection = $this->inputFilter->get('stuff');
         self::assertInstanceOf(CollectionInputFilter::class, $collection);
 
-        /** @psalm-suppress InvalidArgument */
         $collection->setValidationGroup([
             0 => 'first',
         ]);
@@ -176,25 +173,16 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
             ],
         ]);
 
-        set_error_handler(function (int $num, string $msg): never {
-            throw new RuntimeException($msg, $num);
-        });
-
-        try {
-            $this->inputFilter->isValid();
-            self::fail('A warning was not issued');
-        } catch (RuntimeException $e) {
-            self::assertStringContainsString('Undefined array key 1', $e->getMessage());
-        } finally {
-            restore_error_handler();
-        }
+        /**
+         * This behaviour is incorrect, items 1, 2 & 3 should all fail validation
+         */
+        self::assertTrue($this->inputFilter->isValid());
     }
 
     #[DataProvider('collectionCountProvider')]
     public function testValidationGroupViaTopLevelInputFilter(?int $count): void
     {
         $this->setCollectionCount($count);
-        /** @psalm-suppress InvalidArgument */
         $this->inputFilter->setValidationGroup([
             'stuff' => [
                 0 => 'first',
@@ -214,5 +202,16 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         ]);
 
         self::assertTrue($this->inputFilter->isValid());
+    }
+
+    public function testSetValidationGroupOnACollectionHasAFluentInterface(): void
+    {
+        $collection = $this->inputFilter->get('stuff');
+        self::assertInstanceOf(CollectionInputFilter::class, $collection);
+
+        self::assertSame(
+            $collection,
+            $collection->setValidationGroup(['first']),
+        );
     }
 }

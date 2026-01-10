@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter\StaticAnalysis;
 
+use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputInterface;
 
-final class InputFilterPluginManagerType
+/** @psalm-suppress PossiblyUnusedMethod */
+final readonly class InputFilterPluginManagerType
 {
-    public function __construct(private readonly InputFilterPluginManager $manager)
+    public function __construct(private InputFilterPluginManager $manager)
     {
     }
 
-    public function getWillReturnAnInputOrInputFilterGivenAString(
+    public function getWillReturnMixedGivenAString(
         string $anyString,
-    ): InputInterface|InputFilterInterface {
+    ): mixed {
         return $this->manager->get($anyString);
     }
 
@@ -25,8 +28,18 @@ final class InputFilterPluginManagerType
         return $this->manager->get(InputFilterWithTemplatedValues::class);
     }
 
-    public function getInvalidFQCNReturnsFallbackType(): InputInterface|InputFilterInterface
+    public function getInvalidFQCNReturnsGivenFQCN(): self
     {
         return $this->manager->get(self::class);
+    }
+
+    public function getInput(): InputInterface
+    {
+        return $this->manager->get(Input::class);
+    }
+
+    public function getInputFilter(): InputFilterInterface
+    {
+        return $this->manager->get(InputFilter::class);
     }
 }

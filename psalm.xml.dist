@@ -9,6 +9,7 @@
     findUnusedCode="true"
     findUnusedBaselineEntry="true"
     findUnusedPsalmSuppress="true"
+    ensureOverrideAttribute="false"
 >
     <projectFiles>
         <directory name="src"/>
@@ -23,22 +24,17 @@
     </plugins>
 
     <issueHandlers>
+        <!-- Code in `test/StaticAnalysis` will always appear unused -->
         <UnusedClass>
             <errorLevel type="suppress">
                 <directory name="test/StaticAnalysis" />
             </errorLevel>
         </UnusedClass>
-        <PossiblyUnusedParam>
+        <PossiblyUnusedMethod>
             <errorLevel type="suppress">
-                <directory name="test" />
+                <directory name="test/StaticAnalysis" />
             </errorLevel>
-        </PossiblyUnusedParam>
-        <MissingOverrideAttribute>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="test" />
-            </errorLevel>
-        </MissingOverrideAttribute>
+        </PossiblyUnusedMethod>
     </issueHandlers>
 
     <stubs>

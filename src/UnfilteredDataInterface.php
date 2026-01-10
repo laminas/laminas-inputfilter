@@ -12,11 +12,11 @@ interface UnfilteredDataInterface
     /**
      * @return array<array-key, mixed>
      */
-    public function getUnfilteredData();
+    public function getUnfilteredData(): array;
 
     /**
      * @param array<array-key, mixed> $data
      * @return $this
      */
-    public function setUnfilteredData($data);
+    public function setUnfilteredData(array $data): static;
 }

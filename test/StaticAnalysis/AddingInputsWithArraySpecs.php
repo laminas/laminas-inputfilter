@@ -30,13 +30,4 @@ final class AddingInputsWithArraySpecs extends InputFilter
             ],
         ]);
     }
-
-    public function addsAnInputWithNonStandardKeys(): void
-    {
-        $this->add([
-            'name'       => 'input1',
-            'required'   => true,
-            'custom-key' => 'something',
-        ]);
-    }
 }
