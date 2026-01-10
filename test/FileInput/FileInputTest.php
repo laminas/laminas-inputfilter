@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LaminasTest\InputFilter\FileInput;
 
 use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterChainInterface;
 use Laminas\Filter\ToInt;
 use Laminas\Filter\ToNull;
 use Laminas\InputFilter\FileInput;
@@ -55,8 +56,6 @@ final class FileInputTest extends TestCase
     protected function setUp(): void
     {
         $this->input = $this->createFileInput('foo');
-        // Upload validator does not work in CLI test environment, disable
-        $this->input->setAutoPrependUploadValidator(false);
     }
 
     protected function tearDown(): void
@@ -64,73 +63,90 @@ final class FileInputTest extends TestCase
         AbstractValidator::setDefaultTranslator();
     }
 
-    private function createFileInput(?string $name = null): FileInput
-    {
-        return new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
+    private function createFileInput(
+        ?string $name = null,
+        ?FilterChainInterface $filterChain = null,
+        ?Validator\ValidatorChainInterface $validatorChain = null,
+    ): FileInput {
+        $filterChain    ??= TestHelper::createFilterChain();
+        $validatorChain ??= TestHelper::createValidatorChain();
+
+        $input = new FileInput($filterChain, $validatorChain, $name);
+        // Upload validator does not work in CLI test environment, disable
+        $input->setAutoPrependUploadValidator(false);
+
+        return $input;
     }
 
     #[DataProvider('validSingleValueProvider')]
     public function testRetrievingValueFiltersTheValueOnlyAfterValidating(mixed $raw, mixed $filtered): void
     {
-        $this->input->setValue($raw);
-        $this->input->setFilterChain(TestHelper::createFilterChainFixture($raw, $filtered));
-
-        self::assertEquals($raw, $this->input->getValue());
-        self::assertTrue(
-            $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
+        $input = $this->createFileInput(
+            'foo',
+            TestHelper::createFilterChainFixture($raw, $filtered),
         );
-        self::assertEquals($filtered, $this->input->getValue());
+        $input->setValue($raw);
+
+        self::assertEquals($raw, $input->getValue());
+        self::assertTrue(
+            $input->isValid(),
+            'isValid() value not match. Detail . ' . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
+        );
+        self::assertEquals($filtered, $input->getValue());
     }
 
     #[DAtaProvider('validMultiValueProvider')]
     public function testCanFilterArrayOfMultiFileData(array $raw, array $filtered): void
     {
-        $this->input->resetValue();
-        $this->input->setValue($raw);
-
         $map = [];
         for ($i = 0; $i < count($filtered); $i += 1) {
             $map[] = [$raw[$i], $filtered[$i]];
         }
 
-        $this->input->setFilterChain(TestHelper::createFilterChainFixtureFromMap($map));
+        $input = $this->createFileInput('foo', TestHelper::createFilterChainFixtureFromMap($map));
+        $input->setValue($raw);
 
-        self::assertEquals($raw, $this->input->getValue());
+        self::assertEquals($raw, $input->getValue());
         self::assertTrue(
-            $this->input->isValid(),
-            'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR)
+            $input->isValid(),
+            'isValid() value not match. Detail . ' . json_encode($input->getMessages(), JSON_THROW_ON_ERROR)
         );
         self::assertEquals(
             $filtered,
-            $this->input->getValue()
+            $input->getValue()
         );
     }
 
     #[DataProvider('validSingleValueProvider')]
     public function testCanRetrieveRawValue(mixed $raw, mixed $filtered): void
     {
-        $this->input->setValue($raw);
-        $this->input->setFilterChain(TestHelper::createFilterChainFixture($raw, $filtered));
+        $input = $this->createFileInput(
+            'foo',
+            TestHelper::createFilterChainFixture($raw, $filtered),
+        );
+        $input->setValue($raw);
 
-        self::assertEquals($raw, $this->input->getRawValue());
+        self::assertEquals($raw, $input->getRawValue());
     }
 
     #[DataProvider('invalidSingleValueProvider')]
     public function testValidationOperatesBeforeFiltering(mixed $raw, mixed $filtered): void
     {
-        $this->input->setValue($raw);
+        $input = $this->createFileInput(
+            'foo',
+            TestHelper::createFilterChainFixture($raw, $filtered),
+            TestHelper::createValidatorChain($raw, false),
+        );
 
-        $this->input->setFilterChain(TestHelper::createFilterChainFixture($raw, $filtered));
-        $this->input->setValidatorChain(TestHelper::createValidatorChain($raw, false));
+        $input->setValue($raw);
 
-        self::assertFalse($this->input->isValid());
-        self::assertEquals($raw, $this->input->getValue());
+        self::assertFalse($input->isValid());
+        self::assertEquals($raw, $input->getValue());
     }
 
     public function testAutoPrependUploadValidatorIsOnByDefault(): void
     {
-        $input = $this->createFileInput('foo');
+        $input = new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
         self::assertTrue($input->getAutoPrependUploadValidator());
     }
 
@@ -197,11 +213,6 @@ final class FileInputTest extends TestCase
 
     public function testValidationsRunWithoutFileArrayDueToAjaxPost(): void
     {
-        $this->input->setAutoPrependUploadValidator(true);
-        self::assertTrue($this->input->getAutoPrependUploadValidator());
-        self::assertTrue($this->input->isRequired());
-        $this->input->setValue([]);
-
         $expectedNormalizedValue = [
             'tmp_name' => '',
             'name'     => '',
@@ -209,16 +220,22 @@ final class FileInputTest extends TestCase
             'type'     => '',
             'error'    => UPLOAD_ERR_NO_FILE,
         ];
-        $this->input->setValidatorChain(TestHelper::createValidatorChain($expectedNormalizedValue, false));
+
+        $input = $this->createFileInput(
+            'foo',
+            null,
+            TestHelper::createValidatorChain($expectedNormalizedValue, false),
+        );
+
+        $input->setAutoPrependUploadValidator(true);
+        self::assertTrue($input->getAutoPrependUploadValidator());
+        self::assertTrue($input->isRequired());
+        $input->setValue([]);
         self::assertFalse($this->input->isValid());
     }
 
     public function testValidationsRunWithoutFileArrayIsSend(): void
     {
-        $this->input->setAutoPrependUploadValidator(true);
-        self::assertTrue($this->input->getAutoPrependUploadValidator());
-        self::assertTrue($this->input->isRequired());
-        $this->input->setValue([]);
         $expectedNormalizedValue = [
             'tmp_name' => '',
             'name'     => '',
@@ -226,8 +243,18 @@ final class FileInputTest extends TestCase
             'type'     => '',
             'error'    => UPLOAD_ERR_NO_FILE,
         ];
-        $this->input->setValidatorChain(TestHelper::createValidatorChain($expectedNormalizedValue, false));
-        self::assertFalse($this->input->isValid());
+
+        $input = $this->createFileInput(
+            'foo',
+            null,
+            TestHelper::createValidatorChain($expectedNormalizedValue, false),
+        );
+
+        $input->setAutoPrependUploadValidator(true);
+        self::assertTrue($input->getAutoPrependUploadValidator());
+        self::assertTrue($input->isRequired());
+        $input->setValue([]);
+        self::assertFalse($input->isValid());
     }
 
     #[DataProvider('isEmptyProvider')]
@@ -304,20 +331,6 @@ final class FileInputTest extends TestCase
         $validators = $this->input->getValidatorChain();
         self::assertInstanceOf(ValidatorChain::class, $validators);
         self::assertCount(0, $validators);
-    }
-
-    public function testCanInjectFilterChain(): void
-    {
-        $chain = TestHelper::createFilterChain();
-        $this->input->setFilterChain($chain);
-        self::assertSame($chain, $this->input->getFilterChain());
-    }
-
-    public function testCanInjectValidatorChain(): void
-    {
-        $chain = new ValidatorChain();
-        $this->input->setValidatorChain($chain);
-        self::assertSame($chain, $this->input->getValidatorChain());
     }
 
     public function testInputIsMarkedAsRequiredByDefault(): void
@@ -517,16 +530,15 @@ final class FileInputTest extends TestCase
     public function testDoNotInjectNotEmptyValidator(mixed $raw, mixed $filtered): void
     {
         $filterChain    = TestHelper::createFilterChainFixture($raw, $filtered);
-        $validatorChain = $this->input->getValidatorChain();
-        self::assertInstanceOf(ValidatorChain::class, $validatorChain);
+        $validatorChain = TestHelper::createValidatorChain();
 
-        $this->input->setRequired(true);
-        $this->input->setFilterChain($filterChain);
-        $this->input->setValue($raw);
+        $input = $this->createFileInput('foo', $filterChain, $validatorChain);
+
+        $input->setValue($raw);
 
         $validatorChain->attach(TestHelper::createValidatorMock(true));
 
-        self::assertTrue($this->input->isValid());
+        self::assertTrue($input->isValid());
 
         self::assertCount(1, $validatorChain);
     }
@@ -742,13 +754,15 @@ final class FileInputTest extends TestCase
         $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
         $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
-        $target = $this->input;
+        $target = $this->createFileInput(
+            'fooInput',
+            TestHelper::createFilterChain(),
+            TestHelper::createValidatorChain(),
+        );
         $target->setName('fooInput');
         $target->setErrorMessage('fooErrorMessage');
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
-        $target->setFilterChain(TestHelper::createFilterChain());
-        $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');

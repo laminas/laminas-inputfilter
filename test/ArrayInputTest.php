@@ -6,6 +6,7 @@ namespace LaminasTest\InputFilter;
 
 use Laminas\Filter\FilterChain;
 use Laminas\Filter\FilterChainInterface;
+use Laminas\Filter\StringTrim;
 use Laminas\Filter\ToInt;
 use Laminas\Filter\ToNull;
 use Laminas\InputFilter\ArrayInput;
@@ -17,6 +18,7 @@ use Laminas\Validator\AbstractValidator;
 use Laminas\Validator\IsArray;
 use Laminas\Validator\NotEmpty as NotEmptyValidator;
 use Laminas\Validator\NumberComparison;
+use Laminas\Validator\Regex;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorChainInterface;
 use Laminas\Validator\ValidatorInterface;
@@ -48,7 +50,7 @@ final class ArrayInputTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->input = new ArrayInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'foo');
+        $this->input = $this->createArrayInput('foo');
     }
 
     protected function tearDown(): void
@@ -56,9 +58,15 @@ final class ArrayInputTest extends TestCase
         AbstractValidator::setDefaultTranslator();
     }
 
-    private function createArrayInput(?string $name = null): ArrayInput
-    {
-        return new ArrayInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
+    private function createArrayInput(
+        ?string $name = null,
+        ?FilterChainInterface $filterChain = null,
+        ?ValidatorChainInterface $validatorChain = null,
+    ): ArrayInput {
+        $filterChain    ??= TestHelper::createFilterChain();
+        $validatorChain ??= TestHelper::createValidatorChain();
+
+        return new ArrayInput($filterChain, $validatorChain, $name);
     }
 
     /**
@@ -315,22 +323,6 @@ final class ArrayInputTest extends TestCase
         self::assertCount(0, $validators);
     }
 
-    public function testCanInjectFilterChain(): void
-    {
-        $filterChain = TestHelper::createFilterChain();
-
-        $this->input->setFilterChain($filterChain);
-        self::assertSame($filterChain, $this->input->getFilterChain());
-    }
-
-    public function testCanInjectValidatorChain(): void
-    {
-        $validatorChain = new ValidatorChain();
-
-        $this->input->setValidatorChain($validatorChain);
-        self::assertSame($validatorChain, $this->input->getValidatorChain());
-    }
-
     public function testInputIsMarkedAsRequiredByDefault(): void
     {
         self::assertTrue($this->input->isRequired());
@@ -407,11 +399,14 @@ final class ArrayInputTest extends TestCase
         bool $isValid,
         array $expectedValue,
     ): void {
-        $input = $this->input;
-        $input->setContinueIfEmpty(true);
+        $input = $this->createArrayInput(
+            'foo',
+            null,
+            TestHelper::createValidatorChain($originalValue[0], $isValid),
+        );
 
+        $input->setContinueIfEmpty(true);
         $input->setRequired($required);
-        $input->setValidatorChain(TestHelper::createValidatorChain($originalValue[0], $isValid));
         $input->setFallbackValue($fallbackValue);
         $input->setValue($originalValue);
 
@@ -441,7 +436,6 @@ final class ArrayInputTest extends TestCase
         $input->setContinueIfEmpty(true);
 
         $input->setRequired($required);
-        $input->setValidatorChain(new ValidatorChain());
         $input->setFallbackValue($fallbackValue);
 
         self::assertTrue(
@@ -575,41 +569,41 @@ final class ArrayInputTest extends TestCase
 
     public function testRetrievingValueFiltersTheValue(): void
     {
-        $valueRaw      = ['foo'];
-        $valueFiltered = ['filtered'];
+        $filterChain = TestHelper::createFilterChain();
+        $filterChain->attachByName(StringTrim::class);
 
-        $filterChain = TestHelper::createFilterChainFixture($valueRaw[0], $valueFiltered[0]);
+        $input = $this->createArrayInput('foo', $filterChain, TestHelper::createValidatorChain());
+        $input->setValue(['  foo  ']);
 
-        $this->input->setFilterChain($filterChain);
-        $this->input->setValue($valueRaw);
-
-        self::assertSame($valueFiltered, $this->input->getValue());
+        self::assertSame(['foo'], $input->getValue());
     }
 
     public function testCanRetrieveRawValue(): void
     {
-        $valueRaw = 'foo';
+        $filterChain = TestHelper::createFilterChain();
+        $filterChain->attachByName(StringTrim::class);
 
-        $this->input->setFilterChain(TestHelper::createFilterChain());
-        $this->input->setValue($valueRaw);
+        $input = $this->createArrayInput('foo', $filterChain, TestHelper::createValidatorChain());
+        $input->setValue(['  foo  ']);
 
-        self::assertEquals($valueRaw, $this->input->getRawValue());
+        self::assertSame(['  foo  '], $input->getRawValue());
     }
 
     public function testValidationOperatesOnFilteredValue(): void
     {
-        $valueRaw      = ['foo'];
-        $valueFiltered = ['filtered'];
+        $filterChain = TestHelper::createFilterChain();
+        $filterChain->attachByName(StringTrim::class);
 
-        $filterChain = TestHelper::createFilterChainFixture($valueRaw[0], $valueFiltered[0]);
+        $validatorChain = TestHelper::createValidatorChain();
+        $validatorChain->attachByName(Regex::class, [
+            'pattern' => '/^[a-z]+$/',
+        ]);
 
-        $this->input->setAllowEmpty(true);
-        $this->input->setFilterChain($filterChain);
-        $this->input->setValidatorChain(TestHelper::createValidatorChain($valueFiltered[0], true));
-        $this->input->setValue($valueRaw);
+        $input = $this->createArrayInput('foo', $filterChain, TestHelper::createValidatorChain());
+        $input->setValue(['  foo  ']);
 
         self::assertTrue(
-            $this->input->isValid(),
+            $input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR),
         );
     }
@@ -906,21 +900,22 @@ final class ArrayInputTest extends TestCase
     public function testMerge(): void
     {
         $source = $this->createMock(InputInterface::class);
-        $source->method('getName')->willReturn('bazInput');
-        $source->method('getErrorMessage')->willReturn('bazErrorMessage');
-        $source->method('breakOnFailure')->willReturn(true);
-        $source->method('isRequired')->willReturn(true);
-        $source->method('getRawValue')->willReturn('foo');
-        $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
-        $source->method('getValidatorChain')->willReturn(new ValidatorChain());
+        $source->expects($this->once())->method('getName')->willReturn('bazInput');
+        $source->expects($this->once())->method('getErrorMessage')->willReturn('bazErrorMessage');
+        $source->expects($this->once())->method('breakOnFailure')->willReturn(true);
+        $source->expects($this->once())->method('isRequired')->willReturn(true);
+        $source->expects($this->once())->method('getRawValue')->willReturn('foo');
+        $source->expects($this->once())->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
+        $source->expects($this->once())->method('getValidatorChain')->willReturn(new ValidatorChain());
 
-        $target = $this->input;
-        $target->setName('fooInput');
+        $target = $this->createArrayInput(
+            'fooInput',
+            TestHelper::createFilterChain(),
+            TestHelper::createValidatorChain(),
+        );
         $target->setErrorMessage('fooErrorMessage');
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
-        $target->setFilterChain(TestHelper::createFilterChain());
-        $target->setValidatorChain(new ValidatorChain());
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');

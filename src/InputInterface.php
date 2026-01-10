@@ -15,13 +15,9 @@ interface InputInterface
 
     public function setErrorMessage(string|null $errorMessage): static;
 
-    public function setFilterChain(FilterChainInterface $filterChain): static;
-
     public function setName(string|int $name): static;
 
     public function setRequired(bool $required): static;
-
-    public function setValidatorChain(ValidatorChainInterface $validatorChain): static;
 
     public function setValue(mixed $value): static;
 

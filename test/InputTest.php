@@ -52,9 +52,15 @@ final class InputTest extends TestCase
         AbstractValidator::setDefaultTranslator(null);
     }
 
-    private function createInput(?string $name = null): Input
-    {
-        return new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
+    private function createInput(
+        ?string $name = null,
+        ?FilterChainInterface $filterChain = null,
+        ?ValidatorChainInterface $validatorChain = null,
+    ): Input {
+        $filterChain    ??= TestHelper::createFilterChain();
+        $validatorChain ??= TestHelper::createValidatorChain();
+
+        return new Input($filterChain, $validatorChain, $name);
     }
 
     public function assertRequiredValidationErrorMessage(Input $input, string $message = ''): void
@@ -125,20 +131,6 @@ final class InputTest extends TestCase
         $validators = $this->input->getValidatorChain();
         self::assertInstanceOf(ValidatorChain::class, $validators);
         self::assertCount(0, $validators);
-    }
-
-    public function testCanInjectFilterChain(): void
-    {
-        $chain = TestHelper::createFilterChain();
-        $this->input->setFilterChain($chain);
-        self::assertSame($chain, $this->input->getFilterChain());
-    }
-
-    public function testCanInjectValidatorChain(): void
-    {
-        $chain = new ValidatorChain();
-        $this->input->setValidatorChain($chain);
-        self::assertSame($chain, $this->input->getValidatorChain());
     }
 
     public function testInputIsMarkedAsRequiredByDefault(): void
@@ -212,11 +204,13 @@ final class InputTest extends TestCase
         bool $isValid,
         string $expectedValue,
     ): void {
-        $input = $this->input;
+        $input = $this->createInput(
+            'foo',
+            null,
+            TestHelper::createValidatorChain($originalValue, $isValid),
+        );
         $input->setContinueIfEmpty(true);
-
         $input->setRequired($required);
-        $input->setValidatorChain(TestHelper::createValidatorChain($originalValue, $isValid));
         $input->setFallbackValue($fallbackValue);
         $input->setValue($originalValue);
 
@@ -243,7 +237,6 @@ final class InputTest extends TestCase
         $input->setContinueIfEmpty(true);
 
         $input->setRequired($required);
-        $input->setValidatorChain(new ValidatorChain());
         $input->setFallbackValue($fallbackValue);
 
         self::assertTrue(
@@ -386,18 +379,15 @@ final class InputTest extends TestCase
         $valueFiltered = 'filtered';
 
         $filterChain = TestHelper::createFilterChainFixture($valueRaw, $valueFiltered);
+        $input       = $this->createInput('foo', $filterChain);
+        $input->setValue($valueRaw);
 
-        $this->input->setFilterChain($filterChain);
-        $this->input->setValue($valueRaw);
-
-        self::assertSame($valueFiltered, $this->input->getValue());
+        self::assertSame($valueFiltered, $input->getValue());
     }
 
     public function testCanRetrieveRawValue(): void
     {
         $valueRaw = 'foo';
-
-        $this->input->setFilterChain(TestHelper::createFilterChain());
         $this->input->setValue($valueRaw);
 
         self::assertEquals($valueRaw, $this->input->getRawValue());
@@ -408,15 +398,16 @@ final class InputTest extends TestCase
         $valueRaw      = 'foo';
         $valueFiltered = 'filtered';
 
-        $filterChain = TestHelper::createFilterChainFixture($valueRaw, $valueFiltered);
+        $input = $this->createInput(
+            'foo',
+            TestHelper::createFilterChainFixture($valueRaw, $valueFiltered),
+            TestHelper::createValidatorChain($valueFiltered, true)
+        );
 
-        $this->input->setAllowEmpty(true);
-        $this->input->setFilterChain($filterChain);
-        $this->input->setValidatorChain(TestHelper::createValidatorChain($valueFiltered, true));
-        $this->input->setValue($valueRaw);
+        $input->setValue($valueRaw);
 
         self::assertTrue(
-            $this->input->isValid(),
+            $input->isValid(),
             'isValid() value not match. Detail . ' . json_encode($this->input->getMessages(), JSON_THROW_ON_ERROR),
         );
     }
@@ -729,16 +720,11 @@ final class InputTest extends TestCase
         $source->method('getFilterChain')->willReturn(TestHelper::createFilterChain());
         $source->method('getValidatorChain')->willReturn(new ValidatorChain());
 
-        $targetFilterChain    = TestHelper::createFilterChain();
-        $targetValidatorChain = new ValidatorChain();
-
         $target = $this->input;
         $target->setName('fooInput');
         $target->setErrorMessage('fooErrorMessage');
         $target->setBreakOnFailure(false);
         $target->setRequired(false);
-        $target->setFilterChain($targetFilterChain);
-        $target->setValidatorChain($targetValidatorChain);
 
         $return = $target->merge($source);
         self::assertSame($target, $return, 'merge() must return it self');
@@ -1074,14 +1060,6 @@ final class InputTest extends TestCase
         self::assertSame(
             $this->input,
             $this->input->setValue('muppet'),
-        );
-        self::assertSame(
-            $this->input,
-            $this->input->setFilterChain(TestHelper::createFilterChain()),
-        );
-        self::assertSame(
-            $this->input,
-            $this->input->setValidatorChain(TestHelper::createValidatorChain()),
         );
     }
 }
