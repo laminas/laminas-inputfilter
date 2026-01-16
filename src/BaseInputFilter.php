@@ -78,13 +78,37 @@ class BaseInputFilter implements
         return count($this->inputs);
     }
 
+    private function fromArray(
+        array $spec,
+        string|int|null $name,
+    ): InputInterface|InputFilterInterface {
+        if (! $this->factory->isInputSpecification($spec)) {
+            return $this->factory->createInputFilter($spec);
+        }
+
+        /**
+         * The name in the specification array takes precedence over the argument
+         */
+        $name = isset($spec['name']) && is_string($spec['name']) && $spec['name'] !== ''
+            ? $spec['name']
+            : $name;
+
+        if ($name === null || $name === '') {
+            throw new InvalidArgumentException('All inputs must have a non-empty-string or integer name');
+        }
+
+        $spec['name'] = $name;
+
+        return $this->factory->createInput($spec);
+    }
+
     /** @inheritDoc */
     public function add(
         InputInterface|InputFilterInterface|array $input,
         string|int|null $name = null,
     ): static {
         if (is_array($input)) {
-            $input = $this->factory->create($input);
+            $input = $this->fromArray($input, $name);
         }
 
         if ($input instanceof InputInterface && ($name === null || $name === '' || is_int($name))) {

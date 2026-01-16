@@ -15,6 +15,7 @@ interface InputInterface
 
     public function setErrorMessage(string|null $errorMessage): static;
 
+    /** @param non-empty-string|int $name */
     public function setName(string|int $name): static;
 
     public function setRequired(bool $required): static;
@@ -31,7 +32,8 @@ interface InputInterface
 
     public function getFilterChain(): FilterChainInterface;
 
-    public function getName(): int|string|null;
+    /** @return non-empty-string|int */
+    public function getName(): int|string;
 
     public function getRawValue(): mixed;
 

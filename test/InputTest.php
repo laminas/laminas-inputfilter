@@ -52,8 +52,9 @@ final class InputTest extends TestCase
         AbstractValidator::setDefaultTranslator(null);
     }
 
+    /** @param non-empty-string $name */
     private function createInput(
-        ?string $name = null,
+        string $name = 'foo',
         ?FilterChainInterface $filterChain = null,
         ?ValidatorChainInterface $validatorChain = null,
     ): Input {
@@ -85,20 +86,22 @@ final class InputTest extends TestCase
     public function testAnEmptyStringNameIsExceptionalViaTheConstructor(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Input names cannot be an empty string');
+        $this->expectExceptionMessage('Input names must be integers or non-empty-string. Received an empty string');
+        /** @psalm-suppress InvalidArgument */
         new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), '');
     }
 
     public function testAnEmptyStringNameInSetNameIsExceptional(): void
     {
-        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), null);
+        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'non-empty');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Input names cannot be an empty string');
+        $this->expectExceptionMessage('Input names must be integers or non-empty-string. Received an empty string');
+        /** @psalm-suppress InvalidArgument */
         $input->setName('');
     }
 
-    /** @return list<array{0: string|int}> */
+    /** @return list<array{0: non-empty-string|int}> */
     public static function validNamesForSetName(): array
     {
         return [
@@ -110,12 +113,11 @@ final class InputTest extends TestCase
         ];
     }
 
+    /** @param non-empty-string|int $name */
     #[DataProvider('validNamesForSetName')]
     public function testValidInputNames(int|string $name): void
     {
-        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), null);
-        self::assertNull($input->getName());
-        $input->setName($name);
+        $input = new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
         self::assertSame($name, $input->getName());
     }
 
@@ -293,7 +295,7 @@ final class InputTest extends TestCase
 
     public function testRequiredWithoutFallbackAndValueNotSetProvidesAttachedNotEmptyValidatorIsEmptyErrorMessage(): void // phpcs:ignore
     {
-        $input = $this->createInput();
+        $input = $this->createInput('foo');
         $input->setRequired(true);
 
         $customMessage = [NotEmptyValidator::IS_EMPTY => "Custom message"];
