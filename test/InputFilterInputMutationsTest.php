@@ -253,17 +253,6 @@ final class InputFilterInputMutationsTest extends TestCase
         $inputFilter->add($nestedInputFilter);
     }
 
-    public function testYouCantAddAnInputWithoutSpecifyingAName(): void
-    {
-        $inputFilter = $this->createEmptyInputFilter();
-        $input       = $this->factory->createInput([]);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Input or InputFilter name must be a non-empty string or an int, null given');
-
-        $inputFilter->add($input);
-    }
-
     public function testAddingAnInputWithAnExistingNameWillCauseTheInputsToBeMerged(): void
     {
         $inputFilter = $this->createEmptyInputFilter();

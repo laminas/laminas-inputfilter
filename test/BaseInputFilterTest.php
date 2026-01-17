@@ -28,6 +28,7 @@ use stdClass;
 use function array_keys;
 use function array_merge;
 use function array_walk;
+use function assert;
 use function in_array;
 use function json_encode;
 use function sprintf;
@@ -51,7 +52,8 @@ final class BaseInputFilterTest extends TestCase
         $this->inputFilter = new BaseInputFilter($this->factory);
     }
 
-    private function createInput(?string $name = null): Input
+    /** @param non-empty-string $name */
+    private function createInput(string $name = 'foo'): Input
     {
         return new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), $name);
     }
@@ -455,12 +457,19 @@ final class BaseInputFilterTest extends TestCase
         $valid    = true;
         $bOnFail  = true;
 
-        /**
-         * @param array<string, string> $msg
-         * @return callable(): InputInterface
-         */
-        $input = fn(string $iName, bool $required, bool $bOnFail, bool $isValid, array $msg = []): callable =>
-            fn(array|null|string $context): InputInterface => self::createInputInterfaceMock(
+        $input = function (
+            string $iName,
+            bool $required,
+            bool $bOnFail,
+            bool $isValid,
+            array $msg = [],
+        ) use (
+            $vRaw,
+            $vFiltered
+        ): callable {
+            /** @psalm-var array<string, string> $msg */
+            assert($iName !== '');
+            return fn(array|null|string $context): InputInterface => self::createInputInterfaceMock(
                 $iName,
                 $required,
                 $isValid,
@@ -470,6 +479,7 @@ final class BaseInputFilterTest extends TestCase
                 $msg,
                 $bOnFail,
             );
+        };
 
         $inputFilter = fn(bool $isValid, array $msg = []): callable =>
             function () use ($isValid, $vRaw, $vFiltered, $msg): InputFilterInterface {
@@ -595,7 +605,10 @@ final class BaseInputFilterTest extends TestCase
         );
     }
 
-    /** @param array<string, string> $getMessages */
+    /**
+     * @param non-empty-string $name
+     * @param array<string, string> $getMessages
+     */
     public static function createInputInterfaceMock(
         string $name,
         bool|null $isRequired,

@@ -58,8 +58,9 @@ final class ArrayInputTest extends TestCase
         AbstractValidator::setDefaultTranslator();
     }
 
+    /** @param non-empty-string $name */
     private function createArrayInput(
-        ?string $name = null,
+        string $name = 'foo',
         ?FilterChainInterface $filterChain = null,
         ?ValidatorChainInterface $validatorChain = null,
     ): ArrayInput {

@@ -15,9 +15,12 @@ use function PHPUnit\Framework\assertNotNull;
 
 final readonly class InputInterfaceStub implements InputInterface
 {
-    /** @param array<string, string> $getMessages */
+    /**
+     * @param non-empty-string|int $name
+     * @param array<string, string> $getMessages
+     */
     public function __construct(
-        private string $name,
+        private string|int $name,
         private bool|null $isRequired,
         private bool|null $isValid = null,
         private array|string|null $context = null,
@@ -83,7 +86,7 @@ final readonly class InputInterfaceStub implements InputInterface
         throw new Exception('Not implemented');
     }
 
-    public function getName(): string
+    public function getName(): string|int
     {
         return $this->name;
     }

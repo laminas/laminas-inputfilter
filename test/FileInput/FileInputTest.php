@@ -63,8 +63,9 @@ final class FileInputTest extends TestCase
         AbstractValidator::setDefaultTranslator();
     }
 
+    /** @param non-empty-string $name */
     private function createFileInput(
-        ?string $name = null,
+        string $name = 'foo',
         ?FilterChainInterface $filterChain = null,
         ?Validator\ValidatorChainInterface $validatorChain = null,
     ): FileInput {
@@ -146,7 +147,7 @@ final class FileInputTest extends TestCase
 
     public function testAutoPrependUploadValidatorIsOnByDefault(): void
     {
-        $input = new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
+        $input = new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'foo');
         self::assertTrue($input->getAutoPrependUploadValidator());
     }
 
@@ -856,7 +857,7 @@ final class FileInputTest extends TestCase
 
     public function testUploadValidatorIsAddedDuringIsValidWhenAutoPrependUploadValidatorIsEnabled(): void
     {
-        $input = new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain());
+        $input = new FileInput(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'foo');
         $input->setAutoPrependUploadValidator(true);
         self::assertTrue($input->getAutoPrependUploadValidator());
         self::assertTrue($input->isRequired());

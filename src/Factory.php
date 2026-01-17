@@ -10,6 +10,8 @@ use Laminas\Filter\FilterInterface;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\InputFilter\Exception\RuntimeException;
+use Laminas\ServiceManager\Exception\ExceptionInterface as AnyPluginManagerException;
+use Laminas\ServiceManager\Exception\ServiceNotFoundException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\ValidatorChain;
@@ -19,7 +21,6 @@ use Psr\Container\ContainerInterface;
 use Traversable;
 
 use function assert;
-use function class_exists;
 use function get_debug_type;
 use function in_array;
 use function is_a;
@@ -35,6 +36,7 @@ use function sprintf;
  * @psalm-import-type ValidatorSpecification from ValidatorChain
  * @psalm-import-type InputFilterSpecification from InputFilterInterface
  * @psalm-import-type CollectionSpecification from InputFilterInterface
+ * @psalm-type BuiltInInputType = class-string<Input>|class-string<ArrayInput>|class-string<FileInput>
  */
 final readonly class Factory
 {
@@ -73,23 +75,6 @@ final readonly class Factory
     }
 
     /**
-     * @param class-string $class
-     * @psalm-assert-if-true class-string<Input>|class-string<ArrayInput>|class-string<FileInput> $class
-     */
-    private function canCreateInputType(string $class): bool
-    {
-        return in_array(
-            $class,
-            [
-                Input::class,
-                ArrayInput::class,
-                FileInput::class,
-            ],
-            true,
-        );
-    }
-
-    /**
      * @param InputSpecification $spec
      * @return array{
      *     filterChain: FilterChainInterface,
@@ -105,6 +90,13 @@ final readonly class Factory
         if (! is_array($filters) && ! is_callable($filters) && ! $filters instanceof FilterInterface) {
             throw new InvalidArgumentException("filters must be an array, callable, or FilterInterface. Received: "
                 . get_debug_type($filters));
+        }
+
+        if (! is_array($validators) && ! $validators instanceof ValidatorChainInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'The `validators` key must be an array or a ValidatorInterface. Received: %s',
+                get_debug_type($spec['validators'] ?? null),
+            ));
         }
 
         if (is_array($filters)) {
@@ -140,46 +132,10 @@ final readonly class Factory
 
         $class = $spec['type'] ?? Input::class;
 
-        /** @var mixed|null $customInput */
-        $customInput = $this->inputFilterPluginManager->has($class)
-            ? $this->inputFilterPluginManager->get($class)
-            : null;
-
-        if ($customInput === null && ! class_exists($class)) {
-            throw new RuntimeException(sprintf(
-                'Input factory expects the "type" to be a valid class or a plugin name; received "%s"',
-                $class,
-            ));
-        }
-
-        if ($customInput === null && ! $this->canCreateInputType($class)) {
-            throw new RuntimeException(sprintf(
-                'Only internal input types "Input", "ArrayInput" and "FileInput" can be created by the factory. '
-                . 'You will need to create your own factory for custom inputs because we cannot know what your '
-                . 'constructor arguments might be. Received the type: "%s"',
-                $class,
-            ));
-        }
-
-        if ($customInput === null) {
-            [
-                'filterChain'    => $filterChain,
-                'validatorChain' => $validatorChain,
-            ] = $this->buildChainsFromSpecification($spec);
-
-            /** @psalm-suppress UnsafeInstantiation */
-            $input = new $class($filterChain, $validatorChain);
+        if (! $this->isInternalInputType($class)) {
+            $input = $this->createCustomInput($class, $spec);
         } else {
-            /** @var mixed $input */
-            $input = $customInput;
-        }
-
-        if (! $input instanceof InputInterface) {
-            throw new RuntimeException(sprintf(
-                'Input factory expects the "type" to be a class implementing %s; received "%s"',
-                InputInterface::class,
-                get_debug_type($input),
-            ));
+            $input = $this->createBuiltInInput($class, $spec);
         }
 
         $this->applyInputOptions($input, $spec);
@@ -190,10 +146,6 @@ final readonly class Factory
     /** @param InputSpecification $spec */
     private function applyInputOptions(InputInterface $input, array $spec): void
     {
-        if (isset($spec['name'])) {
-            $input->setName($spec['name']);
-        }
-
         if (isset($spec['required'])) {
             $input->setRequired($spec['required']);
         }
@@ -223,9 +175,13 @@ final readonly class Factory
     }
 
     /**
+     * @internal
+     *
+     * @psalm-internal Laminas\InputFilter
+     * @psalm-internal LaminasTest\InputFilter
      * @psalm-assert-if-true InputSpecification $spec
      */
-    private function isInputSpecification(array $spec): bool
+    public function isInputSpecification(array $spec): bool
     {
         /** @var mixed $type */
         $type = $spec['type'] ?? null;
@@ -268,6 +224,12 @@ final readonly class Factory
         /** @psalm-var InputFilterSpecification $spec */
 
         return $this->createInputFilter($spec);
+    }
+
+    /** @psalm-assert-if-true BuiltInInputType $type */
+    private function isInternalInputType(string $type): bool
+    {
+        return in_array($type, [Input::class, ArrayInput::class, FileInput::class], true);
     }
 
     /**
@@ -366,5 +328,82 @@ final readonly class Factory
     public function getValidatorPluginManager(): ValidatorPluginManager
     {
         return $this->validatorPluginManager;
+    }
+
+    /**
+     * Create a user-defined input type from an array specification
+     *
+     * @param InputSpecification $spec
+     * @throws RuntimeException If the input cannot be instantiated (Built or retreived from the plugin manager).
+     */
+    private function createCustomInput(string $class, array $spec): InputInterface
+    {
+        if (! $this->inputFilterPluginManager->has($class)) {
+            throw new RuntimeException(sprintf(
+                'The input type "%s" cannot be created because it is not known in the Input Filter Plugin Manager. '
+                . 'Make sure you have registered a factory for the custom input type under `input_filters.factories`',
+                $class,
+            ));
+        }
+
+        $input    = null;
+        $previous = null;
+        try {
+            /** @psalm-var mixed $input */
+            $input = $this->inputFilterPluginManager->build($class, $spec);
+        } catch (AnyPluginManagerException $e) {
+            $previous = $e;
+        }
+
+        // Build failed - attempt get
+        if ($input === null) {
+            try {
+                /** @psalm-var mixed $input */
+                $input = $this->inputFilterPluginManager->get($class);
+            } catch (ServiceNotFoundException $e) {
+                $previous = $e;
+            }
+        }
+
+        if ($input === null) {
+            throw new RuntimeException(sprintf(
+                'The input type "%s" could neither be built, nor fetched from the plugin manager. '
+                . 'Make sure you have registered a factory for the input type under `input_filters.factories`',
+                $class,
+            ), 0, $previous);
+        }
+
+        if (! $input instanceof InputInterface) {
+            throw new RuntimeException(sprintf(
+                'The input type "%s" resolved to an instance of "%s", but it should resolve to an instance of "%s"',
+                $class,
+                get_debug_type($input),
+                InputInterface::class,
+            ), 0, $previous);
+        }
+
+        return $input;
+    }
+
+    /**
+     * @param BuiltInInputType $class
+     * @param InputSpecification $spec
+     */
+    private function createBuiltInInput(string $class, array $spec): InputInterface
+    {
+        $name = $spec['name'] ?? null;
+        if ((! is_string($name) && ! is_int($name)) || $name === '') {
+            throw new RuntimeException(
+                'The input name must be known in advance. Ensure you set the input name in the specification under '
+                . 'the `name` key',
+            );
+        }
+
+        [
+            'filterChain'    => $filterChain,
+            'validatorChain' => $validatorChain,
+        ] = $this->buildChainsFromSpecification($spec);
+
+        return new $class($filterChain, $validatorChain, $name);
     }
 }

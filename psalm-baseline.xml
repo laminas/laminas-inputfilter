@@ -67,13 +67,6 @@
       <code><![CDATA[$rawValue]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="src/Input.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-      <code><![CDATA[$this]]></code>
-    </LessSpecificReturnStatement>
-  </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <MixedArgument>
       <code><![CDATA[$config]]></code>
@@ -118,7 +111,6 @@
     </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$getMessages]]></code>
-      <code><![CDATA[$msg]]></code>
       <code><![CDATA[$msg]]></code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAssignment>

@@ -614,6 +614,7 @@ final class CollectionInputFilterTest extends TestCase
                                 'type'         => CollectionInputFilter::class,
                                 'input_filter' => [
                                     'test_field1' => [
+                                        'name'       => 'test_field1',
                                         'required'   => false,
                                         'validators' => [
                                             [
@@ -630,6 +631,7 @@ final class CollectionInputFilterTest extends TestCase
                                         ],
                                     ],
                                     'price'       => [
+                                        'name'       => 'price',
                                         'required'   => false,
                                         'validators' => [
                                             [
@@ -776,7 +778,7 @@ final class CollectionInputFilterTest extends TestCase
         $factory = TestHelper::createInputFilterFactory();
 
         $baseInputFilter = (new BaseInputFilter($factory))
-            ->add(new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain()), 'bar');
+            ->add(new Input(TestHelper::createFilterChain(), TestHelper::createValidatorChain(), 'bar'));
 
         $collectionInputFilter = (new CollectionInputFilter($this->factory))->setInputFilter($baseInputFilter);
         $collectionInputFilter->setData($unfilteredArray);

@@ -37,6 +37,7 @@ final class InputFilterTest extends TestCase
         $filter1->add([
             'type'         => InputFilter::class,
             'nestedField1' => [
+                'name'     => 'foo',
                 'required' => false,
             ],
         ], 'nested');

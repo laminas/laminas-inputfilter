@@ -14,14 +14,17 @@ use Laminas\Validator\ValidatorChainInterface;
 
 use function assert;
 use function class_exists;
+use function get_debug_type;
 use function is_array;
+use function is_int;
+use function is_string;
 use function reset;
+use function sprintf;
 
 class Input implements
     InputInterface,
     EmptyContextInterface
 {
-    protected string|int|null $name = null;
     protected bool $allowEmpty      = false;
     protected bool $continueIfEmpty = false;
     protected bool $breakOnFailure  = false;
@@ -40,14 +43,13 @@ class Input implements
     protected mixed $fallbackValue;
     protected bool $hasFallback = false;
 
-    public function __construct(
+    /** @param non-empty-string|int $name */
+    final public function __construct(
         protected FilterChainInterface $filterChain,
         protected ValidatorChainInterface $validatorChain,
-        string|int|null $name = null
+        protected string|int $name,
     ) {
-        if ($name !== null) {
-            $this->setName($name);
-        }
+        $this->assertValidName($name);
     }
 
     public function setAllowEmpty(bool $allowEmpty): static
@@ -74,11 +76,26 @@ class Input implements
         return $this;
     }
 
+    /** @psalm-assert non-empty-string|int $name */
+    private function assertValidName(mixed $name): void
+    {
+        if ((is_string($name) && $name !== '') || is_int($name)) {
+            return;
+        }
+
+        $type = is_string($name)
+            ? 'an empty string'
+            : get_debug_type($name);
+
+        throw new InvalidArgumentException(sprintf(
+            'Input names must be integers or non-empty-string. Received %s',
+            $type,
+        ));
+    }
+
     public function setName(string|int $name): static
     {
-        if ($name === '') {
-            throw new InvalidArgumentException('Input names cannot be an empty string');
-        }
+        $this->assertValidName($name);
 
         $this->name = $name;
         return $this;
@@ -160,7 +177,7 @@ class Input implements
         return $this->filterChain;
     }
 
-    public function getName(): int|string|null
+    public function getName(): int|string
     {
         return $this->name;
     }
@@ -226,11 +243,8 @@ class Input implements
         if ($input instanceof Input) {
             $this->setContinueIfEmpty($input->continueIfEmpty());
         }
+        $this->setName($input->getName());
         $this->setErrorMessage($input->getErrorMessage());
-        $name = $input->getName();
-        if ($name !== null) {
-            $this->setName($name);
-        }
         $this->setRequired($input->isRequired());
         $this->setAllowEmpty($input->allowEmpty());
         if (! $input instanceof Input || $input->hasValue()) {
