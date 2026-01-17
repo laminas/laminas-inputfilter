@@ -24,10 +24,8 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
         $collection = new CollectionInputFilter($factory);
         $collection->setIsRequired(true);
 
-        $first = $factory->createInput(['name' => 'first']);
-        $first->setRequired(true);
+        $first  = $factory->createInput(['name' => 'first']);
         $second = $factory->createInput(['name' => 'second']);
-        $second->setRequired(true);
 
         $nestedFilter = new InputFilter($factory);
         $nestedFilter->add($first);
