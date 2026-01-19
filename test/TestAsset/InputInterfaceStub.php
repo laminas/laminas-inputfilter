@@ -27,43 +27,14 @@ final readonly class InputInterfaceStub implements InputInterface
         private mixed $getRawValue = null,
         private mixed $getValue = null,
         private array $getMessages = [],
-        private bool $breakOnFailure = false
+        private bool $breakOnFailure = false,
+        private bool $continueIfEmpty = false,
     ) {
-    }
-
-    public function setAllowEmpty(bool $allowEmpty): static
-    {
-        return $this;
-    }
-
-    public function setBreakOnFailure(bool $breakOnFailure): static
-    {
-        return $this;
-    }
-
-    public function setErrorMessage(string|null $errorMessage): static
-    {
-        return $this;
-    }
-
-    public function setName(string|int $name): never
-    {
-        throw new Exception('Not implemented');
-    }
-
-    public function setRequired(bool $required): never
-    {
-        throw new Exception('Not implemented');
     }
 
     public function setValue(mixed $value): static
     {
         return $this;
-    }
-
-    public function merge(InputInterface $input): never
-    {
-        throw new Exception('Not implemented');
     }
 
     public function allowEmpty(): never
@@ -128,5 +99,20 @@ final readonly class InputInterfaceStub implements InputInterface
     public function getMessages(): ErrorMessages
     {
         return new ErrorMessages($this->getMessages);
+    }
+
+    public function continueIfEmpty(): bool
+    {
+        return $this->continueIfEmpty;
+    }
+
+    public function getFallbackValue(): mixed
+    {
+        return null;
+    }
+
+    public function hasFallback(): bool
+    {
+        return false;
     }
 }

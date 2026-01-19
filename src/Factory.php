@@ -134,17 +134,18 @@ final readonly class Factory
 
         if (! $this->isInternalInputType($class)) {
             $input = $this->createCustomInput($class, $spec);
+            if ($input instanceof MutableInputInterface) {
+                $this->applyInputOptions($input, $spec);
+            }
         } else {
             $input = $this->createBuiltInInput($class, $spec);
         }
-
-        $this->applyInputOptions($input, $spec);
 
         return $input;
     }
 
     /** @param InputSpecification $spec */
-    private function applyInputOptions(InputInterface $input, array $spec): void
+    private function applyInputOptions(MutableInputInterface $input, array $spec): void
     {
         if (isset($spec['required'])) {
             $input->setRequired($spec['required']);
@@ -404,6 +405,6 @@ final readonly class Factory
             'validatorChain' => $validatorChain,
         ] = $this->buildChainsFromSpecification($spec);
 
-        return new $class($filterChain, $validatorChain, $name);
+        return new $class($filterChain, $validatorChain, $name, $spec);
     }
 }

@@ -21,35 +21,44 @@ use function is_string;
 use function reset;
 use function sprintf;
 
-class Input implements
-    InputInterface,
-    EmptyContextInterface
+/** @psalm-import-type InputSpecification from InputFilterInterface */
+class Input implements MutableInputInterface
 {
-    protected bool $allowEmpty      = false;
-    protected bool $continueIfEmpty = false;
-    protected bool $breakOnFailure  = false;
+    protected bool $allowEmpty;
+    protected bool $continueIfEmpty;
+    protected bool $breakOnFailure;
+    protected bool $required;
+    protected mixed $value = null; // phpcs:ignore
+    protected bool $hasValue;
+    protected mixed $fallbackValue;
+    protected bool $hasFallback;
+
     /**
      * @todo ArrayInput needs refactoring so that this type cannot be an array
      * @var string|array<string, string>|null
      */
-    protected string|array|null $errorMessage = null;
-    protected bool $notEmptyValidator         = false;
-    protected bool $required                  = true;
-    protected mixed $value                    = null; // phpcs:ignore
-    /**
-     * Flag to distinguish when $value contains the value previously set or the default one.
-     */
-    protected bool $hasValue = false;
-    protected mixed $fallbackValue;
-    protected bool $hasFallback = false;
+    protected string|array|null $errorMessage;
+    protected bool $notEmptyValidator = false;
 
-    /** @param non-empty-string|int $name */
+    /**
+     * @param non-empty-string|int $name
+     * @param InputSpecification $options
+     */
     final public function __construct(
         protected FilterChainInterface $filterChain,
         protected ValidatorChainInterface $validatorChain,
         protected string|int $name,
+        array $options = [],
     ) {
         $this->assertValidName($name);
+        $this->allowEmpty      = $options['allow_empty'] ?? false;
+        $this->required        = $options['required'] ?? $this->allowEmpty !== true;
+        $this->continueIfEmpty = $options['continue_if_empty'] ?? false;
+        $this->breakOnFailure  = $options['break_on_failure'] ?? false;
+        $this->errorMessage    = $options['error_message'] ?? null;
+        $this->fallbackValue   = $options['fallback_value'] ?? null;
+        $this->hasFallback     = $this->fallbackValue !== null;
+        $this->hasValue        = false;
     }
 
     public function setAllowEmpty(bool $allowEmpty): static
@@ -199,8 +208,7 @@ class Input implements
 
     public function getValue(): mixed
     {
-        $filter = $this->getFilterChain();
-        return $filter->filter($this->value);
+        return $this->filterChain->filter($this->value);
     }
 
     /**
@@ -234,9 +242,6 @@ class Input implements
         $this->fallbackValue = null;
     }
 
-    /**
-     * @return $this
-     */
     public function merge(InputInterface $input): static
     {
         $this->setBreakOnFailure($input->breakOnFailure());

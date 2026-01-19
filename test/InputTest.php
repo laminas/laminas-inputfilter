@@ -1063,5 +1063,9 @@ final class InputTest extends TestCase
             $this->input,
             $this->input->setValue('muppet'),
         );
+        self::assertSame(
+            $this->input,
+            $this->input->setErrorMessage('muppet'),
+        );
     }
 }

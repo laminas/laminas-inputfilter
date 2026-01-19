@@ -9,20 +9,7 @@ use Laminas\Validator\ValidatorChainInterface;
 
 interface InputInterface
 {
-    public function setAllowEmpty(bool $allowEmpty): static;
-
-    public function setBreakOnFailure(bool $breakOnFailure): static;
-
-    public function setErrorMessage(string|null $errorMessage): static;
-
-    /** @param non-empty-string|int $name */
-    public function setName(string|int $name): static;
-
-    public function setRequired(bool $required): static;
-
     public function setValue(mixed $value): static;
-
-    public function merge(InputInterface $input): static;
 
     public function allowEmpty(): bool;
 
@@ -47,4 +34,10 @@ interface InputInterface
     public function isValid(array|null $context = null): bool;
 
     public function getMessages(): ErrorMessages;
+
+    public function continueIfEmpty(): bool;
+
+    public function getFallbackValue(): mixed;
+
+    public function hasFallback(): bool;
 }

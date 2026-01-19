@@ -89,11 +89,6 @@
       <code><![CDATA[$instanceOf]]></code>
     </NonInvariantDocblockPropertyType>
   </file>
-  <file src="src/InputInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[static]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="src/OptionalInputFilter.php">
     <ClassMustBeFinal>
       <code><![CDATA[OptionalInputFilter]]></code>
@@ -144,11 +139,6 @@
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="test/FactoryTest.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[continueIfEmpty]]></code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="test/InputFilterPluginManagerTest.php">
     <LessSpecificReturnStatement>
