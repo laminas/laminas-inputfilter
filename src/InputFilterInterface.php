@@ -88,6 +88,14 @@ interface InputFilterInterface extends Countable
     public function isValid(array|null $context = null): bool;
 
     /**
+     * Is the data set valid?
+     *
+     * @param iterable<array-key, mixed>|null $data
+     * @param array<array-key, mixed>|null $context
+     */
+    public function validate(iterable|null $data, array|null $context = null): InputFilterValidationResult;
+
+    /**
      * Provide a list of one or more elements indicating the complete set to validate
      *
      * When provided, calls to {@link isValid()} will only validate the provided set.

@@ -22,6 +22,7 @@ use function is_array;
 use function is_int;
 use function is_iterable;
 use function is_string;
+use function iterator_to_array;
 use function sprintf;
 
 /**
@@ -216,6 +217,37 @@ class BaseInputFilter implements
 
         $inputs = $this->validationGroup ?? array_keys($this->inputs);
         return $this->validateInputs($inputs, $this->data, $context);
+    }
+
+    public function validate(iterable|null $data, array|null $context = null): InputFilterValidationResult
+    {
+        $data      = iterator_to_array($data ?? []);
+        $context ??= $data;
+        $inputs    = $this->validationGroup ?? array_keys($this->inputs);
+        $results   = [];
+        foreach ($inputs as $name) {
+            $input = $this->inputs[$name];
+            /** @psalm-var mixed $value */
+            $value = $data[$name] ?? null;
+
+            if ($input instanceof InputFilterInterface) {
+                $value = is_iterable($value) ? iterator_to_array($value) : [];
+
+                $result = $input->validate($value, $context);
+                assert($result instanceof InputFilterValidationResult);
+                $results[$name] = $result;
+
+                continue;
+            }
+
+            $result         = $input->validate($value, $context);
+            $results[$name] = $result;
+            if (! $result->valid() && $input->breakOnFailure()) {
+                break;
+            }
+        }
+
+        return new InputFilterValidationResult($results);
     }
 
     /**

@@ -9,6 +9,9 @@ use Laminas\Validator\ValidatorChainInterface;
 
 interface InputInterface
 {
+    /** @internal */
+    public const EMPTY_FAILURE_VALIDATION_KEY = '__inputEmptyValueFailure';
+
     public function setValue(mixed $value): static;
 
     public function allowEmpty(): bool;
@@ -32,6 +35,9 @@ interface InputInterface
 
     /** @param array<array-key, mixed>|null $context */
     public function isValid(array|null $context = null): bool;
+
+    /** @param array<array-key, mixed> $context */
+    public function validate(mixed $value, array $context): InputValidationResult;
 
     public function getMessages(): ErrorMessages;
 

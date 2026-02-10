@@ -32,9 +32,6 @@ use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
 
-/**
- * @psalm-suppress DeprecatedMethod
- */
 final class InputTest extends TestCase
 {
     private const EMPTY_ERROR_MESSAGE_KEY = 'isEmpty';
@@ -403,7 +400,7 @@ final class InputTest extends TestCase
         $input = $this->createInput(
             'foo',
             TestHelper::createFilterChainFixture($valueRaw, $valueFiltered),
-            TestHelper::createValidatorChain($valueFiltered, true)
+            TestHelper::createValidatorChain($valueFiltered, true),
         );
 
         $input->setValue($valueRaw);
