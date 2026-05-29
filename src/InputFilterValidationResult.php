@@ -6,6 +6,10 @@ namespace Laminas\InputFilter;
 
 use Laminas\InputFilter\Exception\InputNotFoundException;
 
+/**
+ * @template T
+ * @implements ValidationResultInterface<T>
+ */
 final readonly class InputFilterValidationResult implements ValidationResultInterface
 {
     /** @param array<array-key, self|InputValidationResult> $results */
@@ -50,7 +54,6 @@ final readonly class InputFilterValidationResult implements ValidationResultInte
         return $value;
     }
 
-    /** @psalm-suppress MixedAssignment */
     public function value(): array
     {
         $value = [];

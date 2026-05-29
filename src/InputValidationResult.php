@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
+/**
+ * @template T
+ * @implements ValidationResultInterface<T>
+ */
 final readonly class InputValidationResult implements ValidationResultInterface
 {
+    /** @param T $value */
     private function __construct(
         private int|string $name,
         private mixed $rawValue,
@@ -15,6 +20,11 @@ final readonly class InputValidationResult implements ValidationResultInterface
     ) {
     }
 
+    /**
+     * @param T1 $value
+     * @return self<T1>
+     * @template T1
+     */
     public static function pass(
         int|string $name,
         mixed $rawValue,

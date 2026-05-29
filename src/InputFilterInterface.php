@@ -76,7 +76,7 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
-     * @param  iterable<array-key, mixed>|null $data
+     * @param iterable<array-key, mixed>|null $data
      */
     public function setData(iterable|null $data): static;
 
@@ -92,6 +92,7 @@ interface InputFilterInterface extends Countable
      *
      * @param iterable<array-key, mixed> $data
      * @param array<array-key, mixed> $context
+     * @return InputFilterValidationResult<TFilteredValues>
      */
     public function validate(iterable $data, array $context = []): InputFilterValidationResult;
 
