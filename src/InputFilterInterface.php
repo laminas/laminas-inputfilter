@@ -90,10 +90,10 @@ interface InputFilterInterface extends Countable
     /**
      * Is the data set valid?
      *
-     * @param iterable<array-key, mixed>|null $data
-     * @param array<array-key, mixed>|null $context
+     * @param iterable<array-key, mixed> $data
+     * @param array<array-key, mixed> $context
      */
-    public function validate(iterable|null $data, array|null $context = null): InputFilterValidationResult;
+    public function validate(iterable $data, array $context = []): InputFilterValidationResult;
 
     /**
      * Provide a list of one or more elements indicating the complete set to validate

@@ -219,12 +219,12 @@ class BaseInputFilter implements
         return $this->validateInputs($inputs, $this->data, $context);
     }
 
-    public function validate(iterable|null $data, array|null $context = null): InputFilterValidationResult
+    public function validate(iterable $data, array $context = []): InputFilterValidationResult
     {
-        $data      = iterator_to_array($data ?? []);
-        $context ??= $data;
-        $inputs    = $this->validationGroup ?? array_keys($this->inputs);
-        $results   = [];
+        $data    = iterator_to_array($data);
+        $context = $context === [] ? $data : $context;
+        $inputs  = $this->validationGroup ?? array_keys($this->inputs);
+        $results = [];
         foreach ($inputs as $name) {
             $input = $this->inputs[$name];
             /** @psalm-var mixed $value */
