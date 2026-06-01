@@ -100,37 +100,32 @@ final class FileInput extends Input
     /** @inheritDoc */
     public function isValid(array|null $context = null): bool
     {
-        $rawValue        = $this->getRawValue();
-        $hasValue        = $this->hasValue();
-        $empty           = $this->isEmptyFile($rawValue);
-        $required        = $this->isRequired();
-        $allowEmpty      = $this->allowEmpty();
-        $continueIfEmpty = $this->continueIfEmpty();
+        $empty = $this->isEmptyFile($this->value);
 
-        if (! $hasValue && ! $required) {
+        if (! $this->hasValue && ! $this->required) {
             return true;
         }
 
-        if (! $hasValue && ! $this->hasFallback()) { // required, no value, and no fallback
+        if (! $this->hasValue && ! $this->hasFallback()) { // required, no value, and no fallback
             if ($this->errorMessage === null) {
                 $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
             }
             return false;
         }
 
-        if ($empty && ! $required && ! $continueIfEmpty) {
+        if ($empty && ! $this->required && ! $this->continueIfEmpty) {
             return true;
         }
 
-        if ($empty && $allowEmpty && ! $continueIfEmpty) {
+        if ($empty && $this->allowEmpty && ! $this->continueIfEmpty) {
             return true;
         }
 
         assert($this->handler !== null);
         $this->isValid = $this->handler->isValid(
-            $rawValue,
+            $this->value,
             $this->injectUploadValidator($this->getValidatorChain()),
-            $context
+            $context,
         );
         return $this->isValid;
     }
