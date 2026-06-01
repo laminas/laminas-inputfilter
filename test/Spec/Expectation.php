@@ -11,6 +11,7 @@ final readonly class Expectation
      * @param list<string> $invalidKeys
      * @param list<string> $validKeys
      * @param array<array-key, mixed> $expect
+     * @param array<array-key, mixed> $expectRaw
      */
     public function __construct(
         public iterable $input,
@@ -18,6 +19,7 @@ final readonly class Expectation
         public array $invalidKeys,
         public array $validKeys,
         public array $expect,
+        public array $expectRaw,
     ) {
     }
 }

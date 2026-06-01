@@ -90,6 +90,13 @@ final readonly class BasicFilterAndValidate implements InputFilterTestSpecInterf
                         'd' => null,
                     ],
                 ],
+                [
+                    'a' => ' 123.123.123.123 ',
+                    'b' => [
+                        'c' => '1.1.1.1',
+                        'd' => '',
+                    ],
+                ],
             ),
             'Empty Payload'      => new Expectation(
                 [],
@@ -100,6 +107,13 @@ final readonly class BasicFilterAndValidate implements InputFilterTestSpecInterf
                 ],
                 [
                     'b.d',
+                ],
+                [
+                    'a' => null,
+                    'b' => [
+                        'c' => null,
+                        'd' => null,
+                    ],
                 ],
                 [
                     'a' => null,
@@ -124,6 +138,13 @@ final readonly class BasicFilterAndValidate implements InputFilterTestSpecInterf
                 ],
                 [
                     'b.d',
+                ],
+                [
+                    'a' => 'fred',
+                    'b' => [
+                        'c' => 'wilma',
+                        'd' => 'barney',
+                    ],
                 ],
                 [
                     'a' => 'fred',

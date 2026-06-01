@@ -12,7 +12,7 @@ use Laminas\InputFilter\Exception\InputNotFoundException;
  */
 final readonly class InputFilterValidationResult implements ValidationResultInterface
 {
-    /** @param array<array-key, self|InputValidationResult> $results */
+    /** @param array<array-key, ValidationResultInterface> $results */
     public function __construct(
         public array $results,
     ) {
@@ -42,12 +42,12 @@ final readonly class InputFilterValidationResult implements ValidationResultInte
         return new ErrorMessages($messages);
     }
 
-    /** @psalm-suppress MixedAssignment */
     public function rawValue(): array
     {
         $value = [];
         foreach ($this->results as $key => $result) {
-            $name         = $this->keyName($key, $result);
+            $name = $this->keyName($key, $result);
+            /** @psalm-suppress MixedAssignment - Yep. This is mixed… */
             $value[$name] = $result->rawValue();
         }
 
@@ -58,7 +58,8 @@ final readonly class InputFilterValidationResult implements ValidationResultInte
     {
         $value = [];
         foreach ($this->results as $key => $result) {
-            $name         = $this->keyName($key, $result);
+            $name = $this->keyName($key, $result);
+            /** @psalm-suppress MixedAssignment This _is_ effectively mixed, but our overall return type is still T */
             $value[$name] = $result->value();
         }
 

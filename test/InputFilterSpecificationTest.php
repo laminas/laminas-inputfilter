@@ -8,6 +8,7 @@ use Laminas\InputFilter\Factory;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterValidationResult;
 use Laminas\InputFilter\ValidationResultInterface;
+use LaminasTest\InputFilter\Spec\BasicCollections;
 use LaminasTest\InputFilter\Spec\BasicFilterAndValidate;
 use LaminasTest\InputFilter\Spec\Expectation;
 use LaminasTest\InputFilter\Spec\InputFilterTestSpecInterface;
@@ -26,6 +27,7 @@ final class InputFilterSpecificationTest extends TestCase
     {
         return [
             BasicFilterAndValidate::class,
+            BasicCollections::class,
         ];
     }
 
@@ -56,8 +58,24 @@ final class InputFilterSpecificationTest extends TestCase
 
         $result = $inputFilter->validate($expectation->input);
 
-        self::assertSame($expectation->valid, $result->valid());
-        self::assertSame($expectation->expect, $result->value());
+        self::assertSame($expectation->valid, $result->valid(), sprintf(
+            'The result was expected to be %s, but it was %s',
+            $expectation->valid ? 'valid' : 'invalid',
+            $result->valid() ? 'valid' : 'not valid',
+        ));
+
+        self::assertSame(
+            $expectation->expect,
+            $result->value(),
+            'The filtered and validated data did not match expectations'
+        );
+
+        self::assertSame(
+            $expectation->expectRaw,
+            $result->rawValue(),
+            'The raw values should be identical to the input',
+        );
+
         self::assertValidEntry($result, $expectation->validKeys);
         self::assertInvalidEntry($result, $expectation->invalidKeys);
     }

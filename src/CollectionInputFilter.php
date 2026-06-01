@@ -313,4 +313,39 @@ class CollectionInputFilter extends InputFilter
 
         return new ErrorMessages($validator->getMessages());
     }
+
+    public function validate(iterable $data, array $context = []): InputFilterValidationResult
+    {
+        $inputFilter = $this->getInputFilter();
+
+        $data    = iterator_to_array($data, false); // Cast to a list, keys are not relevant
+        $context = $context === [] ? $data : $context;
+
+        $minCount = max(
+            $this->isRequired ? 1 : 0,
+            $this->count ?? 0,
+        );
+
+        $iterations = max(
+            count($data),
+            $minCount,
+        );
+
+        $results = [];
+        for ($i = 0; $i < $iterations; $i++) {
+            /** @psalm-var iterable<array-key, mixed> $set */
+            $set = $data[$i] ?? [];
+            /** @psalm-var ValidationResultInterface<TFilteredValues> $result */
+            $result    = $inputFilter->validate($set, $context);
+            $results[] = $result;
+        }
+
+        /**
+         * This return type needs forcing, because it is effectively list<T>, but this class defines array<array-key, T>
+         * as its generic type.
+         *
+         * @psalm-var InputFilterValidationResult<array<array-key, TFilteredValues>>
+         */
+        return new InputFilterValidationResult($results);
+    }
 }
