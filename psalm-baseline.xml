@@ -40,9 +40,6 @@
     </MixedArgument>
   </file>
   <file src="src/FileInput.php">
-    <MixedAssignment>
-      <code><![CDATA[$rawValue]]></code>
-    </MixedAssignment>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
