@@ -223,10 +223,8 @@ class BaseInputFilter implements
     {
         $data    = iterator_to_array($data);
         $context = $context === [] ? $data : $context;
-        $inputs  = $this->validationGroup ?? array_keys($this->inputs);
         $results = [];
-        foreach ($inputs as $name) {
-            $input = $this->inputs[$name];
+        foreach ($this->inputs as $name => $input) {
             /** @psalm-var mixed $value */
             $value = $data[$name] ?? null;
 
