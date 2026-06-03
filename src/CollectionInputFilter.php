@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\Validator\NotEmpty;
+use NoDiscard;
 
 use function assert;
 use function count;
@@ -314,6 +315,7 @@ class CollectionInputFilter extends InputFilter
         return new ErrorMessages($validator->getMessages());
     }
 
+    #[NoDiscard]
     public function validate(iterable $data, array $context = []): InputFilterValidationResult
     {
         $inputFilter = $this->getInputFilter();

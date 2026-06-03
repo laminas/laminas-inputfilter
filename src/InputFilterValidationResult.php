@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Laminas\InputFilter\Exception\InputNotFoundException;
+use NoDiscard;
 
 /**
  * @template T
@@ -18,6 +19,7 @@ final readonly class InputFilterValidationResult implements ValidationResultInte
     ) {
     }
 
+    #[NoDiscard]
     public function valid(): bool
     {
         foreach ($this->results as $result) {

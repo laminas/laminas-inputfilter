@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Laminas\InputFilter;
 
+use NoDiscard;
+
 /**
  * @template T
  * @implements ValidationResultInterface<T>
@@ -47,6 +49,7 @@ final readonly class InputValidationResult implements ValidationResultInterface
         return $this->name;
     }
 
+    #[NoDiscard]
     public function valid(): bool
     {
         return $this->valid;

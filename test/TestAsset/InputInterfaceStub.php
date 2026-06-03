@@ -8,6 +8,7 @@ use Exception;
 use Laminas\InputFilter\ErrorMessages;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputValidationResult;
+use NoDiscard;
 
 use function func_get_arg;
 use function func_num_args;
@@ -117,6 +118,7 @@ final readonly class InputInterfaceStub implements InputInterface
         return false;
     }
 
+    #[NoDiscard]
     public function validate(mixed $value, array $context): InputValidationResult
     {
         throw new Exception('Not implemented');

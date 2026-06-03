@@ -6,6 +6,7 @@ namespace Laminas\InputFilter;
 
 use Laminas\Filter\FilterChainInterface;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 
 interface InputInterface
 {
@@ -37,6 +38,7 @@ interface InputInterface
     public function isValid(array|null $context = null): bool;
 
     /** @param array<array-key, mixed> $context */
+    #[NoDiscard]
     public function validate(mixed $value, array $context): InputValidationResult;
 
     public function getMessages(): ErrorMessages;

@@ -8,6 +8,7 @@ use Laminas\InputFilter\FileInput\FileInputHandlerInterface;
 use Laminas\Validator\File\UploadFile as UploadValidator;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 use Psr\Http\Message\UploadedFileInterface;
 
 use function array_merge;
@@ -132,6 +133,7 @@ final class FileInput extends Input
         return $this->isValid;
     }
 
+    #[NoDiscard]
     public function validate(mixed $value, array $context): InputValidationResult
     {
         $isEmpty = $value === '' || $value === [] || $value === null || $this->isEmptyFile($value);

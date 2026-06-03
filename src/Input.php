@@ -11,6 +11,7 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 
 use function array_merge;
 use function assert;
@@ -278,6 +279,7 @@ class Input implements MutableInputInterface
         return $this;
     }
 
+    #[NoDiscard]
     public function validate(mixed $value, array $context): InputValidationResult
     {
         $isEmpty = $value === '' || $value === null || $value === [];

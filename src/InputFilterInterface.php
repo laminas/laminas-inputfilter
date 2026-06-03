@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Countable;
-use Laminas\Filter\FilterChain; // phpcs:ignore
-use Laminas\Filter\FilterInterface; // phpcs:ignore
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterInterface;
 use Laminas\InputFilter\Exception\InputNotFoundException;
-use Laminas\Validator\ValidatorChain; // phpcs:ignore
-use Laminas\Validator\ValidatorInterface; // phpcs:ignore
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
+use NoDiscard;
 
 /**
  * @template TFilteredValues
@@ -94,6 +95,7 @@ interface InputFilterInterface extends Countable
      * @param array<array-key, mixed> $context
      * @return InputFilterValidationResult<TFilteredValues>
      */
+    #[NoDiscard]
     public function validate(iterable $data, array $context = []): InputFilterValidationResult;
 
     /**

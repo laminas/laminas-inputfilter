@@ -25,11 +25,17 @@
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
   </file>
   <file src="src/CollectionInputFilter.php">
     <PropertyTypeCoercion>
       <code><![CDATA[$name]]></code>
     </PropertyTypeCoercion>
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
   </file>
   <file src="src/Factory.php">
     <MixedArgument>
@@ -44,6 +50,9 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MoreSpecificImplementedParamType>
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
   </file>
   <file src="src/FileInput/HttpServerFileInputHandler.php">
     <MixedAssignment>
@@ -64,6 +73,11 @@
       <code><![CDATA[$rawValue]]></code>
     </MoreSpecificImplementedParamType>
   </file>
+  <file src="src/Input.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
+  </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <MixedArgument>
       <code><![CDATA[$config]]></code>
@@ -77,6 +91,11 @@
       <code><![CDATA[$config]]></code>
     </MixedAssignment>
   </file>
+  <file src="src/InputFilterInterface.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
+  </file>
   <file src="src/InputFilterPluginManager.php">
     <MethodSignatureMismatch>
       <code><![CDATA[InputFilterPluginManager]]></code>
@@ -86,10 +105,30 @@
       <code><![CDATA[$instanceOf]]></code>
     </NonInvariantDocblockPropertyType>
   </file>
+  <file src="src/InputFilterValidationResult.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
+  </file>
+  <file src="src/InputInterface.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
+  </file>
+  <file src="src/InputValidationResult.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
+  </file>
   <file src="src/OptionalInputFilter.php">
     <ClassMustBeFinal>
       <code><![CDATA[OptionalInputFilter]]></code>
     </ClassMustBeFinal>
+  </file>
+  <file src="src/ValidationResultInterface.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
   </file>
   <file src="test/BaseInputFilterTest.php">
     <InvalidArgument>
@@ -152,5 +191,15 @@
      *     2: class-string<InputInterface>
      * }>]]></code>
     </MoreSpecificReturnType>
+  </file>
+  <file src="test/TestAsset/InputInterfaceImplementation.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
+  </file>
+  <file src="test/TestAsset/InputInterfaceStub.php">
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
   </file>
 </files>

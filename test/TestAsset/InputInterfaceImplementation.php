@@ -11,6 +11,7 @@ use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputValidationResult;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 
 /** @psalm-import-type InputSpecification from InputFilterInterface */
 final class InputInterfaceImplementation implements InputInterface
@@ -119,6 +120,7 @@ final class InputInterfaceImplementation implements InputInterface
         return $this->hasFallback;
     }
 
+    #[NoDiscard]
     public function validate(mixed $value, array $context): InputValidationResult
     {
         throw new Exception('Not implemented');

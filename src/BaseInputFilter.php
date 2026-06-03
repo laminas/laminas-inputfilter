@@ -8,6 +8,7 @@ use Laminas\InputFilter\Exception\InputNotFoundException;
 use Laminas\InputFilter\Exception\InvalidArgumentException;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\InitializableInterface;
+use NoDiscard;
 use Traversable;
 
 use function array_key_exists;
@@ -219,6 +220,7 @@ class BaseInputFilter implements
         return $this->validateInputs($inputs, $this->data, $context);
     }
 
+    #[NoDiscard]
     public function validate(iterable $data, array $context = []): InputFilterValidationResult
     {
         $data    = iterator_to_array($data);
