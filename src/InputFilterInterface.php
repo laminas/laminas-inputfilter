@@ -89,7 +89,18 @@ interface InputFilterInterface extends Countable
     public function isValid(array|null $context = null): bool;
 
     /**
-     * Is the data set valid?
+     * Validate a payload using the configured validator and filter chains
+     *
+     * This method performs stateless validation, returning a result value rather than a boolean. Calling validate()
+     * does not mutate the internal state of the input filter, therefore it is safe to call multiple times for different
+     * payloads.
+     *
+     * The result of this method should not be ignored. Calls to `isValid()` are irrelevant when using this api and the
+     * result value returned encapsulates all validation information, filtered and unfiltered values.
+     *
+     * Note that validation groups are ignored and the entire data set is validated against all configured inputs.
+     *
+     * Before migrating to this method, please familiarise yourself with the migration guide for version 3.x
      *
      * @param iterable<array-key, mixed> $data
      * @param array<array-key, mixed> $context

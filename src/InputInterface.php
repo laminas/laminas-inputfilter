@@ -37,7 +37,19 @@ interface InputInterface
     /** @param array<array-key, mixed>|null $context */
     public function isValid(array|null $context = null): bool;
 
-    /** @param array<array-key, mixed> $context */
+    /**
+     * Validate a value for this input
+     *
+     * This method performs stateless validation, returning a result object that exposes whether validation was
+     * successful, any error messages, the filtered, and un-filtered values.
+     *
+     * This method does not modify the internal state of the input, therefore it is not necessary to `setValue()`, and
+     * subsequent calls to `getValue()`, `isValid()`, `getMessages()` and others will not yield the expected results.
+     *
+     * Before migrating to this method, please familiarise yourself with the migration guide for version 3.x
+     *
+     * @param array<array-key, mixed> $context
+     */
     #[NoDiscard]
     public function validate(mixed $value, array $context): InputValidationResult;
 
