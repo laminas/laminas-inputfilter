@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace LaminasTest\InputFilter\TestAsset;
 
+use Exception;
 use Laminas\Filter\FilterChainInterface;
 use Laminas\InputFilter\ErrorMessages;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputInterface;
+use Laminas\InputFilter\InputValidationResult;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 
 /** @psalm-import-type InputSpecification from InputFilterInterface */
 final class InputInterfaceImplementation implements InputInterface
@@ -115,5 +118,11 @@ final class InputInterfaceImplementation implements InputInterface
     public function hasFallback(): bool
     {
         return $this->hasFallback;
+    }
+
+    #[NoDiscard]
+    public function validate(mixed $value, array $context): InputValidationResult
+    {
+        throw new Exception('Not implemented');
     }
 }

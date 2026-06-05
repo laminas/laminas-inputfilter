@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Laminas\InputFilter;
 
 use Countable;
-use Laminas\Filter\FilterChain; // phpcs:ignore
-use Laminas\Filter\FilterInterface; // phpcs:ignore
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\FilterInterface;
 use Laminas\InputFilter\Exception\InputNotFoundException;
-use Laminas\Validator\ValidatorChain; // phpcs:ignore
-use Laminas\Validator\ValidatorInterface; // phpcs:ignore
+use Laminas\Validator\ValidatorChain;
+use Laminas\Validator\ValidatorInterface;
+use NoDiscard;
 
 /**
  * @template TFilteredValues
@@ -76,7 +77,7 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
-     * @param  iterable<array-key, mixed>|null $data
+     * @param iterable<array-key, mixed>|null $data
      */
     public function setData(iterable|null $data): static;
 
@@ -86,6 +87,27 @@ interface InputFilterInterface extends Countable
      * @param array<array-key, mixed>|null $context
      */
     public function isValid(array|null $context = null): bool;
+
+    /**
+     * Validate a payload using the configured validator and filter chains
+     *
+     * This method performs stateless validation, returning a result value rather than a boolean. Calling validate()
+     * does not mutate the internal state of the input filter, therefore it is safe to call multiple times for different
+     * payloads.
+     *
+     * The result of this method should not be ignored. Calls to `isValid()` are irrelevant when using this api and the
+     * result value returned encapsulates all validation information, filtered and unfiltered values.
+     *
+     * Note that validation groups are ignored and the entire data set is validated against all configured inputs.
+     *
+     * Before migrating to this method, please familiarise yourself with the migration guide for version 3.x
+     *
+     * @param iterable<array-key, mixed> $data
+     * @param array<array-key, mixed> $context
+     * @return InputFilterValidationResult<TFilteredValues>
+     */
+    #[NoDiscard]
+    public function validate(iterable $data, array $context = []): InputFilterValidationResult;
 
     /**
      * Provide a list of one or more elements indicating the complete set to validate

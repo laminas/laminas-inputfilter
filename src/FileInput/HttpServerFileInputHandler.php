@@ -7,6 +7,8 @@ namespace Laminas\InputFilter\FileInput;
 use Laminas\Filter\FilterChainInterface;
 use Laminas\Validator\ValidatorChainInterface;
 
+use function array_key_exists;
+use function assert;
 use function count;
 use function is_array;
 
@@ -96,12 +98,15 @@ final class HttpServerFileInputHandler implements FileInputHandlerInterface
             ];
         }
 
-        if (isset($rawValue['tmp_name'])) {
+        if (array_key_exists('tmp_name', $rawValue)) {
             // Single file input
             return $validatorChain->isValid($rawValue, $context);
         }
 
-        if (isset($rawValue[0]['tmp_name'])) {
+        $first = $rawValue[0] ?? [];
+        assert(is_array($first));
+
+        if (array_key_exists('tmp_name', $first)) {
             // Multi file input (multiple attribute set)
             foreach ($rawValue as $value) {
                 if (! $validatorChain->isValid($value, $context)) {

@@ -8,10 +8,13 @@ use Laminas\InputFilter\FileInput\FileInputHandlerInterface;
 use Laminas\Validator\File\UploadFile as UploadValidator;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 use Psr\Http\Message\UploadedFileInterface;
 
+use function array_merge;
 use function assert;
 use function is_array;
+use function sprintf;
 
 /**
  * FileInput is a special Input type for handling uploaded files.
@@ -100,39 +103,99 @@ final class FileInput extends Input
     /** @inheritDoc */
     public function isValid(array|null $context = null): bool
     {
-        $rawValue        = $this->getRawValue();
-        $hasValue        = $this->hasValue();
-        $empty           = $this->isEmptyFile($rawValue);
-        $required        = $this->isRequired();
-        $allowEmpty      = $this->allowEmpty();
-        $continueIfEmpty = $this->continueIfEmpty();
+        $empty = $this->isEmptyFile($this->value);
 
-        if (! $hasValue && ! $required) {
+        if (! $this->hasValue && ! $this->required) {
             return true;
         }
 
-        if (! $hasValue && ! $this->hasFallback()) { // required, no value, and no fallback
+        if (! $this->hasValue && ! $this->hasFallback()) { // required, no value, and no fallback
             if ($this->errorMessage === null) {
                 $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
             }
             return false;
         }
 
-        if ($empty && ! $required && ! $continueIfEmpty) {
+        if ($empty && ! $this->required && ! $this->continueIfEmpty) {
             return true;
         }
 
-        if ($empty && $allowEmpty && ! $continueIfEmpty) {
+        if ($empty && $this->allowEmpty && ! $this->continueIfEmpty) {
             return true;
         }
 
         assert($this->handler !== null);
         $this->isValid = $this->handler->isValid(
-            $rawValue,
+            $this->value,
             $this->injectUploadValidator($this->getValidatorChain()),
-            $context
+            $context,
         );
         return $this->isValid;
+    }
+
+    #[NoDiscard]
+    public function validate(mixed $value, array $context): InputValidationResult
+    {
+        $isEmpty = $value === '' || $value === [] || $value === null || $this->isEmptyFile($value);
+        $handler = $this->createHandler($value);
+
+        if (
+            // We have a valid result when a value is empty, but a fallback is present
+            ($isEmpty && $this->hasFallback)
+            ||
+            // Empty values are valid when they are not required and validation should not continue for empty values
+            ($isEmpty && ! $this->required && ! $this->continueIfEmpty)
+            ||
+            // Empty is valid when allowEmpty is true and continue if empty is false
+            ($isEmpty && $this->allowEmpty && ! $this->continueIfEmpty)
+        ) {
+            return InputValidationResult::pass(
+                $this->name,
+                $value,
+                $handler->filterValue($value, true, $this->filterChain),
+            );
+        }
+
+        $validatorChain = $this->injectUploadValidator($this->validatorChain);
+
+        $isValid  = $handler->isValid(
+            $value,
+            $validatorChain,
+            $context,
+        );
+        $messages = $this->validatorChain->getMessages();
+
+        /**
+         * An empty value should not be considered valid in this situation, regardless
+         * of what the validator chain says.
+         * Instead of mutating the chain, fail validation with a validation failure message that advises the user to
+         * customise the validation chain with a NotEmpty validator.
+         */
+        if ($isValid && $isEmpty) {
+            $isValid  = false;
+            $messages = array_merge([
+                InputInterface::EMPTY_FAILURE_VALIDATION_KEY => sprintf(
+                    'The value for "%s" was empty, but its configuration prohibits an empty value. '
+                    . 'Enable the auto-prepend of a "UploadFile" validator to this input’s chain, '
+                    . 'or configure one manually in order to customise '
+                    . 'this validation failure message',
+                    $this->name,
+                ),
+            ], $messages);
+        }
+
+        return $isValid
+            ? InputValidationResult::pass(
+                $this->name,
+                $value,
+                $handler->filterValue($value, true, $this->filterChain),
+            )
+            : InputValidationResult::fail(
+                $this->name,
+                $value,
+                $handler->filterValue($value, false, $this->filterChain),
+                new ErrorMessages($messages),
+            );
     }
 
     public function merge(InputInterface $input): static

@@ -96,7 +96,7 @@ final class FileInputTest extends TestCase
         self::assertEquals($filtered, $input->getValue());
     }
 
-    #[DAtaProvider('validMultiValueProvider')]
+    #[DataProvider('validMultiValueProvider')]
     public function testCanFilterArrayOfMultiFileData(array $raw, array $filtered): void
     {
         $map = [];

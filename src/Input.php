@@ -11,7 +11,9 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\ValidatorChain;
 use Laminas\Validator\ValidatorChainInterface;
+use NoDiscard;
 
+use function array_merge;
 use function assert;
 use function class_exists;
 use function get_debug_type;
@@ -277,6 +279,63 @@ class Input implements MutableInputInterface
         return $this;
     }
 
+    #[NoDiscard]
+    public function validate(mixed $value, array $context): InputValidationResult
+    {
+        $isEmpty = $value === '' || $value === null || $value === [];
+        /** @psalm-var mixed $resolvedValue */
+        $resolvedValue = $isEmpty && $this->hasFallback ? $this->fallbackValue : $value;
+        /**
+         * Behaviour Change: The fallback value is filtered where previously it was returned verbatim
+         *
+         * @psalm-var mixed $filteredValue
+         */
+        $filteredValue = $this->filterChain->filter($resolvedValue);
+
+        if (
+            // We have a valid result when a value is empty, but a fallback is present
+            ($isEmpty && $this->hasFallback)
+            ||
+            // Empty values are valid when they are not required and validation should not continue for empty values
+            ($isEmpty && ! $this->required && ! $this->continueIfEmpty)
+            ||
+            // Empty is valid when allowEmpty is true and continue if empty is false
+            ($isEmpty && $this->allowEmpty && ! $this->continueIfEmpty)
+        ) {
+            return InputValidationResult::pass($this->name, $value, $filteredValue);
+        }
+
+        $isValid  = $this->validatorChain->isValid($filteredValue, $context);
+        $messages = $this->validatorChain->getMessages();
+
+        /**
+         * An empty value should not be considered valid in this situation, regardless
+         * of what the validator chain says.
+         * Instead of mutating the chain, fail validation with a validation failure message that advises the user to
+         * customise the validation chain with a NotEmpty validator.
+         */
+        if ($isValid && $isEmpty) {
+            $isValid  = false;
+            $messages = array_merge([
+                InputInterface::EMPTY_FAILURE_VALIDATION_KEY => sprintf(
+                    'The value for "%s" was empty, but its configuration prohibits an empty value. '
+                    . 'Prepend a "NotEmpty" validator to this input’s chain in order to customise '
+                    . 'this validation failure message',
+                    $this->name,
+                ),
+            ], $messages);
+        }
+
+        return $isValid
+            ? InputValidationResult::pass($this->name, $value, $filteredValue)
+            : InputValidationResult::fail(
+                $this->name,
+                $value,
+                $filteredValue,
+                new ErrorMessages($messages),
+            );
+    }
+
     /** @inheritDoc */
     public function isValid(array|null $context = null): bool
     {
@@ -340,8 +399,7 @@ class Input implements MutableInputInterface
             return new ErrorMessages([]);
         }
 
-        $validator = $this->getValidatorChain();
-        return new ErrorMessages($validator->getMessages());
+        return new ErrorMessages($this->validatorChain->getMessages());
     }
 
     protected function injectNotEmptyValidator(): void
