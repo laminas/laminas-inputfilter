@@ -29,6 +29,11 @@ class ArrayInput extends Input
         return $this;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function getValue(): mixed
     {
         if (! is_array($this->value)) {
@@ -43,7 +48,11 @@ class ArrayInput extends Input
         );
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function isValid(array|null $context = null): bool
     {
         if (! $this->hasValue && $this->hasFallback) {

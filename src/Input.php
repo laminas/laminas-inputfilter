@@ -30,16 +30,23 @@ class Input implements MutableInputInterface
     protected bool $continueIfEmpty;
     protected bool $breakOnFailure;
     protected bool $required;
+
+    /** @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0 */
     protected mixed $value = null; // phpcs:ignore
+    /** @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0 */
     protected bool $hasValue;
     protected mixed $fallbackValue;
     protected bool $hasFallback;
 
     /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
      * @todo ArrayInput needs refactoring so that this type cannot be an array
      * @var string|array<string, string>|null
      */
     protected string|array|null $errorMessage;
+
+    /** @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0 */
     protected bool $notEmptyValidator = false;
 
     /**
@@ -123,6 +130,8 @@ class Input implements MutableInputInterface
      *
      * If you want to remove/unset the current value use {@link Input::resetValue()}.
      *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @see Input::getValue() For retrieve the input value.
      * @see Input::hasValue() For to know if input value was set.
      * @see Input::resetValue() For reset the input value to the default state.
@@ -136,6 +145,8 @@ class Input implements MutableInputInterface
 
     /**
      * Reset input value to the default state.
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      *
      * @see Input::hasValue() For to know if input value was set.
      * @see Input::setValue() For set a new value.
@@ -172,6 +183,8 @@ class Input implements MutableInputInterface
     }
 
     /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @todo Once ArrayInput is refactored, remove the array checks here
      */
     public function getErrorMessage(): string|null
@@ -193,6 +206,11 @@ class Input implements MutableInputInterface
         return $this->name;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function getRawValue(): mixed
     {
         return $this->value;
@@ -208,6 +226,11 @@ class Input implements MutableInputInterface
         return $this->validatorChain;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function getValue(): mixed
     {
         return $this->filterChain->filter($this->value);
@@ -218,6 +241,8 @@ class Input implements MutableInputInterface
      *
      * This flag used for distinguish when {@link Input::getValue()}
      * will return the value previously set or the default.
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      *
      * @see Input::getValue() For retrieve the input value.
      * @see Input::setValue() For set a new value.
@@ -336,7 +361,11 @@ class Input implements MutableInputInterface
             );
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function isValid(array|null $context = null): bool
     {
         if (is_array($this->errorMessage)) {
@@ -389,6 +418,11 @@ class Input implements MutableInputInterface
         return $result;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function getMessages(): ErrorMessages
     {
         if ($this->errorMessage !== null) {
@@ -402,6 +436,9 @@ class Input implements MutableInputInterface
         return new ErrorMessages($this->validatorChain->getMessages());
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     */
     protected function injectNotEmptyValidator(): void
     {
         if ((! $this->isRequired() && $this->allowEmpty()) || $this->notEmptyValidator) {
@@ -435,6 +472,8 @@ class Input implements MutableInputInterface
 
     /**
      * Create and return the validation failure message for required input.
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      *
      * @return array<string, string>
      */

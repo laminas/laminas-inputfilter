@@ -6,6 +6,8 @@ namespace Laminas\InputFilter;
 
 /**
  * Ensures Inputs store unfiltered data and are capable of returning it
+ *
+ * @deprecated Since 3.0. Input filters will no longer store payloads from version 4.0
  */
 interface UnfilteredDataInterface
 {

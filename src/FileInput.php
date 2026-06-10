@@ -38,6 +38,8 @@ final class FileInput extends Input
     private ?FileInputHandlerInterface $handler = null;
 
     /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @inheritDoc
      * @param array|UploadedFileInterface $value
      */
@@ -48,6 +50,11 @@ final class FileInput extends Input
         return $this;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function resetValue(): static
     {
         $this->handler = null;
@@ -69,6 +76,11 @@ final class FileInput extends Input
         return $this->autoPrependUploadValidator;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function getValue(): mixed
     {
         if ($this->handler === null) {
@@ -100,7 +112,11 @@ final class FileInput extends Input
         return true;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function isValid(array|null $context = null): bool
     {
         $empty = $this->isEmptyFile($this->value);
@@ -210,6 +226,8 @@ final class FileInput extends Input
     /**
      * No-op, NotEmpty validator does not apply for FileInputs.
      * See also: BaseInputFilter::isValid()
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      */
     protected function injectNotEmptyValidator(): void
     {

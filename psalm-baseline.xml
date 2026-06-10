@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
   <file src="src/ArrayInput.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[injectNotEmptyValidator]]></code>
+      <code><![CDATA[prepareRequiredValidationFailureMessage]]></code>
+      <code><![CDATA[prepareRequiredValidationFailureMessage]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+    </DeprecatedMethod>
     <DeprecatedProperty>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
       <code><![CDATA[$this->value]]></code>
       <code><![CDATA[$this->value]]></code>
       <code><![CDATA[$this->value]]></code>
@@ -12,6 +30,71 @@
     </MixedAssignment>
   </file>
   <file src="src/BaseInputFilter.php">
+    <DeprecatedConstant>
+      <code><![CDATA[self::VALIDATE_ALL]]></code>
+      <code><![CDATA[self::VALIDATE_ALL]]></code>
+    </DeprecatedConstant>
+    <DeprecatedInterface>
+      <code><![CDATA[BaseInputFilter]]></code>
+    </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[clearRawValues]]></code>
+      <code><![CDATA[clearValues]]></code>
+      <code><![CDATA[getInvalidInput]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[populate]]></code>
+      <code><![CDATA[resetValue]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setUnfilteredData]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[validateInputs]]></code>
+      <code><![CDATA[validateValidationGroup]]></code>
+    </DeprecatedMethod>
+    <DeprecatedProperty>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->invalidInputs]]></code>
+      <code><![CDATA[$this->invalidInputs]]></code>
+      <code><![CDATA[$this->invalidInputs]]></code>
+      <code><![CDATA[$this->invalidInputs]]></code>
+      <code><![CDATA[$this->invalidInputs]]></code>
+      <code><![CDATA[$this->unfilteredData]]></code>
+      <code><![CDATA[$this->unfilteredData]]></code>
+      <code><![CDATA[$this->validInputs]]></code>
+      <code><![CDATA[$this->validInputs]]></code>
+      <code><![CDATA[$this->validInputs]]></code>
+      <code><![CDATA[$this->validInputs]]></code>
+      <code><![CDATA[$this->validInputs]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+    </DeprecatedProperty>
     <InvalidReturnStatement>
       <code><![CDATA[$values]]></code>
     </InvalidReturnStatement>
@@ -30,6 +113,57 @@
     </UndefinedAttributeClass>
   </file>
   <file src="src/CollectionInputFilter.php">
+    <DeprecatedConstant>
+      <code><![CDATA[self::VALIDATE_ALL]]></code>
+    </DeprecatedConstant>
+    <DeprecatedInterface>
+      <code><![CDATA[CollectionInputFilter]]></code>
+    </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[clearRawValues]]></code>
+      <code><![CDATA[clearValues]]></code>
+      <code><![CDATA[getEmptyValidationErrorMessages]]></code>
+      <code><![CDATA[getInvalidInput]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getValidInput]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setUnfilteredData]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+    </DeprecatedMethod>
+    <DeprecatedProperty>
+      <code><![CDATA[$this->collectionMessages]]></code>
+      <code><![CDATA[$this->collectionMessages]]></code>
+      <code><![CDATA[$this->collectionMessages]]></code>
+      <code><![CDATA[$this->collectionMessages]]></code>
+      <code><![CDATA[$this->collectionRawValues]]></code>
+      <code><![CDATA[$this->collectionRawValues]]></code>
+      <code><![CDATA[$this->collectionRawValues]]></code>
+      <code><![CDATA[$this->collectionValues]]></code>
+      <code><![CDATA[$this->collectionValues]]></code>
+      <code><![CDATA[$this->collectionValues]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->emptyErrorMessage]]></code>
+      <code><![CDATA[$this->emptyErrorMessage]]></code>
+      <code><![CDATA[$this->emptyErrorMessage]]></code>
+      <code><![CDATA[$this->invalidInputs]]></code>
+      <code><![CDATA[$this->validInputs]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+      <code><![CDATA[$this->validationGroup]]></code>
+    </DeprecatedProperty>
     <PropertyTypeCoercion>
       <code><![CDATA[$name]]></code>
     </PropertyTypeCoercion>
@@ -38,6 +172,10 @@
     </UndefinedAttributeClass>
   </file>
   <file src="src/Factory.php">
+    <DeprecatedMethod>
+      <code><![CDATA[setErrorMessage]]></code>
+      <code><![CDATA[setIsRequiredValidationMessage]]></code>
+    </DeprecatedMethod>
     <MixedArgument>
       <code><![CDATA[$inputFilterSpecification['count']]]></code>
       <code><![CDATA[$inputFilterSpecification['input_filter']]]></code>
@@ -46,6 +184,22 @@
     </MixedArgument>
   </file>
   <file src="src/FileInput.php">
+    <DeprecatedMethod>
+      <code><![CDATA[parent::resetValue()]]></code>
+      <code><![CDATA[parent::setValue($value)]]></code>
+      <code><![CDATA[prepareRequiredValidationFailureMessage]]></code>
+    </DeprecatedMethod>
+    <DeprecatedProperty>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->notEmptyValidator]]></code>
+      <code><![CDATA[$this->value]]></code>
+      <code><![CDATA[$this->value]]></code>
+      <code><![CDATA[$this->value]]></code>
+      <code><![CDATA[$this->value]]></code>
+    </DeprecatedProperty>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -74,9 +228,52 @@
     </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Input.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getErrorMessage]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[injectNotEmptyValidator]]></code>
+      <code><![CDATA[prepareRequiredValidationFailureMessage]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+    </DeprecatedMethod>
+    <DeprecatedProperty>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->errorMessage]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->hasValue]]></code>
+      <code><![CDATA[$this->notEmptyValidator]]></code>
+      <code><![CDATA[$this->notEmptyValidator]]></code>
+      <code><![CDATA[$this->notEmptyValidator]]></code>
+      <code><![CDATA[$this->value]]></code>
+      <code><![CDATA[$this->value]]></code>
+      <code><![CDATA[$this->value]]></code>
+      <code><![CDATA[$this->value]]></code>
+    </DeprecatedProperty>
     <UndefinedAttributeClass>
       <code><![CDATA[NoDiscard]]></code>
     </UndefinedAttributeClass>
+  </file>
+  <file src="src/InputFilter.php">
+    <DeprecatedInterface>
+      <code><![CDATA[InputFilter]]></code>
+    </DeprecatedInterface>
   </file>
   <file src="src/InputFilterAbstractServiceFactory.php">
     <MixedArgument>
@@ -124,6 +321,19 @@
     <ClassMustBeFinal>
       <code><![CDATA[OptionalInputFilter]]></code>
     </ClassMustBeFinal>
+    <DeprecatedInterface>
+      <code><![CDATA[OptionalInputFilter]]></code>
+    </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[parent::isValid($context)]]></code>
+      <code><![CDATA[parent::setData($this->isEmpty($data) ? [] : $data)]]></code>
+    </DeprecatedMethod>
+    <DeprecatedProperty>
+      <code><![CDATA[$this->data]]></code>
+    </DeprecatedProperty>
+    <UndefinedAttributeClass>
+      <code><![CDATA[NoDiscard]]></code>
+    </UndefinedAttributeClass>
   </file>
   <file src="src/ValidationResultInterface.php">
     <UndefinedAttributeClass>
@@ -131,6 +341,51 @@
     </UndefinedAttributeClass>
   </file>
   <file src="test/BaseInputFilterTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getInvalidInput]]></code>
+      <code><![CDATA[getInvalidInput]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getUnfilteredData]]></code>
+      <code><![CDATA[getUnfilteredData]]></code>
+      <code><![CDATA[getUnfilteredData]]></code>
+      <code><![CDATA[getUnfilteredData]]></code>
+      <code><![CDATA[getValidInput]]></code>
+      <code><![CDATA[getValidInput]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setUnfilteredData]]></code>
+      <code><![CDATA[setUnfilteredData]]></code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
@@ -176,6 +431,78 @@
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
     </PossiblyInvalidArgument>
   </file>
+  <file src="test/CollectionInputFilterTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getRawValues]]></code>
+      <code><![CDATA[getUnfilteredData]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setIsRequiredValidationMessage]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/FactoryTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getErrorMessage]]></code>
+      <code><![CDATA[getErrorMessage]]></code>
+      <code><![CDATA[getErrorMessage]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="test/InputFilterPluginManagerTest.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[[
@@ -192,6 +519,186 @@
      * }>]]></code>
     </MoreSpecificReturnType>
   </file>
+  <file src="test/InputFilterTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/InputFilterWithCustomInputsTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/InputTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getErrorMessage]]></code>
+      <code><![CDATA[getErrorMessage]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getMessages]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[resetValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+      <code><![CDATA[setValue]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/InputValidateMethodTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getRawValue]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[hasValue]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/OptionalInputFilterTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/StaticAnalysis/AddingInputsWithArraySpecs.php">
+    <DeprecatedInterface>
+      <code><![CDATA[AddingInputsWithArraySpecs]]></code>
+    </DeprecatedInterface>
+  </file>
+  <file src="test/StaticAnalysis/CollectionWithTemplatedValues.php">
+    <DeprecatedInterface>
+      <code><![CDATA[CollectionWithTemplatedValues]]></code>
+    </DeprecatedInterface>
+  </file>
+  <file src="test/StaticAnalysis/InputFilterTemplateInfersFilterValueTypes.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/StaticAnalysis/InputFilterWithTemplatedValues.php">
+    <DeprecatedInterface>
+      <code><![CDATA[InputFilterWithTemplatedValues]]></code>
+    </DeprecatedInterface>
+  </file>
+  <file src="test/StaticAnalysis/NestedInputFilterWithTemplatedValues.php">
+    <DeprecatedInterface>
+      <code><![CDATA[NestedInputFilterWithTemplatedValues]]></code>
+    </DeprecatedInterface>
+  </file>
+  <file src="test/TestAsset/Foo.php">
+    <DeprecatedInterface>
+      <code><![CDATA[Foo]]></code>
+    </DeprecatedInterface>
+  </file>
+  <file src="test/TestAsset/InputFilterInterfaceStub.php">
+    <DeprecatedInterface>
+      <code><![CDATA[InputFilterInterfaceStub]]></code>
+    </DeprecatedInterface>
+  </file>
   <file src="test/TestAsset/InputInterfaceImplementation.php">
     <UndefinedAttributeClass>
       <code><![CDATA[NoDiscard]]></code>
@@ -201,5 +708,85 @@
     <UndefinedAttributeClass>
       <code><![CDATA[NoDiscard]]></code>
     </UndefinedAttributeClass>
+  </file>
+  <file src="test/ValidationGroup/InputFilterCollectionsValidationGroupTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/ValidationGroup/InputFilterNestedValidationGroupTest.php">
+    <DeprecatedConstant>
+      <code><![CDATA[InputFilterInterface::VALIDATE_ALL]]></code>
+      <code><![CDATA[InputFilterInterface::VALIDATE_ALL]]></code>
+    </DeprecatedConstant>
+    <DeprecatedMethod>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[getValues]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="test/ValidationGroup/InputFilterStringValidationGroupTest.php">
+    <DeprecatedMethod>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[isValid]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setData]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+      <code><![CDATA[setValidationGroup]]></code>
+    </DeprecatedMethod>
   </file>
 </files>
