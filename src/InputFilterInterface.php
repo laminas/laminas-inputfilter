@@ -176,7 +176,7 @@ interface InputFilterInterface extends Countable
      * List should be an associative array, with the values filtered. If
      * validation failed, this should raise an exception.
      *
-     * @deprecated Since 3.0. Using the rsult returned from {@link validate()}, you can retrieve the filtered values
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the filtered values
      *             by calling {@link ValidationResultInterface::value()}
      *
      * @return array<array-key, mixed>
@@ -187,7 +187,7 @@ interface InputFilterInterface extends Countable
     /**
      * Retrieve a raw (unfiltered) value from a named input
      *
-     * @deprecated Since 3.0. Using the rsult returned from {@link validate()}, you can retrieve the un-filtered values
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
      *             by calling {@link ValidationResultInterface::rawValue()}
      *
      * @throws InputNotFoundException
@@ -200,7 +200,7 @@ interface InputFilterInterface extends Countable
      * List should be an associative array of named input/value pairs,
      * with the values unfiltered.
      *
-     * @deprecated Since 3.0. Using the rsult returned from {@link validate()}, you can retrieve the un-filtered values
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
      *             by calling {@link ValidationResultInterface::rawValue()}
      *
      * @return array<array-key, mixed>

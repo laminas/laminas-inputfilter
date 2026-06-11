@@ -38,7 +38,8 @@ final class FileInput extends Input
     private ?FileInputHandlerInterface $handler = null;
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Setting the value to be validated is deprecated as part of the old stateful API.
+     *             Use the {@link validate()} method instead.
      *
      * @inheritDoc
      * @param array|UploadedFileInterface $value
@@ -77,7 +78,9 @@ final class FileInput extends Input
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. The filtered value is included in the result of {@link validate()} and is not
+     *             present when using the new validation API. This method continues to work as it did previously
+     *             when using the old API.
      *
      * @inheritDoc
      */
@@ -113,7 +116,8 @@ final class FileInput extends Input
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Please migrate to the new validation method {@link validate()} that returns a result
+     *             object instead of a boolean, and does not mutate internal state.
      *
      * @inheritDoc
      */

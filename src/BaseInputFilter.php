@@ -430,6 +430,8 @@ class BaseInputFilter implements
      * Retrieve a value from a named input
      *
      * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *             {@link InputFilterValidationResult::resultFor()} can yield the result for a specific input enabling
+     *             retrieval of specific values.
      *
      * @throws InvalidArgumentException
      */
@@ -457,7 +459,8 @@ class BaseInputFilter implements
      * List should be an associative array, with the values filtered. If
      * validation failed, this should raise an exception.
      *
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated  Since 3.0. Using the result returned from {@link validate()}, you can retrieve the filtered values
+     *              by calling {@link ValidationResultInterface::value()}
      *
      * @return TFilteredValues
      */
@@ -479,7 +482,8 @@ class BaseInputFilter implements
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
      *
      * @inheritDoc
      */
@@ -493,7 +497,8 @@ class BaseInputFilter implements
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
      *
      * @inheritDoc
      */
@@ -513,7 +518,8 @@ class BaseInputFilter implements
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Error messages can be retrieved from the immutable result returned by {@link validate()}
+     *             by calling {@link ValidationResultInterface::getMessages()}
      *
      * @inheritDoc
      */

@@ -277,7 +277,8 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the filtered values
+     *             by calling {@link ValidationResultInterface::value()}
      *
      * @return array<array-key, TFilteredValues>
      */
@@ -287,7 +288,8 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
      *
      * @return array<array-key, array>
      */
@@ -317,7 +319,8 @@ class CollectionInputFilter extends InputFilter
     }
 
     /**
-     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     * @deprecated Since 3.0. Error messages can be retrieved from the immutable result returned by {@link validate()}
+     *             by calling {@link ValidationResultInterface::getMessages()}
      *
      * @inheritDoc
      */
