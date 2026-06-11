@@ -41,6 +41,9 @@ use NoDiscard;
  */
 interface InputFilterInterface extends Countable
 {
+    /**
+     * @deprecated Since 3.0 Validation groups are only available in the old validation API and will be removed in 4.0
+     */
     public const VALIDATE_ALL = 'INPUT_FILTER_ALL';
 
     /**
@@ -77,12 +80,18 @@ interface InputFilterInterface extends Countable
     /**
      * Set data to use when validating and filtering
      *
+     * @deprecated Since 3.0. Please migrate to the {@link validate()} API which accepts input as an argument instead
+     *             of mutating the internal state of the input filter.
+     *
      * @param iterable<array-key, mixed>|null $data
      */
     public function setData(iterable|null $data): static;
 
     /**
      * Is the data set valid?
+     *
+     * @deprecated  Since 3.0. Please migrate to the {@link validate()} API which returns a result object instead of a
+     *              boolean. This API will continue to work until its removal in 4.0
      *
      * @param array<array-key, mixed>|null $context
      */
@@ -120,6 +129,9 @@ interface InputFilterInterface extends Countable
      * Implementations should allow passing a single array value, or multiple arguments,
      * each specifying a single input.
      *
+     * @deprecated Since 3.0. Validation groups are deprecated entirely and will be removed in 4.0. They are still
+     *             supported in the 'old' API, but are ignored by the new stateless API when using {@link validate()}.
+     *
      * @param array-key|array<array-key, mixed> $name
      * @throws InputNotFoundException
      */
@@ -131,6 +143,8 @@ interface InputFilterInterface extends Countable
      * Implementations should return an associative array of name/input pairs
      * that failed validation.
      *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
     public function getInvalidInput(): array;
@@ -141,12 +155,18 @@ interface InputFilterInterface extends Countable
      * Implementations should return an associative array of name/input pairs
      * that passed validation.
      *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
     public function getValidInput(): array;
 
     /**
      * Retrieve a value from a named input
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *             {@link InputFilterValidationResult::resultFor()} can yield the result for a specific input enabling
+     *             retrieval of specific values.
      */
     public function getValue(int|string $name): mixed;
 
@@ -156,6 +176,9 @@ interface InputFilterInterface extends Countable
      * List should be an associative array, with the values filtered. If
      * validation failed, this should raise an exception.
      *
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the filtered values
+     *             by calling {@link ValidationResultInterface::value()}
+     *
      * @return array<array-key, mixed>
      * @psalm-return TFilteredValues
      */
@@ -163,6 +186,9 @@ interface InputFilterInterface extends Countable
 
     /**
      * Retrieve a raw (unfiltered) value from a named input
+     *
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
      *
      * @throws InputNotFoundException
      */
@@ -174,12 +200,18 @@ interface InputFilterInterface extends Countable
      * List should be an associative array of named input/value pairs,
      * with the values unfiltered.
      *
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
+     *
      * @return array<array-key, mixed>
      */
     public function getRawValues(): array;
 
     /**
      * Return validation failure messages
+     *
+     * @deprecated Since 3.0. Error messages can be retrieved from the immutable result returned by {@link validate()}
+     *             by calling {@link ValidationResultInterface::getMessages()}
      */
     public function getMessages(): ErrorMessages;
 }

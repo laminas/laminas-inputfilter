@@ -39,28 +39,48 @@ class BaseInputFilter implements
     ReplaceableInputInterface,
     UnfilteredDataInterface
 {
-    public function __construct(
-        protected readonly Factory $factory,
-    ) {
-    }
-
-    /** @var array<array-key, mixed>|null */
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, mixed>|null
+     */
     protected array|null $data = null;
 
-    /** @var array<array-key, mixed> */
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, mixed>
+     */
     protected array $unfilteredData = [];
 
     /** @var array<array-key, InputInterface|InputFilterInterface> */
     protected array $inputs = [];
 
-    /** @var array<array-key, InputInterface|InputFilterInterface>|null */
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, InputInterface|InputFilterInterface>|null
+     */
     protected array|null $invalidInputs = null;
 
-    /** @var array<array-key, InputInterface|InputFilterInterface>|null */
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, InputInterface|InputFilterInterface>|null
+     */
     protected array|null $validInputs = null;
 
-    /** @var null|list<array-key> Input names */
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var null|list<array-key> Input names
+     */
     protected array|null $validationGroup = null;
+
+    public function __construct(
+        protected readonly Factory $factory,
+    ) {
+    }
 
     /**
      * This function is automatically called when creating element with factory. It
@@ -186,7 +206,11 @@ class BaseInputFilter implements
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function setData(iterable|null $data): static
     {
         // A null value indicates an empty set
@@ -206,7 +230,11 @@ class BaseInputFilter implements
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function isValid(array|null $context = null): bool
     {
         if (null === $this->data) {
@@ -252,6 +280,8 @@ class BaseInputFilter implements
 
     /**
      * Validate a set of inputs against the current data
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      *
      * @param  list<array-key> $inputs A list of input names to validate
      * @param  array<array-key, mixed> $data
@@ -307,6 +337,8 @@ class BaseInputFilter implements
     }
 
     /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @inheritDoc
      * @throws InvalidArgumentException
      */
@@ -370,6 +402,8 @@ class BaseInputFilter implements
      * Implementations should return an associative array of name/input pairs
      * that failed validation.
      *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
     public function getInvalidInput(): array
@@ -383,6 +417,8 @@ class BaseInputFilter implements
      * Implementations should return an associative array of name/input pairs
      * that passed validation.
      *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @return array<array-key, InputInterface|InputFilterInterface>
      */
     public function getValidInput(): array
@@ -392,6 +428,10 @@ class BaseInputFilter implements
 
     /**
      * Retrieve a value from a named input
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *             {@link InputFilterValidationResult::resultFor()} can yield the result for a specific input enabling
+     *             retrieval of specific values.
      *
      * @throws InvalidArgumentException
      */
@@ -419,6 +459,9 @@ class BaseInputFilter implements
      * List should be an associative array, with the values filtered. If
      * validation failed, this should raise an exception.
      *
+     * @deprecated  Since 3.0. Using the result returned from {@link validate()}, you can retrieve the filtered values
+     *              by calling {@link ValidationResultInterface::value()}
+     *
      * @return TFilteredValues
      */
     public function getValues(): array
@@ -438,6 +481,12 @@ class BaseInputFilter implements
         return $values;
     }
 
+    /**
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
+     *
+     * @inheritDoc
+     */
     public function getRawValue(int|string $name): mixed
     {
         $input = $this->get($name);
@@ -447,7 +496,12 @@ class BaseInputFilter implements
             : $input->getRawValue();
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
+     *
+     * @inheritDoc
+     */
     public function getRawValues(): array
     {
         $values = [];
@@ -463,6 +517,12 @@ class BaseInputFilter implements
         return $values;
     }
 
+    /**
+     * @deprecated Since 3.0. Error messages can be retrieved from the immutable result returned by {@link validate()}
+     *             by calling {@link ValidationResultInterface::getMessages()}
+     *
+     * @inheritDoc
+     */
     public function getMessages(): ErrorMessages
     {
         return new ErrorMessages(array_map(
@@ -473,6 +533,8 @@ class BaseInputFilter implements
 
     /**
      * Ensure all names of a validation group exist as input in the filter
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      *
      * @param array<array-key, mixed> $inputs Input names
      * @throws InputNotFoundException
@@ -489,6 +551,8 @@ class BaseInputFilter implements
 
     /**
      * Populate the values of all attached inputs
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      */
     protected function populate(): void
     {
@@ -591,20 +655,34 @@ class BaseInputFilter implements
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function getUnfilteredData(): array
     {
         return $this->unfilteredData;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function setUnfilteredData(array $data): static
     {
         $this->unfilteredData = $data;
         return $this;
     }
 
-    /** @psalm-assert-if-true int|non-empty-string $value */
+    /**
+     * @internal
+     *
+     * @psalm-internal Laminas\InputFilter
+     * @psalm-internal LaminasTest\InputFilter
+     * @psalm-assert-if-true int|non-empty-string $value
+     */
     protected function isKey(mixed $value): bool
     {
         return is_int($value) || (is_string($value) && $value !== '');

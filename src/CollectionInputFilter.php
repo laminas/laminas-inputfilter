@@ -25,18 +25,37 @@ class CollectionInputFilter extends InputFilter
 {
     protected bool $isRequired = false;
     protected int|null $count  = null;
-    /** @var array<array-key, TFilteredValues> */
+
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, TFilteredValues>
+     */
     protected array $collectionValues = [];
-    /** @var array<array-key, array> */
+
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, array>
+     */
     protected array $collectionRawValues = [];
-    /** @var array<array-key, ErrorMessages> */
+
+    /**
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
+     * @var array<array-key, ErrorMessages>
+     */
     protected array $collectionMessages = [];
     /** @var InputFilterInterface<TFilteredValues>|null */
     protected InputFilterInterface|null $inputFilter = null;
-    private string|null $emptyErrorMessage           = null;
+
+    /** @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0 */
+    private string|null $emptyErrorMessage = null;
 
     /**
      * Data in a collection is guaranteed to be an array of arrays
+     *
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
      *
      * @psalm-suppress NonInvariantDocblockPropertyType
      * @var array<array-key, array<array-key, mixed>>|null
@@ -46,6 +65,8 @@ class CollectionInputFilter extends InputFilter
     /**
      * In Collections, the type is not compatible with the parent class
      *
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
+     *
      * @psalm-suppress NonInvariantDocblockPropertyType
      * @var array<array-key, array<array-key, InputInterface|InputFilterInterface>>|null
      */
@@ -53,6 +74,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * In Collections, the type is not compatible with the parent class
+     *
+     * @deprecated Since 3.0. This property is part of the old API and will be removed in 4.0
      *
      * @psalm-suppress NonInvariantDocblockPropertyType
      * @var array<array-key, array<array-key, InputInterface|InputFilterInterface>>|null
@@ -104,6 +127,8 @@ class CollectionInputFilter extends InputFilter
      * Set a custom error message for the collection being empty.
      * If not called, CollectionInputFilter will default to the NotEmpty validators IS_EMPTY message
      *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
      * @param non-empty-string $message
      */
     public function setIsRequiredValidationMessage(string $message): static
@@ -143,7 +168,11 @@ class CollectionInputFilter extends InputFilter
         return $this->count;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function setData(iterable|null $data): static
     {
         $data = iterator_to_array($data ?? []);
@@ -172,7 +201,11 @@ class CollectionInputFilter extends InputFilter
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function isValid(array|null $context = null): bool
     {
         $this->collectionMessages = [];
@@ -228,7 +261,11 @@ class CollectionInputFilter extends InputFilter
         return $valid;
     }
 
-    /** @inheritDoc */
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     *
+     * @inheritDoc
+     */
     public function setValidationGroup(int|string|array $name): static
     {
         if ($name === self::VALIDATE_ALL) {
@@ -239,13 +276,21 @@ class CollectionInputFilter extends InputFilter
         return $this;
     }
 
-    /** @return array<array-key, TFilteredValues> */
+    /**
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the filtered values
+     *             by calling {@link ValidationResultInterface::value()}
+     *
+     * @return array<array-key, TFilteredValues>
+     */
     public function getValues(): array
     {
         return $this->collectionValues;
     }
 
     /**
+     * @deprecated Since 3.0. Using the result returned from {@link validate()}, you can retrieve the un-filtered values
+     *             by calling {@link ValidationResultInterface::rawValue()}
+     *
      * @return array<array-key, array>
      */
     public function getRawValues(): array
@@ -255,6 +300,8 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Clear collectionValues
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      */
     public function clearValues(): void
     {
@@ -263,12 +310,20 @@ class CollectionInputFilter extends InputFilter
 
     /**
      * Clear collectionRawValues
+     *
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
      */
     public function clearRawValues(): void
     {
         $this->collectionRawValues = [];
     }
 
+    /**
+     * @deprecated Since 3.0. Error messages can be retrieved from the immutable result returned by {@link validate()}
+     *             by calling {@link ValidationResultInterface::getMessages()}
+     *
+     * @inheritDoc
+     */
     public function getMessages(): ErrorMessages
     {
         return new ErrorMessages($this->collectionMessages);
@@ -302,6 +357,9 @@ class CollectionInputFilter extends InputFilter
         return $unknownInputs;
     }
 
+    /**
+     * @deprecated Since 3.0. This method is part of the old API and will be removed in 4.0
+     */
     private function getEmptyValidationErrorMessages(): ErrorMessages
     {
         $options = $this->emptyErrorMessage === null
