@@ -333,11 +333,11 @@ final class HttpServerFileInputDecoratorTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
 
         // phpcs:disable Generic.Formatting.MultipleStatementAlignment.NotSame
-        $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+        $validatorNotCall = static fn(mixed $value, array|null $context = null): ValidatorInterface =>
         self::createValidatorMock(null, $value, $context);
-        $validatorInvalid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+        $validatorInvalid = static fn(mixed $value, array|null $context = null): ValidatorInterface =>
         self::createValidatorMock(false, $value, $context, $validatorMsg);
-        $validatorValid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+        $validatorValid = static fn(mixed $value, array|null $context = null): ValidatorInterface =>
         self::createValidatorMock(true, $value, $context);
 
         $dataTemplates = [

@@ -169,11 +169,11 @@ final class CollectionInputFilterTest extends TestCase
         $errorMessage = ['error_type' => ['fooInput' => 'fooError']];
         $colMessages  = [$errorMessage];
 
-        $invalidIf  = fn(): BaseInputFilter =>
+        $invalidIf  = static fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(false, $dataRaw, $dataFiltered, $errorMessage);
-        $validIf    = fn(): BaseInputFilter =>
+        $validIf    = static fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(true, $dataRaw, $dataFiltered);
-        $noValidIf  = fn(): BaseInputFilter =>
+        $noValidIf  = static fn(): BaseInputFilter =>
             new InputFilterInterfaceStub(null, $dataRaw, $dataFiltered);
         $isRequired = true;
 

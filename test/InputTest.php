@@ -842,11 +842,11 @@ final class InputTest extends TestCase
         $validatorMsg = ['FooValidator' => 'Invalid Value'];
         $notEmptyMsg  = ['isEmpty' => "Value is required and can't be empty"];
 
-        $validatorNotCall = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+        $validatorNotCall = static fn(mixed $value, array|null $context = null): ValidatorInterface =>
             self::createValidatorMock(null, $value, $context);
-        $validatorInvalid = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+        $validatorInvalid = static fn(mixed $value, array|null $context = null): ValidatorInterface =>
             self::createValidatorMock(false, $value, $context, $validatorMsg);
-        $validatorValid   = fn(mixed $value, array|null $context = null): ValidatorInterface =>
+        $validatorValid   = static fn(mixed $value, array|null $context = null): ValidatorInterface =>
             self::createValidatorMock(true, $value, $context);
 
         $dataTemplates = [
