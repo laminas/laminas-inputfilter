@@ -40,6 +40,7 @@
     },
     "require-dev": {
         "ext-json": "*",
+        "boundwize/structarmed": "^0.17.12",
         "laminas/laminas-coding-standard": "^3.1.0",
         "phpunit/phpunit": "^11.5.46",
         "psalm/plugin-phpunit": "^0.19.5",

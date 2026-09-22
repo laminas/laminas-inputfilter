@@ -176,7 +176,7 @@ final class InputFilterCollectionsValidationGroupTest extends TestCase
             ],
         ]);
 
-        set_error_handler(function (int $num, string $msg): never {
+        set_error_handler(static function (int $num, string $msg): never {
             throw new RuntimeException($msg, $num);
         });
 
