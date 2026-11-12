@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+<files psalm-version="6.20.11@fca8e037ed356b9fc1afc213902e82dfad418eba">
   <file src="src/ArrayInput.php">
     <DeprecatedProperty>
       <code><![CDATA[$this->value]]></code>
@@ -9,12 +9,14 @@
     </DeprecatedProperty>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->prepareNotArrayFailureMessage()]]></code>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
     </InvalidPropertyAssignmentValue>
     <MixedAssignment>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
+    <PossiblyInvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->errorMessage ??= $this->prepareRequiredValidationFailureMessage()]]></code>
+      <code><![CDATA[$this->errorMessage ??= $this->prepareRequiredValidationFailureMessage()]]></code>
+    </PossiblyInvalidPropertyAssignmentValue>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[! $required]]></code>
     </RedundantConditionGivenDocblockType>
@@ -58,7 +60,11 @@
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
     </ImplementedParamTypeMismatch>
+    <InvalidArgument>
+      <code><![CDATA[$data]]></code>
+    </InvalidArgument>
     <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$data]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
       <code><![CDATA[$this->collectionMessages]]></code>
@@ -146,9 +152,6 @@
     </UnusedPsalmSuppress>
   </file>
   <file src="src/FileInput.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MixedAssignment>
       <code><![CDATA[$rawValue]]></code>
     </MixedAssignment>
@@ -156,6 +159,9 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MoreSpecificImplementedParamType>
+    <PossiblyInvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->errorMessage ??= $this->prepareRequiredValidationFailureMessage()]]></code>
+    </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="src/FileInput/HttpServerFileInputDecorator.php">
     <MixedAssignment>
@@ -203,9 +209,6 @@
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[null|string]]></code>
     </ImplementedReturnTypeMismatch>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->prepareRequiredValidationFailureMessage()]]></code>
-    </InvalidPropertyAssignmentValue>
     <MixedArgument>
       <code><![CDATA[$notEmpty->getTranslatorTextDomain()]]></code>
     </MixedArgument>
@@ -213,6 +216,9 @@
       <code><![CDATA[$translator]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
+    <PossiblyInvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->errorMessage ??= $this->prepareRequiredValidationFailureMessage()]]></code>
+    </PossiblyInvalidPropertyAssignmentValue>
     <PossiblyUndefinedMethod>
       <code><![CDATA[getOption]]></code>
       <code><![CDATA[getTranslator]]></code>
@@ -272,6 +278,9 @@
     </InvalidNullableReturnType>
   </file>
   <file src="src/InputFilterInterface.php">
+    <MissingClassConstType>
+      <code><![CDATA[VALIDATE_ALL = 'INPUT_FILTER_ALL']]></code>
+    </MissingClassConstType>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[InputFilterInterface]]></code>
     </PossiblyUnusedReturnValue>
@@ -360,6 +369,7 @@
       <code><![CDATA[enableProxyingToOriginalMethods]]></code>
     </DeprecatedMethod>
     <InvalidArgument>
+      <code><![CDATA[$data]]></code>
       <code><![CDATA[['nested' => ['nested-input1', 'nested-input2']]]]></code>
       <code><![CDATA[testSetDataAndGetRawValueGetValue]]></code>
       <code><![CDATA[testSetTraversableDataAndGetRawValueGetValue]]></code>
