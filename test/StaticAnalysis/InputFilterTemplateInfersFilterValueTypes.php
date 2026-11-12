@@ -8,12 +8,12 @@ use function assert;
 use function count;
 use function reset;
 
-final class InputFilterTemplateInfersFilterValueTypes
+final readonly class InputFilterTemplateInfersFilterValueTypes
 {
     public function __construct(
-        private readonly InputFilterWithTemplatedValues $inputFilter,
-        private readonly NestedInputFilterWithTemplatedValues $nestedFilter,
-        private readonly CollectionWithTemplatedValues $collection,
+        private InputFilterWithTemplatedValues $inputFilter,
+        private NestedInputFilterWithTemplatedValues $nestedFilter,
+        private CollectionWithTemplatedValues $collection,
     ) {
     }
 

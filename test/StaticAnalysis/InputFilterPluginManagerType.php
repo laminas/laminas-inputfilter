@@ -8,9 +8,9 @@ use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\InputFilter\InputInterface;
 
-final class InputFilterPluginManagerType
+final readonly class InputFilterPluginManagerType
 {
-    public function __construct(private readonly InputFilterPluginManager $manager)
+    public function __construct(private InputFilterPluginManager $manager)
     {
     }
 

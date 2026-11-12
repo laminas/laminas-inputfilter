@@ -9,10 +9,10 @@ use Psr\Http\Message\UploadedFileInterface;
 
 use const UPLOAD_ERR_OK;
 
-final class UploadedFileInterfaceStub implements UploadedFileInterface
+final readonly class UploadedFileInterfaceStub implements UploadedFileInterface
 {
     public function __construct(
-        private readonly int $expectedErrorCode = UPLOAD_ERR_OK
+        private int $expectedErrorCode = UPLOAD_ERR_OK
     ) {
     }
 
