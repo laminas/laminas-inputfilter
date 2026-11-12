@@ -42,7 +42,7 @@ class ArrayInput extends Input
         $filter = $this->getFilterChain();
 
         return array_map(
-            static fn (mixed $value): mixed => $filter->filter($value),
+            $filter->filter(...),
             $this->value,
         );
     }
@@ -60,9 +60,7 @@ class ArrayInput extends Input
         }
 
         if (! $hasValue && $required) {
-            if ($this->errorMessage === null) {
-                $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
-            }
+            $this->errorMessage ??= $this->prepareRequiredValidationFailureMessage();
             return false;
         }
 
@@ -86,9 +84,7 @@ class ArrayInput extends Input
         $result    = true;
 
         if ($required && empty($values)) {
-            if ($this->errorMessage === null) {
-                $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
-            }
+            $this->errorMessage ??= $this->prepareRequiredValidationFailureMessage();
             return false;
         }
 

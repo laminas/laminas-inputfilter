@@ -76,9 +76,7 @@ class CollectionInputFilter extends InputFilter
      */
     public function getInputFilter()
     {
-        if (null === $this->inputFilter) {
-            $this->inputFilter = new InputFilter();
-        }
+        $this->inputFilter ??= new InputFilter();
 
         return $this->inputFilter;
     }
@@ -179,9 +177,7 @@ class CollectionInputFilter extends InputFilter
      */
     public function getNotEmptyValidator()
     {
-        if ($this->notEmptyValidator === null) {
-            $this->notEmptyValidator = new NotEmpty();
-        }
+        $this->notEmptyValidator ??= new NotEmpty();
 
         return $this->notEmptyValidator;
     }

@@ -18,7 +18,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.2.99"
+            "php": "8.3.99"
         },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
@@ -31,7 +31,7 @@
         }
     },
     "require": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
         "laminas/laminas-filter": "^2.19",
         "laminas/laminas-servicemanager": "^3.21.0",
         "laminas/laminas-stdlib": "^3.19",
@@ -40,12 +40,13 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "boundwize/structarmed": "^0.21.0",
+        "boundwize/structarmed": "^0.21.8",
+        "laminas/internal-tooling": "^1.2",
         "laminas/laminas-coding-standard": "^3.1.0",
-        "phpunit/phpunit": "^11.5.46",
-        "psalm/plugin-phpunit": "^0.22.0",
+        "phpunit/phpunit": "^11.5.57",
+        "psalm/plugin-phpunit": "^0.22.2",
         "psr/http-message": "^2.0",
-        "vimeo/psalm": "^6.14.3"
+        "vimeo/psalm": "^6.20.11"
     },
     "suggest": {
         "psr/http-message-implementation": "PSR-7 is required if you wish to validate PSR-7 UploadedFileInterface payloads"

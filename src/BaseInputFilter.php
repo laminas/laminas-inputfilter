@@ -250,9 +250,7 @@ class BaseInputFilter implements
     public function setData($data)
     {
         // A null value indicates an empty set
-        if (null === $data) {
-            $data = [];
-        }
+        $data ??= [];
 
         if ($data instanceof Traversable) {
             $data = ArrayUtils::iteratorToArray($data);

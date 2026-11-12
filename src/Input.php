@@ -366,9 +366,7 @@ class Input implements
         }
 
         if (! $hasValue) { // required, but no value
-            if ($this->errorMessage === null) {
-                $this->errorMessage = $this->prepareRequiredValidationFailureMessage();
-            }
+            $this->errorMessage ??= $this->prepareRequiredValidationFailureMessage();
             return false;
         }
 

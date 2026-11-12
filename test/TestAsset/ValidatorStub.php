@@ -11,14 +11,14 @@ use function func_num_args;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
 
-final class ValidatorStub implements ValidatorInterface
+final readonly class ValidatorStub implements ValidatorInterface
 {
     /** @param array<string, string> $messages */
     public function __construct(
-        private readonly bool|null $isValid,
-        private readonly mixed $value = 'not-set',
-        private readonly array|null $context = null,
-        private readonly array $messages = [],
+        private bool|null $isValid,
+        private mixed $value = 'not-set',
+        private array|null $context = null,
+        private array $messages = [],
     ) {
     }
 

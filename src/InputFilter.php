@@ -38,9 +38,7 @@ class InputFilter extends BaseInputFilter
      */
     public function getFactory()
     {
-        if (null === $this->factory) {
-            $this->factory = new Factory();
-        }
+        $this->factory ??= new Factory();
         return $this->factory;
     }
 
