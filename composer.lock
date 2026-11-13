@@ -1327,16 +1327,16 @@
         },
         {
             "name": "boundwize/structarmed",
-            "version": "0.21.8",
+            "version": "0.21.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/boundwize/structarmed.git",
-                "reference": "aceafaded72331ef1754b16f5dea34834f6be4a3"
+                "reference": "0bef582b930f63eafcaf8117e046dfc9380d180a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/boundwize/structarmed/zipball/aceafaded72331ef1754b16f5dea34834f6be4a3",
-                "reference": "aceafaded72331ef1754b16f5dea34834f6be4a3",
+                "url": "https://api.github.com/repos/boundwize/structarmed/zipball/0bef582b930f63eafcaf8117e046dfc9380d180a",
+                "reference": "0bef582b930f63eafcaf8117e046dfc9380d180a",
                 "shasum": ""
             },
             "require": {
@@ -1393,7 +1393,7 @@
             ],
             "support": {
                 "issues": "https://github.com/boundwize/structarmed/issues",
-                "source": "https://github.com/boundwize/structarmed/tree/0.21.8"
+                "source": "https://github.com/boundwize/structarmed/tree/0.21.10"
             },
             "funding": [
                 {
@@ -1401,8 +1401,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-08T23:46:25+00:00",
-            "published-time": "2026-11-08T23:46:55+00:00"
+            "time": "2026-11-13T02:04:08+00:00",
+            "published-time": "2026-11-13T02:04:37+00:00"
         },
         {
             "name": "carthage-software/mago",
